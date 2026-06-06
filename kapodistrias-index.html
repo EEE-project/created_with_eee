@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Created with EEE — Kapodistrias</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap');
+
+    :root {
+      --bg: #ffffff;
+      --surface: #f8f9fa;
+      --border: #e0e0e0;
+      --accent: #003d82;
+      --accent2: #5f27cd;
+      --text: #1a1a1a;
+      --muted: #666666;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: var(--bg);
+      font-family: 'Syne', sans-serif;
+      color: var(--text);
+    }
+
+    /* ── Top bar ── */
+    #topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      height: 48px;
+      background: #f5f5f5;
+      border-bottom: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 10px;
+    }
+
+    .tb-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .tb-title {
+      font-size: 16px; font-weight: 700;
+      letter-spacing: 0.02em;
+      flex: 1; color: var(--text); text-decoration: none;
+    }
+
+    .tb-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; font-weight: 700;
+      color: var(--accent);
+      background: rgba(0,61,130,0.08);
+      border: 1px solid rgba(0,61,130,0.3);
+      border-radius: 4px;
+      padding: 4px 8px;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.85); opacity: 0.7; }
+    }
+
+    /* ── Content ── */
+    .content {
+      padding: 72px 20px 32px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .hero { text-align: center; margin-bottom: 40px; }
+
+    .hero-series {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; color: var(--accent);
+      letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: 28px; font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle { font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+    /* ── Cards ── */
+    .cards { display: flex; flex-direction: column; gap: 16px; }
+
+    .card {
+      display: block; text-decoration: none; color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+      transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card:active { transform: scale(0.98); }
+
+    .card:hover {
+      border-color: rgba(0,61,130,0.25);
+      box-shadow: 0 0 20px rgba(0,61,130,0.06);
+    }
+
+    .card-header {
+      display: flex; align-items: center;
+      gap: 12px; margin-bottom: 10px;
+    }
+
+    .card-icon {
+      font-size: 28px; width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,61,130,0.06);
+      border-radius: 10px; flex-shrink: 0;
+    }
+
+    .card-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; color: var(--accent);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .card-title { font-size: 18px; font-weight: 700; letter-spacing: 0.01em; }
+
+    .card-greek {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px; color: var(--accent2); margin-top: 2px;
+    }
+
+    .card-desc { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+    .card-arrow {
+      display: flex; align-items: center; justify-content: flex-end;
+      margin-top: 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; color: var(--accent2); letter-spacing: 0.1em;
+    }
+
+    /* ── Footer ── */
+    .footer { text-align: center; margin-top: 40px; padding-bottom: 20px; }
+
+    .footer-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; color: var(--muted);
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    .footer-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; color: var(--accent);
+      letter-spacing: 0.05em; text-decoration: none;
+    }
+
+    /* ── Language Selector ── */
+    #lang-selector {
+      position: fixed; top: 60px; right: 10px; z-index: 1000;
+      background: white; border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 12px;
+      font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer;
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D9SLECHKZL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-D9SLECHKZL');
+  </script>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div id="topbar">
+    <a class="tb-back" href="index.html" style="font-size:18px;color:var(--accent);text-decoration:none;padding:4px 6px;"><div class="tb-dot"></div>#9664;</a>
+    <span class="tb-title">B1 Greek Language and Culture</span>
+    <a class="tb-badge" href="#" onclick="openTelegramGroup(); return false;">EEE Community</a>
+  </div>
+
+  <!-- Language Selector -->
+  <select id="lang-selector" onchange="changeLanguage(this.value)">
+    <option value="en">English</option>
+    <option value="ru">Русский</option>
+    <option value="el">Ελληνικά</option>
+  </select>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="hero">
+      <div class="hero-series" id="hero-series">B1 GREEK LANGUAGE AND CULTURE — INTERACTIVE NOTEBOOKS</div>
+      <div class="hero-title" id="hero-title">● Kapodistrias Lessons</div>
+      <div class="hero-subtitle" id="hero-subtitle">Interactive exercises on vocabulary and grammar from the Kapodistrias lecture series.</div>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="kapodistrias-1.html">
+        <div class="card-header">
+          <div class="card-icon">🏛️</div>
+          <div>
+            <div class="card-label" id="card-l1-label">Lesson 1</div>
+            <div class="card-title" id="card-l1-title">Kapodistrias: First Governor</div>
+            <div class="card-greek">Ιωάννης Καποδίστριας: Ο Πρώτος Κυβερνήτης</div>
+          </div>
+        </div>
+        <div class="card-desc" id="card-l1-desc">Nouns, verbs, and adjectives — the life and legacy of Ioannis Kapodistrias.</div>
+        <div class="card-arrow">◀</div>
+      </a>
+
+      <a class="card" href="kapodistrias-2.html">
+        <div class="card-header">
+          <div class="card-icon">🗺️</div>
+          <div>
+            <div class="card-label" id="card-l2-label">Lesson 2</div>
+            <div class="card-title" id="card-l2-title">The Greece He Found</div>
+            <div class="card-greek">Η Ελλάδα που Βρήκε ο Καποδίστριας</div>
+          </div>
+        </div>
+        <div class="card-desc" id="card-l2-desc">Nouns, verbs, and adjectives — the state of Greece when Kapodistrias arrived in 1828.</div>
+        <div class="card-arrow">◀</div>
+      </a>
+
+      <a class="card" href="kapodistrias-3.html">
+        <div class="card-header">
+          <div class="card-icon">🔥</div>
+          <div>
+            <div class="card-label" id="card-l3-label">Lesson 3</div>
+            <div class="card-title" id="card-l3-title">The Rebirth of Greece</div>
+            <div class="card-greek">Η Αναγέννηση της Ελλάδας</div>
+          </div>
+        </div>
+        <div class="card-desc" id="card-l3-desc">Nouns, verbs, and adjectives — how Kapodistrias rebuilt Greece from the ashes.</div>
+        <div class="card-arrow">◀</div>
+      </a>
+    </div>
+
+    <div class="footer">
+      <div class="footer-text" id="footer-text">EEE &mdash; Greek Language Educational Tools</div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text); margin-top: 8px;">
+        <span id="footer-label">Source code:</span>
+        <a class="footer-link" href="https://codeberg.org/EEE-project/created_with_eee" target="_blank">codeberg.org/EEE-project/created_with_eee</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LANG_STORAGE_KEY = 'gsc-lang';
+
+    const TRANSLATIONS = {
+      en: {
+        series:      'B1 GREEK LANGUAGE AND CULTURE — INTERACTIVE NOTEBOOKS',
+        heroTitle:   '● Kapodistrias Lessons',
+        heroSubtitle:'Interactive exercises on vocabulary and grammar from the Kapodistrias lecture series.',
+        l1Label: 'Lesson 1',
+        l1Title: 'Kapodistrias: First Governor',
+        l1Desc:  'Nouns, verbs, and adjectives — the life and legacy of Ioannis Kapodistrias.',
+        l2Label: 'Lesson 2',
+        l2Title: 'The Greece He Found',
+        l2Desc:  'Nouns, verbs, and adjectives — the state of Greece when Kapodistrias arrived in 1828.',
+        l3Label: 'Lesson 3',
+        l3Title: 'The Rebirth of Greece',
+        l3Desc:  'Nouns, verbs, and adjectives — how Kapodistrias rebuilt Greece from the ashes.',
+        footerText:  'EEE — Greek Language Educational Tools',
+        footerLabel: 'Source code:'
+      },
+      ru: {
+        series:      'B1 ГРЕЧЕСКИЙ ЯЗЫК И КУЛЬТУРА — ИНТЕРАКТИВНЫЕ ТЕТРАДИ',
+        heroTitle:   '● Уроки о Каподистриасе',
+        heroSubtitle:'Интерактивные упражнения по лексике и грамматике из цикла лекций о Каподистриасе.',
+        l1Label: 'Урок 1',
+        l1Title: 'Каподистриас: первый правитель Эллады',
+        l1Desc:  'Существительные, глаголы и прилагательные — жизнь и наследие Иоанниса Каподистриаса.',
+        l2Label: 'Урок 2',
+        l2Title: 'Греция, которую он нашёл',
+        l2Desc:  'Существительные, глаголы и прилагательные — положение Греции, когда Каподистриас прибыл в 1828 году.',
+        l3Label: 'Урок 3',
+        l3Title: 'Возрождение Греции',
+        l3Desc:  'Существительные, глаголы и прилагательные — как Каподистриас возродил Грецию из пепла.',
+        footerText:  'EEE — Образовательные инструменты для греческого языка',
+        footerLabel: 'Исходный код:'
+      },
+      el: {
+        series:      'B1 ΕΛΛΗΝΙΚΗ ΓΛΩΣΣΑ ΚΑΙ ΠΟΛΙΤΙΣΜΟΣ — ΔΙΑΔΡΑΣΤΙΚΑ ΤΕΤΡΑΔΙΑ',
+        heroTitle:   '● Μαθήματα Καποδίστρια',
+        heroSubtitle:'Διαδραστικές ασκήσεις για λεξιλόγιο και γραμματική από τη σειρά μαθημάτων για τον Καποδίστρια.',
+        l1Label: 'Μάθημα 1',
+        l1Title: 'Καποδίστριας: Πρώτος Κυβερνήτης',
+        l1Desc:  'Ουσιαστικά, ρήματα και επίθετα — η ζωή και η κληρονομιά του Ιωάννη Καποδίστρια.',
+        l2Label: 'Μάθημα 2',
+        l2Title: 'Η Ελλάδα που Βρήκε',
+        l2Desc:  'Ουσιαστικά, ρήματα και επίθετα — η κατάσταση της Ελλάδας όταν ο Καποδίστριας έφτασε το 1828.',
+        l3Label: 'Μάθημα 3',
+        l3Title: 'Η Αναγέννηση της Ελλάδας',
+        l3Desc:  'Ουσιαστικά, ρήματα και επίθετα — πώς ο Καποδίστριας ανέστησε την Ελλάδα από τις στάχτες της.',
+        footerText:  'EEE — Ελληνικά Εκπαιδευτικά Εργαλεία',
+        footerLabel: 'Πηγαίος κώδικας:'
+      }
+    };
+
+    const ELS = {
+      series:       document.getElementById('hero-series'),
+      heroTitle:    document.getElementById('hero-title'),
+      heroSubtitle: document.getElementById('hero-subtitle'),
+      l1Label:      document.getElementById('card-l1-label'),
+      l1Title:      document.getElementById('card-l1-title'),
+      l1Desc:       document.getElementById('card-l1-desc'),
+      l2Label:      document.getElementById('card-l2-label'),
+      l2Title:      document.getElementById('card-l2-title'),
+      l2Desc:       document.getElementById('card-l2-desc'),
+      l3Label:      document.getElementById('card-l3-label'),
+      l3Title:      document.getElementById('card-l3-title'),
+      l3Desc:       document.getElementById('card-l3-desc'),
+      footerText:   document.getElementById('footer-text'),
+      footerLabel:  document.getElementById('footer-label'),
+      langSelector: document.getElementById('lang-selector')
+    };
+
+    function updateLanguage(lang) {
+      const t = TRANSLATIONS[lang];
+      ELS.series.textContent       = t.series;
+      ELS.heroTitle.textContent    = t.heroTitle;
+      ELS.heroSubtitle.textContent = t.heroSubtitle;
+      ELS.l1Label.textContent      = t.l1Label;
+      ELS.l1Title.textContent      = t.l1Title;
+      ELS.l1Desc.textContent       = t.l1Desc;
+      ELS.l2Label.textContent      = t.l2Label;
+      ELS.l2Title.textContent      = t.l2Title;
+      ELS.l2Desc.textContent       = t.l2Desc;
+      ELS.l3Label.textContent      = t.l3Label;
+      ELS.l3Title.textContent      = t.l3Title;
+      ELS.l3Desc.textContent       = t.l3Desc;
+      ELS.footerText.textContent   = t.footerText;
+      ELS.footerLabel.textContent  = t.footerLabel;
+      ELS.langSelector.value       = lang;
+      localStorage.setItem(LANG_STORAGE_KEY, lang);
+    }
+
+    function changeLanguage(lang) { updateLanguage(lang); }
+
+    if (window.Telegram?.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.ready();
+      tg.expand();
+      tg.setHeaderColor('#ffffff');
+      tg.setBackgroundColor('#ffffff');
+    }
+
+    let currentLang = localStorage.getItem(LANG_STORAGE_KEY);
+    if (!currentLang || !TRANSLATIONS[currentLang]) currentLang = 'en';
+    updateLanguage(currentLang);
+
+    function openTelegramGroup() {
+      const url = 'https://t.me/+VuocC5la3ZwyNDky';
+      if (window.Telegram?.WebApp) window.Telegram.WebApp.openLink(url);
+      else window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
