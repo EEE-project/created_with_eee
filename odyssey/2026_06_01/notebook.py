@@ -518,10 +518,11 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
     _lang = lang_sel.value
+    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_32dyZq8gA6x14GL2Zwa6ZU)"
     _TITLE = {
-        "ru": "# Древнегреческий с Гомером\n**Пилотное занятие · Odyss. I.1–21**",
-        "en": "# Ancient Greek with Homer\n**Pilot Lesson · Odyss. I.1–21**",
-        "el": "# Αρχαία Ελληνικά με τον Όμηρο\n**Δοκιμαστικό μάθημα · Οδ. Α.1–21**",
+        "ru": f"# Древнегреческий с Гомером {_badge}\n**Пилотное занятие · Odyss. I.1–21**",
+        "en": f"# Ancient Greek with Homer {_badge}\n**Pilot Lesson · Odyss. I.1–21**",
+        "el": f"# Αρχαία Ελληνικά με τον Όμηρο {_badge}\n**Δοκιμαστικό μάθημα · Οδ. Α.1–21**",
     }
     _DESC = {
         "ru": "Текст поэмы с параллельными переводами. Слова, известные движку **eee** (базы `ancient-greek` и `unimorph grc`), выделены <span style='color:#b5451b;font-weight:bold'>цветом</span>.",
