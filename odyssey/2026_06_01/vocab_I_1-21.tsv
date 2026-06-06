@@ -1,0 +1,17 @@
+form	lemma	meaning	meaning_en	meaning_el	context	backend	pos	grammar
+Ἄνδρα	ἀνήρ	мужа	man (acc.)	άνδρα	I.1: Ἄνδρα μοι ἔννεπε, μοῦσα…	ancient-greek	noun	.ASM
+ἔγνω	γιγνώσκω	познал	he knew	έγνω	I.3: …νόον ἔγνω	ancient-greek	verb	AAI.3S
+ἱέμενός	ἵημι	стремясь	yearning	ποθώντας	I.6: …ἐρρύσατο, ἱέμενός περ	ancient-greek	verb	PAP.NSM
+θεά	θεός	богиня	goddess	θεά	I.10: …τῶν ἁμόθεν γε, θεά, θύγατερ Διός	ancient-greek	noun	.VSF
+Διός	Ζεύς	Зевса	of Zeus	Διός	I.10: …θύγατερ Διός, εἰπὲ καὶ ἡμῖν	ancient-greek	noun	.GSM
+εἶναι	εἰμί	быть	to be	να είναι	I.15: …λιλαιομένη πόσιν εἶναι	ancient-greek	verb	PAN
+ἔτος	ἔτος	год	year	έτος	I.16: ἀλλ' ὅτε δὴ ἔτος ἦλθε…	ancient-greek	noun	.NSN
+θεοὶ	θεός	боги	gods	θεοί	I.17: …ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι	ancient-greek	noun	.NPM
+ἀνθρώπων	ἄνθρωπος	людей	of men	ανθρώπων	I.3: πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα…	unimorph	noun	N;GEN;PL
+πόντῳ	πόντος	морю	to the sea	(στον) πόντο	I.4: …ἐν πόντῳ πάθεν ἄλγεα…	unimorph	noun	N;DAT;SG
+ἦμαρ	ἦμαρ	день	day	ημέρα	I.10: …ἀφείλετο νόστιμον ἦμαρ	unimorph	noun	N;ACC;SG
+θύγατερ	θυγάτηρ	дочь	daughter	θύγατερ	I.10: …θεά, θύγατερ Διός	unimorph	noun	N;VOC;SG
+ὄλεθρον	ὄλεθρος	гибель	destruction	(τον) όλεθρο	I.11: …ὅσοι φύγον αἰπὺν ὄλεθρον	unimorph	noun	N;ACC;SG
+γυναικὸς	γυνή	жены	of his wife	γυναικός	I.13: …νόστου κεχρημένον ἠδὲ γυναικὸς	unimorph	noun	N;GEN;SG
+νύμφη	νύμφη	нимфа	nymph	νύμφη	I.14: νύμφη πόντι' ἔρυκε Καλυψώ…	unimorph	noun	N;NOM;SG
+σπέσσι	σπέος	пещерах	in caves	σπέσσι	I.15: ἐν σπέσσι γλαφυροῖσι…	unimorph	noun	N;DAT;PL
