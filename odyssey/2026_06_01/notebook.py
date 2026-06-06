@@ -20,178 +20,432 @@ app = marimo.App(width="medium")
 
 
 @app.cell(hide_code=True)
-def _():
-    import marimo as mo
-    import random
-    import eee
-    from ancient_greek_backend_eee import AncientGreekBackend
-    from unimorph_backend_eee import UniMorphBackend
+def _(mo):
+    import base64 as _b64
+    from pathlib import Path as _Path
 
-    _ag = AncientGreekBackend()
-    _um = UniMorphBackend(language="grc")
-    eee.register_backend("grc", _ag, backend="ancient-greek")
-    eee.register_backend("grc", _um, backend="unimorph")
-    eee.set_chain("grc", ["ancient-greek", "unimorph"])
+    _img_path = _Path(__file__).parent / "sirens_vase.jpg"
+    _img_b64  = _b64.b64encode(_img_path.read_bytes()).decode()
+    mo.Html(
+        f'<div style="text-align:center;margin-bottom:1em">'
+        f'<img src="data:image/jpeg;base64,{_img_b64}" '
+        f'style="max-width:680px;width:100%;border-radius:4px"/>'
+        f'</div>'
+    )
 
-    ag_backend = _ag
-    um_backend = _um
-    return ag_backend, mo, random, um_backend
+    return
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, um_backend):
-    import unicodedata, tomlkit
+def _(lang_sel, mo):
+    _lang = lang_sel.value
+    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_32dyZq8gA6x14GL2Zwa6ZU)"
+    _TITLE = {
+        "ru": f"# Древнегреческий с Гомером {_badge}\n**Пилотное занятие · Odyss. I.1–21**",
+        "en": f"# Ancient Greek with Homer {_badge}\n**Pilot Lesson · Odyss. I.1–21**",
+        "el": f"# Αρχαία Ελληνικά με τον Όμηρο {_badge}\n**Δοκιμαστικό μάθημα · Οδ. Α.1–21**",
+    }
+    _DESC = {
+        "ru": "Текст поэмы с параллельными переводами. Слова, известные движку **eee** (базы `ancient-greek` и `unimorph grc`), выделены <span style='color:#b5451b;font-weight:bold'>цветом</span>.",
+        "en": "Poem text with parallel translations. Words known to the **eee** engine (backends `ancient-greek` and `unimorph grc`) are highlighted <span style='color:#b5451b;font-weight:bold'>in color</span>.",
+        "el": "Κείμενο με παράλληλες μεταφράσεις. Λέξεις γνωστές στη μηχανή **eee** (βάσεις `ancient-greek` και `unimorph grc`) επισημαίνονται <span style='color:#b5451b;font-weight:bold'>με χρώμα</span>.",
+    }
+    mo.md(f"""
+    {_TITLE.get(_lang, _TITLE["en"])}
+
+    ---
+    {_DESC.get(_lang, _DESC["en"])}
+    """)
+
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo, trans_selector):
+    _lang = lang_sel.value
+    _ILN_DESC = {
+        "ru": "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала",
+        "en": "**interlinear** · word-for-word literal translation preserving original word order",
+        "el": "**λέξη-λέξη** · κατά λέξη μετάφραση με διατήρηση της σειράς του πρωτοτύπου",
+    }
+    _TRANS_DESC = {
+        "подстрочник":          _ILN_DESC.get(_lang, _ILN_DESC["ru"]),
+        "Жуковский":            "**Жуковский, 1849** · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский",
+        "Вересаев":             "**Вересаев, 1953** · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод",
+        "Pope":                 "**Pope, 1725–26** · eng., heroic couplets · elegant 18th-c. rhetorical style · poetic adaptation; long considered the standard English version",
+        "Lattimore":            "**Lattimore, 1951** · eng., blank verse · restrained academic style · closest to literal among English translations; standard for philological study",
+        "Πολυλάς":              "**Πολυλάς, 1875** · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος",
+        "Καζαντζάκης–Κακριδής": "**Καζαντζάκης–Κακριδής, 1965** · ν.ε., Δημοτική · καλλιτεχνική (Καζαντζάκης) + επιστημονική (Κακριδής) · σύγχρονη γλώσσα",
+    }
+    mo.md(_TRANS_DESC.get(trans_selector.value, ""))
+
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    STANZAS,
+    interlinear_el,
+    interlinear_en,
+    lang_sel,
+    mo,
+    stanza_selector,
+    trans_selector,
+):
+    # ── Parallel text display ────────────────────────────────────────────────────
+    from itertools import zip_longest as _zip_longest
+    _lang = lang_sel.value
+    _st_map = {s["ref"]: s for s in STANZAS}
+    _stanza = _st_map[stanza_selector.value]
+
+    _HIGHLIGHT = {
+        "Ἄνδρα", "ἄστεα", "ἔγνω", "ἱέμενός", "θεά", "θεοὶ", "θεοί",
+        "Διός", "εἰπὲ", "εἶναι", "ἔσαν", "ἦεν", "ἔτος",
+        "ἀνθρώπων", "πόντῳ", "ἦμαρ", "θύγατερ", "ὄλεθρον",
+        "γυναικὸς", "νύμφη", "σπέσσι",
+    }
+    _GRK = (
+        "font-family:'Gentium Plus','GFS Didot',serif;"
+        "font-size:1.15em;line-height:2"
+    )
+
+    def _hl(line):
+        return " ".join(
+            f'<span style="color:#b5451b;font-weight:600">{w}</span>'
+            if w.strip("·,;.'") in _HIGHLIGHT else w
+            for w in line.split()
+        )
+
+    if trans_selector.value == "подстрочник":
+        if _lang == "el":
+            _el_lines = interlinear_el.get(_stanza["ref"], [])
+            _pairs = list(_zip_longest(_stanza["lines"], _el_lines, fillvalue=""))
+        elif _lang == "en":
+            _pairs = interlinear_en.get(_stanza["ref"], [])
+        else:
+            _pairs = _stanza["interlinear"]
+        _rows = "".join(
+            f'<tr>'
+            f'<td style="{_GRK};padding-right:1.5em;vertical-align:top">{_hl(gl) if gl else ""}</td>'
+            f'<td style="font-size:1.0em;line-height:2.3;color:#333;vertical-align:top">{tl}</td>'
+            f'</tr>'
+            for gl, tl in _pairs
+        )
+        _content = mo.Html(
+            '<table style="width:100%;border-collapse:collapse">' + _rows + "</table>"
+        )
+    else:
+        _greek_html = "<br>".join(_hl(ln) for ln in _stanza["lines"])
+        _left = mo.Html(
+            f'<div style="{_GRK};padding-right:1.5em">'
+            + _greek_html + "</div>"
+        )
+        _txt = _stanza["translations"].get(trans_selector.value, "—")
+        _line_divs = "".join(
+            f'<div>{l.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")}</div>'
+            for l in _txt.split("\n")
+        )
+        _right = mo.Html(
+            '<div style="font-size:1.0em;display:flex;flex-direction:column;'
+            'justify-content:space-between;border-left:3px solid #ccc;padding-left:0.8em">'
+            + _line_divs + "</div>"
+        )
+        _content = mo.hstack([_left, _right], justify="start", align="stretch")
+
+    mo.vstack([
+        mo.hstack([stanza_selector, trans_selector], justify="space-between"),
+        _content,
+    ])
+
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _lang = lang_sel.value
+    _HEAD = {
+        "ru": "## Упражнение: словарная форма",
+        "en": "## Exercise: dictionary form",
+        "el": "## Άσκηση: λεξικός τύπος",
+    }
+    mo.md(f"""
+    ---
+    {_HEAD.get(_lang, _HEAD["en"])}
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(QUIZ_WORDS, cv, lang_sel, mo, next_btn, score):
+    _s = score()
+    _n = _s['total'] + (1 if cv() is not None else 0)
+    _lang = lang_sel.value
+    _LBL = {"ru": "Тесты:", "en": "Cards:", "el": "Κάρτες:"}
+    mo.hstack(
+        [mo.md(f"{_LBL.get(_lang, 'Tests:')} **{_n}** / {len(QUIZ_WORDS)}"),
+         mo.Html('<div style="width:2rem"></div>'),
+         next_btn],
+        justify="start",
+        align="center",
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(QUIZ_WORDS, cv, lang_sel, mo, random):
+    if cv() is None:
+        answer_radio = mo.ui.radio(options=[""], label="")
+        mo.stop(True, mo.md(""))
+
+    w = cv()
+    _lang = lang_sel.value
+    _meaning = w.get("meaning" if _lang == "ru" else f"meaning_{_lang}", w.get("meaning", ""))
+    _FORM_LBL = {"ru": "Форма в тексте:", "en": "Form in text:", "el": "Μορφή στο κείμενο:"}
+    other_forms = list({q["form"] for q in QUIZ_WORDS if q["form"] != w["form"]})
+    random.shuffle(other_forms)
+    choices = sorted([w["form"]] + other_forms[:3], key=lambda x: random.random())
+
+    answer_radio = mo.ui.radio(
+        options=choices,
+        label=f"«{_meaning}» — _{w['context']}_\n\n{_FORM_LBL.get(_lang, 'Form:')}",
+    )
+    return answer_radio, w
+
+
+@app.cell(hide_code=True)
+def _(answer_radio, build_paradigm_table, lang_sel, mo, score, w):
+    import tomlkit as _tomlkit
     from pathlib import Path as _Path
 
-    def _norm_grc(s):
-        _STRIP = {
-            "̀","́","̂","̈",
-            "̓","̔","̓","͂",
-            "̄","̆",
-        }
-        s = unicodedata.normalize("NFD", s).lower()
-        return unicodedata.normalize("NFC", "".join(c for c in s if c not in _STRIP))
+    _lang = lang_sel.value
 
-    def _slot_lmap(backend, pos, lang):
-        d = _Path.home() / ".cache/eee" / f"{backend}-backend-eee"
-        p = d / f"slots_grc_{lang}.toml"
-        if not p.exists():
-            p = d / "slots_grc_en.toml"
-        if not p.exists():
+    if w is None:
+        _s = score()
+        _DONE_MSG = {
+            "ru": "🎉 Все слова пройдены! Нажмите «→ Следующее» для повтора.",
+            "en": "🎉 All words done! Press «→ Next» to repeat.",
+            "el": "🎉 Όλες οι λέξεις! Πατήστε «→ Επόμενο» για επανάληψη.",
+        }
+        _CORR_LBL = {"ru": "Верно:", "en": "Correct:", "el": "Σωστά:"}
+        mo.stop(True, mo.vstack([
+            mo.callout(mo.md(_DONE_MSG.get(_lang, "Done!")), kind="success"),
+            mo.md(f"{_CORR_LBL.get(_lang, 'Correct:')} **{_s['correct']}** / **{_s['total']}**"),
+        ]))
+
+    correct = answer_radio.value == w["form"]
+
+    _POS_LABELS = {
+        "ru": {"noun":"сущ.","verb":"глаг.","adj":"прил.","adv":"нар."},
+        "en": {"noun":"n.","verb":"v.","adj":"adj.","adv":"adv."},
+        "el": {"noun":"ουσ.","verb":"ρ.","adj":"επίθ.","adv":"επίρρ."},
+    }
+    _pos_key      = w.get("pos", "")
+    _pos          = _POS_LABELS.get(_lang, _POS_LABELS["ru"]).get(_pos_key, _pos_key)
+    _grammar_key  = w.get("grammar", "")
+    _backend_name = w.get("backend", "ancient-greek")
+
+    def _load_tag_labels(backend_name, pos, lang):
+        _dir  = _Path.home() / ".cache" / "eee" / f"{backend_name}-backend-eee"
+        _path = _dir / f"slots_grc_{lang}.toml"
+        if not _path.exists():
+            _path = _dir / "slots_grc_en.toml"
+        if not _path.exists():
             return {}
         try:
-            doc = tomlkit.loads(p.read_text(encoding="utf-8"))
+            doc = _tomlkit.loads(_path.read_text(encoding="utf-8"))
             sec = doc.get(pos) or {}
             return {str(s["tag"]): str(s["label"]) for s in sec.get("slots", [])}
         except Exception:
             return {}
 
-    def build_paradigm_table(w, lang="ru"):
-        lemma, pos, backend, tested = w["lemma"], w["pos"], w["backend"], w["form"]
-        tn  = _norm_grc(tested)
-        HL  = "background:#fef3c7;font-weight:bold;color:#92400e;padding:3px 10px;text-align:center;font-family:serif;"
-        TD  = "padding:3px 10px;text-align:center;font-family:serif;"
-        TH  = "padding:3px 8px;font-weight:600;border-bottom:1px solid #e5e7eb;color:#6b7280;font-size:.82em;text-align:center;"
-        ROW = "padding:3px 8px;color:#9ca3af;font-size:.82em;text-align:right;"
-        found = [False]
+    _lmap      = _load_tag_labels(_backend_name, _pos_key, _lang)
+    _grammar   = _lmap.get(_grammar_key, _grammar_key)
+    _gram_line = " · ".join(filter(None, [_pos, _grammar, f"[{_backend_name}]"]))
 
-        def td(forms):
-            hl = any(_norm_grc(f) == tn for f in forms)
-            if hl:
-                found[0] = True
-            return f'<td style="{HL if hl else TD}">{"/ ".join(sorted(forms)) if forms else chr(8212)}</td>'
+    _RIGHT = {"ru":"✓ Верно!","en":"✓ Correct!","el":"✓ Σωστό!"}
+    _WRONG = {"ru":"✗ Нет. Правильно:","en":"✗ No. Correct form:","el":"✗ Όχι. Σωστή μορφή:"}
 
-        lmap = _slot_lmap(backend, pos, lang)
-
-        def _part(tag, idx, fb=""):
-            parts = lmap.get(tag, "").split()
-            return parts[idx] if len(parts) > idx else fb
-
-        def _lbl(tag, fb=""):
-            return lmap.get(tag, fb)
-
-        _SUPPL = {
-            "ru": f"нерегулярная форма, отсутствует в парадигме {lemma}",
-            "en": f"irregular form, not in the standard paradigm of {lemma}",
-            "el": f"ανώμαλος τύπος, λείπει από το παράδειγμα του {lemma}",
-        }
-
-        if pos == "noun":
-            if backend == "ancient-greek":
-                CASES = [("N",".NSM"),("G",".GSM"),("D",".DSM"),("A",".ASM"),("V",".VSM")]
-                case_rows = [(c, _part(tag, 0, c)) for c, tag in CASES]
-                sg_lbl = _part(".NSM", 1, "Sg.")
-                pl_lbl = _part(".NPM", 1, "Pl.")
-                tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
-                p = ag_backend.paradigm(lemma, "noun")
-                for c, clbl in case_rows:
-                    tbl += f'<tr><td style="{ROW}">{clbl}</td>'
-                    for n in ("S", "P"):
-                        forms = set()
-                        for g in "MFN":
-                            forms |= p.get(f".{c}{n}{g}", set())
-                        tbl += td(forms)
-                    tbl += "</tr>"
-
-            elif backend == "unimorph":
-                CASES_UM = ["NOM","GEN","DAT","ACC","VOC"]
-                case_rows = [(c, _part(f"N;{c};SG", 0, c)) for c in CASES_UM]
-                sg_lbl = _part("N;NOM;SG", 1, "Sg.")
-                pl_lbl = _part("N;NOM;PL", 1, "Pl.")
-                tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
-                for cname, clbl in case_rows:
-                    tbl += f'<tr><td style="{ROW}">{clbl}</td>'
-                    for ns in ("SG", "PL"):
-                        forms = um_backend.inflect(lemma, f"N;{cname};{ns}", "noun")
-                        tbl += td(forms)
-                    tbl += "</tr>"
-
-            tbl += "</table>"
-
-        elif pos == "verb" and backend == "ancient-greek":
-            p = ag_backend.paradigm(lemma, "verb")
-            PS_TAGS = ["1S","2S","3S","1P","2P","3P"]
-
-            def _tcol(t):
-                for ps in PS_TAGS:
-                    v = _part(f"{t}.{ps}", 0, "")
-                    if v:
-                        return v
-                return t
-
-            def _prow(ps):
-                for t in ["PAI","IAI","AAI"]:
-                    parts = lmap.get(f"{t}.{ps}", "").split()
-                    if len(parts) >= 2:
-                        return " ".join(parts[-2:])
-                return ps
-
-            TENSES = [(t, _tcol(t)) for t in ["PAI","IAI","AAI"]
-                      if any(f"{t}.{ps}" in p for ps in PS_TAGS)]
-            if not TENSES:
-                return None
-
-            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th>'
-            tbl += "".join(f'<th style="{TH}">{lbl}</th>' for _, lbl in TENSES) + "</tr>"
-            for ps in PS_TAGS:
-                tbl += f'<tr><td style="{ROW}">{_prow(ps)}</td>'
-                for t, _ in TENSES:
-                    tbl += td(p.get(f"{t}.{ps}", set()))
-                tbl += "</tr>"
-
-            INF_MAP = {"PAI":"PAN","IAI":"IAN","AAI":"AAN"}
-            if any(p.get(INF_MAP.get(t,""), set()) for t, _ in TENSES):
-                inf_lbl = _lbl("PAN", "Inf.")
-                tbl += f'<tr><td style="{ROW}">{inf_lbl}</td>'
-                for t, _ in TENSES:
-                    tbl += td(p.get(INF_MAP.get(t, ""), set()))
-                tbl += "</tr>"
-
-            IMP_MAP = {"PAI":"PAD","AAI":"AAD"}
-            for imp_ps, imp_sfx in [("2S",".2S"),("2P",".2P")]:
-                if any(p.get(f"{IMP_MAP[t]}{imp_sfx}") for t, _ in TENSES if t in IMP_MAP):
-                    imp_row_lbl = _lbl(f"PAD{imp_sfx}", f"Imp. {imp_ps}")
-                    tbl += f'<tr><td style="{ROW}">{imp_row_lbl}</td>'
-                    for t, _ in TENSES:
-                        imp_t = IMP_MAP.get(t)
-                        if imp_t:
-                            tbl += td(p.get(f"{imp_t}{imp_sfx}", set()))
-                        else:
-                            tbl += f'<td style="{TD}">—</td>'
-                    tbl += "</tr>"
-
-            tbl += "</table>"
+    feedback = mo.md("")
+    if answer_radio.value is not None:
+        _form      = w["form"]
+        _lemma     = w["lemma"]
+        _word_info = f"**{_form}**" if _form == _lemma else f"**{_form}** → **{_lemma}**"
+        if correct:
+            try:
+                _tbl_html = build_paradigm_table(w, lang=_lang)
+                _tbl = mo.Html(_tbl_html) if _tbl_html else mo.md("")
+            except Exception as _e:
+                _tbl = mo.md(f"_{_e}_")
+            _info = mo.vstack([mo.md(f"{_word_info} · {_gram_line}"), _tbl])
+            feedback = mo.callout(mo.vstack([mo.md(_RIGHT.get(_lang, "✓")), _info]), kind="success")
         else:
-            return None
+            feedback = mo.callout(
+                mo.vstack([mo.md(f"{_WRONG.get(_lang, '✗')} **{_form}**"),
+                           mo.md(f"{_word_info} · {_gram_line}")]),
+                kind="danger",
+            )
 
-        if not found[0]:
-            NOTE = "background:#fff7ed;border-left:3px solid #f97316;padding:7px 12px;margin-top:8px;font-size:.9em;color:#7c2d12;"
-            note = f'<div style="{NOTE}"><b>{tested}</b> — {_SUPPL.get(lang, _SUPPL["en"])}</div>'
-            return note + tbl
-        return tbl
+    mo.vstack([answer_radio, feedback])
+
+    return
 
 
-    return (build_paradigm_table,)
+@app.cell(hide_code=True)
+def _(mo):
+    lang_sel = mo.ui.dropdown(
+        options={"Русский": "ru", "English": "en", "Ελληνικά": "el"},
+        value="Русский",
+        label="🌐",
+    )
+    mo.Html(f"""
+    <div style="position: fixed; top: 60px; right: 10px; z-index: 1000;
+         background: white; padding: 8px 12px; border-radius: 8px;
+         box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+        {lang_sel}
+    </div>
+    """)
+    return (lang_sel,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    cv, set_cv = mo.state(None)
+    score, set_score = mo.state({"correct": 0, "total": 0})
+    scored_clicks, set_scored_clicks = mo.state(0)
+    remaining, set_remaining = mo.state(None)
+
+    return (
+        cv,
+        remaining,
+        score,
+        scored_clicks,
+        set_cv,
+        set_remaining,
+        set_score,
+        set_scored_clicks,
+    )
+
+
+@app.cell(hide_code=True)
+def _(QUIZ_WORDS, random, remaining, set_cv, set_remaining):
+    if remaining() is None and QUIZ_WORDS:
+        _shuffled = random.sample(QUIZ_WORDS, len(QUIZ_WORDS))
+        set_cv(_shuffled[0])
+        set_remaining(_shuffled[1:])
+    return
+
+
+@app.cell(hide_code=True)
+def _(STANZAS, mo):
+    stanza_selector = mo.ui.dropdown(
+        options=[st["ref"] for st in STANZAS],
+        value=STANZAS[0]["ref"],
+        label="Строфа",
+    )
+    return (stanza_selector,)
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _lang = lang_sel.value
+    _ILN  = {"ru": "подстрочник", "en": "interlinear", "el": "λέξη-λέξη"}
+    _ALL = {
+        _ILN.get(_lang, "подстрочник"):                   "подстрочник",
+        "Жуковский (1849) · рус., классический":           "Жуковский",
+        "Вересаев (1953) · рус., точный":                 "Вересаев",
+        "Pope (1725) · eng., classical":                  "Pope",
+        "Lattimore (1951) · eng., literal":               "Lattimore",
+        "Πολυλάς (1875) · ν.ε., κλασική":                "Πολυλάς",
+        "Καζαντζάκης–Κακριδής (1965) · ν.ε., σύγχρονη":  "Καζαντζάκης–Κακριδής",
+    }
+    _LANG_VALS = {
+        "ru": {"подстрочник", "Жуковский", "Вересаев"},
+        "en": {"подстрочник", "Pope", "Lattimore"},
+        "el": {"подстрочник", "Πολυλάς", "Καζαντζάκης–Κακριδής"},
+    }
+    _LANG_DEF  = {"ru": "подстрочник", "en": "подстрочник", "el": "подстрочник"}
+    _TRANS_LBL = {"ru": "Перевод", "en": "Translation", "el": "Μετάφραση"}
+    _valid  = _LANG_VALS.get(_lang, _LANG_VALS["ru"])
+    _opts   = {k: v for k, v in _ALL.items() if v in _valid}
+    _def_v  = _LANG_DEF.get(_lang, "подстрочник")
+    _def_k  = next((k for k, v in _opts.items() if v == _def_v), list(_opts.keys())[0])
+    trans_selector = mo.ui.dropdown(
+        options=_opts,
+        value=_def_k,
+        label=_TRANS_LBL.get(_lang, "Translation"),
+    )
+
+    return (trans_selector,)
+
+
+@app.cell(hide_code=True)
+def _(cv, lang_sel, mo, remaining):
+    _r = remaining()
+    _done = cv() is None and _r is not None and len(_r) == 0
+    _lang = lang_sel.value
+    _NEXT = {"ru": "→ Следующее", "en": "→ Next", "el": "→ Επόμενο"}
+    _REST = {"ru": "Начать сначала", "en": "Start over", "el": "Αρχή"}
+    next_btn = mo.ui.button(
+        label=_REST.get(_lang, "→") if _done else _NEXT.get(_lang, "→"),
+        on_click=lambda v: (v or 0) + 1,
+    )
+    return (next_btn,)
+
+
+@app.cell(hide_code=True)
+def _(
+    QUIZ_WORDS,
+    cv,
+    next_btn,
+    random,
+    remaining,
+    set_cv,
+    set_remaining,
+    set_score,
+    set_scored_clicks,
+):
+    if next_btn.value:
+        r = remaining()
+        if r is None:
+            pass  # not yet initialized; ZHCJ handles first render
+        elif r:
+            set_cv(r[0])
+            set_remaining(r[1:])
+        else:
+            # remaining is empty []
+            if cv() is None:
+                # already in done state → restart
+                _shuffled = random.sample(QUIZ_WORDS, len(QUIZ_WORDS))
+                set_cv(_shuffled[0])
+                set_remaining(_shuffled[1:])
+                set_score({"correct": 0, "total": 0})
+                set_scored_clicks(0)
+            else:
+                # last word was just shown → transition to done
+                set_cv(None)
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    answer_radio,
+    cv,
+    next_btn,
+    score,
+    scored_clicks,
+    set_score,
+    set_scored_clicks,
+):
+    _click = next_btn.value or 0
+    if _click > scored_clicks():
+        if answer_radio.value is not None and cv() is not None:
+            s = score()
+            set_score({
+                "correct": s["correct"] + (1 if answer_radio.value == cv()["form"] else 0),
+                "total": s["total"] + 1,
+            })
+        set_scored_clicks(_click)
+    return
 
 
 @app.cell(hide_code=True)
@@ -499,435 +753,6 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    import base64 as _b64
-    from pathlib import Path as _Path
-
-    _img_path = _Path(__file__).parent / "sirens_vase.jpg"
-    _img_b64  = _b64.b64encode(_img_path.read_bytes()).decode()
-    mo.Html(
-        f'<div style="text-align:center;margin-bottom:1em">'
-        f'<img src="data:image/jpeg;base64,{_img_b64}" '
-        f'style="max-width:680px;width:100%;border-radius:4px"/>'
-        f'</div>'
-    )
-
-    return
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _lang = lang_sel.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_32dyZq8gA6x14GL2Zwa6ZU)"
-    _TITLE = {
-        "ru": f"# Древнегреческий с Гомером {_badge}\n**Пилотное занятие · Odyss. I.1–21**",
-        "en": f"# Ancient Greek with Homer {_badge}\n**Pilot Lesson · Odyss. I.1–21**",
-        "el": f"# Αρχαία Ελληνικά με τον Όμηρο {_badge}\n**Δοκιμαστικό μάθημα · Οδ. Α.1–21**",
-    }
-    _DESC = {
-        "ru": "Текст поэмы с параллельными переводами. Слова, известные движку **eee** (базы `ancient-greek` и `unimorph grc`), выделены <span style='color:#b5451b;font-weight:bold'>цветом</span>.",
-        "en": "Poem text with parallel translations. Words known to the **eee** engine (backends `ancient-greek` and `unimorph grc`) are highlighted <span style='color:#b5451b;font-weight:bold'>in color</span>.",
-        "el": "Κείμενο με παράλληλες μεταφράσεις. Λέξεις γνωστές στη μηχανή **eee** (βάσεις `ancient-greek` και `unimorph grc`) επισημαίνονται <span style='color:#b5451b;font-weight:bold'>με χρώμα</span>.",
-    }
-    mo.md(f"""
-    {_TITLE.get(_lang, _TITLE["en"])}
-
-    ---
-    {_DESC.get(_lang, _DESC["en"])}
-    """)
-
-    return
-
-
-@app.cell(hide_code=True)
-def _(STANZAS, mo):
-    stanza_selector = mo.ui.dropdown(
-        options=[st["ref"] for st in STANZAS],
-        value=STANZAS[0]["ref"],
-        label="Строфа",
-    )
-    return (stanza_selector,)
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _lang = lang_sel.value
-    _ILN  = {"ru": "подстрочник", "en": "interlinear", "el": "λέξη-λέξη"}
-    _ALL = {
-        _ILN.get(_lang, "подстрочник"):                   "подстрочник",
-        "Жуковский (1849) · рус., классический":           "Жуковский",
-        "Вересаев (1953) · рус., точный":                 "Вересаев",
-        "Pope (1725) · eng., classical":                  "Pope",
-        "Lattimore (1951) · eng., literal":               "Lattimore",
-        "Πολυλάς (1875) · ν.ε., κλασική":                "Πολυλάς",
-        "Καζαντζάκης–Κακριδής (1965) · ν.ε., σύγχρονη":  "Καζαντζάκης–Κακριδής",
-    }
-    _LANG_VALS = {
-        "ru": {"подстрочник", "Жуковский", "Вересаев"},
-        "en": {"подстрочник", "Pope", "Lattimore"},
-        "el": {"подстрочник", "Πολυλάς", "Καζαντζάκης–Κακριδής"},
-    }
-    _LANG_DEF  = {"ru": "подстрочник", "en": "подстрочник", "el": "подстрочник"}
-    _TRANS_LBL = {"ru": "Перевод", "en": "Translation", "el": "Μετάφραση"}
-    _valid  = _LANG_VALS.get(_lang, _LANG_VALS["ru"])
-    _opts   = {k: v for k, v in _ALL.items() if v in _valid}
-    _def_v  = _LANG_DEF.get(_lang, "подстрочник")
-    _def_k  = next((k for k, v in _opts.items() if v == _def_v), list(_opts.keys())[0])
-    trans_selector = mo.ui.dropdown(
-        options=_opts,
-        value=_def_k,
-        label=_TRANS_LBL.get(_lang, "Translation"),
-    )
-
-    return (trans_selector,)
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo, trans_selector):
-    _lang = lang_sel.value
-    _ILN_DESC = {
-        "ru": "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала",
-        "en": "**interlinear** · word-for-word literal translation preserving original word order",
-        "el": "**λέξη-λέξη** · κατά λέξη μετάφραση με διατήρηση της σειράς του πρωτοτύπου",
-    }
-    _TRANS_DESC = {
-        "подстрочник":          _ILN_DESC.get(_lang, _ILN_DESC["ru"]),
-        "Жуковский":            "**Жуковский, 1849** · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский",
-        "Вересаев":             "**Вересаев, 1953** · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод",
-        "Pope":                 "**Pope, 1725–26** · eng., heroic couplets · elegant 18th-c. rhetorical style · poetic adaptation; long considered the standard English version",
-        "Lattimore":            "**Lattimore, 1951** · eng., blank verse · restrained academic style · closest to literal among English translations; standard for philological study",
-        "Πολυλάς":              "**Πολυλάς, 1875** · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος",
-        "Καζαντζάκης–Κακριδής": "**Καζαντζάκης–Κακριδής, 1965** · ν.ε., Δημοτική · καλλιτεχνική (Καζαντζάκης) + επιστημονική (Κακριδής) · σύγχρονη γλώσσα",
-    }
-    mo.md(_TRANS_DESC.get(trans_selector.value, ""))
-
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    STANZAS,
-    interlinear_el,
-    interlinear_en,
-    lang_sel,
-    mo,
-    stanza_selector,
-    trans_selector,
-):
-    # ── Parallel text display ────────────────────────────────────────────────────
-    from itertools import zip_longest as _zip_longest
-    _lang = lang_sel.value
-    _st_map = {s["ref"]: s for s in STANZAS}
-    _stanza = _st_map[stanza_selector.value]
-
-    _HIGHLIGHT = {
-        "Ἄνδρα", "ἄστεα", "ἔγνω", "ἱέμενός", "θεά", "θεοὶ", "θεοί",
-        "Διός", "εἰπὲ", "εἶναι", "ἔσαν", "ἦεν", "ἔτος",
-        "ἀνθρώπων", "πόντῳ", "ἦμαρ", "θύγατερ", "ὄλεθρον",
-        "γυναικὸς", "νύμφη", "σπέσσι",
-    }
-    _GRK = (
-        "font-family:'Gentium Plus','GFS Didot',serif;"
-        "font-size:1.15em;line-height:2"
-    )
-
-    def _hl(line):
-        return " ".join(
-            f'<span style="color:#b5451b;font-weight:600">{w}</span>'
-            if w.strip("·,;.'") in _HIGHLIGHT else w
-            for w in line.split()
-        )
-
-    if trans_selector.value == "подстрочник":
-        if _lang == "el":
-            _el_lines = interlinear_el.get(_stanza["ref"], [])
-            _pairs = list(_zip_longest(_stanza["lines"], _el_lines, fillvalue=""))
-        elif _lang == "en":
-            _pairs = interlinear_en.get(_stanza["ref"], [])
-        else:
-            _pairs = _stanza["interlinear"]
-        _rows = "".join(
-            f'<tr>'
-            f'<td style="{_GRK};padding-right:1.5em;vertical-align:top">{_hl(gl) if gl else ""}</td>'
-            f'<td style="font-size:1.0em;line-height:2.3;color:#333;vertical-align:top">{tl}</td>'
-            f'</tr>'
-            for gl, tl in _pairs
-        )
-        _content = mo.Html(
-            '<table style="width:100%;border-collapse:collapse">' + _rows + "</table>"
-        )
-    else:
-        _greek_html = "<br>".join(_hl(ln) for ln in _stanza["lines"])
-        _left = mo.Html(
-            f'<div style="{_GRK};padding-right:1.5em">'
-            + _greek_html + "</div>"
-        )
-        _txt = _stanza["translations"].get(trans_selector.value, "—")
-        _line_divs = "".join(
-            f'<div>{l.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")}</div>'
-            for l in _txt.split("\n")
-        )
-        _right = mo.Html(
-            '<div style="font-size:1.0em;display:flex;flex-direction:column;'
-            'justify-content:space-between;border-left:3px solid #ccc;padding-left:0.8em">'
-            + _line_divs + "</div>"
-        )
-        _content = mo.hstack([_left, _right], justify="start", align="stretch")
-
-    mo.vstack([
-        mo.hstack([stanza_selector, trans_selector], justify="space-between"),
-        _content,
-    ])
-
-    return
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _lang = lang_sel.value
-    _HEAD = {
-        "ru": "## Упражнение: словарная форма",
-        "en": "## Exercise: dictionary form",
-        "el": "## Άσκηση: λεξικός τύπος",
-    }
-    mo.md(f"""
-    ---
-    {_HEAD.get(_lang, _HEAD["en"])}
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    lang_sel = mo.ui.dropdown(
-        options={"Русский": "ru", "English": "en", "Ελληνικά": "el"},
-        value="Русский",
-        label="🌐",
-    )
-    mo.Html(f"""
-    <div style="position: fixed; top: 60px; right: 10px; z-index: 1000;
-         background: white; padding: 8px 12px; border-radius: 8px;
-         box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-        {lang_sel}
-    </div>
-    """)
-    return (lang_sel,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    cv, set_cv = mo.state(None)
-    score, set_score = mo.state({"correct": 0, "total": 0})
-    scored_clicks, set_scored_clicks = mo.state(0)
-    remaining, set_remaining = mo.state(None)
-
-    return (
-        cv,
-        remaining,
-        score,
-        scored_clicks,
-        set_cv,
-        set_remaining,
-        set_score,
-        set_scored_clicks,
-    )
-
-
-@app.cell(hide_code=True)
-def _(QUIZ_WORDS, random, remaining, set_cv, set_remaining):
-    if remaining() is None and QUIZ_WORDS:
-        _shuffled = random.sample(QUIZ_WORDS, len(QUIZ_WORDS))
-        set_cv(_shuffled[0])
-        set_remaining(_shuffled[1:])
-    return
-
-
-@app.cell(hide_code=True)
-def _(cv, lang_sel, mo, remaining):
-    _r = remaining()
-    _done = cv() is None and _r is not None and len(_r) == 0
-    _lang = lang_sel.value
-    _NEXT = {"ru": "→ Следующее", "en": "→ Next", "el": "→ Επόμενο"}
-    _REST = {"ru": "Начать сначала", "en": "Start over", "el": "Αρχή"}
-    next_btn = mo.ui.button(
-        label=_REST.get(_lang, "→") if _done else _NEXT.get(_lang, "→"),
-        on_click=lambda v: (v or 0) + 1,
-    )
-    return (next_btn,)
-
-
-@app.cell(hide_code=True)
-def _(
-    QUIZ_WORDS,
-    cv,
-    next_btn,
-    random,
-    remaining,
-    set_cv,
-    set_remaining,
-    set_score,
-    set_scored_clicks,
-):
-    if next_btn.value:
-        r = remaining()
-        if r is None:
-            pass  # not yet initialized; ZHCJ handles first render
-        elif r:
-            set_cv(r[0])
-            set_remaining(r[1:])
-        else:
-            # remaining is empty []
-            if cv() is None:
-                # already in done state → restart
-                _shuffled = random.sample(QUIZ_WORDS, len(QUIZ_WORDS))
-                set_cv(_shuffled[0])
-                set_remaining(_shuffled[1:])
-                set_score({"correct": 0, "total": 0})
-                set_scored_clicks(0)
-            else:
-                # last word was just shown → transition to done
-                set_cv(None)
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    answer_radio,
-    cv,
-    next_btn,
-    score,
-    scored_clicks,
-    set_score,
-    set_scored_clicks,
-):
-    _click = next_btn.value or 0
-    if _click > scored_clicks():
-        if answer_radio.value is not None and cv() is not None:
-            s = score()
-            set_score({
-                "correct": s["correct"] + (1 if answer_radio.value == cv()["form"] else 0),
-                "total": s["total"] + 1,
-            })
-        set_scored_clicks(_click)
-    return
-
-
-@app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, lang_sel, mo, next_btn, score):
-    _s = score()
-    _n = _s['total'] + (1 if cv() is not None else 0)
-    _lang = lang_sel.value
-    _LBL = {"ru": "Тесты:", "en": "Cards:", "el": "Κάρτες:"}
-    mo.hstack(
-        [mo.md(f"{_LBL.get(_lang, 'Tests:')} **{_n}** / {len(QUIZ_WORDS)}"),
-         mo.Html('<div style="width:2rem"></div>'),
-         next_btn],
-        justify="start",
-        align="center",
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, lang_sel, mo, random):
-    if cv() is None:
-        answer_radio = mo.ui.radio(options=[""], label="")
-        mo.stop(True, mo.md(""))
-
-    w = cv()
-    _lang = lang_sel.value
-    _meaning = w.get("meaning" if _lang == "ru" else f"meaning_{_lang}", w.get("meaning", ""))
-    _FORM_LBL = {"ru": "Форма в тексте:", "en": "Form in text:", "el": "Μορφή στο κείμενο:"}
-    other_forms = list({q["form"] for q in QUIZ_WORDS if q["form"] != w["form"]})
-    random.shuffle(other_forms)
-    choices = sorted([w["form"]] + other_forms[:3], key=lambda x: random.random())
-
-    answer_radio = mo.ui.radio(
-        options=choices,
-        label=f"«{_meaning}» — _{w['context']}_\n\n{_FORM_LBL.get(_lang, 'Form:')}",
-    )
-    return answer_radio, w
-
-
-@app.cell(hide_code=True)
-def _(answer_radio, build_paradigm_table, lang_sel, mo, score, w):
-    import tomlkit as _tomlkit
-    from pathlib import Path as _Path
-
-    _lang = lang_sel.value
-
-    if w is None:
-        _s = score()
-        _DONE_MSG = {
-            "ru": "🎉 Все слова пройдены! Нажмите «→ Следующее» для повтора.",
-            "en": "🎉 All words done! Press «→ Next» to repeat.",
-            "el": "🎉 Όλες οι λέξεις! Πατήστε «→ Επόμενο» για επανάληψη.",
-        }
-        _CORR_LBL = {"ru": "Верно:", "en": "Correct:", "el": "Σωστά:"}
-        mo.stop(True, mo.vstack([
-            mo.callout(mo.md(_DONE_MSG.get(_lang, "Done!")), kind="success"),
-            mo.md(f"{_CORR_LBL.get(_lang, 'Correct:')} **{_s['correct']}** / **{_s['total']}**"),
-        ]))
-
-    correct = answer_radio.value == w["form"]
-
-    _POS_LABELS = {
-        "ru": {"noun":"сущ.","verb":"глаг.","adj":"прил.","adv":"нар."},
-        "en": {"noun":"n.","verb":"v.","adj":"adj.","adv":"adv."},
-        "el": {"noun":"ουσ.","verb":"ρ.","adj":"επίθ.","adv":"επίρρ."},
-    }
-    _pos_key      = w.get("pos", "")
-    _pos          = _POS_LABELS.get(_lang, _POS_LABELS["ru"]).get(_pos_key, _pos_key)
-    _grammar_key  = w.get("grammar", "")
-    _backend_name = w.get("backend", "ancient-greek")
-
-    def _load_tag_labels(backend_name, pos, lang):
-        _dir  = _Path.home() / ".cache" / "eee" / f"{backend_name}-backend-eee"
-        _path = _dir / f"slots_grc_{lang}.toml"
-        if not _path.exists():
-            _path = _dir / "slots_grc_en.toml"
-        if not _path.exists():
-            return {}
-        try:
-            doc = _tomlkit.loads(_path.read_text(encoding="utf-8"))
-            sec = doc.get(pos) or {}
-            return {str(s["tag"]): str(s["label"]) for s in sec.get("slots", [])}
-        except Exception:
-            return {}
-
-    _lmap      = _load_tag_labels(_backend_name, _pos_key, _lang)
-    _grammar   = _lmap.get(_grammar_key, _grammar_key)
-    _gram_line = " · ".join(filter(None, [_pos, _grammar, f"[{_backend_name}]"]))
-
-    _RIGHT = {"ru":"✓ Верно!","en":"✓ Correct!","el":"✓ Σωστό!"}
-    _WRONG = {"ru":"✗ Нет. Правильно:","en":"✗ No. Correct form:","el":"✗ Όχι. Σωστή μορφή:"}
-
-    feedback = mo.md("")
-    if answer_radio.value is not None:
-        _form      = w["form"]
-        _lemma     = w["lemma"]
-        _word_info = f"**{_form}**" if _form == _lemma else f"**{_form}** → **{_lemma}**"
-        if correct:
-            try:
-                _tbl_html = build_paradigm_table(w, lang=_lang)
-                _tbl = mo.Html(_tbl_html) if _tbl_html else mo.md("")
-            except Exception as _e:
-                _tbl = mo.md(f"_{_e}_")
-            _info = mo.vstack([mo.md(f"{_word_info} · {_gram_line}"), _tbl])
-            feedback = mo.callout(mo.vstack([mo.md(_RIGHT.get(_lang, "✓")), _info]), kind="success")
-        else:
-            feedback = mo.callout(
-                mo.vstack([mo.md(f"{_WRONG.get(_lang, '✗')} **{_form}**"),
-                           mo.md(f"{_word_info} · {_gram_line}")]),
-                kind="danger",
-            )
-
-    mo.vstack([answer_radio, feedback])
-
-    return
-
-
-@app.cell(hide_code=True)
 def _():
     from pathlib import Path as _Path
 
@@ -1006,6 +831,181 @@ def _():
             interlinear_el[_ref] = _paras
 
     return (interlinear_el,)
+
+
+@app.cell(hide_code=True)
+def _(ag_backend, um_backend):
+    import unicodedata, tomlkit
+    from pathlib import Path as _Path
+
+    def _norm_grc(s):
+        _STRIP = {
+            "̀","́","̂","̈",
+            "̓","̔","̓","͂",
+            "̄","̆",
+        }
+        s = unicodedata.normalize("NFD", s).lower()
+        return unicodedata.normalize("NFC", "".join(c for c in s if c not in _STRIP))
+
+    def _slot_lmap(backend, pos, lang):
+        d = _Path.home() / ".cache/eee" / f"{backend}-backend-eee"
+        p = d / f"slots_grc_{lang}.toml"
+        if not p.exists():
+            p = d / "slots_grc_en.toml"
+        if not p.exists():
+            return {}
+        try:
+            doc = tomlkit.loads(p.read_text(encoding="utf-8"))
+            sec = doc.get(pos) or {}
+            return {str(s["tag"]): str(s["label"]) for s in sec.get("slots", [])}
+        except Exception:
+            return {}
+
+    def build_paradigm_table(w, lang="ru"):
+        lemma, pos, backend, tested = w["lemma"], w["pos"], w["backend"], w["form"]
+        tn  = _norm_grc(tested)
+        HL  = "background:#fef3c7;font-weight:bold;color:#92400e;padding:3px 10px;text-align:center;font-family:serif;"
+        TD  = "padding:3px 10px;text-align:center;font-family:serif;"
+        TH  = "padding:3px 8px;font-weight:600;border-bottom:1px solid #e5e7eb;color:#6b7280;font-size:.82em;text-align:center;"
+        ROW = "padding:3px 8px;color:#9ca3af;font-size:.82em;text-align:right;"
+        found = [False]
+
+        def td(forms):
+            hl = any(_norm_grc(f) == tn for f in forms)
+            if hl:
+                found[0] = True
+            return f'<td style="{HL if hl else TD}">{"/ ".join(sorted(forms)) if forms else chr(8212)}</td>'
+
+        lmap = _slot_lmap(backend, pos, lang)
+
+        def _part(tag, idx, fb=""):
+            parts = lmap.get(tag, "").split()
+            return parts[idx] if len(parts) > idx else fb
+
+        def _lbl(tag, fb=""):
+            return lmap.get(tag, fb)
+
+        _SUPPL = {
+            "ru": f"нерегулярная форма, отсутствует в парадигме {lemma}",
+            "en": f"irregular form, not in the standard paradigm of {lemma}",
+            "el": f"ανώμαλος τύπος, λείπει από το παράδειγμα του {lemma}",
+        }
+
+        if pos == "noun":
+            if backend == "ancient-greek":
+                CASES = [("N",".NSM"),("G",".GSM"),("D",".DSM"),("A",".ASM"),("V",".VSM")]
+                case_rows = [(c, _part(tag, 0, c)) for c, tag in CASES]
+                sg_lbl = _part(".NSM", 1, "Sg.")
+                pl_lbl = _part(".NPM", 1, "Pl.")
+                tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
+                p = ag_backend.paradigm(lemma, "noun")
+                for c, clbl in case_rows:
+                    tbl += f'<tr><td style="{ROW}">{clbl}</td>'
+                    for n in ("S", "P"):
+                        forms = set()
+                        for g in "MFN":
+                            forms |= p.get(f".{c}{n}{g}", set())
+                        tbl += td(forms)
+                    tbl += "</tr>"
+
+            elif backend == "unimorph":
+                CASES_UM = ["NOM","GEN","DAT","ACC","VOC"]
+                case_rows = [(c, _part(f"N;{c};SG", 0, c)) for c in CASES_UM]
+                sg_lbl = _part("N;NOM;SG", 1, "Sg.")
+                pl_lbl = _part("N;NOM;PL", 1, "Pl.")
+                tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
+                for cname, clbl in case_rows:
+                    tbl += f'<tr><td style="{ROW}">{clbl}</td>'
+                    for ns in ("SG", "PL"):
+                        forms = um_backend.inflect(lemma, f"N;{cname};{ns}", "noun")
+                        tbl += td(forms)
+                    tbl += "</tr>"
+
+            tbl += "</table>"
+
+        elif pos == "verb" and backend == "ancient-greek":
+            p = ag_backend.paradigm(lemma, "verb")
+            PS_TAGS = ["1S","2S","3S","1P","2P","3P"]
+
+            def _tcol(t):
+                for ps in PS_TAGS:
+                    v = _part(f"{t}.{ps}", 0, "")
+                    if v:
+                        return v
+                return t
+
+            def _prow(ps):
+                for t in ["PAI","IAI","AAI"]:
+                    parts = lmap.get(f"{t}.{ps}", "").split()
+                    if len(parts) >= 2:
+                        return " ".join(parts[-2:])
+                return ps
+
+            TENSES = [(t, _tcol(t)) for t in ["PAI","IAI","AAI"]
+                      if any(f"{t}.{ps}" in p for ps in PS_TAGS)]
+            if not TENSES:
+                return None
+
+            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th>'
+            tbl += "".join(f'<th style="{TH}">{lbl}</th>' for _, lbl in TENSES) + "</tr>"
+            for ps in PS_TAGS:
+                tbl += f'<tr><td style="{ROW}">{_prow(ps)}</td>'
+                for t, _ in TENSES:
+                    tbl += td(p.get(f"{t}.{ps}", set()))
+                tbl += "</tr>"
+
+            INF_MAP = {"PAI":"PAN","IAI":"IAN","AAI":"AAN"}
+            if any(p.get(INF_MAP.get(t,""), set()) for t, _ in TENSES):
+                inf_lbl = _lbl("PAN", "Inf.")
+                tbl += f'<tr><td style="{ROW}">{inf_lbl}</td>'
+                for t, _ in TENSES:
+                    tbl += td(p.get(INF_MAP.get(t, ""), set()))
+                tbl += "</tr>"
+
+            IMP_MAP = {"PAI":"PAD","AAI":"AAD"}
+            for imp_ps, imp_sfx in [("2S",".2S"),("2P",".2P")]:
+                if any(p.get(f"{IMP_MAP[t]}{imp_sfx}") for t, _ in TENSES if t in IMP_MAP):
+                    imp_row_lbl = _lbl(f"PAD{imp_sfx}", f"Imp. {imp_ps}")
+                    tbl += f'<tr><td style="{ROW}">{imp_row_lbl}</td>'
+                    for t, _ in TENSES:
+                        imp_t = IMP_MAP.get(t)
+                        if imp_t:
+                            tbl += td(p.get(f"{imp_t}{imp_sfx}", set()))
+                        else:
+                            tbl += f'<td style="{TD}">—</td>'
+                    tbl += "</tr>"
+
+            tbl += "</table>"
+        else:
+            return None
+
+        if not found[0]:
+            NOTE = "background:#fff7ed;border-left:3px solid #f97316;padding:7px 12px;margin-top:8px;font-size:.9em;color:#7c2d12;"
+            note = f'<div style="{NOTE}"><b>{tested}</b> — {_SUPPL.get(lang, _SUPPL["en"])}</div>'
+            return note + tbl
+        return tbl
+
+
+    return (build_paradigm_table,)
+
+
+@app.cell(hide_code=True)
+def _():
+    import marimo as mo
+    import random
+    import eee
+    from ancient_greek_backend_eee import AncientGreekBackend
+    from unimorph_backend_eee import UniMorphBackend
+
+    _ag = AncientGreekBackend()
+    _um = UniMorphBackend(language="grc")
+    eee.register_backend("grc", _ag, backend="ancient-greek")
+    eee.register_backend("grc", _um, backend="unimorph")
+    eee.set_chain("grc", ["ancient-greek", "unimorph"])
+
+    ag_backend = _ag
+    um_backend = _um
+    return ag_backend, mo, random, um_backend
 
 
 if __name__ == "__main__":
