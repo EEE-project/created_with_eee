@@ -45,18 +45,10 @@
       gap: 10px;
     }
 
-    .tb-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 6px var(--accent);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    .tb-title {
-      font-size: 16px; font-weight: 700;
-      letter-spacing: 0.02em;
-      flex: 1; color: var(--text); text-decoration: none;
+    .tb-back {
+      font-size: 15px; font-weight: 700; color: var(--accent);
+      text-decoration: none; padding: 4px 6px; flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
     .tb-badge {
@@ -191,8 +183,7 @@
 
   <!-- Top bar -->
   <div id="topbar">
-    <a class="tb-back" href="../index.html" style="font-size:18px;color:var(--accent);text-decoration:none;padding:4px 6px;"><div class="tb-dot"></div>#9664;</a>
-    <span class="tb-title">B1 Greek Language and Culture</span>
+    <a class="tb-back" href="../index.html" id="tb-back">◀ All Courses</a>
     <a class="tb-badge" href="#" onclick="openTelegramGroup(); return false;">EEE Community</a>
   </div>
 
@@ -256,7 +247,7 @@
       <div class="footer-text" id="footer-text">EEE &mdash; Greek Language Educational Tools</div>
       <div style="font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text); margin-top: 8px;">
         <span id="footer-label">Source code:</span>
-        <a class="footer-link" href="https://codeberg.org/EEE-project/created_with_eee" target="_blank">codeberg.org/EEE-project/created_with_eee</a>
+        <a class="footer-link" href="https://codeberg.org/EEE-project/" target="_blank">codeberg.org/EEE-project/</a>
       </div>
     </div>
   </div>
@@ -266,6 +257,7 @@
 
     const TRANSLATIONS = {
       en: {
+        tbBack:      '◀ All Courses',
         series:      'B1 GREEK LANGUAGE AND CULTURE — INTERACTIVE NOTEBOOKS',
         heroTitle:   '● Kapodistrias Lessons',
         heroSubtitle:'Interactive exercises on vocabulary and grammar from the Kapodistrias lecture series.',
@@ -282,6 +274,7 @@
         footerLabel: 'Source code:'
       },
       ru: {
+        tbBack:      '◀ Все курсы',
         series:      'B1 ГРЕЧЕСКИЙ ЯЗЫК И КУЛЬТУРА — ИНТЕРАКТИВНЫЕ ТЕТРАДИ',
         heroTitle:   '● Уроки о Каподистриасе',
         heroSubtitle:'Интерактивные упражнения по лексике и грамматике из цикла лекций о Каподистриасе.',
@@ -298,6 +291,7 @@
         footerLabel: 'Исходный код:'
       },
       el: {
+        tbBack:      '◀ Όλα τα μαθήματα',
         series:      'B1 ΕΛΛΗΝΙΚΗ ΓΛΩΣΣΑ ΚΑΙ ΠΟΛΙΤΙΣΜΟΣ — ΔΙΑΔΡΑΣΤΙΚΑ ΤΕΤΡΑΔΙΑ',
         heroTitle:   '● Μαθήματα Καποδίστρια',
         heroSubtitle:'Διαδραστικές ασκήσεις για λεξιλόγιο και γραμματική από τη σειρά μαθημάτων για τον Καποδίστρια.',
@@ -316,6 +310,7 @@
     };
 
     const ELS = {
+      tbBack:       document.getElementById('tb-back'),
       series:       document.getElementById('hero-series'),
       heroTitle:    document.getElementById('hero-title'),
       heroSubtitle: document.getElementById('hero-subtitle'),
@@ -335,6 +330,7 @@
 
     function updateLanguage(lang) {
       const t = TRANSLATIONS[lang];
+      ELS.tbBack.textContent       = t.tbBack;
       ELS.series.textContent       = t.series;
       ELS.heroTitle.textContent    = t.heroTitle;
       ELS.heroSubtitle.textContent = t.heroSubtitle;

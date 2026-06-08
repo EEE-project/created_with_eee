@@ -51,22 +51,10 @@
       gap: 10px;
     }
 
-    .tb-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 6px var(--accent);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    .tb-title {
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      flex: 1;
-      color: var(--text);
-      text-decoration: none;
+    .tb-back {
+      font-size: 15px; font-weight: 700; color: var(--accent);
+      text-decoration: none; padding: 4px 6px; flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
     .tb-badge {
@@ -260,8 +248,7 @@
 
   <!-- Top bar -->
   <div id="topbar">
-    <a class="tb-back" href="../index.html" style="font-size:18px;color:var(--accent);text-decoration:none;padding:4px 6px;"><div class="tb-dot"></div>#9664;</a>
-    <span class="tb-title">Ελληνικά Β</span>
+    <a class="tb-back" href="../index.html" id="tb-back">◀ All Courses</a>
     <a class="tb-badge" href="#" onclick="openTelegramGroup(); return false;">EEE Community</a>
   </div>
 
@@ -413,7 +400,7 @@
 
     <div class="footer">
       <div class="footer-text" id="footer-text">EEE &mdash; Greek Language Educational Tools</div>
-      <div style="font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text); margin-top: 8px;"><span id="footer-label">Source code:</span> <a class="footer-link" href="https://codeberg.org/EEE-project/created_with_eee" target="_blank">codeberg.org/EEE-project/created_with_eee</a></div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text); margin-top: 8px;"><span id="footer-label">Source code:</span> <a class="footer-link" href="https://codeberg.org/EEE-project/" target="_blank">codeberg.org/EEE-project/</a></div>
     </div>
   </div>
 
@@ -422,6 +409,7 @@
 
     const TRANSLATIONS = {
       en: {
+        tbBack: '◀ All Courses',
         series: 'ELLINIKA B — INTERACTIVE NOTEBOOKS',
         heroTitle: '● Greek B Lessons',
         heroSubtitle: 'Interactive exercises for vocabulary, nouns, verbs, and adjectives',
@@ -459,6 +447,7 @@
         footerLabel: 'Source code:'
       },
       ru: {
+        tbBack: '◀ Все курсы',
         series: 'ЭЛЛИНИКА Β — ИНТЕРАКТИВНЫЕ ТЕТРАДИ',
         heroTitle: '● Уроки греческого Б',
         heroSubtitle: 'Интерактивные упражнения по словарному запасу, существительным, глаголам и прилагательным',
@@ -496,6 +485,7 @@
         footerLabel: 'Исходный код:'
       },
       el: {
+        tbBack: '◀ Όλα τα μαθήματα',
         series: 'ΕΛΛΗΝΙΚΑ Β — ΔΙΑΔΡΑΣΤΙΚΑ ΤΕΤΡΑΔΙΑ',
         heroTitle: '● Μαθήματα Ελληνικών Β',
         heroSubtitle: 'Διαδραστικές ασκήσεις για λεξιλόγιο, ουσιαστικά, ρήματα και επίθετα',
@@ -535,6 +525,7 @@
     };
 
     const ELS = {
+      tbBack:      document.getElementById('tb-back'),
       series:      document.getElementById('hero-series'),
       heroTitle:   document.getElementById('hero-title'),
       heroSubtitle:document.getElementById('hero-subtitle'),
@@ -575,6 +566,7 @@
 
     function updateLanguage(lang) {
       const t = TRANSLATIONS[lang];
+      ELS.tbBack.textContent       = t.tbBack;
       ELS.series.textContent       = t.series;
       ELS.heroTitle.textContent    = t.heroTitle;
       ELS.heroSubtitle.textContent = t.heroSubtitle;
