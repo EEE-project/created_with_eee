@@ -68,7 +68,7 @@
 <body>
 
   <div id="topbar">
-    <a class="tb-back" href="../index.html">&#9664;</a>
+    <a class="tb-back" href="../index.html" id="tb-back">&#9664; All Courses</a>
     <span class="tb-title" id="tb-title">Ancient Greek with Homer</span>
     <a class="tb-badge" href="#" onclick="openTelegramGroup(); return false;">EEE Community</a>
   </div>
@@ -113,6 +113,7 @@
     const LANG_STORAGE_KEY = 'gsc-lang';
     const TRANSLATIONS = {
       en: {
+        tbBack:      '◀ All Courses',
         tbTitle:     'Ancient Greek with Homer',
         series:      'ANCIENT GREEK — HOMER\'S ODYSSEY',
         heroTitle:   'Ancient Greek with Homer',
@@ -123,6 +124,7 @@
         footerLabel: 'Source:'
       },
       ru: {
+        tbBack:      '◀ Все курсы',
         tbTitle:     'Древнегреческий с Гомером',
         series:      'ДРЕВНЕГРЕЧЕСКИЙ — ГОМЕРОВСКАЯ ОДИССЕЯ',
         heroTitle:   'Древнегреческий с Гомером',
@@ -133,6 +135,7 @@
         footerLabel: 'Исходный код:'
       },
       el: {
+        tbBack:      '◀ Όλα τα μαθήματα',
         tbTitle:     'Αρχαία Ελληνικά με τον Όμηρο',
         series:      'ΑΡΧΑΙΑ ΕΛΛΗΝΙΚΑ — ΟΜΗΡΙΚΗ ΟΔΥΣΣΕΙΑ',
         heroTitle:   'Αρχαία Ελληνικά με τον Όμηρο',
@@ -145,6 +148,7 @@
     };
 
     const ELS = {
+      tbBack:       document.getElementById('tb-back'),
       tbTitle:      document.getElementById('tb-title'),
       series:       document.getElementById('hero-series'),
       heroTitle:    document.getElementById('hero-title'),
@@ -158,6 +162,7 @@
 
     function updateLanguage(lang) {
       const t = TRANSLATIONS[lang];
+      ELS.tbBack.textContent       = t.tbBack;
       ELS.tbTitle.textContent      = t.tbTitle;
       ELS.series.textContent       = t.series;
       ELS.heroTitle.textContent    = t.heroTitle;
