@@ -1,6 +1,7 @@
 CLAUDE.md
 LOCAL.md
 __pycache__/
+__marimo__/
 *.pyc
 .venv/
 venv/

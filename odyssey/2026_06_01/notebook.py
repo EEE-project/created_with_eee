@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.1",
-#     "eee @ git+https://codeberg.org/EEE-project/eee.git",
+#     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
 #     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
 #     "unimorph-backend-eee @ git+https://codeberg.org/EEE-project/unimorph-backend-eee.git",
 # ]
@@ -20,43 +20,93 @@ app = marimo.App(width="medium")
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(lang_sel, mo):
+    _TITLE = {
+        "ru": "Древнегреческий с Гомером",
+        "en": "Ancient Greek with Homer",
+        "el": "Αρχαία Ελληνικά με τον Όμηρο",
+    }
+    _t = _TITLE.get(lang_sel.value, _TITLE["en"])
+    _b = f"◀ {_t}"
+    mo.Html(f'''
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap');
+    #eee-topbar {{
+      position: sticky; top: 0; z-index: 100;
+      height: 48px; background: #f5f5f5;
+      border-bottom: 2px solid #003d82;
+      display: flex; align-items: center;
+      padding: 0 12px; gap: 10px;
+      margin: -16px -16px 16px -16px;
+      font-family: Syne, sans-serif;
+    }}
+    #eee-topbar .tb-back {{
+      font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+      color: #003d82; text-decoration: none;
+      padding: 4px 6px; flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }}
+    #eee-topbar .tb-badge {{
+      font-family: "DM Mono", monospace; font-size: 12px; font-weight: 700;
+      color: #003d82; background: rgba(0,61,130,0.08);
+      border: 1px solid rgba(0,61,130,0.3); border-radius: 4px;
+      padding: 4px 8px; letter-spacing: 0.1em; text-decoration: none; flex-shrink: 0;
+    }}
+    </style>
+    <div id="eee-topbar">
+      <a class="tb-back" href="https://eee-project.codeberg.page/created_with_eee/odyssey/">{_b}</a>
+      <a class="tb-badge" href="https://t.me/+VuocC5la3ZwyNDky" target="_blank">EEE Community</a>
+    </div>
+    ''')
+    return
+
+
+@app.cell(hide_code=True)
+def _():
     import base64 as _b64
     from pathlib import Path as _Path
 
-    _img_path = _Path(__file__).parent / "sirens_vase.jpg"
-    _img_b64  = _b64.b64encode(_img_path.read_bytes()).decode()
-    mo.Html(
-        f'<div style="text-align:center;margin-bottom:1em">'
-        f'<img src="data:image/jpeg;base64,{_img_b64}" '
-        f'style="max-width:680px;width:100%;border-radius:4px"/>'
-        f'</div>'
-    )
+    _img_path = _Path(__file__).parent / "Odysseus_Sirens_BM_E440_n2.jpg"
+    img_b64 = _b64.b64encode(_img_path.read_bytes()).decode()
+    return (img_b64,)
 
+
+@app.cell(hide_code=True)
+def _(img_b64, lang_sel, mo):
+    _lang = lang_sel.value
+    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_32dyZq8gA6x14GL2Zwa6ZU)"
+    _TITLE = {
+        "ru": "Древнегреческий с Гомером",
+        "en": "Ancient Greek with Homer",
+        "el": "Αρχαία Ελληνικά με τον Όμηρο",
+    }
+    _LESSON = {
+        "ru": "Пилотное занятие · Odyss. I.1–21",
+        "en": "Pilot Lesson · Odyss. I.1–21",
+        "el": "Δοκιμαστικό μάθημα · Οδ. Α.1–21",
+    }
+    _left = mo.vstack([
+        mo.md(f"# {_TITLE.get(_lang, _TITLE['en'])}"),
+        mo.md(_badge),
+        mo.md(f"## {_LESSON.get(_lang, _LESSON['en'])}"),
+    ])
+    _img = mo.Html(
+        f'<img src="data:image/jpeg;base64,{img_b64}" '
+        f'style="max-width:340px;width:100%;border-radius:4px;object-fit:cover"/>'
+    )
+    mo.hstack([_left, _img], align="start")
     return
 
 
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
     _lang = lang_sel.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_32dyZq8gA6x14GL2Zwa6ZU)"
-    _TITLE = {
-        "ru": f"# Древнегреческий с Гомером {_badge}\n**Пилотное занятие · Odyss. I.1–21**",
-        "en": f"# Ancient Greek with Homer {_badge}\n**Pilot Lesson · Odyss. I.1–21**",
-        "el": f"# Αρχαία Ελληνικά με τον Όμηρο {_badge}\n**Δοκιμαστικό μάθημα · Οδ. Α.1–21**",
-    }
     _DESC = {
         "ru": "Текст поэмы с параллельными переводами. Слова, известные движку **eee** (базы `ancient-greek` и `unimorph grc`), выделены <span style='color:#b5451b;font-weight:bold'>цветом</span>.",
         "en": "Poem text with parallel translations. Words known to the **eee** engine (backends `ancient-greek` and `unimorph grc`) are highlighted <span style='color:#b5451b;font-weight:bold'>in color</span>.",
         "el": "Κείμενο με παράλληλες μεταφράσεις. Λέξεις γνωστές στη μηχανή **eee** (βάσεις `ancient-greek` και `unimorph grc`) επισημαίνονται <span style='color:#b5451b;font-weight:bold'>με χρώμα</span>.",
     }
-    mo.md(f"""
-    {_TITLE.get(_lang, _TITLE["en"])}
-
-    ---
-    {_DESC.get(_lang, _DESC["en"])}
-    """)
-
+    mo.md(_DESC.get(_lang, _DESC["en"]))
     return
 
 
@@ -78,7 +128,6 @@ def _(lang_sel, mo, trans_selector):
         "Καζαντζάκης–Κακριδής": "**Καζαντζάκης–Κακριδής, 1965** · ν.ε., Δημοτική · καλλιτεχνική (Καζαντζάκης) + επιστημονική (Κακριδής) · σύγχρονη γλώσσα",
     }
     mo.md(_TRANS_DESC.get(trans_selector.value, ""))
-
     return
 
 
@@ -156,7 +205,6 @@ def _(
         mo.hstack([stanza_selector, trans_selector], justify="space-between"),
         _content,
     ])
-
     return
 
 
@@ -213,10 +261,38 @@ def _(QUIZ_WORDS, cv, lang_sel, mo, random):
 
 
 @app.cell(hide_code=True)
-def _(answer_radio, build_paradigm_table, lang_sel, mo, score, w):
-    import tomlkit as _tomlkit
-    from pathlib import Path as _Path
+def _():
+    import tomlkit as _tk
+    from pathlib import Path as _P
 
+    def load_slot_labels(backend, pos, lang):
+        nb_dir    = _P(__file__).parent
+        cache_dir = _P.home() / ".cache" / "eee" / f"{backend}-backend-eee"
+
+        def _try(path):
+            if not path.exists():
+                return None
+            try:
+                doc = _tk.loads(path.read_text(encoding="utf-8"))
+                sec = doc.get(pos) or {}
+                return {str(s["tag"]): str(s["label"]) for s in sec.get("slots", [])}
+            except Exception:
+                return None
+
+        for lng in [lang, "en"]:
+            r = _try(nb_dir / f"{backend}-backend-eee-slots_grc_{lng}.toml")
+            if r is not None:
+                return r
+            r = _try(cache_dir / f"slots_grc_{lng}.toml")
+            if r is not None:
+                return r
+        return {}
+
+    return (load_slot_labels,)
+
+
+@app.cell(hide_code=True)
+def _(answer_radio, build_paradigm_table, lang_sel, load_slot_labels, mo, score, w):
     _lang = lang_sel.value
 
     if w is None:
@@ -244,21 +320,7 @@ def _(answer_radio, build_paradigm_table, lang_sel, mo, score, w):
     _grammar_key  = w.get("grammar", "")
     _backend_name = w.get("backend", "ancient-greek")
 
-    def _load_tag_labels(backend_name, pos, lang):
-        _dir  = _Path.home() / ".cache" / "eee" / f"{backend_name}-backend-eee"
-        _path = _dir / f"slots_grc_{lang}.toml"
-        if not _path.exists():
-            _path = _dir / "slots_grc_en.toml"
-        if not _path.exists():
-            return {}
-        try:
-            doc = _tomlkit.loads(_path.read_text(encoding="utf-8"))
-            sec = doc.get(pos) or {}
-            return {str(s["tag"]): str(s["label"]) for s in sec.get("slots", [])}
-        except Exception:
-            return {}
-
-    _lmap      = _load_tag_labels(_backend_name, _pos_key, _lang)
+    _lmap      = load_slot_labels(_backend_name, _pos_key, _lang)
     _grammar   = _lmap.get(_grammar_key, _grammar_key)
     _gram_line = " · ".join(filter(None, [_pos, _grammar, f"[{_backend_name}]"]))
 
@@ -286,7 +348,6 @@ def _(answer_radio, build_paradigm_table, lang_sel, mo, score, w):
             )
 
     mo.vstack([answer_radio, feedback])
-
     return
 
 
@@ -311,18 +372,14 @@ def _(mo):
 def _(mo):
     cv, set_cv = mo.state(None)
     score, set_score = mo.state({"correct": 0, "total": 0})
-    scored_clicks, set_scored_clicks = mo.state(0)
     remaining, set_remaining = mo.state(None)
-
     return (
         cv,
         remaining,
         score,
-        scored_clicks,
         set_cv,
         set_remaining,
         set_score,
-        set_scored_clicks,
     )
 
 
@@ -374,7 +431,6 @@ def _(lang_sel, mo):
         value=_def_k,
         label=_TRANS_LBL.get(_lang, "Translation"),
     )
-
     return (trans_selector,)
 
 
@@ -395,56 +451,43 @@ def _(cv, lang_sel, mo, remaining):
 @app.cell(hide_code=True)
 def _(
     QUIZ_WORDS,
+    answer_radio,
     cv,
     next_btn,
     random,
     remaining,
+    score,
     set_cv,
     set_remaining,
     set_score,
-    set_scored_clicks,
 ):
-    if next_btn.value:
-        r = remaining()
-        if r is None:
-            pass  # not yet initialized; ZHCJ handles first render
-        elif r:
-            set_cv(r[0])
-            set_remaining(r[1:])
-        else:
-            # remaining is empty []
-            if cv() is None:
-                # already in done state → restart
-                _shuffled = random.sample(QUIZ_WORDS, len(QUIZ_WORDS))
-                set_cv(_shuffled[0])
-                set_remaining(_shuffled[1:])
-                set_score({"correct": 0, "total": 0})
-                set_scored_clicks(0)
-            else:
-                # last word was just shown → transition to done
-                set_cv(None)
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    answer_radio,
-    cv,
-    next_btn,
-    score,
-    scored_clicks,
-    set_score,
-    set_scored_clicks,
-):
-    _click = next_btn.value or 0
-    if _click > scored_clicks():
+    def _record_answer():
         if answer_radio.value is not None and cv() is not None:
             s = score()
             set_score({
                 "correct": s["correct"] + (1 if answer_radio.value == cv()["form"] else 0),
                 "total": s["total"] + 1,
             })
-        set_scored_clicks(_click)
+
+    if next_btn.value:
+        r = remaining()
+        if r is None:
+            pass  # not yet initialized
+        elif r:
+            _record_answer()
+            set_cv(r[0])
+            set_remaining(r[1:])
+        else:
+            if cv() is None:
+                # done state → restart
+                _shuffled = random.sample(QUIZ_WORDS, len(QUIZ_WORDS))
+                set_cv(_shuffled[0])
+                set_remaining(_shuffled[1:])
+                set_score({"correct": 0, "total": 0})
+            else:
+                # last word → score and transition to done
+                _record_answer()
+                set_cv(None)
     return
 
 
@@ -748,8 +791,25 @@ def _():
 
     _vocab_path = Path(__file__).parent / "vocab_I_1-21.tsv"
     with open(_vocab_path, encoding="utf-8") as _f:
-        QUIZ_WORDS = list(csv.DictReader(_f, delimiter="\t"))
-    return (QUIZ_WORDS,)
+        QUIZ_WORDS_RAW = list(csv.DictReader(_f, delimiter="\t"))
+    return (QUIZ_WORDS_RAW,)
+
+
+@app.cell(hide_code=True)
+def _(QUIZ_WORDS_RAW, build_paradigm_table):
+    def _has_displayable_form(w):
+        try:
+            result = build_paradigm_table(w, lang="en")
+            if not result:
+                return False
+            return "#f97316" not in result
+        except Exception:
+            return False
+
+    _flags            = [_has_displayable_form(w) for w in QUIZ_WORDS_RAW]
+    QUIZ_WORDS        = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
+    words_no_paradigm = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if not ok]
+    return QUIZ_WORDS, words_no_paradigm
 
 
 @app.cell(hide_code=True)
@@ -778,7 +838,6 @@ def _():
 
     if _ref and _pairs:
         interlinear_en[_ref] = _pairs
-
     return (interlinear_en,)
 
 
@@ -829,14 +888,12 @@ def _():
             _paras.append(" ".join(_buf))
         if _paras:
             interlinear_el[_ref] = _paras
-
     return (interlinear_el,)
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, um_backend):
-    import unicodedata, tomlkit
-    from pathlib import Path as _Path
+def _(ag_backend, load_slot_labels, um_backend):
+    import unicodedata
 
     def _norm_grc(s):
         _STRIP = {
@@ -846,20 +903,6 @@ def _(ag_backend, um_backend):
         }
         s = unicodedata.normalize("NFD", s).lower()
         return unicodedata.normalize("NFC", "".join(c for c in s if c not in _STRIP))
-
-    def _slot_lmap(backend, pos, lang):
-        d = _Path.home() / ".cache/eee" / f"{backend}-backend-eee"
-        p = d / f"slots_grc_{lang}.toml"
-        if not p.exists():
-            p = d / "slots_grc_en.toml"
-        if not p.exists():
-            return {}
-        try:
-            doc = tomlkit.loads(p.read_text(encoding="utf-8"))
-            sec = doc.get(pos) or {}
-            return {str(s["tag"]): str(s["label"]) for s in sec.get("slots", [])}
-        except Exception:
-            return {}
 
     def build_paradigm_table(w, lang="ru"):
         lemma, pos, backend, tested = w["lemma"], w["pos"], w["backend"], w["form"]
@@ -876,7 +919,7 @@ def _(ag_backend, um_backend):
                 found[0] = True
             return f'<td style="{HL if hl else TD}">{"/ ".join(sorted(forms)) if forms else chr(8212)}</td>'
 
-        lmap = _slot_lmap(backend, pos, lang)
+        lmap = load_slot_labels(backend, pos, lang)
 
         def _part(tag, idx, fb=""):
             parts = lmap.get(tag, "").split()
@@ -993,7 +1036,7 @@ def _(ag_backend, um_backend):
 def _():
     import marimo as mo
     import random
-    import eee
+    import eee_project as eee
     from ancient_greek_backend_eee import AncientGreekBackend
     from unimorph_backend_eee import UniMorphBackend
 
@@ -1006,6 +1049,29 @@ def _():
     ag_backend = _ag
     um_backend = _um
     return ag_backend, mo, random, um_backend
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _SRC = {"ru": "Исходный код:", "en": "Source:", "el": "Πηγαίος κώδικας:"}
+    _lbl = _SRC.get(lang_sel.value, _SRC["en"])
+    mo.Html(f'''
+    <style>
+    #eee-footer {{
+      height: 40px; background: #f5f5f5; border-top: 1px solid #e0e0e0;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      margin: 16px -16px -16px -16px;
+      font-family: "DM Mono", monospace;
+    }}
+    #eee-footer .footer-label {{ font-size: 10px; color: #1a1a1a; }}
+    #eee-footer a {{ font-size: 11px; color: #003d82; text-decoration: none; }}
+    </style>
+    <div id="eee-footer">
+      <span class="footer-label">{_lbl}</span>
+      <a href="https://codeberg.org/EEE-project/created_with_eee" target="_blank">codeberg.org/EEE-project/created_with_eee</a>
+    </div>
+    ''')
+    return
 
 
 if __name__ == "__main__":
