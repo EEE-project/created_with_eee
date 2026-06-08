@@ -24,8 +24,7 @@
       height: 48px; background: #f5f5f5; border-bottom: 2px solid var(--accent);
       display: flex; align-items: center; padding: 0 12px; gap: 8px;
     }
-    .tb-back { font-size: 18px; color: var(--accent); text-decoration: none; padding: 4px 6px; }
-    .tb-title { font-size: 16px; font-weight: 700; flex: 1; color: var(--text); letter-spacing: 0.02em; }
+    .tb-back { font-size: 15px; font-weight: 700; color: var(--accent); text-decoration: none; padding: 4px 6px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .tb-badge {
       font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 700;
       color: var(--accent); background: rgba(0,61,130,0.08); border: 1px solid rgba(0,61,130,0.3);
@@ -69,7 +68,6 @@
 
   <div id="topbar">
     <a class="tb-back" href="../index.html" id="tb-back">&#9664; All Courses</a>
-    <span class="tb-title" id="tb-title">Ancient Greek with Homer</span>
     <a class="tb-badge" href="#" onclick="openTelegramGroup(); return false;">EEE Community</a>
   </div>
 
@@ -92,7 +90,7 @@
           <div class="card-icon">⚓</div>
           <div>
             <div class="card-label" id="card-l1-label">I.1–21</div>
-            <div class="card-title" id="card-l1-title">Odyss. I.1–21</div>
+            <div class="card-title" id="card-l1-title">Odyssey I.1–21</div>
             <div class="card-greek">Ὀδύσσεια Α΄ 1–21</div>
           </div>
         </div>
@@ -119,7 +117,7 @@
         heroTitle:   'Ancient Greek with Homer',
         heroSubtitle:'Interactive exercises on vocabulary and forms from Homer\'s Odyssey.',
         l1Label: 'I.1–21',
-        l1Title: 'Odyss. I.1–21',
+        l1Title: 'Odyssey I.1–21',
         l1Desc:  'Nouns and verbs from the proem — with parallel translations and paradigm drill.',
         footerLabel: 'Source:'
       },
@@ -130,7 +128,7 @@
         heroTitle:   'Древнегреческий с Гомером',
         heroSubtitle:'Интерактивные упражнения по лексике и формам из Одиссеи Гомера.',
         l1Label: 'I.1–21',
-        l1Title: 'Odyss. I.1–21',
+        l1Title: 'Одиссея I.1–21',
         l1Desc:  'Существительные и глаголы из зачина — с параллельными переводами и парадигмами.',
         footerLabel: 'Исходный код:'
       },
@@ -141,7 +139,7 @@
         heroTitle:   'Αρχαία Ελληνικά με τον Όμηρο',
         heroSubtitle:'Διαδραστικές ασκήσεις λεξιλογίου και τύπων από την Οδύσσεια του Ομήρου.',
         l1Label: 'I.1–21',
-        l1Title: 'Odyss. I.1–21',
+        l1Title: 'Οδύσσεια I.1–21',
         l1Desc:  'Ουσιαστικά και ρήματα από το προοίμιο — με παράλληλες μεταφράσεις και παραδείγματα.',
         footerLabel: 'Πηγαίος κώδικας:'
       }
@@ -149,7 +147,6 @@
 
     const ELS = {
       tbBack:       document.getElementById('tb-back'),
-      tbTitle:      document.getElementById('tb-title'),
       series:       document.getElementById('hero-series'),
       heroTitle:    document.getElementById('hero-title'),
       heroSubtitle: document.getElementById('hero-subtitle'),
@@ -163,7 +160,6 @@
     function updateLanguage(lang) {
       const t = TRANSLATIONS[lang];
       ELS.tbBack.textContent       = t.tbBack;
-      ELS.tbTitle.textContent      = t.tbTitle;
       ELS.series.textContent       = t.series;
       ELS.heroTitle.textContent    = t.heroTitle;
       ELS.heroSubtitle.textContent = t.heroSubtitle;
