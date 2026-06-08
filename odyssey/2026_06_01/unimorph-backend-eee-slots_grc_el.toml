@@ -1,0 +1,51 @@
+# UniMorph grc slot templates — Modern Greek labels
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;NOM;SG"
+label = "Ονομ. εν."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;NOM;PL"
+label = "Ονομ. πλ."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;GEN;SG"
+label = "Γεν. εν."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;GEN;PL"
+label = "Γεν. πλ."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;DAT;SG"
+label = "Δοτ. εν."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;DAT;PL"
+label = "Δοτ. πλ."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;ACC;SG"
+label = "Αιτ. εν."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;ACC;PL"
+label = "Αιτ. πλ."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;VOC;SG"
+label = "Κλητ. εν."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;VOC;PL"
+label = "Κλητ. πλ."

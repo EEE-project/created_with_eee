@@ -1,0 +1,51 @@
+# UniMorph grc slot templates — Russian labels
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;NOM;SG"
+label = "Именит. ед."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;NOM;PL"
+label = "Именит. мн."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;GEN;SG"
+label = "Родит. ед."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;GEN;PL"
+label = "Родит. мн."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;DAT;SG"
+label = "Дат. ед."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;DAT;PL"
+label = "Дат. мн."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;ACC;SG"
+label = "Вин. ед."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;ACC;PL"
+label = "Вин. мн."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;VOC;SG"
+label = "Зват. ед."
+
+[[noun.slots]]
+tag_type = "unimorph"
+tag = "N;VOC;PL"
+label = "Зват. мн."
