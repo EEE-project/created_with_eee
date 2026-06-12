@@ -15,3 +15,12 @@ form	lemma	meaning	meaning_en	meaning_el	context	backend	pos	grammar
 γυναικὸς	γυνή	жены	of his wife	γυναικός	I.13: …νόστου κεχρημένον ἠδὲ γυναικὸς	unimorph	noun	N;GEN;SG
 νύμφη	νύμφη	нимфа	nymph	νύμφη	I.14: νύμφη πόντι' ἔρυκε Καλυψώ…	unimorph	noun	N;NOM;SG
 σπέσσι	σπέος	пещерах	in caves	σπέσσι	I.15: ἐν σπέσσι γλαφυροῖσι…	unimorph	noun	N;DAT;PL
+ἄστεα	ἄστυ	города	cities (acc. pl.)	άστεα	I.3: πολλῶν δ᾿ ἀνθρώπων ἴδεν ἄστεα	ancient-greek	noun	.APN
+ψυχήν	ψυχή	душу	soul (acc.)	ψυχή	I.5: …ψυχὴν καὶ νόστον ἑταίρων	ancient-greek	noun	.ASF
+πλάγχθη	πλάζω	блуждал	was driven off course	πλανήθηκε	I.2: πλάγχθη, ἐπεὶ Τροίης ἱερὸν πτολίεθρον ἔπερσεν	ancient-greek	verb	API.3S
+ἴδεν	ὁράω	увидел	he saw	είδε	I.3: πολλῶν δ᾿ ἀνθρώπων ἴδεν ἄστεα	ancient-greek	verb	AAI.3S
+πάθεν	πάσχω	претерпел	he suffered	έπαθε	I.4: ἐν πόντῳ πάθεν ἄλγεα	ancient-greek	verb	AAI.3S
+ὄλοντο	ἀπόλλυμι	погибли	they perished	χάθηκαν	I.7: σφετέρῃσιν ἀτασθαλίῃσιν ὄλοντο	ancient-greek	verb	AMI.3P
+φύγον	φεύγω	бежали	they fled, escaped	έφυγαν	I.11: ὅσοι φύγον αἰπὺν ὄλεθρον	ancient-greek	verb	AAI.3P
+ἐπεκλώσαντο	ἐπικλώθω	назначили судьбой	fated	μοίρεψαν	I.17: ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι	ancient-greek	verb	AMI.3P
+ἱκέσθαι	ἱκνέομαι	достигнуть	to reach	να φτάσει	I.21: …πάρος ἣν γαῖαν ἱκέσθαι	ancient-greek	verb	AMN
