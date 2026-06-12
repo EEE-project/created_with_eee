@@ -2,25 +2,29 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.3",
+#     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
+#     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
 # ]
+#
+# [tool.uv.sources]
+# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
+# ancient-greek-backend-eee = { git = "https://codeberg.org/EEE-project/ancient-greek-backend-eee.git" }
 # ///
 
 import marimo
 
-__generated_with = "0.23.9"
+__generated_with = "0.23.8"
 app = marimo.App(width="medium")
 
 
 @app.cell(hide_code=True)
 def _(mo):
-
     mo.md(r"""
     # Δίδαγμα α'
     **Palaestra — Древнегреческий язык, начальный уровень — Лето 2026**
 
     [![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_6yCT2rFgPRPqBPNKo3g3uj)
     """)
-
     return
 
 
@@ -70,8 +74,8 @@ def _(mo):
     <div style="border-left:3px solid #ccc;padding:.6em 1.2em;font-size:1.1em;line-height:2.2">
     ἔστ' <strong>ἄλφα</strong>, <strong>βῆτα</strong>, <strong>γάμμα</strong>, <strong>δέλτα</strong>, καὶ τὸ <strong>εἶ</strong>,<br>
     <strong>ζῆτ'</strong>, <strong>ἦτα</strong>, <strong>θῆτ'</strong>, <strong>ἰῶτα</strong>, <strong>κάππα</strong>, <strong>λάμβδα</strong>, <strong>μῦ</strong>,<br>
-    <strong>νῦ</strong>, <strong>ξεῖ</strong>, τὸ <strong>οὖ</strong>, <strong>πῖ</strong>, <strong>ῥῶ</strong>, τὸ <strong>σῖγμα</strong>, <strong>ταῦ</strong>, τὸ <strong>ῦ</strong>,<br>
-    <strong>φῖ</strong>, <strong>χῖ</strong> τε καὶ <strong>ψεῖ</strong> καὶ τὸ <strong>ὦ</strong>.
+    <strong>νῦ</strong>, <strong>ξῖ</strong>, τὸ <strong>οὖ</strong>, <strong>πῖ</strong>, <strong>ῥῶ</strong>, τὸ <strong>σῖγμα</strong>, <strong>ταῦ</strong>, τὸ <strong>ῦ</strong>,<br>
+    <strong>φῖ</strong>, <strong>χῖ</strong> τε καὶ <strong>ψῖ</strong> καὶ τὸ <strong>ὦ</strong>.
     </div>
 
     *Домашнее задание: выучить наизусть.*
@@ -111,13 +115,33 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _():
-    VERBS = [
-        {"verb": "λέγω",        "meaning": "говорить",        "sg": "λέγε",        "pl": "λέγετε"},
-        {"verb": "ἀκούω",       "meaning": "слушать",         "sg": "ἄκουε",       "pl": "ἀκούετε"},
-        {"verb": "ἀναγιγνώσκω", "meaning": "читать",          "sg": "ἀναγίγνωσκε", "pl": "ἀναγιγνώσκετε"},
-        {"verb": "παύω",        "meaning": "останавливаться", "sg": "παῦε",        "pl": "παύετε"},
-    ]
-    return (VERBS,)
+    import csv as _csv
+    import eee_project as eee
+    from ancient_greek_backend_eee import AncientGreekBackend
+    from pathlib import Path as _Path
+
+    ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt"])
+    eee.register_backend("grc", ag)
+    eee.register_backend("grc", ag, backend="ancient-greek")
+    eee.set_chain("grc", ["ancient-greek"])
+
+    _all_vslots = eee.get_slot_templates("grc", "verb", "en") or []
+    _sg_slot = next((s for s in _all_vslots if s.tag == "PAD.2S"), None)
+    _pl_slot = next((s for s in _all_vslots if s.tag == "PAD.2P"), None)
+
+    with open(_Path(__file__).parent / "verbs.tsv", encoding="utf-8") as _f:
+        _rows = list(_csv.DictReader(_f, delimiter="\t"))
+
+    VERBS = []
+    for _r in _rows:
+        _w = _r["Word"]
+        VERBS.append({
+            "verb": _w,
+            "meaning": _r["Translation"],
+            "sg": min(eee.inflect_slot(_w, _sg_slot, "verb", language="grc", backend="ancient-greek"), default="") if _sg_slot else "",
+            "pl": min(eee.inflect_slot(_w, _pl_slot, "verb", language="grc", backend="ancient-greek"), default="") if _pl_slot else "",
+        })
+    return VERBS, eee
 
 
 @app.cell(hide_code=True)
@@ -226,15 +250,24 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _():
-    ADJS = [
-        {"adj": "καλός",    "meaning": "красивый (образец)",  "adv": "καλῶς"},
-        {"adj": "χαλεπός",  "meaning": "трудный, суровый",    "adv": "χαλεπῶς"},
-        {"adj": "μικρός",   "meaning": "маленький",            "adv": "μικρῶς"},
-        {"adj": "ἱκανός",   "meaning": "достаточный",          "adv": "ἱκανῶς"},
-        {"adj": "ἀργός",    "meaning": "ленивый",              "adv": "ἀργῶς"},
-        {"adj": "σκαιός",   "meaning": "глупый, неловкий",     "adv": "σκαιῶς"},
-    ]
+def _(eee):
+    import csv as _csv
+    from pathlib import Path as _Path
+
+    _all_aslots = eee.get_slot_templates("grc", "adjective", "en") or []
+    _adv_slot = next((s for s in _all_aslots if s.tag == "ADV"), None)
+
+    with open(_Path(__file__).parent / "adjs.tsv", encoding="utf-8") as _f:
+        _rows = list(_csv.DictReader(_f, delimiter="\t"))
+
+    ADJS = []
+    for _r in _rows:
+        _w = _r["Word"]
+        ADJS.append({
+            "adj": _w,
+            "meaning": _r["Translation"],
+            "adv": min(eee.inflect_slot(_w, _adv_slot, "adjective", language="grc", backend="ancient-greek"), default="") if _adv_slot else "",
+        })
     return (ADJS,)
 
 
