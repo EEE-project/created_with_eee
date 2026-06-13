@@ -933,7 +933,6 @@ def _(ag_backend, eee, um_backend):
             "̄","̆",
         }
         s = unicodedata.normalize("NFD", s).lower()
-        s = s.replace("(ν)", "ν")
         return unicodedata.normalize("NFC", "".join(c for c in s if c not in _STRIP))
 
     @functools.lru_cache(maxsize=None)
@@ -978,10 +977,11 @@ def _(ag_backend, eee, um_backend):
         TD  = "padding:3px 10px;text-align:center;font-family:serif;"
         TH  = "padding:3px 8px;font-weight:600;border-bottom:1px solid #e5e7eb;color:#6b7280;font-size:.82em;text-align:center;"
         ROW = "padding:3px 8px;color:#9ca3af;font-size:.82em;text-align:right;"
+        CAP = "font-size:.75em;color:#9ca3af;text-align:right;padding:2px 4px;"
         found = [False]
 
         def td(forms):
-            hl = any(_norm_grc(f) == tn for f in forms)
+            hl = any(_norm_grc(f.replace("(ν)", "ν")) == tn for f in forms)
             if hl:
                 found[0] = True
             return f'<td style="{HL if hl else TD}">{"/ ".join(sorted(forms)) if forms else chr(8212)}</td>'
@@ -994,28 +994,29 @@ def _(ag_backend, eee, um_backend):
 
         if pos == "noun":
             ag_nmap = _ag_slots("noun", lang)
-            _ag_has = any(
-                eee.inflect_slot(lemma, ag_nmap[t], "noun", language="grc", backend="ancient-greek")
-                for t in (".NSM", ".NSN", ".NSF") if t in ag_nmap
-            )
-
             cl = _CL.get(lang, _CL["en"])
             sg_lbl, pl_lbl = _NL.get(lang, _NL["en"])
-            _be_lbl = "ancient-greek" if _ag_has else "unimorph"
-            _CAP = "font-size:.75em;color:#9ca3af;text-align:right;padding:2px 4px;"
-            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><caption style="{_CAP}">{_be_lbl}</caption><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
+
+            ag_rows = {}
+            for c in ["N", "G", "D", "A", "V"]:
+                for n in ("S", "P"):
+                    forms = set()
+                    for g in "MFN":
+                        slot = ag_nmap.get(f".{c}{n}{g}")
+                        if slot:
+                            forms |= eee.inflect_slot(lemma, slot, "noun", language="grc", backend="ancient-greek")
+                    ag_rows[(c, n)] = forms
+
+            _ag_has = any(ag_rows.values())
+            be_lbl = "ancient-greek" if _ag_has else "unimorph"
+            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><caption style="{CAP}">{be_lbl}</caption><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
 
             if _ag_has:
                 for c in ["N", "G", "D", "A", "V"]:
                     case_key = {"N": "Nom", "G": "Gen", "D": "Dat", "A": "Acc", "V": "Voc"}[c]
                     tbl += f'<tr><td style="{ROW}">{cl.get(case_key, c)}</td>'
                     for n in ("S", "P"):
-                        forms = set()
-                        for g in "MFN":
-                            slot = ag_nmap.get(f".{c}{n}{g}")
-                            if slot:
-                                forms |= eee.inflect_slot(lemma, slot, "noun", language="grc", backend="ancient-greek")
-                        tbl += td(forms)
+                        tbl += td(ag_rows[(c, n)])
                     tbl += "</tr>"
             else:
                 um_nmap = _um_noun_slots(lang)
@@ -1052,8 +1053,7 @@ def _(ag_backend, eee, um_backend):
             if not TENSES:
                 return None
 
-            _CAP = "font-size:.75em;color:#9ca3af;text-align:right;padding:2px 4px;"
-            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><caption style="{_CAP}">{_be_lbl}</caption><tr><th style="{TH}"></th>'
+            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><caption style="{CAP}">ancient-greek</caption><tr><th style="{TH}"></th>'
             tbl += "".join(f'<th style="{TH}">{lbl}</th>' for _, lbl in TENSES) + "</tr>"
             for ps in PS_TAGS:
                 tbl += f'<tr><td style="{ROW}">{prow.get(ps, ps)}</td>'
