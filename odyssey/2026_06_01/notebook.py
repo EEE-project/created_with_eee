@@ -933,6 +933,7 @@ def _(ag_backend, eee, um_backend):
             "̄","̆",
         }
         s = unicodedata.normalize("NFD", s).lower()
+        s = s.replace("(ν)", "ν")
         return unicodedata.normalize("NFC", "".join(c for c in s if c not in _STRIP))
 
     @functools.lru_cache(maxsize=None)
@@ -993,13 +994,16 @@ def _(ag_backend, eee, um_backend):
 
         if pos == "noun":
             ag_nmap = _ag_slots("noun", lang)
-            _probe = ag_nmap.get(".NSM")
-            _nsm_forms = eee.inflect_slot(lemma, _probe, "noun", language="grc", backend="ancient-greek") if _probe else set()
-            _ag_has = bool(_nsm_forms)
+            _ag_has = any(
+                eee.inflect_slot(lemma, ag_nmap[t], "noun", language="grc", backend="ancient-greek")
+                for t in (".NSM", ".NSN", ".NSF") if t in ag_nmap
+            )
 
             cl = _CL.get(lang, _CL["en"])
             sg_lbl, pl_lbl = _NL.get(lang, _NL["en"])
-            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
+            _be_lbl = "ancient-greek" if _ag_has else "unimorph"
+            _CAP = "font-size:.75em;color:#9ca3af;text-align:right;padding:2px 4px;"
+            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><caption style="{_CAP}">{_be_lbl}</caption><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
 
             if _ag_has:
                 for c in ["N", "G", "D", "A", "V"]:
@@ -1008,13 +1012,9 @@ def _(ag_backend, eee, um_backend):
                     for n in ("S", "P"):
                         forms = set()
                         for g in "MFN":
-                            slot_tag = f".{c}{n}{g}"
-                            if slot_tag == ".NSM":
-                                forms |= _nsm_forms
-                            else:
-                                slot = ag_nmap.get(slot_tag)
-                                if slot:
-                                    forms |= eee.inflect_slot(lemma, slot, "noun", language="grc", backend="ancient-greek")
+                            slot = ag_nmap.get(f".{c}{n}{g}")
+                            if slot:
+                                forms |= eee.inflect_slot(lemma, slot, "noun", language="grc", backend="ancient-greek")
                         tbl += td(forms)
                     tbl += "</tr>"
             else:
@@ -1052,7 +1052,8 @@ def _(ag_backend, eee, um_backend):
             if not TENSES:
                 return None
 
-            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th>'
+            _CAP = "font-size:.75em;color:#9ca3af;text-align:right;padding:2px 4px;"
+            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><caption style="{_CAP}">{_be_lbl}</caption><tr><th style="{TH}"></th>'
             tbl += "".join(f'<th style="{TH}">{lbl}</th>' for _, lbl in TENSES) + "</tr>"
             for ps in PS_TAGS:
                 tbl += f'<tr><td style="{ROW}">{prow.get(ps, ps)}</td>'
