@@ -1,14 +1,14 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo>=0.23.1",
+#     "marimo>=0.23.8",
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
 #     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
 #     "unimorph-backend-eee @ git+https://codeberg.org/EEE-project/unimorph-backend-eee.git",
 # ]
 #
 # [tool.uv.sources]
-# eee = { git = "https://codeberg.org/EEE-project/eee.git" }
+# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
 # ancient-greek-backend-eee = { git = "https://codeberg.org/EEE-project/ancient-greek-backend-eee.git" }
 # unimorph-backend-eee = { git = "https://codeberg.org/EEE-project/unimorph-backend-eee.git" }
 # ///
@@ -384,7 +384,6 @@ def _(answer_radio, build_paradigm_table, lang_sel, mo, score, w):
             )
 
     mo.vstack([answer_radio, feedback])
-
     return
 
 
@@ -937,11 +936,13 @@ def _(ag_backend, eee, um_backend):
 
     @functools.lru_cache(maxsize=None)
     def _ag_slots(pos, lang):
-        return {s.tag: s for s in ag_backend.get_slot_templates("grc", pos, lang)}
+        t = ag_backend.get_slot_templates("grc", pos, lang)
+        return {} if t is None else {s.tag: s for s in t}
 
     @functools.lru_cache(maxsize=None)
     def _um_noun_slots(lang):
-        return {s.tag: s for s in um_backend.get_slot_templates("grc", "noun", lang)}
+        t = um_backend.get_slot_templates("grc", "noun", lang)
+        return {} if t is None else {s.tag: s for s in t}
 
     _CL = {
         "ru": {"Nom": "Им.", "Gen": "Род.", "Dat": "Дат.", "Acc": "Вин.", "Voc": "Зват."},
