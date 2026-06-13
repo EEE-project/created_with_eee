@@ -133,6 +133,7 @@ def _(lang_sel, mo, trans_selector):
 
 @app.cell(hide_code=True)
 def _(
+    QUIZ_WORDS,
     STANZAS,
     interlinear_el,
     interlinear_en,
@@ -147,12 +148,7 @@ def _(
     _st_map = {s["ref"]: s for s in STANZAS}
     _stanza = _st_map[stanza_selector.value]
 
-    _HIGHLIGHT = {
-        "Ἄνδρα", "ἄστεα", "ἔγνω", "ἱέμενός", "θεά", "θεοὶ", "θεοί",
-        "Διός", "εἰπὲ", "εἶναι", "ἔσαν", "ἦεν", "ἔτος",
-        "ἀνθρώπων", "πόντῳ", "ἦμαρ", "θύγατερ", "ὄλεθρον",
-        "γυναικὸς", "νύμφη", "σπέσσι",
-    }
+    _HIGHLIGHT = {q["form"] for q in QUIZ_WORDS}
     _GRK = (
         "font-family:'Gentium Plus','GFS Didot',serif;"
         "font-size:1.15em;line-height:2"
@@ -260,36 +256,82 @@ def _(QUIZ_WORDS, cv, lang_sel, mo, random):
     return answer_radio, w
 
 
+@app.function(hide_code=True)
+def fmt_ud(grammar_str, lang):
+    if not grammar_str:
+        return grammar_str
+    try:
+        feats = dict(kv.split("=") for kv in grammar_str.split("|") if "=" in kv)
+    except Exception:
+        return grammar_str
+
+    _CASE = {
+        "ru": {"Nom": "Им.", "Gen": "Род.", "Dat": "Дат.", "Acc": "Вин.", "Voc": "Зват."},
+        "en": {"Nom": "Nom.", "Gen": "Gen.", "Dat": "Dat.", "Acc": "Acc.", "Voc": "Voc."},
+        "el": {"Nom": "Ον.", "Gen": "Γεν.", "Dat": "Δοτ.", "Acc": "Αιτ.", "Voc": "Κλ."},
+    }
+    _NUM = {
+        "ru": {"Sing": "ед.", "Plur": "мн.", "Dual": "дв."},
+        "en": {"Sing": "sg.", "Plur": "pl.", "Dual": "du."},
+        "el": {"Sing": "εν.", "Plur": "πλ.", "Dual": "δυ."},
+    }
+    _TENSE = {
+        "ru": {"Pres": "наст.", "Imp": "имп.", "Aor": "аор.", "Fut": "буд.", "Perf": "перф."},
+        "en": {"Pres": "pres.", "Imp": "impf.", "Aor": "aor.", "Fut": "fut.", "Perf": "pf."},
+        "el": {"Pres": "ενεστ.", "Imp": "παρατ.", "Aor": "αορ.", "Fut": "μελ.", "Perf": "παρακ."},
+    }
+    _VOICE = {
+        "ru": {"Act": "акт.", "Mid": "мед.", "Pass": "пасс."},
+        "en": {"Act": "act.", "Mid": "mid.", "Pass": "pass."},
+        "el": {"Act": "ενεργ.", "Mid": "μέσ.", "Pass": "παθ."},
+    }
+    _MOOD = {
+        "ru": {"Ind": "изъяв.", "Sub": "сосл.", "Opt": "опт.", "Imp": "пов."},
+        "en": {"Ind": "ind.", "Sub": "subj.", "Opt": "opt.", "Imp": "imp."},
+        "el": {"Ind": "οριστ.", "Sub": "υποτ.", "Opt": "ευκτ.", "Imp": "προστ."},
+    }
+    _VFORM = {
+        "ru": {"Fin": "личн.", "Inf": "инф.", "Part": "прич."},
+        "en": {"Fin": "fin.", "Inf": "inf.", "Part": "part."},
+        "el": {"Fin": "ρηματ.", "Inf": "απρφ.", "Part": "μτχ."},
+    }
+    _GENDER = {
+        "ru": {"Masc": "м.", "Fem": "ж.", "Neut": "ср."},
+        "en": {"Masc": "m.", "Fem": "f.", "Neut": "n."},
+        "el": {"Masc": "αρσ.", "Fem": "θηλ.", "Neut": "ουδ."},
+    }
+    c = _CASE.get(lang, _CASE["en"])
+    n = _NUM.get(lang, _NUM["en"])
+    t = _TENSE.get(lang, _TENSE["en"])
+    v = _VOICE.get(lang, _VOICE["en"])
+    m = _MOOD.get(lang, _MOOD["en"])
+    vf = _VFORM.get(lang, _VFORM["en"])
+    g = _GENDER.get(lang, _GENDER["en"])
+
+    parts = []
+    if "VerbForm" in feats:
+        parts.append(vf.get(feats["VerbForm"], feats["VerbForm"]))
+    if "Tense" in feats:
+        parts.append(t.get(feats["Tense"], feats["Tense"]))
+    if "Voice" in feats:
+        parts.append(v.get(feats["Voice"], feats["Voice"]))
+    if "Mood" in feats and feats.get("Mood") != "Ind":
+        parts.append(m.get(feats["Mood"], feats["Mood"]))
+    if "Person" in feats:
+        num_lbl = n.get(feats.get("Number", ""), "")
+        parts.append(f"{feats['Person']} {num_lbl}".strip())
+    elif "Number" in feats:
+        parts.append(n.get(feats["Number"], feats["Number"]))
+    if "Case" in feats:
+        parts.append(c.get(feats["Case"], feats["Case"]))
+    if "Gender" in feats:
+        parts.append(g.get(feats["Gender"], feats["Gender"]))
+
+    return " ".join(parts) if parts else grammar_str
+
+
 @app.cell(hide_code=True)
-def _(ag_backend, um_backend):
-    import functools as _functools
-
-    _be_map = {"ancient-greek": ag_backend, "unimorph": um_backend}
-
-    @_functools.lru_cache(maxsize=None)
-    def _slot_templates(backend, pos, lang):
-        be = _be_map.get(backend)
-        return tuple((be.get_slot_templates("grc", pos, lang) if be else None) or ())
-
-    def get_slot_map(backend, pos, lang):
-        return {s.tag: s for s in _slot_templates(backend, pos, lang)}
-
-    def load_slot_labels(backend, pos, lang):
-        return {s.tag: s.label for s in _slot_templates(backend, pos, lang)}
-
-    return get_slot_map, load_slot_labels
-
-
-@app.cell(hide_code=True)
-def _(
-    answer_radio,
-    build_paradigm_table,
-    lang_sel,
-    load_slot_labels,
-    mo,
-    score,
-    w,
-):
+def _(answer_radio, build_paradigm_table, lang_sel, mo, score, w):
     _lang = lang_sel.value
 
     if w is None:
@@ -308,21 +350,18 @@ def _(
     correct = answer_radio.value == w["form"]
 
     _POS_LABELS = {
-        "ru": {"noun":"сущ.","verb":"глаг.","adj":"прил.","adv":"нар."},
-        "en": {"noun":"n.","verb":"v.","adj":"adj.","adv":"adv."},
-        "el": {"noun":"ουσ.","verb":"ρ.","adj":"επίθ.","adv":"επίρρ."},
+        "ru": {"noun": "сущ.", "verb": "глаг.", "adj": "прил.", "adv": "нар."},
+        "en": {"noun": "n.", "verb": "v.", "adj": "adj.", "adv": "adv."},
+        "el": {"noun": "ουσ.", "verb": "ρ.", "adj": "επίθ.", "adv": "επίρρ."},
     }
-    _pos_key      = w.get("pos", "")
-    _pos          = _POS_LABELS.get(_lang, _POS_LABELS["ru"]).get(_pos_key, _pos_key)
-    _grammar_key  = w.get("grammar", "")
-    _backend_name = w.get("backend", "ancient-greek")
+    _pos_key     = w.get("pos", "")
+    _pos         = _POS_LABELS.get(_lang, _POS_LABELS["ru"]).get(_pos_key, _pos_key)
+    _grammar_key = w.get("grammar", "")
+    _grammar     = fmt_ud(_grammar_key, _lang)
+    _gram_line   = " · ".join(filter(None, [_pos, _grammar]))
 
-    _lmap      = load_slot_labels(_backend_name, _pos_key, _lang)
-    _grammar   = _lmap.get(_grammar_key, _grammar_key)
-    _gram_line = " · ".join(filter(None, [_pos, _grammar, f"[{_backend_name}]"]))
-
-    _RIGHT = {"ru":"✓ Верно!","en":"✓ Correct!","el":"✓ Σωστό!"}
-    _WRONG = {"ru":"✗ Нет. Правильно:","en":"✗ No. Correct form:","el":"✗ Όχι. Σωστή μορφή:"}
+    _RIGHT = {"ru": "✓ Верно!", "en": "✓ Correct!", "el": "✓ Σωστό!"}
+    _WRONG = {"ru": "✗ Нет. Правильно:", "en": "✗ No. Correct form:", "el": "✗ Όχι. Σωστή μορφή:"}
 
     feedback = mo.md("")
     if answer_radio.value is not None:
@@ -345,6 +384,7 @@ def _(
             )
 
     mo.vstack([answer_radio, feedback])
+
     return
 
 
@@ -882,8 +922,9 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(eee, get_slot_map, load_slot_labels):
+def _(ag_backend, eee, um_backend):
     import unicodedata
+    import functools
 
     def _norm_grc(s):
         _STRIP = {
@@ -894,8 +935,43 @@ def _(eee, get_slot_map, load_slot_labels):
         s = unicodedata.normalize("NFD", s).lower()
         return unicodedata.normalize("NFC", "".join(c for c in s if c not in _STRIP))
 
+    @functools.lru_cache(maxsize=None)
+    def _ag_slots(pos, lang):
+        return {s.tag: s for s in ag_backend.get_slot_templates("grc", pos, lang)}
+
+    @functools.lru_cache(maxsize=None)
+    def _um_noun_slots(lang):
+        return {s.tag: s for s in um_backend.get_slot_templates("grc", "noun", lang)}
+
+    _CL = {
+        "ru": {"Nom": "Им.", "Gen": "Род.", "Dat": "Дат.", "Acc": "Вин.", "Voc": "Зват."},
+        "en": {"Nom": "Nom.", "Gen": "Gen.", "Dat": "Dat.", "Acc": "Acc.", "Voc": "Voc."},
+        "el": {"Nom": "Ον.", "Gen": "Γεν.", "Dat": "Δοτ.", "Acc": "Αιτ.", "Voc": "Κλ."},
+    }
+    _NL = {
+        "ru": ("Ед.", "Мн."),
+        "en": ("Sg.", "Pl."),
+        "el": ("Εν.", "Πλ."),
+    }
+    _TCOL = {
+        "ru": {"PAI": "Наст.", "IAI": "Имп.", "AAI": "Аор.", "AMI": "Аор. М.", "API": "Аор. П."},
+        "en": {"PAI": "Pres.", "IAI": "Impf.", "AAI": "Aor.", "AMI": "Aor. M.", "API": "Aor. P."},
+        "el": {"PAI": "Ενεστ.", "IAI": "Παρατ.", "AAI": "Αορ.", "AMI": "Αορ. Μ.", "API": "Αορ. Π."},
+    }
+    _PROW = {
+        "ru": {"1S": "1 ед.", "2S": "2 ед.", "3S": "3 ед.", "1P": "1 мн.", "2P": "2 мн.", "3P": "3 мн."},
+        "en": {"1S": "1 sg.", "2S": "2 sg.", "3S": "3 sg.", "1P": "1 pl.", "2P": "2 pl.", "3P": "3 pl."},
+        "el": {"1S": "1 εν.", "2S": "2 εν.", "3S": "3 εν.", "1P": "1 πλ.", "2P": "2 πλ.", "3P": "3 πλ."},
+    }
+    _INF_LBL = {"ru": "Инф.", "en": "Inf.", "el": "Απρφ."}
+    _IMP_LBL = {
+        "ru": {"2S": "Пов. 2ед.", "2P": "Пов. 2мн."},
+        "en": {"2S": "Imp. 2sg.", "2P": "Imp. 2pl."},
+        "el": {"2S": "Προστ. 2εν.", "2P": "Προστ. 2πλ."},
+    }
+
     def build_paradigm_table(w, lang="ru"):
-        lemma, pos, backend, tested = w["lemma"], w["pos"], w["backend"], w["form"]
+        lemma, pos, tested = w["lemma"], w["pos"], w["form"]
         tn  = _norm_grc(tested)
         HL  = "background:#fef3c7;font-weight:bold;color:#92400e;padding:3px 10px;text-align:center;font-family:serif;"
         TD  = "padding:3px 10px;text-align:center;font-family:serif;"
@@ -909,15 +985,6 @@ def _(eee, get_slot_map, load_slot_labels):
                 found[0] = True
             return f'<td style="{HL if hl else TD}">{"/ ".join(sorted(forms)) if forms else chr(8212)}</td>'
 
-        lmap = load_slot_labels(backend, pos, lang)
-
-        def _part(tag, idx, fb=""):
-            parts = lmap.get(tag, "").split()
-            return parts[idx] if len(parts) > idx else fb
-
-        def _lbl(tag, fb=""):
-            return lmap.get(tag, fb)
-
         _SUPPL = {
             "ru": f"нерегулярная форма, отсутствует в парадигме {lemma}",
             "en": f"irregular form, not in the standard paradigm of {lemma}",
@@ -925,73 +992,62 @@ def _(eee, get_slot_map, load_slot_labels):
         }
 
         if pos == "noun":
-            nmap = get_slot_map(backend, "noun", lang)
-            if backend == "ancient-greek":
-                CASES = [("N",".NSM"),("G",".GSM"),("D",".DSM"),("A",".ASM"),("V",".VSM")]
-                case_rows = [(c, _part(tag, 0, c)) for c, tag in CASES]
-                sg_lbl = _part(".NSM", 1, "Sg.")
-                pl_lbl = _part(".NPM", 1, "Pl.")
-                tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
-                for c, clbl in case_rows:
-                    tbl += f'<tr><td style="{ROW}">{clbl}</td>'
+            ag_nmap = _ag_slots("noun", lang)
+            _probe = ag_nmap.get(".NSM")
+            _nsm_forms = eee.inflect_slot(lemma, _probe, "noun", language="grc", backend="ancient-greek") if _probe else set()
+            _ag_has = bool(_nsm_forms)
+
+            cl = _CL.get(lang, _CL["en"])
+            sg_lbl, pl_lbl = _NL.get(lang, _NL["en"])
+            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
+
+            if _ag_has:
+                for c in ["N", "G", "D", "A", "V"]:
+                    case_key = {"N": "Nom", "G": "Gen", "D": "Dat", "A": "Acc", "V": "Voc"}[c]
+                    tbl += f'<tr><td style="{ROW}">{cl.get(case_key, c)}</td>'
                     for n in ("S", "P"):
                         forms = set()
                         for g in "MFN":
-                            slot = nmap.get(f".{c}{n}{g}")
-                            if slot:
-                                forms |= eee.inflect_slot(lemma, slot, "noun", language="grc",
-                                                          backend="ancient-greek")
+                            slot_tag = f".{c}{n}{g}"
+                            if slot_tag == ".NSM":
+                                forms |= _nsm_forms
+                            else:
+                                slot = ag_nmap.get(slot_tag)
+                                if slot:
+                                    forms |= eee.inflect_slot(lemma, slot, "noun", language="grc", backend="ancient-greek")
                         tbl += td(forms)
                     tbl += "</tr>"
-
-            elif backend == "unimorph":
-                CASES_UM = ["NOM","GEN","DAT","ACC","VOC"]
-                case_rows = [(c, _part(f"N;{c};SG", 0, c)) for c in CASES_UM]
-                sg_lbl = _part("N;NOM;SG", 1, "Sg.")
-                pl_lbl = _part("N;NOM;PL", 1, "Pl.")
-                tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
-                for cname, clbl in case_rows:
-                    tbl += f'<tr><td style="{ROW}">{clbl}</td>'
+            else:
+                um_nmap = _um_noun_slots(lang)
+                _UM_CASES = [("NOM", "Nom"), ("GEN", "Gen"), ("DAT", "Dat"), ("ACC", "Acc"), ("VOC", "Voc")]
+                for c, case_key in _UM_CASES:
+                    tbl += f'<tr><td style="{ROW}">{cl.get(case_key, c)}</td>'
                     for ns in ("SG", "PL"):
-                        slot = nmap.get(f"N;{cname};{ns}")
-                        forms = (eee.inflect_slot(lemma, slot, "noun", language="grc",
-                                                  backend="unimorph")
-                                 if slot is not None else set())
+                        slot = um_nmap.get(f"N;{c};{ns}")
+                        forms = eee.inflect_slot(lemma, slot, "noun", language="grc", backend="unimorph") if slot else set()
                         tbl += td(forms)
                     tbl += "</tr>"
 
             tbl += "</table>"
 
-        elif pos == "verb" and backend == "ancient-greek":
-            slot_map = get_slot_map("ancient-greek", "verb", lang)
-            PS_TAGS = ["1S","2S","3S","1P","2P","3P"]
+        elif pos == "verb":
+            slot_map = _ag_slots("verb", lang)
+            PS_TAGS = ["1S", "2S", "3S", "1P", "2P", "3P"]
 
             _vcache = {}
             def _vf(tag):
                 if tag not in _vcache:
                     slot = slot_map.get(tag)
                     _vcache[tag] = (
-                        eee.inflect_slot(lemma, slot, "verb", language="grc",
-                                         backend="ancient-greek")
+                        eee.inflect_slot(lemma, slot, "verb", language="grc", backend="ancient-greek")
                         if slot else set()
                     )
                 return _vcache[tag]
 
-            def _tcol(t):
-                for ps in PS_TAGS:
-                    v = _part(f"{t}.{ps}", 0, "")
-                    if v:
-                        return v
-                return t
+            tcol = _TCOL.get(lang, _TCOL["en"])
+            prow = _PROW.get(lang, _PROW["en"])
 
-            def _prow(ps):
-                for t in ["PAI","IAI","AAI"]:
-                    parts = lmap.get(f"{t}.{ps}", "").split()
-                    if len(parts) >= 2:
-                        return " ".join(parts[-2:])
-                return ps
-
-            TENSES = [(t, _tcol(t)) for t in ["PAI","IAI","AAI"]
+            TENSES = [(t, tcol.get(t, t)) for t in ["PAI", "IAI", "AAI", "AMI", "API"]
                       if any(_vf(f"{t}.{ps}") for ps in PS_TAGS)]
             if not TENSES:
                 return None
@@ -999,30 +1055,25 @@ def _(eee, get_slot_map, load_slot_labels):
             tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><tr><th style="{TH}"></th>'
             tbl += "".join(f'<th style="{TH}">{lbl}</th>' for _, lbl in TENSES) + "</tr>"
             for ps in PS_TAGS:
-                tbl += f'<tr><td style="{ROW}">{_prow(ps)}</td>'
+                tbl += f'<tr><td style="{ROW}">{prow.get(ps, ps)}</td>'
                 for t, _ in TENSES:
                     tbl += td(_vf(f"{t}.{ps}"))
                 tbl += "</tr>"
 
-            INF_MAP = {"PAI":"PAN","IAI":"IAN","AAI":"AAN"}
-            if any(_vf(INF_MAP.get(t,"")) for t, _ in TENSES):
-                inf_lbl = _lbl("PAN", "Inf.")
-                tbl += f'<tr><td style="{ROW}">{inf_lbl}</td>'
+            INF_MAP = {"PAI": "PAN", "IAI": "IAN", "AAI": "AAN", "AMI": "AMN", "API": "APN"}
+            if any(_vf(INF_MAP.get(t, "")) for t, _ in TENSES):
+                tbl += f'<tr><td style="{ROW}">{_INF_LBL.get(lang, "Inf.")}</td>'
                 for t, _ in TENSES:
                     tbl += td(_vf(INF_MAP.get(t, "")))
                 tbl += "</tr>"
 
-            IMP_MAP = {"PAI":"PAD","AAI":"AAD"}
-            for imp_ps, imp_sfx in [("2S",".2S"),("2P",".2P")]:
+            IMP_MAP = {"PAI": "PAD", "AAI": "AAD", "AMI": "AMD"}
+            for imp_ps, imp_sfx in [("2S", ".2S"), ("2P", ".2P")]:
                 if any(_vf(f"{IMP_MAP[t]}{imp_sfx}") for t, _ in TENSES if t in IMP_MAP):
-                    imp_row_lbl = _lbl(f"PAD{imp_sfx}", f"Imp. {imp_ps}")
-                    tbl += f'<tr><td style="{ROW}">{imp_row_lbl}</td>'
+                    tbl += f'<tr><td style="{ROW}">{_IMP_LBL.get(lang, _IMP_LBL["en"]).get(imp_ps, imp_ps)}</td>'
                     for t, _ in TENSES:
                         imp_t = IMP_MAP.get(t)
-                        if imp_t:
-                            tbl += td(_vf(f"{imp_t}{imp_sfx}"))
-                        else:
-                            tbl += f'<td style="{TD}">—</td>'
+                        tbl += td(_vf(f"{imp_t}{imp_sfx}")) if imp_t else f'<td style="{TD}">—</td>'
                     tbl += "</tr>"
 
             tbl += "</table>"
@@ -1071,7 +1122,7 @@ def _(lang_sel, mo):
     </style>
     <div id="eee-footer">
       <span class="footer-label">{_lbl}</span>
-      <a href="https://codeberg.org/EEE-project/created_with_eee" target="_blank">codeberg.org/EEE-project/created_with_eee</a>
+      <a href="https://codeberg.org/EEE-project" target="_blank">codeberg.org/EEE-project</a>
     </div>
     ''')
     return
