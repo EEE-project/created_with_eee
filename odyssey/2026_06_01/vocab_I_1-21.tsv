@@ -1,26 +1,26 @@
-form	lemma	meaning	meaning_en	meaning_el	context	backend	pos	grammar
-Ἄνδρα	ἀνήρ	мужа	man (acc.)	άνδρα	I.1: Ἄνδρα μοι ἔννεπε, μοῦσα…	ancient-greek	noun	.ASM
-ἔγνω	γιγνώσκω	познал	he knew	έγνω	I.3: …νόον ἔγνω	ancient-greek	verb	AAI.3S
-ἱέμενός	ἵημι	стремясь	yearning	ποθώντας	I.6: …ἐρρύσατο, ἱέμενός περ	ancient-greek	verb	PAP.NSM
-θεά	θεός	богиня	goddess	θεά	I.10: …τῶν ἁμόθεν γε, θεά, θύγατερ Διός	ancient-greek	noun	.VSF
-Διός	Ζεύς	Зевса	of Zeus	Διός	I.10: …θύγατερ Διός, εἰπὲ καὶ ἡμῖν	ancient-greek	noun	.GSM
-εἶναι	εἰμί	быть	to be	να είναι	I.15: …λιλαιομένη πόσιν εἶναι	ancient-greek	verb	PAN
-ἔτος	ἔτος	год	year	έτος	I.16: ἀλλ' ὅτε δὴ ἔτος ἦλθε…	ancient-greek	noun	.NSN
-θεοὶ	θεός	боги	gods	θεοί	I.17: …ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι	ancient-greek	noun	.NPM
-ἀνθρώπων	ἄνθρωπος	людей	of men	ανθρώπων	I.3: πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα…	unimorph	noun	N;GEN;PL
-πόντῳ	πόντος	морю	to the sea	(στον) πόντο	I.4: …ἐν πόντῳ πάθεν ἄλγεα…	unimorph	noun	N;DAT;SG
-ἦμαρ	ἦμαρ	день	day	ημέρα	I.10: …ἀφείλετο νόστιμον ἦμαρ	unimorph	noun	N;ACC;SG
-θύγατερ	θυγάτηρ	дочь	daughter	θύγατερ	I.10: …θεά, θύγατερ Διός	unimorph	noun	N;VOC;SG
-ὄλεθρον	ὄλεθρος	гибель	destruction	(τον) όλεθρο	I.11: …ὅσοι φύγον αἰπὺν ὄλεθρον	unimorph	noun	N;ACC;SG
-γυναικὸς	γυνή	жены	of his wife	γυναικός	I.13: …νόστου κεχρημένον ἠδὲ γυναικὸς	unimorph	noun	N;GEN;SG
-νύμφη	νύμφη	нимфа	nymph	νύμφη	I.14: νύμφη πόντι' ἔρυκε Καλυψώ…	unimorph	noun	N;NOM;SG
-σπέσσι	σπέος	пещерах	in caves	σπέσσι	I.15: ἐν σπέσσι γλαφυροῖσι…	unimorph	noun	N;DAT;PL
-ἄστεα	ἄστυ	города	cities (acc. pl.)	άστεα	I.3: πολλῶν δ᾿ ἀνθρώπων ἴδεν ἄστεα	ancient-greek	noun	.APN
-ψυχήν	ψυχή	душу	soul (acc.)	ψυχή	I.5: …ψυχὴν καὶ νόστον ἑταίρων	ancient-greek	noun	.ASF
-πλάγχθη	πλάζω	блуждал	was driven off course	πλανήθηκε	I.2: πλάγχθη, ἐπεὶ Τροίης ἱερὸν πτολίεθρον ἔπερσεν	ancient-greek	verb	API.3S
-ἴδεν	ὁράω	увидел	he saw	είδε	I.3: πολλῶν δ᾿ ἀνθρώπων ἴδεν ἄστεα	ancient-greek	verb	AAI.3S
-πάθεν	πάσχω	претерпел	he suffered	έπαθε	I.4: ἐν πόντῳ πάθεν ἄλγεα	ancient-greek	verb	AAI.3S
-ὄλοντο	ἀπόλλυμι	погибли	they perished	χάθηκαν	I.7: σφετέρῃσιν ἀτασθαλίῃσιν ὄλοντο	ancient-greek	verb	AMI.3P
-φύγον	φεύγω	бежали	they fled, escaped	έφυγαν	I.11: ὅσοι φύγον αἰπὺν ὄλεθρον	ancient-greek	verb	AAI.3P
-ἐπεκλώσαντο	ἐπικλώθω	назначили судьбой	fated	μοίρεψαν	I.17: ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι	ancient-greek	verb	AMI.3P
-ἱκέσθαι	ἱκνέομαι	достигнуть	to reach	να φτάσει	I.21: …πάρος ἣν γαῖαν ἱκέσθαι	ancient-greek	verb	AMN
+form	lemma	meaning	meaning_en	meaning_el	context	pos	grammar
+Ἄνδρα	ἀνήρ	мужа	man (acc.)	άνδρα	I.1: Ἄνδρα μοι ἔννεπε, μοῦσα…	noun	Case=Acc|Gender=Masc|Number=Sing
+ἔγνω	γιγνώσκω	познал	he knew	έγνω	I.3: …νόον ἔγνω	verb	Mood=Ind|Number=Sing|Person=3|Tense=Aor|VerbForm=Fin|Voice=Act
+ἱέμενός	ἵημι	стремясь	yearning	ποθώντας	I.6: …ἐρρύσατο, ἱέμενός περ	verb	Case=Nom|Gender=Masc|Number=Sing|Tense=Pres|VerbForm=Part|Voice=Mid
+θεά	θεός	богиня	goddess	θεά	I.10: …τῶν ἁμόθεν γε, θεά, θύγατερ Διός	noun	Case=Voc|Gender=Fem|Number=Sing
+Διός	Ζεύς	Зевса	of Zeus	Διός	I.10: …θύγατερ Διός, εἰπὲ καὶ ἡμῖν	noun	Case=Gen|Gender=Masc|Number=Sing
+εἶναι	εἰμί	быть	to be	να είναι	I.15: …λιλαιομένη πόσιν εἶναι	verb	Tense=Pres|VerbForm=Inf|Voice=Act
+ἔτος	ἔτος	год	year	έτος	I.16: ἀλλ' ὅτε δὴ ἔτος ἦλθε…	noun	Case=Nom|Gender=Neut|Number=Sing
+θεοὶ	θεός	боги	gods	θεοί	I.17: …ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι	noun	Case=Nom|Gender=Masc|Number=Plur
+ἀνθρώπων	ἄνθρωπος	людей	of men	ανθρώπων	I.3: πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα…	noun	Case=Gen|Number=Plur
+πόντῳ	πόντος	морю	to the sea	(στον) πόντο	I.4: …ἐν πόντῳ πάθεν ἄλγεα…	noun	Case=Dat|Number=Sing
+ἦμαρ	ἦμαρ	день	day	ημέρα	I.10: …ἀφείλετο νόστιμον ἦμαρ	noun	Case=Acc|Number=Sing
+θύγατερ	θυγάτηρ	дочь	daughter	θύγατερ	I.10: …θεά, θύγατερ Διός	noun	Case=Voc|Number=Sing
+ὄλεθρον	ὄλεθρος	гибель	destruction	(τον) όλεθρο	I.11: …ὅσοι φύγον αἰπὺν ὄλεθρον	noun	Case=Acc|Number=Sing
+γυναικὸς	γυνή	жены	of his wife	γυναικός	I.13: …νόστου κεχρημένον ἠδὲ γυναικὸς	noun	Case=Gen|Number=Sing
+νύμφη	νύμφη	нимфа	nymph	νύμφη	I.14: νύμφη πόντι' ἔρυκε Καλυψώ…	noun	Case=Nom|Number=Sing
+σπέσσι	σπέος	пещерах	in caves	σπέσσι	I.15: ἐν σπέσσι γλαφυροῖσι…	noun	Case=Dat|Number=Plur
+ἄστεα	ἄστυ	города	cities (acc. pl.)	άστεα	I.3: πολλῶν δ᾿ ἀνθρώπων ἴδεν ἄστεα	noun	Case=Acc|Gender=Neut|Number=Plur
+ψυχήν	ψυχή	душу	soul (acc.)	ψυχή	I.5: …ψυχὴν καὶ νόστον ἑταίρων	noun	Case=Acc|Gender=Fem|Number=Sing
+πλάγχθη	πλάζω	блуждал	was driven off course	πλανήθηκε	I.2: πλάγχθη, ἐπεὶ Τροίης ἱερὸν πτολίεθρον ἔπερσεν	verb	Mood=Ind|Number=Sing|Person=3|Tense=Aor|VerbForm=Fin|Voice=Pass
+ἴδεν	ὁράω	увидел	he saw	είδε	I.3: πολλῶν δ᾿ ἀνθρώπων ἴδεν ἄστεα	verb	Mood=Ind|Number=Sing|Person=3|Tense=Aor|VerbForm=Fin|Voice=Act
+πάθεν	πάσχω	претерпел	he suffered	έπαθε	I.4: ἐν πόντῳ πάθεν ἄλγεα	verb	Mood=Ind|Number=Sing|Person=3|Tense=Aor|VerbForm=Fin|Voice=Act
+ὄλοντο	ἀπόλλυμι	погибли	they perished	χάθηκαν	I.7: σφετέρῃσιν ἀτασθαλίῃσιν ὄλοντο	verb	Mood=Ind|Number=Plur|Person=3|Tense=Aor|VerbForm=Fin|Voice=Mid
+φύγον	φεύγω	бежали	they fled, escaped	έφυγαν	I.11: ὅσοι φύγον αἰπὺν ὄλεθρον	verb	Mood=Ind|Number=Plur|Person=3|Tense=Aor|VerbForm=Fin|Voice=Act
+ἐπεκλώσαντο	ἐπικλώθω	назначили судьбой	fated	μοίρεψαν	I.17: ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι	verb	Mood=Ind|Number=Plur|Person=3|Tense=Aor|VerbForm=Fin|Voice=Mid
+ἱκέσθαι	ἱκνέομαι	достигнуть	to reach	να φτάσει	I.21: …πάρος ἣν γαῖαν ἱκέσθαι	verb	Tense=Aor|VerbForm=Inf|Voice=Mid
