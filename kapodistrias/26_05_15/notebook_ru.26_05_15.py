@@ -2,14 +2,14 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.1",
-#     "modern-greek-eee @ git+https://github.com/EEE-project/modern-greek-eee.git",
-#     "modern-greek-inflexion-eee @ git+https://github.com/EEE-project/modern-greek-inflexion-eee.git",
+#     "eee-project",
+#     "modern-greek-backend-eee",
 #     "pandas==3.0.2",
 # ]
 #
 # [tool.uv.sources]
-# modern-greek-eee = { git = "https://github.com/EEE-project/modern-greek-eee" }
-# modern-greek-inflexion-eee = { git = "https://github.com/EEE-project/modern-greek-inflexion-eee" }
+# modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
+# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
 # ///
 
 import marimo
@@ -890,11 +890,13 @@ def _(clear_button_a, clear_count_a, set_captured_adj, set_clear_count_a):
 
 @app.cell(hide_code=True)
 def _():
-    import os
-    import random
-    import pandas as pd
-    import marimo as mo
-    from modern_greek_eee import greek_utils as gu
+    import os, random, pandas as pd, marimo as mo
+    import eee_project as eee
+    from eee_project import GreekUtils
+    from modern_greek_backend_eee import ModernGreekBackend
+    mg = ModernGreekBackend()
+    eee.register_backend("el", mg)
+    gu = GreekUtils(mg, mo, pd, eee_module=eee)
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
     return gu, mo, notebook_dir, os, pd, random
 

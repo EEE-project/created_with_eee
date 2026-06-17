@@ -2,12 +2,14 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.1",
-#     "modern-greek-eee @ git+https://github.com/EEE-project/modern-greek-eee.git",
+#     "eee-project",
+#     "modern-greek-backend-eee",
 #     "pandas==3.0.2",
 # ]
 #
 # [tool.uv.sources]
-# modern-greek-eee = { git = "https://github.com/EEE-project/modern-greek-eee" }
+# modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
+# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
 # ///
 
 import marimo
@@ -22,59 +24,63 @@ app = marimo.App(
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    # **Ioannis Kapodistrias: The First Governor of Greece**
-    The following is a summary of information about Ioannis Kapodistrias from the [presentation](https://docs.google.com/presentation/d/1Za9Z9vyZDUYFn_Rv_QZBga_GxfO5fn9I/edit?usp=sharing&ouid=114390708685640574713&rtpof=true&sd=true) and the film "Ioannis Kapodistrias – The Incredible Story of Greece's First Governor" ([subtitles](https://drive.google.com/file/d/1z-3NR6gyGQg4kugiOVovggtP4_UWoIKh/view?usp=drive_link)):
-    """)
-    return
+def _(mo, notebook_dir, os):
+    def _img(n):
+        _p = os.path.join(notebook_dir, f'slide-{n}.jpg')
+        return mo.image(src=open(_p, 'rb').read(), width=700) if os.path.exists(_p) else mo.md("")
+    mo.vstack([
+        mo.md(r"""
+        # **Ioannis Kapodistrias: The First Governor of Greece**
+        The following is a summary of information about Ioannis Kapodistrias from the [presentation](https://docs.google.com/presentation/d/1Za9Z9vyZDUYFn_Rv_QZBga_GxfO5fn9I/edit?usp=sharing&ouid=114390708685640574713&rtpof=true&sd=true) and the film "Ioannis Kapodistrias – The Incredible Story of Greece's First Governor" ([subtitles](https://drive.google.com/file/d/1z-3NR6gyGQg4kugiOVovggtP4_UWoIKh/view?usp=drive_link)):
+        """),
+        _img(1),
+        mo.Html('''<iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/IeLVfRQ9Lsk"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+        </iframe>'''),
+        _img(2),
+        mo.md(r"""
+        ## **1. Origins and Early Years**
+        *   Ioannis Kapodistrias was born in **Corfu in 1776**.
+        *   He studied **medicine, philosophy, and law** in Italy.
+        *   His surname has Italian origins (**Capo d'Istria**), meaning "from Istria", a region in present-day Slovenia/Croatia, while his original surname was "Vittori".
+        """),
+        _img(3),
+        _img(4),
+        mo.md(r"""
+        ## **2. Diplomatic Career in Russia**
+        *   In 1808 he emigrated to **Russia**, where he worked as a diplomat.
+        *   He rose to become one of Europe's leading diplomats, reaching the position of **Foreign Minister of Tsar Alexander I**.
+        *   Despite his wealthy and secure life in Russia, he decided to give it all up to help Greece after the revolution.
+        """),
+        _img(5),
+        mo.md(r"""
+        ## **3. Governing Greece (1828–1831)**
+        *   He arrived in Greece in **1828** and found a country in a state of absolute chaos, without an army, treasury, roads, or schools.
+        *   **Major Achievements:**
+            *   Founded the first **school system**.
+            *   Organised the **regular army** and public administration.
+            *   Minted the first Greek currency, the **Phoenix**.
+        *   **Personal Stance:** He refused to accept a salary and used his personal fortune to support orphans and widows.
+        """),
+        _img(6),
+        mo.md(r"""
+        ## **4. Conflicts and Opposition**
+        *   His policy of a **strong central state** provoked the anger of local chieftains and powerful families, such as the **Mavromichalis clan**, who lost their privileges.
+        *   Foreign powers regarded him with suspicion, wanting a Greece that was weak and controllable.
 
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.Html('''<iframe
-        width="560"
-        height="315"
-        src="https://www.youtube.com/embed/IeLVfRQ9Lsk"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-    </iframe>''')
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ## **1. Origins and Early Years**
-    *   Ioannis Kapodistrias was born in **Corfu in 1776**.
-    *   He studied **medicine, philosophy, and law** in Italy.
-    *   His surname has Italian origins (**Capo d'Istria**), meaning "from Istria", a region in present-day Slovenia/Croatia, while his original surname was "Vittori".
-
-    ## **2. Diplomatic Career in Russia**
-    *   In 1808 he emigrated to **Russia**, where he worked as a diplomat.
-    *   He rose to become one of Europe's leading diplomats, reaching the position of **Foreign Minister of Tsar Alexander I**.
-    *   Despite his wealthy and secure life in Russia, he decided to give it all up to help Greece after the revolution.
-
-    ## **3. Governing Greece (1828–1831)**
-    *   He arrived in Greece in **1828** and found a country in a state of absolute chaos, without an army, treasury, roads, or schools.
-    *   **Major Achievements:**
-        *   Founded the first **school system**.
-        *   Organised the **regular army** and public administration.
-        *   Minted the first Greek currency, the **Phoenix**.
-    *   **Personal Stance:** He refused to accept a salary and used his personal fortune to support orphans and widows.
-
-    ## **4. Conflicts and Opposition**
-    *   His policy of a **strong central state** provoked the anger of local chieftains and powerful families, such as the **Mavromichalis clan**, who lost their privileges.
-    *   Foreign powers regarded him with suspicion, wanting a Greece that was weak and controllable.
-
-    ## **5. The Assassination and His Legacy**
-    *   He was assassinated on the morning of **27 September 1831** in Nafplio, outside the Church of Saint Spyridon.
-    *   The perpetrators were Konstantinos and Georgios Mavromichalis.
-    *   After his death, the country plunged back into chaos and civil conflicts. Civil wars, foreign interventions, and ultimately a king from abroad.
-    *   His most important legacy was the idea that Greece could function as a **modern, organised, and honest state**.
-    """)
+        ## **5. The Assassination and His Legacy**
+        *   He was assassinated on the morning of **27 September 1831** in Nafplio, outside the Church of Saint Spyridon.
+        *   The perpetrators were Konstantinos and Georgios Mavromichalis.
+        *   After his death, the country plunged back into chaos and civil conflicts. Civil wars, foreign interventions, and ultimately a king from abroad.
+        *   His most important legacy was the idea that Greece could function as a **modern, organised, and honest state**.
+        """),
+    ])
     return
 
 
@@ -887,11 +893,13 @@ def _(clear_button_a, clear_count_a, set_captured_adj, set_clear_count_a):
 
 @app.cell(hide_code=True)
 def _():
-    import os
-    import random
-    import pandas as pd
-    import marimo as mo
-    from modern_greek_eee import greek_utils as gu
+    import os, random, pandas as pd, marimo as mo
+    import eee_project as eee
+    from eee_project import GreekUtils
+    from modern_greek_backend_eee import ModernGreekBackend
+    mg = ModernGreekBackend()
+    eee.register_backend("el", mg)
+    gu = GreekUtils(mg, mo, pd, eee_module=eee)
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
     return gu, mo, notebook_dir, os, pd, random
 

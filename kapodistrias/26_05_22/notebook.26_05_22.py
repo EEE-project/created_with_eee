@@ -39,157 +39,258 @@ def _(language_selector, mo):
 
 @app.cell(hide_code=True)
 def _(language_selector, mo, notebook_dir, os):
-    # Content + slides
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_7wUv6eX2PPjoWc7ix63W7n)"
+    _badge = ""
     def _img(n):
         _p = os.path.join(notebook_dir, f'slide-{n}.jpg')
         return mo.image(src=open(_p, 'rb').read(), width=700) if os.path.exists(_p) else mo.md("")
-    _youtube = mo.Html('''<iframe
-        width="560"
-        height="315"
-        src="https://www.youtube.com/embed/IeLVfRQ9Lsk"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-    </iframe>''')
     if _lang == "ru":
         _c = mo.vstack([
             mo.md(f"""
-            # **Иоаннис Каподистриас: Первый Губернатор Греции** {_badge}
-            Ниже приводится краткое содержание информации об Иоаннисе Каподистриасе из [презентации](https://docs.google.com/presentation/d/1Za9Z9vyZDUYFn_Rv_QZBga_GxfO5fn9I/edit?usp=sharing&ouid=114390708685640574713&rtpof=true&sd=true) и фильма «Иоаннис Каподистриас — Невероятная история первого губернатора Греции» ([субтитры](https://drive.google.com/file/d/1z-3NR6gyGQg4kugiOVovggtP4_UWoIKh/view?usp=drive_link)):
+            # **КОНЕЦ КАПОДИСТРИАСА** {_badge}
+            #### *Иоаннис Каподистриас · Урок 4*
+            Краткое содержание материалов занятия от 22/5/2026.
             """),
             _img(1),
-            _youtube,
+            mo.md(r"""
+            ### **1. Мечтатель или реалист?**
+            """),
             _img(2),
             mo.md(r"""
-            ## **1. Происхождение и ранние годы**
-            *   Иоаннис Каподистриас родился на **Корфу в 1776 году**.
-            *   Изучал **медицину, философию и право** в Италии.
-            *   Его фамилия имеет итальянское происхождение (**Capo d'Istria**) и означает «из Истрии» — региона в современной Словении/Хорватии; его первоначальная фамилия была «Витторис».
+            | Мечтатель | Реалист |
+            |---|---|
+            | Идеи | Организация |
+            | Видение | Законы |
+            | Перемены | Государство |
+            | Надежда | Дисциплина |
+
+            ### **2. Что ему удалось?**
             """),
             _img(3),
+            mo.md(r"""
+            Каподистриас стремился организовать новое греческое государство:
+            *   Придавал большое значение **образованию** и основал школы.
+            *   Организовал **управление** и установил **законы** и порядок.
+            *   Ввёл первую греческую **валюту** — Феникс.
+            *   Укрепил **сельское хозяйство**, распространив культуру картофеля.
+            """),
             _img(4),
             mo.md(r"""
-            ## **2. Дипломатическая карьера в России**
-            *   В 1808 году переехал в **Россию**, где работал дипломатом.
-            *   Стал одним из ведущих дипломатов Европы, достигнув должности **министра иностранных дел царя Александра I**.
-            *   Несмотря на богатую и безопасную жизнь в России, решил бросить всё, чтобы помочь Греции после революции.
+            ### **3. Фильм: «Иоаннис Каподистриас» (Смарагдис)**
+
+            На уроке мы посмотрели фрагмент документального фильма OPEN TV о картине Яниса Смарагдиса «Иоаннис Каподистриас» (в главной роли — Андонис Мириагкос).
+
+            > *«Δολοφονήθηκε... από χέρι ελληνικό με τις ευλογίες ξένων δυνάμεων.»*
+            > «Был убит... греческой рукой с благословения иностранных держав.»
+
+            > *«Σκοτώσαμε όχι τον Καποδίστρια. Σκοτώσαμε το μέλλον της Ελλάδος.»*
+            > «Мы убили не Каподистриаса. Мы убили будущее Греции.»
+
+            > *«Ο Ράμφος λέει ότι μας έπεσε ένα λαχείο ο Καποδίστριας και το πετάξαμε.»*
+            > «Рампос говорит, что Каподистриас был нашим лотерейным билетом — и мы его выбросили.»
+
+            ### **4. Первые конфликты**
             """),
             _img(5),
             mo.md(r"""
-            ## **3. Управление Грецией (1828–1831)**
-            *   Прибыл в Грецию в **1828 году** и застал страну в состоянии полного хаоса — без армии, казны, дорог и школ.
-            *   **Главные достижения:**
-                *   Основал первую **систему образования**.
-                *   Организовал **регулярную армию** и государственное управление.
-                *   Выпустил первую греческую валюту — **Феникс**.
-            *   **Личная позиция:** Отказался от жалованья и использовал собственное состояние для помощи сиротам и вдовам.
+            Многие влиятельные люди не соглашались с Каподистриасом. Они считали, что его перемены вредят их **интересам**. Ситуация стала трудной, и возникло много **противодействий**.
+
+            ### **5. Ситуация становится опасной**
             """),
             _img(6),
             mo.md(r"""
-            ## **4. Конфликты и оппозиция**
-            *   Его политика создания **сильного централизованного государства** вызвала гнев местных вождей и влиятельных семей, таких как **Мавромихалисы**, лишившихся своих привилегий.
-            *   Иностранные державы относились к нему с подозрением, желая видеть Грецию слабой и подконтрольной.
+            Политическая ситуация в Греции стала очень **опасной**. У Каподистриаса было много **врагов** и сильное **давление**. **Конфликты** в стране не прекращались.
 
-            ## **5. Убийство и наследие**
-            *   Был убит утром **27 сентября 1831 года** в Нафплионе, у церкви Святого Спиридона.
-            *   Убийцами были Константинос и Георгиос Мавромихалис.
-            *   После его гибели страна снова погрузилась в хаос и гражданские конфликты. Гражданские войны, иностранное вмешательство и в итоге — король из-за рубежа.
-            *   Главным его наследием стала идея о том, что Греция способна функционировать как **современное, организованное и честное государство**.
+            ### **6. Убийство**
+            """),
+            _img(7),
+            mo.md(r"""
+            **27 сентября 1831 года** Иоаннис Каподистриас был **убит** перед церковью Святого Спиридона в Нафплионе.
+
+            *(Картина: Дионисиос Цокос, «Убийство Каподистриаса»)*
+
+            ### **7. Каподистриас сегодня**
+            """),
+            _img(9),
+            mo.md(r"""
+            Иоаннис Каподистриас остаётся важной фигурой греческой истории. Люди до сих пор **помнят** его дела и идеи — **статуи** и **бюсты** по всей стране **чтят** его **память**.
+
+            ### **Основная лексика (Занятие 22/5/2026)**
+            *   **Ουσιαστικά:** ανάμνηση (воспоминание), γειτονιά (квартал), χωριό (деревня), νησί (остров), θάλασσα (море), λιμάνι (порт), βουνό (гора), ναός (храм), οικογένεια (семья), κοινωνία (общество), ελευθερία (свобода), κανόνες (правила), φύση (природа), νόημα (смысл), συμβολισμός (символизм), αλληγορία (аллегория), περιορισμός (ограничение), πίεση (давление), σύγκρουση (конфликт), αντίδραση (реакция), συμφέρον (интерес/выгода), εχθρός (враг), φόβος (страх), αγωνία (тревога), δολοφονία (убийство), θάνατος (смерть), προδοσία (предательство), εμφύλιος (гражданская война), ατμόσφαιρα (атмосфера), ένταση (напряжение), μνήμη (память), άγαλμα (статуя), προτομή (бюст).
+            *   **Ρήματα:** μεγαλώνω (расти), θυμάμαι (помнить), νιώθω (чувствовать), περνάω (проходить), περιγράφω (описывать), σκέφτομαι (думать), φαντάζομαι (представлять), αλλάζω (менять), γνωρίζω (знать), ταξιδεύω (путешествовать), διαφωνώ (не соглашаться), φοβάμαι (бояться), αντιδρώ (реагировать), συνεχίζω (продолжать), πιέζω (давить), αισθάνομαι (ощущать), δολοφονώ (убивать), τιμώ (чтить), επηρεάζω (влиять), χωρίζω (разделять), συγκρούομαι (сталкиваться).
+            *   **Επίθετα:** παλιός (старый), μικρός (маленький), μεγάλος (большой), ήσυχος (тихий), όμορφος (красивый), αυστηρός (строгий), ελεύθερος (свободный), διαφορετικός (другой), καταπράσινος (насыщенный зелёный), ανθρώπινος (человеческий), ονειροπόλος (мечтательный), επικίνδυνος (опасный), τραγικός (трагический), ήρεμος (спокойный), πολιτικός (политический), ιστορικός (исторический), μόνος (одинокий), δραματικός (драматический), διχασμένος (разделённый).
+
+            ### **Полезные фразы**
+            *   **Θυμάμαι ότι…** — Я помню, что…
+            *   **Νιώθω ότι…** — Я чувствую, что…
+            *   **Φοβάμαι ότι…** — Я боюсь, что…
+            *   **Διαφωνώ γιατί…** — Я не согласен, потому что…
+            *   **Κατά τη γνώμη μου, ο Καποδίστριας ήταν…** — По-моему, Каподистриас был…
             """),
         ])
     elif _lang == "el":
         _c = mo.vstack([
             mo.md(f"""
-            # **Ιωάννης Καποδίστριας: Ο Πρώτος Κυβερνήτης της Ελλάδας** {_badge}
-            Ακολουθεί μια σύνοψη των πληροφοριών για τον Ιωάννη Καποδίστρια από την [παρουσίαση](https://docs.google.com/presentation/d/1Za9Z9vyZDUYFn_Rv_QZBga_GxfO5fn9I/edit?usp=sharing&ouid=114390708685640574713&rtpof=true&sd=true) και την ταινία "Ιωάννης Καποδίστριας – Η Συγκλονιστική Ιστορία του Πρώτου Κυβερνήτη της Ελλάδας" ([υπότιτλοι](https://drive.google.com/file/d/1z-3NR6gyGQg4kugiOVovggtP4_UWoIKh/view?usp=drive_link)):
+            # **ΤΟ ΤΕΛΟΣ ΤΟΥ ΚΑΠΟΔΙΣΤΡΙΑ** {_badge}
+            #### *Ιωάννης Καποδίστριας · Μάθημα 4*
+            Σύνοψη υλικών από το μάθημα της 22/5/2026.
             """),
             _img(1),
-            _youtube,
+            mo.md(r"""
+            ### **1. Ονειροπόλος ή Ρεαλιστής;**
+            """),
             _img(2),
             mo.md(r"""
-            ## **1. Καταγωγή και Πρώτα Χρόνια**
-            *   Ο Ιωάννης Καποδίστριας γεννήθηκε στην **Κέρκυρα το 1776**.
-            *   Σπούδασε **ιατρική, φιλοσοφία και νομικά** στην Ιταλία.
-            *   Το επώνυμό του έχει ιταλική προέλευση (**Capo d'Istria**) και σημαίνει "από την Ιστρία", μια περιοχή στη σημερινή Σλοβενία/Κροατία, ενώ το αρχικό του επώνυμο ήταν "Βιττόρι".
+            | Ονειροπόλος | Ρεαλιστής |
+            |---|---|
+            | Ιδέες | Οργάνωση |
+            | Όραμα | Νόμοι |
+            | Αλλαγές | Κράτος |
+            | Ελπίδα | Πειθαρχία |
+
+            ### **2. Τι Κατάφερε;**
             """),
             _img(3),
+            mo.md(r"""
+            Ο Καποδίστριας προσπάθησε να οργανώσει το νέο ελληνικό κράτος:
+            *   Έδωσε σημασία στην **εκπαίδευση** και δημιούργησε σχολεία.
+            *   Οργάνωσε τη **διοίκηση** και έφερε **νόμους** και τάξη.
+            *   Εισήγαγε το πρώτο ελληνικό **νόμισμα**, τον Φοίνικα.
+            *   Ενίσχυσε τη **γεωργία** με την καλλιέργεια της πατάτας.
+            """),
             _img(4),
             mo.md(r"""
-            ## **2. Διπλωματική Καριέρα στη Ρωσία**
-            *   Το 1808 μετανάστευσε στη **Ρωσία**, όπου εργάστηκε ως διπλωμάτης.
-            *   Αναδείχθηκε σε έναν από τους κορυφαίους διπλωμάτες της Ευρώπης, φτάνοντας στη θέση του **Υπουργού Εξωτερικών του Τσάρου Αλεξάνδρου Α΄**.
-            *   Παρά την πλούσια και ασφαλή ζωή του στη Ρωσία, αποφάσισε να τα εγκαταλείψει όλα για να βοηθήσει την Ελλάδα μετά την επανάσταση.
+            ### **3. Η Ταινία: «Ιωάννης Καποδίστριας» (Σμαραγδής)**
+
+            Στο μάθημα παρακολουθήσαμε απόσπασμα από το ντοκιμαντέρ του OPEN TV για την ταινία του Γιάννη Σμαραγδή (πρωταγωνιστής: Αντώνης Μυριαγκός).
+
+            > *«Δολοφονήθηκε... από χέρι ελληνικό με τις ευλογίες ξένων δυνάμεων.»*
+
+            > *«Σκοτώσαμε όχι τον Καποδίστρια. Σκοτώσαμε το μέλλον της Ελλάδος.»*
+
+            > *«Ο Ράμφος λέει ότι μας έπεσε ένα λαχείο ο Καποδίστριας και το πετάξαμε.»*
+
+            ### **4. Οι Πρώτες Συγκρούσεις**
             """),
             _img(5),
             mo.md(r"""
-            ## **3. Η Διακυβέρνηση της Ελλάδας (1828-1831)**
-            *   Έφτασε στην Ελλάδα το **1828** και βρήκε μια χώρα σε κατάσταση απόλυτου χάους, χωρίς στρατό, ταμείο, δρόμους ή σχολεία.
-            *   **Σημαντικά Έργα:**
-                *   Ίδρυσε το πρώτο **σχολικό σύστημα**.
-                *   Οργάνωσε τον **τακτικό στρατό** και τη δημόσια διοίκηση.
-                *   Έκοψε το πρώτο ελληνικό νόμισμα, τον **Φοίνικα**.
-            *   **Προσωπική Στάση:** Αρνήθηκε να λαμβάνει μισθό και διέθεσε την προσωπική του περιουσία για τη στήριξη ορφανών και χηρών.
+            Πολλοί ισχυροί άνθρωποι δεν συμφωνούσαν με τον Καποδίστρια. Πίστευαν ότι οι αλλαγές του δεν ήταν καλές για τα **συμφέροντά** τους. Η κατάσταση έγινε δύσκολη και υπήρχαν πολλές **αντιδράσεις**.
+
+            ### **5. Η Κατάσταση Γίνεται Επικίνδυνη**
             """),
             _img(6),
             mo.md(r"""
-            ## **4. Συγκρούσεις και Αντιπολίτευση**
-            *   Η πολιτική του για ένα **ισχυρό κεντρικό κράτος** προκάλεσε την οργή των τοπικών αρχόντων και ισχυρών οικογενειών, όπως οι **Μαυρομιχαλαίοι**, που έχασαν τα προνόμιά τους.
-            *   Οι ξένες δυνάμεις τον αντιμετώπιζαν με καχυποψία, καθώς ήθελαν μια Ελλάδα αδύναμη και ελεγχόμενη.
+            Η πολιτική κατάσταση στην Ελλάδα έγινε πολύ **επικίνδυνη**. Ο Καποδίστριας είχε πολλούς **εχθρούς** και μεγάλες **πιέσεις**. Οι **συγκρούσεις** στη χώρα συνεχίζονταν.
 
-            ## **5. Η Δολοφονία και η Κληρονομιά του**
-            *   Δολοφονήθηκε το πρωί της **27ης Σεπτεμβρίου 1831** στο Ναύπλιο, έξω από την εκκλησία του Αγίου Σπυρίδωνα.
-            *   Δράστες ήταν ο Κωνσταντίνος και ο Γεώργιος Μαυρομιχάλης.
-            *   Μετά τον θάνατό του, η χώρα βυθίστηκε ξανά στο χάος και στις εμφύλιες συγκρούσεις. Εμφύλιες συγκρούσεις, ξένες παρεμβάσεις και τελικά ένας βασιλιάς από το εξωτερικό.
-            *   Η σημαντικότερη κληρονομιά του ήταν η ιδέα ότι η Ελλάδα μπορεί να λειτουργήσει ως ένα **σύγχρονο, οργανωμένο και έντιμο κράτος**.
+            ### **6. Η Δολοφονία**
+            """),
+            _img(7),
+            mo.md(r"""
+            Στις **27 Σεπτεμβρίου 1831** ο Ιωάννης Καποδίστριας **δολοφονήθηκε** έξω από την εκκλησία του Αγίου Σπυρίδωνα στο Ναύπλιο.
+
+            *(Πίνακας: Διονύσιος Τσόκος, «Η δολοφονία του Καποδίστρια»)*
+
+            ### **7. Ο Καποδίστριας Σήμερα**
+            """),
+            _img(9),
+            mo.md(r"""
+            Ο Ιωάννης Καποδίστριας παραμένει ένα σημαντικό πρόσωπο της ελληνικής ιστορίας. Οι άνθρωποι **θυμούνται** ακόμη το έργο και τις ιδέες του — **αγάλματα** και **προτομές** σε όλη τη χώρα **τιμούν** τη **μνήμη** του.
+
+            ### **Βασικό Λεξιλόγιο (Μάθημα 22/5/2026)**
+            *   **Ουσιαστικά:** ανάμνηση, γειτονιά, χωριό, νησί, θάλασσα, λιμάνι, βουνό, ναός, οικογένεια, κοινωνία, ελευθερία, κανόνες, φύση, νόημα, συμβολισμός, αλληγορία, περιορισμός, πίεση, σύγκρουση, αντίδραση, συμφέρον, εχθρός, φόβος, αγωνία, δολοφονία, θάνατος, προδοσία, εμφύλιος, ατμόσφαιρα, ένταση, μνήμη, άγαλμα, προτομή.
+            *   **Ρήματα:** μεγαλώνω, θυμάμαι, νιώθω, περνάω, περιγράφω, σκέφτομαι, φαντάζομαι, αλλάζω, γνωρίζω, ταξιδεύω, διαφωνώ, φοβάμαι, αντιδρώ, συνεχίζω, πιέζω, αισθάνομαι, δολοφονώ, τιμώ, επηρεάζω, χωρίζω, συγκρούομαι.
+            *   **Επίθετα:** παλιός, μικρός, μεγάλος, ήσυχος, όμορφος, αυστηρός, ελεύθερος, διαφορετικός, καταπράσινος, ανθρώπινος, ονειροπόλος, επικίνδυνος, τραγικός, ήρεμος, πολιτικός, ιστορικός, μόνος, δραματικός, διχασμένος.
+
+            ### **Χρήσιμες Φράσεις**
+            *   **Θυμάμαι ότι…** — I remember that… / Я помню, что…
+            *   **Νιώθω ότι…** — I feel that… / Я чувствую, что…
+            *   **Φοβάμαι ότι…** — I'm afraid that… / Я боюсь, что…
+            *   **Διαφωνώ γιατί…** — I disagree because… / Я не согласен, потому что…
+            *   **Κατά τη γνώμη μου, ο Καποδίστριας ήταν…** — In my opinion, Kapodistrias was… / По-моему, Каподистриас был…
             """),
         ])
     else:
         _c = mo.vstack([
             mo.md(f"""
-            # **Ioannis Kapodistrias: The First Governor of Greece** {_badge}
-            The following is a summary of information about Ioannis Kapodistrias from the [presentation](https://docs.google.com/presentation/d/1Za9Z9vyZDUYFn_Rv_QZBga_GxfO5fn9I/edit?usp=sharing&ouid=114390708685640574713&rtpof=true&sd=true) and the film "Ioannis Kapodistrias – The Incredible Story of Greece's First Governor" ([subtitles](https://drive.google.com/file/d/1z-3NR6gyGQg4kugiOVovggtP4_UWoIKh/view?usp=drive_link)):
+            # **THE END OF KAPODISTRIAS** {_badge}
+            #### *Ioannis Kapodistrias · Lesson 4*
+            Summary of materials from the lesson of 22/5/2026.
             """),
             _img(1),
-            _youtube,
+            mo.md(r"""
+            ### **1. Dreamer or Realist?**
+            """),
             _img(2),
             mo.md(r"""
-            ## **1. Origins and Early Years**
-            *   Ioannis Kapodistrias was born in **Corfu in 1776**.
-            *   He studied **medicine, philosophy, and law** in Italy.
-            *   His surname has Italian origins (**Capo d'Istria**), meaning "from Istria", a region in present-day Slovenia/Croatia, while his original surname was "Vittori".
+            | Dreamer | Realist |
+            |---|---|
+            | Ideas | Organisation |
+            | Vision | Laws |
+            | Changes | State |
+            | Hope | Discipline |
+
+            ### **2. What Did He Achieve?**
             """),
             _img(3),
+            mo.md(r"""
+            Kapodistrias worked to organise the new Greek state:
+            *   He prioritised **education** and founded schools.
+            *   He organised **governance** and brought **laws** and order.
+            *   He introduced the first Greek **currency**, the Phoenix.
+            *   He promoted **agriculture** by introducing potato cultivation.
+            """),
             _img(4),
             mo.md(r"""
-            ## **2. Diplomatic Career in Russia**
-            *   In 1808 he emigrated to **Russia**, where he worked as a diplomat.
-            *   He rose to become one of Europe's leading diplomats, reaching the position of **Foreign Minister of Tsar Alexander I**.
-            *   Despite his wealthy and secure life in Russia, he decided to give it all up to help Greece after the revolution.
+            ### **3. The Film: "Ioannis Kapodistrias" (Smaradis)**
+
+            In the lesson we watched a clip from the OPEN TV documentary about Yannis Smaradis's film (starring Antonis Myriagkos).
+
+            > *«Δολοφονήθηκε... από χέρι ελληνικό με τις ευλογίες ξένων δυνάμεων.»*
+            > "He was assassinated... by a Greek hand, with the blessing of foreign powers."
+
+            > *«Σκοτώσαμε όχι τον Καποδίστρια. Σκοτώσαμε το μέλλον της Ελλάδος.»*
+            > "We didn't kill Kapodistrias. We killed the future of Greece."
+
+            > *«Ο Ράμφος λέει ότι μας έπεσε ένα λαχείο ο Καποδίστριας και το πετάξαμε.»*
+            > "Ramphos says Kapodistrias was a lottery ticket that fell into our hands — and we threw it away."
+
+            ### **4. The First Conflicts**
             """),
             _img(5),
             mo.md(r"""
-            ## **3. Governing Greece (1828–1831)**
-            *   He arrived in Greece in **1828** and found a country in a state of absolute chaos, without an army, treasury, roads, or schools.
-            *   **Major Achievements:**
-                *   Founded the first **school system**.
-                *   Organised the **regular army** and public administration.
-                *   Minted the first Greek currency, the **Phoenix**.
-            *   **Personal Stance:** He refused to accept a salary and used his personal fortune to support orphans and widows.
+            Many powerful people disagreed with Kapodistrias. They believed his changes were not good for their **interests**. The situation became difficult and there were many **reactions** against him.
+
+            ### **5. The Situation Becomes Dangerous**
             """),
             _img(6),
             mo.md(r"""
-            ## **4. Conflicts and Opposition**
-            *   His policy of a **strong central state** provoked the anger of local chieftains and powerful families, such as the **Mavromichalis clan**, who lost their privileges.
-            *   Foreign powers regarded him with suspicion, wanting a Greece that was weak and controllable.
+            The political situation in Greece became very **dangerous**. Kapodistrias had many **enemies** and faced great **pressure**. **Conflicts** in the country continued to escalate.
 
-            ## **5. The Assassination and His Legacy**
-            *   He was assassinated on the morning of **27 September 1831** in Nafplio, outside the Church of Saint Spyridon.
-            *   The perpetrators were Konstantinos and Georgios Mavromichalis.
-            *   After his death, the country plunged back into chaos and civil conflicts. Civil wars, foreign interventions, and ultimately a king from abroad.
-            *   His most important legacy was the idea that Greece could function as a **modern, organised, and honest state**.
+            ### **6. The Assassination**
+            """),
+            _img(7),
+            mo.md(r"""
+            On **27 September 1831**, Ioannis Kapodistrias was **assassinated** outside the Church of Saint Spyridon in Nafplio.
+
+            *(Painting: Dionysios Tsokos, "The Assassination of Kapodistrias")*
+
+            ### **7. Kapodistrias Today**
+            """),
+            _img(9),
+            mo.md(r"""
+            Ioannis Kapodistrias remains an important figure in Greek history. People still **remember** his work and ideas — **statues** and **busts** across the country **honour** his **memory**.
+
+            ### **Key Vocabulary (Lesson 22/5/2026)**
+            *   **Nouns:** ανάμνηση (memory), γειτονιά (neighbourhood), χωριό (village), νησί (island), θάλασσα (sea), λιμάνι (port), βουνό (mountain), ναός (temple/church), οικογένεια (family), κοινωνία (society), ελευθερία (freedom), κανόνες (rules), φύση (nature), νόημα (meaning), συμβολισμός (symbolism), αλληγορία (allegory), περιορισμός (restriction), πίεση (pressure), σύγκρουση (conflict), αντίδραση (reaction), συμφέρον (interest), εχθρός (enemy), φόβος (fear), αγωνία (anxiety), δολοφονία (assassination), θάνατος (death), προδοσία (betrayal), εμφύλιος (civil war), ατμόσφαιρα (atmosphere), ένταση (tension), μνήμη (memory), άγαλμα (statue), προτομή (bust).
+            *   **Verbs:** μεγαλώνω (to grow up), θυμάμαι (to remember), νιώθω (to feel), περνάω (to pass/spend), περιγράφω (to describe), σκέφτομαι (to think), φαντάζομαι (to imagine), αλλάζω (to change), γνωρίζω (to know), ταξιδεύω (to travel), διαφωνώ (to disagree), φοβάμαι (to fear), αντιδρώ (to react), συνεχίζω (to continue), πιέζω (to pressure), αισθάνομαι (to feel/sense), δολοφονώ (to assassinate), τιμώ (to honour), επηρεάζω (to influence), χωρίζω (to divide), συγκρούομαι (to clash).
+            *   **Adjectives:** παλιός (old), μικρός (small), μεγάλος (big), ήσυχος (quiet), όμορφος (beautiful), αυστηρός (strict), ελεύθερος (free), διαφορετικός (different), καταπράσινος (bright green), ανθρώπινος (human), ονειροπόλος (dreamy), επικίνδυνος (dangerous), τραγικός (tragic), ήρεμος (calm), πολιτικός (political), ιστορικός (historic), μόνος (alone), δραματικός (dramatic), διχασμένος (divided).
+
+            ### **Useful Phrases**
+            *   **Θυμάμαι ότι…** — I remember that…
+            *   **Νιώθω ότι…** — I feel that…
+            *   **Φοβάμαι ότι…** — I'm afraid that…
+            *   **Διαφωνώ γιατί…** — I disagree because…
+            *   **Κατά τη γνώμη μου, ο Καποδίστριας ήταν…** — In my opinion, Kapodistrias was…
             """),
         ])
     _c
@@ -197,28 +298,28 @@ def _(language_selector, mo, notebook_dir, os):
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, notebook_dir, os, pd, t_ui):
-    # Vocabulary table
-    _lang = language_selector.value
-    _df_vocab = pd.read_csv(os.path.join(notebook_dir, 'vocabulary.tsv'), sep='\t')
-    _tbl_vocab = mo.ui.table(_df_vocab, selection="multi") if _df_vocab is not None else None
-    mo.vstack([
-        mo.md(t_ui("vocabulary_heading", _lang)),
-        _tbl_vocab,
-    ])
+def _(mo):
+    # Ιωάννης Καποδίστριας — ταινία Σμαραγδή (OPEN TV documentary)
+    mo.Html('''<iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/IbXSgf8NVKI"
+        title="Ιωάννης Καποδίστριας — Ταινία Σμαραγδή"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+    </iframe>''')
     return
 
 
 @app.cell(hide_code=True)
 def _(language_selector, mo, t_ui):
-    # Nouns section heading
     mo.md(t_ui("nouns_heading", language_selector.value))
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    # Noun state
     tbl_sel_n, set_tbl_sel_n = mo.state(None)
     session_total_n, set_session_total_n = mo.state(0)
     return session_total_n, set_session_total_n, set_tbl_sel_n, tbl_sel_n
@@ -226,7 +327,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    # Noun file upload (static label — no lang dep to preserve uploaded state)
     file_upload_noun = mo.ui.file(label="Upload nouns TSV")
     file_upload_noun
     return (file_upload_noun,)
@@ -234,7 +334,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(file_upload_noun, gu, notebook_dir, os, pd):
-    # Noun data loading
     if file_upload_noun.value:
         df_noun = gu.load_data(file_upload_noun, [])
     else:
@@ -247,18 +346,13 @@ def _(file_upload_noun, gu, notebook_dir, os, pd):
 
 @app.cell(hide_code=True)
 def _(df_noun, language_selector, mo, t_ui, tbl_sel_n):
-    # Noun table display
     table_noun = mo.ui.table(df_noun, selection="multi", initial_selection=tbl_sel_n()) if df_noun is not None else None
-    mo.vstack([
-        mo.md(t_ui("select_nouns", language_selector.value)),
-        table_noun,
-    ])
+    mo.vstack([mo.md(t_ui("select_nouns", language_selector.value)), table_noun])
     return (table_noun,)
 
 
 @app.cell(hide_code=True)
 def _(gu, mo, random, session_total_n, set_session_total_n, table_noun):
-    # Noun state init (no lang dep — static English buttons)
     words_noun = gu.get_words(table_noun)
     words4test_noun, set_words4test_noun = mo.state(words_noun.copy() if words_noun else [])
     if words_noun and len(words_noun) > session_total_n():
@@ -355,7 +449,6 @@ def _(
     t_ui,
     words4test_noun,
 ):
-    # Simple noun test display
     _lang = language_selector.value
     _feedback = mo.md("")
     if words4test_noun() and noun_word:
@@ -365,9 +458,8 @@ def _(
                 gu.check_noun_test(noun_word, _cs, mode='simple')
             if _buf.getvalue():
                 _feedback = mo.md(_buf.getvalue())
-        _heading = t_ui("simple_noun_test", _lang).format(count=len(words4test_noun()), total=session_total_n())
         _view = mo.vstack([
-            mo.md(_heading),
+            mo.md(t_ui("simple_noun_test", _lang).format(count=len(words4test_noun()), total=session_total_n())),
             mo.md(f"{t_ui('translation_label', _lang)} **{noun_trans}**"),
             noun_form,
             _feedback,
@@ -395,7 +487,6 @@ def _(
     t_ui,
     words4test_noun,
 ):
-    # Article noun test display
     _lang = language_selector.value
     _feedback_a = mo.md("")
     if words4test_noun() and art_noun_word:
@@ -405,9 +496,8 @@ def _(
                 gu.check_noun_test(art_noun_word, _ca, mode='article')
             if _buf_a.getvalue():
                 _feedback_a = mo.md(_buf_a.getvalue())
-        _heading = t_ui("article_noun_test", _lang).format(count=len(words4test_noun()), total=session_total_n())
         _view_art = mo.vstack([
-            mo.md(_heading),
+            mo.md(t_ui("article_noun_test", _lang).format(count=len(words4test_noun()), total=session_total_n())),
             mo.md(f"{t_ui('translation_label', _lang)} **{art_noun_trans}**"),
             art_noun_form,
             _feedback_a,
@@ -444,7 +534,6 @@ def _(
     t_ui,
     words4test_noun,
 ):
-    # Noun pass handler
     _lang = language_selector.value
     _cn = current_noun()
     _cs = captured_simple()
@@ -483,9 +572,9 @@ def _(
 ):
     if (submit_button_n.value or 0) > submit_count_n():
         set_submit_count_n(submit_button_n.value)
-        if noun_word and noun_form:
+        if noun_word and noun_form is not None:
             set_captured_simple(gu.make_snapshot(noun_form))
-        if art_noun_word and art_noun_form:
+        if art_noun_word and art_noun_form is not None:
             set_captured_article(gu.make_snapshot(art_noun_form))
     return
 
@@ -536,14 +625,12 @@ def _(
 
 @app.cell(hide_code=True)
 def _(language_selector, mo, t_ui):
-    # Verbs section heading
     mo.md(t_ui("verbs_heading", language_selector.value))
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    # Verb state
     tbl_sel_v, set_tbl_sel_v = mo.state(None)
     session_total_v, set_session_total_v = mo.state(0)
     return session_total_v, set_session_total_v, set_tbl_sel_v, tbl_sel_v
@@ -551,7 +638,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    # Verb file upload (static label)
     file_upload_verb = mo.ui.file(label="Upload verbs TSV")
     file_upload_verb
     return (file_upload_verb,)
@@ -559,7 +645,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(file_upload_verb, gu, notebook_dir, os, pd):
-    # Verb data loading
     if file_upload_verb.value:
         df_verb = gu.load_data(file_upload_verb, [])
     else:
@@ -572,7 +657,6 @@ def _(file_upload_verb, gu, notebook_dir, os, pd):
 
 @app.cell(hide_code=True)
 def _(df_verb, language_selector, mo, t_ui, tbl_sel_v):
-    # Verb table display
     table_verb = mo.ui.table(df_verb, selection="multi", initial_selection=tbl_sel_v()) if df_verb is not None else None
     mo.vstack([mo.md(t_ui("select_verbs", language_selector.value)), table_verb])
     return (table_verb,)
@@ -580,32 +664,17 @@ def _(df_verb, language_selector, mo, t_ui, tbl_sel_v):
 
 @app.cell(hide_code=True)
 def _(gu, language_selector, mo, t_ui):
-    # Tense selector (inline options per language)
     _lang = language_selector.value
     _b1_tenses = ['present', 'imperfect', 'aorist', 'future', 'future_continuous']
-    if _lang == "ru":
-        _tense_options = {
-            "Настоящее": "present",
-            "Имперфект": "imperfect",
-            "Аорист": "aorist",
-            "Простое будущее": "future",
-            "Длительное будущее": "future_continuous",
-        }
-        _default_tense = "Настоящее"
-    elif _lang == "el":
-        _tense_options = {gu.TENSE_LABELS[k]['greek']: k for k in _b1_tenses if k in gu.TENSE_LABELS}
-        _default_tense = gu.TENSE_LABELS['present']['greek']
-    else:
-        _tense_options = {gu.TENSE_LABELS[k]['dropdown']: k for k in _b1_tenses if k in gu.TENSE_LABELS}
-        _default_tense = gu.TENSE_LABELS['present']['dropdown']
-    tense_selector = mo.ui.dropdown(options=_tense_options, value=_default_tense, label=t_ui("tense_label", _lang))
+    _opts = {gu.TENSE_LABELS[k]['dropdown']: k for k in _b1_tenses if k in gu.TENSE_LABELS}
+    _default = gu.TENSE_LABELS['present']['dropdown']
+    tense_selector = mo.ui.dropdown(options=_opts, value=_default, label=t_ui("tense_label", _lang))
     tense_selector
     return (tense_selector,)
 
 
 @app.cell(hide_code=True)
 def _(gu, mo, random, session_total_v, set_session_total_v, table_verb):
-    # Verb state init (no lang dep — static English buttons)
     words_verb = gu.get_words(table_verb)
     words4test_verb, set_words4test_verb = mo.state(words_verb.copy() if words_verb else [])
     if words_verb and len(words_verb) > session_total_v():
@@ -645,30 +714,11 @@ def _(gu, mo, random, session_total_v, set_session_total_v, table_verb):
 
 
 @app.cell(hide_code=True)
-def _(
-    clear_count_v,
-    cv_verb,
-    gu,
-    language_selector,
-    tense_selector,
-    words4test_verb,
-    words_verb,
-):
-    # Verb fields
+def _(clear_count_v, cv_verb, gu, tense_selector, words4test_verb, words_verb):
     clear_count_v()
     _cv = cv_verb()
     _tense_key = tense_selector.value
-    _lang = language_selector.value
-    _RU_LABELS = {"present": "Настоящее", "imperfect": "Имперфект", "aorist": "Аорист", "future": "Простое будущее", "future_continuous": "Длительное будущее"}
-    if _tense_key:
-        if _lang == "ru":
-            _ui_label = _RU_LABELS.get(_tense_key, _tense_key)
-        elif _lang == "el":
-            _ui_label = gu.TENSE_LABELS[_tense_key]['greek']
-        else:
-            _ui_label = gu.TENSE_LABELS[_tense_key]['dropdown']
-    else:
-        _ui_label = "—"
+    _ui_label = gu.TENSE_LABELS[_tense_key]['greek'] if _tense_key else "—"
     verb_fields, _ = gu.create_verb_test_ui(_ui_label, words_verb, words4test_verb(), _cv)
     return (verb_fields,)
 
@@ -707,7 +757,6 @@ def _(
     verb_msg,
     words4test_verb,
 ):
-    # Verb display
     _lang = language_selector.value
     _cv = cv_verb()
     if not words4test_verb():
@@ -728,8 +777,7 @@ def _(
             _label = gu.TENSE_LABELS.get(_tense_key, {}).get('greek', _tense_key)
         else:
             _label = gu.TENSE_LABELS.get(_tense_key, {}).get('dropdown', _tense_key)
-        _heading = t_ui("verb_test_heading", _lang).format(label=_label, count=len(words4test_verb()), total=session_total_v())
-        _items = [mo.md(_heading)]
+        _items = [mo.md(t_ui("verb_test_heading", _lang).format(label=_label, count=len(words4test_verb()), total=session_total_v()))]
         if verb_msg():
             _items.append(mo.md(verb_msg()))
         _items += [
@@ -761,7 +809,6 @@ def _(
     tense_selector,
     words4test_verb,
 ):
-    # Verb pass handler
     _lang = language_selector.value
     _tense_key = tense_selector.value
     _c = captured_verb()
@@ -794,7 +841,7 @@ def _(
     if (submit_button_v.value or 0) > submit_count_v():
         set_submit_count_v(submit_button_v.value)
         _cv = cv_verb()
-        if _cv and verb_fields:
+        if _cv and verb_fields is not None:
             set_captured_verb(gu.make_snapshot(verb_fields, verb_word=_cv['Word'], tense=tense_selector.value))
     return
 
@@ -836,14 +883,12 @@ def _(clear_button_v, clear_count_v, set_captured_verb, set_clear_count_v):
 
 @app.cell(hide_code=True)
 def _(language_selector, mo, t_ui):
-    # Adjectives section heading
     mo.md(t_ui("adjectives_heading", language_selector.value))
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    # Adjective state
     tbl_sel_a, set_tbl_sel_a = mo.state(None)
     session_total_a, set_session_total_a = mo.state(0)
     return session_total_a, set_session_total_a, set_tbl_sel_a, tbl_sel_a
@@ -851,7 +896,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    # Adjective file upload (static label)
     file_upload_adj = mo.ui.file(label="Upload adjectives TSV")
     file_upload_adj
     return (file_upload_adj,)
@@ -859,7 +903,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(file_upload_adj, gu, notebook_dir, os, pd):
-    # Adjective data loading
     if file_upload_adj.value:
         df_adj = gu.load_data(file_upload_adj, [])
     else:
@@ -872,7 +915,6 @@ def _(file_upload_adj, gu, notebook_dir, os, pd):
 
 @app.cell(hide_code=True)
 def _(df_adj, language_selector, mo, t_ui, tbl_sel_a):
-    # Adjective table display
     table_adj = mo.ui.table(df_adj, selection="multi", initial_selection=tbl_sel_a()) if df_adj is not None else None
     mo.vstack([mo.md(t_ui("select_adjs", language_selector.value)), table_adj])
     return (table_adj,)
@@ -880,16 +922,24 @@ def _(df_adj, language_selector, mo, t_ui, tbl_sel_a):
 
 @app.cell(hide_code=True)
 def _(language_selector, mo, t_ui):
-    # Mode selector (inline options per language)
     _lang = language_selector.value
     if _lang == "ru":
-        _opts = {"Простой: 3 рода × 2 числа (6 полей)": "simple", "Полный: все роды, числа и падежи (18 полей)": "complex"}
+        _opts = {
+            "Простой: 3 рода × 2 числа (6 полей)": "simple",
+            "Полный: все роды, числа и падежи (18 полей)": "complex",
+        }
         _default_mode = "Простой: 3 рода × 2 числа (6 полей)"
     elif _lang == "el":
-        _opts = {"Απλό: 3 γένη × 2 αριθμοί (6 πεδία)": "simple", "Πλήρες: όλα τα γένη, αριθμοί και πτώσεις (18 πεδία)": "complex"}
+        _opts = {
+            "Απλό: 3 γένη × 2 αριθμοί (6 πεδία)": "simple",
+            "Πλήρες: όλα τα γένη, αριθμοί και πτώσεις (18 πεδία)": "complex",
+        }
         _default_mode = "Απλό: 3 γένη × 2 αριθμοί (6 πεδία)"
     else:
-        _opts = {"Simple: 3 genders × 2 numbers (6 fields)": "simple", "Full: all genders, numbers and cases (18 fields)": "complex"}
+        _opts = {
+            "Simple: 3 genders × 2 numbers (6 fields)": "simple",
+            "Full: all genders, numbers and cases (18 fields)": "complex",
+        }
         _default_mode = "Simple: 3 genders × 2 numbers (6 fields)"
     mode_selector = mo.ui.radio(options=_opts, value=_default_mode, label=t_ui("mode_label", _lang))
     mo.md(f"{mode_selector}")
@@ -898,7 +948,6 @@ def _(language_selector, mo, t_ui):
 
 @app.cell(hide_code=True)
 def _(gu, mo, random, session_total_a, set_session_total_a, table_adj):
-    # Adjective state init (no lang dep — static English buttons)
     adj_words = gu.get_words(table_adj)
     words4test_adj, set_words4test_adj = mo.state(adj_words.copy() if adj_words else [])
     if adj_words and len(adj_words) > session_total_a():
@@ -946,7 +995,7 @@ def _(adj_cv, clear_count_a, gu, mode_selector):
 
 @app.cell(hide_code=True)
 def _(adj_form, captured_adj, mo, set_submit_count_a):
-    _values = adj_form.value if adj_form else []
+    _values = adj_form.value if adj_form is not None else []
     _snap = captured_adj()
     _has_input = bool(_values and any(v.strip() for v in _values))
     _matches_snap = _snap is not None and [v.strip() for v in _values] == [v.strip() for v in (_snap.value or [])]
@@ -973,7 +1022,6 @@ def _(
     t_ui,
     words4test_adj,
 ):
-    # Adjective display
     _lang = language_selector.value
     _adj = adj_cv()
     if words4test_adj() and _adj:
@@ -983,9 +1031,8 @@ def _(
             _, _msg = gu.check_adjective_test(_adj['Word'], _c, mode=mode_selector.value)
             if _msg:
                 _feedback_a = mo.md(_msg)
-        _heading = t_ui("adj_test_heading", _lang).format(count=len(words4test_adj()), total=session_total_a())
         _view_adj = mo.vstack([
-            mo.md(_heading),
+            mo.md(t_ui("adj_test_heading", _lang).format(count=len(words4test_adj()), total=session_total_a())),
             mo.md(f"{t_ui('translation_label', _lang)} **{_adj['Translation']}**"),
             adj_form,
             _feedback_a,
@@ -1020,7 +1067,6 @@ def _(
     t_ui,
     words4test_adj,
 ):
-    # Adjective pass handler
     _lang = language_selector.value
     _adj = adj_cv()
     _c = captured_adj()
@@ -1051,7 +1097,7 @@ def _(
     if (submit_button_a.value or 0) > submit_count_a():
         set_submit_count_a(submit_button_a.value)
         _acv = adj_cv()
-        if _acv and adj_form:
+        if _acv and adj_form is not None:
             set_captured_adj(gu.make_snapshot(adj_form))
     return
 
@@ -1093,10 +1139,8 @@ def _(clear_button_a, clear_count_a, set_captured_adj, set_clear_count_a):
 
 @app.cell(hide_code=True)
 def _():
-    # UI strings (no deps — must be at bottom)
     UI_STRINGS = {
         "en": {
-            "vocabulary_heading": "## USEFUL VOCABULARY",
             "nouns_heading": "## NOUNS",
             "verbs_heading": "## VERBS",
             "adjectives_heading": "## ADJECTIVES",
@@ -1119,7 +1163,6 @@ def _():
             "adj_passed":  '<span style="color:green;">Test for <b>"{word} — {trans}"</b> passed.\n\n{remaining} words remaining out of {total}.</span>',
         },
         "ru": {
-            "vocabulary_heading": "## ПОЛЕЗНЫЕ СЛОВА",
             "nouns_heading": "## СУЩЕСТВИТЕЛЬНЫЕ",
             "verbs_heading": "## ГЛАГОЛЫ",
             "adjectives_heading": "## ПРИЛАГАТЕЛЬНЫЕ",
@@ -1142,7 +1185,6 @@ def _():
             "adj_passed":  '<span style="color:green;">Тест для <b>"{word} — {trans}"</b> пройден.\n\n{remaining} слов осталось из {total}.</span>',
         },
         "el": {
-            "vocabulary_heading": "## ΧΡΗΣΙΜΕΣ ΛΕΞΕΙΣ",
             "nouns_heading": "## ΟΥΣΙΑΣΤΙΚΑ",
             "verbs_heading": "## ΡΗΜΑΤΑ",
             "adjectives_heading": "## ΕΠΙΘΕΤΑ",
@@ -1175,7 +1217,6 @@ def _():
 
 @app.cell(hide_code=True)
 def _(mo):
-    # Fixed-position language selector overlay
     language_selector = mo.ui.dropdown(
         options={"English": "en", "Русский": "ru", "Ελληνικά": "el"},
         value="Ελληνικά",
@@ -1198,10 +1239,14 @@ def _(language_selector, mo):
 
 @app.cell(hide_code=True)
 def _():
-    import os, random, pandas as pd, marimo as mo
+    import os
+    import random
+    import pandas as pd
+    import marimo as mo
     import eee_project as eee
     from eee_project import GreekUtils
     from modern_greek_backend_eee import ModernGreekBackend
+
     mg = ModernGreekBackend()
     eee.register_backend("el", mg)
     gu = GreekUtils(mg, mo, pd, eee_module=eee)

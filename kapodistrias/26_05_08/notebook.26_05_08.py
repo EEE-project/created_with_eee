@@ -2,19 +2,19 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.1",
-#     "modern-greek-eee @ git+https://github.com/EEE-project/modern-greek-eee.git",
-#     "modern-greek-inflexion-eee @ git+https://github.com/EEE-project/modern-greek-inflexion-eee.git",
+#     "eee-project",
+#     "modern-greek-backend-eee",
 #     "pandas==3.0.2",
 # ]
 #
 # [tool.uv.sources]
-# modern-greek-eee = { git = "https://github.com/EEE-project/modern-greek-eee" }
-# modern-greek-inflexion-eee = { git = "https://github.com/EEE-project/modern-greek-inflexion-eee" }
+# modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
+# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
 # ///
 
 import marimo
 
-__generated_with = "0.23.5"
+__generated_with = "0.23.9"
 app = marimo.App(
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
@@ -25,105 +25,161 @@ app = marimo.App(
 
 @app.cell(hide_code=True)
 def _(language_selector, mo):
+    from eee_project import ConfigStore, eee_topbar
+    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _cfg = ConfigStore.from_url(
+        f"{_ROOT}/kapodistrias/lessons.tsv",
+        ga=f"{_ROOT}/ga.json",
+    )
+    eee_topbar(mo, back_url=_cfg.index_url(), lang=language_selector.value, titles={
+        "ru": "Каподистриас", "el": "Καποδίστριας", "en": "Kapodistrias",
+    }, ga_config=_cfg.ga_config())
+    return
+
+
+@app.cell(hide_code=True)
+def _(language_selector, mo, notebook_dir, os):
     _lang = language_selector.value
     _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_XS3qPmXh4EibY7vf9rmQfS)"
+    def _img(n):
+        _p = os.path.join(notebook_dir, f'slide-{n}.jpg')
+        return mo.image(src=open(_p, 'rb').read(), width=700) if os.path.exists(_p) else mo.md("")
     if _lang == "ru":
-        _c = mo.md(f"""
-        # **В каком состоянии Грецию нашёл Каподистриас** {_badge}
-        Ниже приводится краткое содержание материалов презентации [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) и записей занятия 8/5/2026:
+        _c = mo.vstack([
+            mo.md(f"""
+            # **В каком состоянии Грецию нашёл Каподистриас** {_badge}
+            Ниже приводится краткое содержание материалов презентации [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) и записей занятия 8/5/2026:
+            """),
+            _img(1),
+            mo.md(r"""
+            ### **Положение Греции после Революции (1828)**
 
-        ### **Положение Греции после Революции (1828)**
+            #### **1. Общая картина страны**
+            *   Когда Иоаннис Каподистриас прибыл в Грецию в **1828 году**, ситуация была крайне тяжёлой — царил **хаос**.
+            *   Страна была **разрушена** долгой войной за независимость.
+            *   Народ страдал от сильной **бедности** и **голода**.
+            *   Не было **организованного государства**, казны, дорог или безопасности.
+            *   В своём письме Каподистриас отмечал: *«Η Ελλάς στερείται πάντων· και χρημάτων και σχολείων και διοικήσεως»* («Греция лишена всего: денег, школ и управления»).
+            """),
+            _img(2),
+            _img(3),
+            mo.md(r"""
+            #### **2. Вопрос образования**
+            *   До приезда Каподистриаса образование было крайне ограниченным.
+            *   Организованных школ почти не было, многие дети были неграмотными.
+            *   Обучение происходило преимущественно через **церковь** и **монастыри**.
+            *   **Первые шаги:** В 1828 году в Навплионе была основана первая **Военная школа эвелпидов**.
+            *   Ставился вопрос: может ли образование изменить будущее страны и важнее ли организованность, чем сила.
+            """),
+            _img(4),
+            _img(5),
+            mo.md(r"""
+            #### **3. Управление и столица**
+            *   **Навплион** был первой столицей Греции до переноса в Афины.
+            *   Каподистриасу предстояло решить, с чего начать: с еды, законов, безопасности или управления.
+            """),
+            _img(6),
+            _img(7),
+            mo.md(r"""
+            ### **Основная лексика (Занятие 8/5/2026)**
 
-        #### **1. Общая картина страны**
-        *   Когда Иоаннис Каподистриас прибыл в Грецию в **1828 году**, ситуация была крайне тяжёлой — царил **хаос**.
-        *   Страна была **разрушена** долгой войной за независимость.
-        *   Народ страдал от сильной **бедности** и **голода**.
-        *   Не было **организованного государства**, казны, дорог или безопасности.
-        *   В своём письме Каподистриас отмечал: *«Η Ελλάς στερείται πάντων· και χρημάτων και σχολείων και διοικήσεως»* («Греция лишена всего: денег, школ и управления»).
-
-        #### **2. Вопрос образования**
-        *   До приезда Каподистриаса образование было крайне ограниченным.
-        *   Организованных школ почти не было, многие дети были неграмотными.
-        *   Обучение происходило преимущественно через **церковь** и **монастыри**.
-        *   **Первые шаги:** В 1828 году в Навплионе была основана первая **Военная школа эвелпидов**.
-        *   Ставился вопрос: может ли образование изменить будущее страны и важнее ли организованность, чем сила.
-
-        #### **3. Управление и столица**
-        *   **Навплион** был первой столицей Греции до переноса в Афины.
-        *   Каподистриасу предстояло решить, с чего начать: с еды, законов, безопасности или управления.
-
-        ### **Основная лексика (Занятие 8/5/2026)**
-
-        *   **Ουσιαστικά:** φτώχεια (бедность), πείνα (голод), κράτος (государство), νόμος (закон), εκπαίδευση (образование), διοίκηση (управление), οργάνωση (организация), μέλλον (будущее).
-        *   **Ρήματα:** οργανώνω (организовывать), βοηθάω (помогать), κυβερνώ (управлять), δημιουργώ (создавать), μορφώνω (обучать), χτίζω (строить).
-        *   **Επίθετα:** οργανωμένος (организованный), κατεστραμμένος (разрушенный), ελεύθερος (свободный), ισχυρός (сильный), μορφωμένος (образованный).
-        """)
+            *   **Ουσιαστικά:** φτώχεια (бедность), πείνα (голод), κράτος (государство), νόμος (закон), εκπαίδευση (образование), διοίκηση (управление), οργάνωση (организация), μέλλον (будущее).
+            *   **Ρήματα:** οργανώνω (организовывать), βοηθάω (помогать), κυβερνώ (управлять), δημιουργώ (создавать), μορφώνω (обучать), χτίζω (строить).
+            *   **Επίθετα:** οργανωμένος (организованный), κατεστραμμένος (разрушенный), ελεύθερος (свободный), ισχυρός (сильный), μορφωμένος (образованный).
+            """),
+        ])
     elif _lang == "el":
-        _c = mo.md(f"""
-        # **Η Ελλάδα που Βρήκε ο Καποδίστριας** {_badge}
-        Παρακάτω παρουσιάζεται σύνοψη του υλικού από την παρουσίαση [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) και τις σημειώσεις του μαθήματος 8/5/2026:
+        _c = mo.vstack([
+            mo.md(f"""
+            # **Η Ελλάδα που Βρήκε ο Καποδίστριας** {_badge}
+            Παρακάτω παρουσιάζεται σύνοψη του υλικού από την παρουσίαση [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) και τις σημειώσεις του μαθήματος 8/5/2026:
+            """),
+            _img(1),
+            mo.md(r"""
+            ### **Η Ελλάδα που βρήκε ο Καποδίστριας (1828)**
 
-        ### **Η Ελλάδα που βρήκε ο Καποδίστριας (1828)**
+            #### **1. Γενική κατάσταση της χώρας**
+            *   Όταν ο Ιωάννης Καποδίστριας έφτασε στην Ελλάδα το **1828**, η κατάσταση ήταν εξαιρετικά δύσκολη — επικρατούσε **χάος**.
+            *   Η χώρα ήταν **κατεστραμμένη** από τον μακρύ αγώνα για την ανεξαρτησία.
+            *   Ο λαός υπέφερε από σοβαρή **φτώχεια** και **πείνα**.
+            *   Δεν υπήρχε **οργανωμένο κράτος**, ταμείο, δρόμοι ή ασφάλεια.
+            *   Σε επιστολή του ο Καποδίστριας σημείωνε: *«Η Ελλάς στερείται πάντων· και χρημάτων και σχολείων και διοικήσεως»*.
+            """),
+            _img(2),
+            _img(3),
+            mo.md(r"""
+            #### **2. Το ζήτημα της εκπαίδευσης**
+            *   Πριν έρθει ο Καποδίστριας, η εκπαίδευση ήταν εξαιρετικά περιορισμένη.
+            *   Σχεδόν δεν υπήρχαν οργανωμένα σχολεία και πολλά παιδιά ήταν αναλφάβητα.
+            *   Η διδασκαλία γινόταν κυρίως μέσω της **εκκλησίας** και των **μοναστηριών**.
+            *   **Πρώτα βήματα:** Το 1828 ιδρύθηκε στο Ναύπλιο η πρώτη **Στρατιωτική Σχολή Ευελπίδων**.
+            *   Τέθηκε το ερώτημα: μπορεί η εκπαίδευση να αλλάξει το μέλλον της χώρας και είναι η οργάνωση πιο σημαντική από τη δύναμη;
+            """),
+            _img(4),
+            _img(5),
+            mo.md(r"""
+            #### **3. Διοίκηση και πρωτεύουσα**
+            *   Το **Ναύπλιο** ήταν η πρώτη πρωτεύουσα της Ελλάδας πριν μεταφερθεί στην Αθήνα.
+            *   Ο Καποδίστριας έπρεπε να αποφασίσει από πού να αρχίσει: από την τροφή, τους νόμους, την ασφάλεια ή τη διοίκηση.
+            """),
+            _img(6),
+            _img(7),
+            mo.md(r"""
+            ### **Βασικό λεξιλόγιο (Μάθημα 8/5/2026)**
 
-        #### **1. Γενική κατάσταση της χώρας**
-        *   Όταν ο Ιωάννης Καποδίστριας έφτασε στην Ελλάδα το **1828**, η κατάσταση ήταν εξαιρετικά δύσκολη — επικρατούσε **χάος**.
-        *   Η χώρα ήταν **κατεστραμμένη** από τον μακρύ αγώνα για την ανεξαρτησία.
-        *   Ο λαός υπέφερε από σοβαρή **φτώχεια** και **πείνα**.
-        *   Δεν υπήρχε **οργανωμένο κράτος**, ταμείο, δρόμοι ή ασφάλεια.
-        *   Σε επιστολή του ο Καποδίστριας σημείωνε: *«Η Ελλάς στερείται πάντων· και χρημάτων και σχολείων και διοικήσεως»*.
+            *   **Ουσιαστικά:** φτώχεια, πείνα, κράτος, νόμος, εκπαίδευση, διοίκηση, οργάνωση, μέλλον.
+            *   **Ρήματα:** οργανώνω, βοηθάω, κυβερνώ, δημιουργώ, μορφώνω, χτίζω.
+            *   **Επίθετα:** οργανωμένος, κατεστραμμένος, ελεύθερος, ισχυρός, μορφωμένος.
 
-        #### **2. Το ζήτημα της εκπαίδευσης**
-        *   Πριν έρθει ο Καποδίστριας, η εκπαίδευση ήταν εξαιρετικά περιορισμένη.
-        *   Σχεδόν δεν υπήρχαν οργανωμένα σχολεία και πολλά παιδιά ήταν αναλφάβητα.
-        *   Η διδασκαλία γινόταν κυρίως μέσω της **εκκλησίας** και των **μοναστηριών**.
-        *   **Πρώτα βήματα:** Το 1828 ιδρύθηκε στο Ναύπλιο η πρώτη **Στρατιωτική Σχολή Ευελπίδων**.
-        *   Τέθηκε το ερώτημα: μπορεί η εκπαίδευση να αλλάξει το μέλλον της χώρας και είναι η οργάνωση πιο σημαντική από τη δύναμη;
-
-        #### **3. Διοίκηση και πρωτεύουσα**
-        *   Το **Ναύπλιο** ήταν η πρώτη πρωτεύουσα της Ελλάδας πριν μεταφερθεί στην Αθήνα.
-        *   Ο Καποδίστριας έπρεπε να αποφασίσει από πού να αρχίσει: από την τροφή, τους νόμους, την ασφάλεια ή τη διοίκηση.
-
-        ### **Βασικό λεξιλόγιο (Μάθημα 8/5/2026)**
-
-        *   **Ουσιαστικά:** φτώχεια, πείνα, κράτος, νόμος, εκπαίδευση, διοίκηση, οργάνωση, μέλλον.
-        *   **Ρήματα:** οργανώνω, βοηθάω, κυβερνώ, δημιουργώ, μορφώνω, χτίζω.
-        *   **Επίθετα:** οργανωμένος, κατεστραμμένος, ελεύθερος, ισχυρός, μορφωμένος.
-
-        Το υλικό του μαθήματος αντικατοπτρίζει τις προσπάθειες του Καποδίστρια να μετατρέψει μια κατεστραμμένη χώρα σε **σύγχρονο και οργανωμένο ευρωπαϊκό κράτος**.
-        """)
+            Το υλικό του μαθήματος αντικατοπτρίζει τις προσπάθειες του Καποδίστρια να μετατρέψει μια κατεστραμμένη χώρα σε **σύγχρονο και οργανωμένο ευρωπαϊκό κράτος**.
+            """),
+        ])
     else:
-        _c = mo.md(f"""
-        # **The Greece that Kapodistrias Found** {_badge}
-        Below is a summary of the materials from the presentation [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) and notes from the lesson on 8/5/2026:
+        _c = mo.vstack([
+            mo.md(f"""
+            # **The Greece that Kapodistrias Found** {_badge}
+            Below is a summary of the materials from the presentation [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) and notes from the lesson on 8/5/2026:
+            """),
+            _img(1),
+            mo.md(r"""
+            ### **Greece at the Time of Kapodistrias (1828)**
 
-        ### **Greece at the Time of Kapodistrias (1828)**
+            #### **1. General State of the Country**
+            *   When Ioannis Kapodistrias arrived in Greece in **1828**, the situation was extremely difficult — there was **chaos**.
+            *   The country was **devastated** by the long war of independence.
+            *   The people suffered from severe **poverty** and **hunger**.
+            *   There was no **organised state**, no treasury, no roads, and no security.
+            *   In a letter, Kapodistrias noted: *«Η Ελλάς στερείται πάντων· και χρημάτων και σχολείων και διοικήσεως»* ("Greece lacks everything: money, schools, and governance").
+            """),
+            _img(2),
+            _img(3),
+            mo.md(r"""
+            #### **2. The Question of Education**
+            *   Before Kapodistrias arrived, education was extremely limited.
+            *   There were almost no organised schools, and many children were illiterate.
+            *   Teaching took place mainly through the **church** and **monasteries**.
+            *   **First steps:** In 1828, the first **Military Academy of Evelpidon** was founded in Nafplio.
+            *   A key question: can education change the future of the country, and is organisation more important than force?
+            """),
+            _img(4),
+            _img(5),
+            mo.md(r"""
+            #### **3. Governance and the Capital**
+            *   **Nafplio** was the first capital of Greece before the capital was moved to Athens.
+            *   Kapodistrias had to decide where to begin: with food, laws, security, or governance.
+            """),
+            _img(6),
+            _img(7),
+            mo.md(r"""
+            ### **Key Vocabulary (Lesson 8/5/2026)**
 
-        #### **1. General State of the Country**
-        *   When Ioannis Kapodistrias arrived in Greece in **1828**, the situation was extremely difficult — there was **chaos**.
-        *   The country was **devastated** by the long war of independence.
-        *   The people suffered from severe **poverty** and **hunger**.
-        *   There was no **organised state**, no treasury, no roads, and no security.
-        *   In a letter, Kapodistrias noted: *«Η Ελλάς στερείται πάντων· και χρημάτων και σχολείων και διοικήσεως»* ("Greece lacks everything: money, schools, and governance").
+            *   **Ουσιαστικά:** φτώχεια (poverty), πείνα (hunger), κράτος (state), νόμος (law), εκπαίδευση (education), διοίκηση (governance), οργάνωση (organisation), μέλλον (future).
+            *   **Ρήματα:** οργανώνω (to organise), βοηθάω (to help), κυβερνώ (to govern), δημιουργώ (to create), μορφώνω (to educate), χτίζω (to build).
+            *   **Επίθετα:** οργανωμένος (organised), κατεστραμμένος (devastated), ελεύθερος (free), ισχυρός (strong), μορφωμένος (educated).
 
-        #### **2. The Question of Education**
-        *   Before Kapodistrias arrived, education was extremely limited.
-        *   There were almost no organised schools, and many children were illiterate.
-        *   Teaching took place mainly through the **church** and **monasteries**.
-        *   **First steps:** In 1828, the first **Military Academy of Evelpidon** was founded in Nafplio.
-        *   A key question: can education change the future of the country, and is organisation more important than force?
-
-        #### **3. Governance and the Capital**
-        *   **Nafplio** was the first capital of Greece before the capital was moved to Athens.
-        *   Kapodistrias had to decide where to begin: with food, laws, security, or governance.
-
-        ### **Key Vocabulary (Lesson 8/5/2026)**
-
-        *   **Ουσιαστικά:** φτώχεια (poverty), πείνα (hunger), κράτος (state), νόμος (law), εκπαίδευση (education), διοίκηση (governance), οργάνωση (organisation), μέλλον (future).
-        *   **Ρήματα:** οργανώνω (to organise), βοηθάω (to help), κυβερνώ (to govern), δημιουργώ (to create), μορφώνω (to educate), χτίζω (to build).
-        *   **Επίθετα:** οργανωμένος (organised), κατεστραμμένος (devastated), ελεύθερος (free), ισχυρός (strong), μορφωμένος (educated).
-
-        The lesson materials reflect Kapodistrias' efforts to transform a devastated country into a **modern and organised European state**.
-        """)
+            The lesson materials reflect Kapodistrias' efforts to transform a devastated country into a **modern and organised European state**.
+            """),
+        ])
     _c
     return
 
@@ -1051,12 +1107,21 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
+def _(language_selector, mo):
+    from eee_project.notebook_utils import eee_footer
+    eee_footer(mo, lang=language_selector.value)
+    return
+
+
+@app.cell(hide_code=True)
 def _():
-    import os
-    import random
-    import pandas as pd
-    import marimo as mo
-    from modern_greek_eee import greek_utils as gu
+    import os, random, pandas as pd, marimo as mo
+    import eee_project as eee
+    from eee_project import GreekUtils
+    from modern_greek_backend_eee import ModernGreekBackend
+    mg = ModernGreekBackend()
+    eee.register_backend("el", mg)
+    gu = GreekUtils(mg, mo, pd, eee_module=eee)
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
     return gu, mo, notebook_dir, os, pd, random
 

@@ -2,14 +2,14 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.1",
-#     "modern-greek-eee @ git+https://github.com/EEE-project/modern-greek-eee.git",
-#     "modern-greek-inflexion-eee @ git+https://github.com/EEE-project/modern-greek-inflexion-eee.git",
+#     "eee-project",
+#     "modern-greek-backend-eee",
 #     "pandas==3.0.2",
 # ]
 #
 # [tool.uv.sources]
-# modern-greek-eee = { git = "https://github.com/EEE-project/modern-greek-eee" }
-# modern-greek-inflexion-eee = { git = "https://github.com/EEE-project/modern-greek-inflexion-eee" }
+# modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
+# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
 # ///
 
 import marimo
@@ -24,41 +24,59 @@ app = marimo.App(
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    # **The Greece that Kapodistrias Found**
-    Below is a summary of the materials from the presentation [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) and notes from the lesson on 8/5/2026:
+def _(mo, notebook_dir, os):
+    def _img(n):
+        _p = os.path.join(notebook_dir, f'slide-{n}.jpg')
+        return mo.image(src=open(_p, 'rb').read(), width=700) if os.path.exists(_p) else mo.md("")
+    mo.vstack([
+        mo.md(r"""
+        # **The Greece that Kapodistrias Found**
+        Below is a summary of the materials from the presentation [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) and notes from the lesson on 8/5/2026:
+        """),
+        _img(1),
+        mo.md(r"""
+        ### **Greece at the Time of Kapodistrias (1828)**
 
-    ### **Greece at the Time of Kapodistrias (1828)**
+        #### **1. General State of the Country**
+        *   When Ioannis Kapodistrias arrived in Greece in **1828**, the situation was extremely difficult — there was **chaos**.
+        *   The country was **devastated** by the long war of independence.
+        *   The people suffered from severe **poverty** and **hunger**.
+        *   There was no **organised state**, no treasury, no roads, and no security.
+        *   In a letter, Kapodistrias noted: *«Η Ελλάς στερείται πάντων· και χρημάτων και σχολείων και διοικήσεως»* ("Greece lacks everything: money, schools, and governance").
+        """),
+        _img(2),
+        _img(3),
+        mo.md(r"""
+        #### **2. The Question of Education**
+        *   Before Kapodistrias arrived, education was extremely limited.
+        *   There were almost no organised schools, and many children were illiterate.
+        *   Teaching took place mainly through the **church** and **monasteries**.
+        """),
+        _img(4),
+        _img(5),
+        mo.md(r"""
+        *   **First steps:** In 1828, the first **Military Academy of Evelpidon** was founded in Nafplio.
+        *   A key question: can education change the future of the country, and is organisation more important than force?
+        """),
+        _img(6),
+        mo.md(r"""
+        #### **3. Governance and the Capital**
+        *   **Nafplio** was the first capital of Greece before the capital was moved to Athens.
+        *   Kapodistrias had to decide where to begin: with food, laws, security, or governance.
+        """),
+        _img(7),
+        mo.md(r"""
+        ### **Key Vocabulary (Lesson 8/5/2026)**
 
-    #### **1. General State of the Country**
-    *   When Ioannis Kapodistrias arrived in Greece in **1828**, the situation was extremely difficult — there was **chaos**.
-    *   The country was **devastated** by the long war of independence.
-    *   The people suffered from severe **poverty** and **hunger**.
-    *   There was no **organised state**, no treasury, no roads, and no security.
-    *   In a letter, Kapodistrias noted: *«Η Ελλάς στερείται πάντων· και χρημάτων και σχολείων και διοικήσεως»* ("Greece lacks everything: money, schools, and governance").
+        The lesson focused on words describing the Governor's actions and social conditions:
 
-    #### **2. The Question of Education**
-    *   Before Kapodistrias arrived, education was extremely limited.
-    *   There were almost no organised schools, and many children were illiterate.
-    *   Teaching took place mainly through the **church** and **monasteries**.
-    *   **First steps:** In 1828, the first **Military Academy of Evelpidon** was founded in Nafplio.
-    *   A key question: can education change the future of the country, and is organisation more important than force?
+        *   **Ουσιαστικά:** φτώχεια (poverty), πείνα (hunger), κράτος (state), νόμος (law), εκπαίδευση (education), διοίκηση (governance), οργάνωση (organisation), μέλλον (future).
+        *   **Ρήματα:** οργανώνω (to organise), βοηθάω (to help), κυβερνώ (to govern), δημιουργώ (to create), μορφώνω (to educate), χτίζω (to build).
+        *   **Επίθετα:** οργανωμένος (organised), κατεστραμμένος (devastated), ελεύθερος (free), ισχυρός (strong), μορφωμένος (educated).
 
-    #### **3. Governance and the Capital**
-    *   **Nafplio** was the first capital of Greece before the capital was moved to Athens.
-    *   Kapodistrias had to decide where to begin: with food, laws, security, or governance.
-
-    ### **Key Vocabulary (Lesson 8/5/2026)**
-
-    The lesson focused on words describing the Governor's actions and social conditions:
-
-    *   **Ουσιαστικά:** φτώχεια (poverty), πείνα (hunger), κράτος (state), νόμος (law), εκπαίδευση (education), διοίκηση (governance), οργάνωση (organisation), μέλλον (future).
-    *   **Ρήματα:** οργανώνω (to organise), βοηθάω (to help), κυβερνώ (to govern), δημιουργώ (to create), μορφώνω (to educate), χτίζω (to build).
-    *   **Επίθετα:** οργανωμένος (organised), κατεστραμμένος (devastated), ελεύθερος (free), ισχυρός (strong), μορφωμένος (educated).
-
-    The lesson materials reflect Kapodistrias' efforts to transform a devastated country into a **modern and organised European state**.
-    """)
+        The lesson materials reflect Kapodistrias' efforts to transform a devastated country into a **modern and organised European state**.
+        """),
+    ])
     return
 
 
@@ -860,11 +878,13 @@ def _(clear_button_a, clear_count_a, set_captured_adj, set_clear_count_a):
 
 @app.cell(hide_code=True)
 def _():
-    import os
-    import random
-    import pandas as pd
-    import marimo as mo
-    from modern_greek_eee import greek_utils as gu
+    import os, random, pandas as pd, marimo as mo
+    import eee_project as eee
+    from eee_project import GreekUtils
+    from modern_greek_backend_eee import ModernGreekBackend
+    mg = ModernGreekBackend()
+    eee.register_backend("el", mg)
+    gu = GreekUtils(mg, mo, pd, eee_module=eee)
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
     return gu, mo, notebook_dir, os, pd, random
 
