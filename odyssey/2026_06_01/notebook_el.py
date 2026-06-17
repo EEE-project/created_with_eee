@@ -15,23 +15,49 @@
 
 import marimo
 
-__generated_with = "0.23.9"
+__generated_with = "0.23.8"
 app = marimo.App(width="medium")
 
 
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
-    from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
-    _cfg = ConfigStore.from_url(
-        f"{_ROOT}/odyssey/lessons.tsv",
-        ga=f"{_ROOT}/ga.json",
-    )
-    eee_topbar(mo, back_url=_cfg.index_url(), lang=lang_sel.value, titles={
+    _TITLE = {
         "ru": "Древнегреческий с Гомером",
         "en": "Ancient Greek with Homer",
         "el": "Αρχαία Ελληνικά με τον Όμηρο",
-    }, ga_config=_cfg.ga_config())
+    }
+    _t = _TITLE.get(lang_sel.value, _TITLE["en"])
+    _b = f"◀ {_t}"
+    mo.Html(f'''
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap');
+    #eee-topbar {{
+      position: sticky; top: 0; z-index: 100;
+      height: 48px; background: #f5f5f5;
+      border-bottom: 2px solid #003d82;
+      display: flex; align-items: center;
+      padding: 0 12px; gap: 10px;
+      margin: -16px -16px 16px -16px;
+      font-family: Syne, sans-serif;
+    }}
+    #eee-topbar .tb-back {{
+      font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+      color: #003d82; text-decoration: none;
+      padding: 4px 6px; flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }}
+    #eee-topbar .tb-badge {{
+      font-family: "DM Mono", monospace; font-size: 12px; font-weight: 700;
+      color: #003d82; background: rgba(0,61,130,0.08);
+      border: 1px solid rgba(0,61,130,0.3); border-radius: 4px;
+      padding: 4px 8px; letter-spacing: 0.1em; text-decoration: none; flex-shrink: 0;
+    }}
+    </style>
+    <div id="eee-topbar">
+      <a class="tb-back" href="https://eee-project.codeberg.page/created_with_eee/odyssey/">{_b}</a>
+      <a class="tb-badge" href="https://t.me/+VuocC5la3ZwyNDky" target="_blank">EEE Community</a>
+    </div>
+    ''')
     return
 
 
@@ -220,23 +246,13 @@ def _(answer_radio, build_paradigm_table, gu, lang_sel, mo, score, w):
     mo.vstack([answer_radio,
                gu.word_quiz_feedback(w, answer_radio.value, score(), lang_sel.value,
                                      build_paradigm_table=build_paradigm_table)])
-    return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    lang_sel = mo.ui.dropdown(
-        options={"Русский": "ru", "English": "en", "Ελληνικά": "el"},
-        value="Русский",
-        label="🌐",
-    )
-    mo.Html(f"""
-    <div style="position: fixed; top: 60px; right: 10px; z-index: 1000;
-         background: white; padding: 8px 12px; border-radius: 8px;
-         box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-        {lang_sel}
-    </div>
-    """)
+def _():
+    class _Sel:
+        value = "el"
+    lang_sel = _Sel()
     return (lang_sel,)
 
 
@@ -941,14 +957,29 @@ def _():
     eee.register_backend("grc", um_backend, backend="unimorph")
     eee.set_chain("grc", ["ancient-greek", "unimorph"])
     gu = eee.GreekUtils(mo_module=mo)
-
     return ag_backend, eee, gu, mo, random, um_backend
 
 
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
-    from eee_project.notebook_utils import eee_footer
-    eee_footer(mo, lang=lang_sel.value)
+    _SRC = {"ru": "Исходный код:", "en": "Source:", "el": "Πηγαίος κώδικας:"}
+    _lbl = _SRC.get(lang_sel.value, _SRC["en"])
+    mo.Html(f'''
+    <style>
+    #eee-footer {{
+      height: 40px; background: #f5f5f5; border-top: 1px solid #e0e0e0;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      margin: 16px -16px -16px -16px;
+      font-family: "DM Mono", monospace;
+    }}
+    #eee-footer .footer-label {{ font-size: 10px; color: #1a1a1a; }}
+    #eee-footer a {{ font-size: 11px; color: #003d82; text-decoration: none; }}
+    </style>
+    <div id="eee-footer">
+      <span class="footer-label">{_lbl}</span>
+      <a href="https://codeberg.org/EEE-project" target="_blank">codeberg.org/EEE-project</a>
+    </div>
+    ''')
     return
 
 

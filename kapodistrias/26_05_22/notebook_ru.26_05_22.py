@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.5"
+__generated_with = "0.23.8"
 app = marimo.App(
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
@@ -25,56 +25,91 @@ app = marimo.App(
 
 @app.cell(hide_code=True)
 def _(mo, notebook_dir, os):
+    _badge = ""
     def _img(n):
         _p = os.path.join(notebook_dir, f'slide-{n}.jpg')
         return mo.image(src=open(_p, 'rb').read(), width=700) if os.path.exists(_p) else mo.md("")
     mo.vstack([
-        mo.md(r"""
-        # **В каком состоянии Грецию нашёл Каподистриас**
-        Ниже приводится краткое содержание материалов презентации [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) и записей занятия 8/5/2026:
+        mo.md(f"""
+        # **КОНЕЦ КАПОДИСТРИАСА** {_badge}
+        #### *Иоаннис Каподистриас · Урок 4*
+        Краткое содержание материалов занятия от 22/5/2026.
         """),
         _img(1),
         mo.md(r"""
-        ### **Положение Греции после Революции (1828)**
-
-        #### **1. Общая картина страны**
-        *   Когда Иоаннис Каподистриас прибыл в Грецию в **1828 году**, ситуация была крайне тяжёлой — царил **хаос**.
-        *   Страна была **разрушена** долгой войной за независимость.
-        *   Народ страдал от сильной **бедности** и **голода**.
-        *   Не было **организованного государства**, казны, дорог или безопасности.
-        *   В своём письме Каподистриас отмечал: *«Η Ελλάς στερείται πάντων· και χρημάτων και σχολείων και διοικήσεως»* («Греция лишена всего: денег, школ и управления»).
+        ### **1. Мечтатель или реалист?**
         """),
         _img(2),
+        mo.md(r"""
+        | Мечтатель | Реалист |
+        |---|---|
+        | Идеи | Организация |
+        | Видение | Законы |
+        | Перемены | Государство |
+        | Надежда | Дисциплина |
+
+        ### **2. Что ему удалось?**
+        """),
         _img(3),
         mo.md(r"""
-        #### **2. Вопрос образования**
-        *   До приезда Каподистриаса образование было крайне ограниченным.
-        *   Организованных школ почти не было, многие дети были неграмотными.
-        *   Обучение происходило преимущественно через **церковь** и **монастыри**.
+        Каподистриас стремился организовать новое греческое государство:
+        *   Придавал большое значение **образованию** и основал школы.
+        *   Организовал **управление** и установил **законы** и порядок.
+        *   Ввёл первую греческую **валюту** — Феникс.
+        *   Укрепил **сельское хозяйство**, распространив культуру картофеля.
         """),
         _img(4),
+        mo.md(r"""
+        ### **3. Фильм: «Иоаннис Каподистриас» (Смарагдис)**
+
+        На уроке мы посмотрели фрагмент документального фильма OPEN TV о картине Яниса Смарагдиса «Иоаннис Каподистриас» (в главной роли — Андонис Мириагкос).
+
+        > *«Δολοφονήθηκε... από χέρι ελληνικό με τις ευλογίες ξένων δυνάμεων.»*
+        > «Был убит... греческой рукой с благословения иностранных держав.»
+
+        > *«Σκοτώσαμε όχι τον Καποδίστρια. Σκοτώσαμε το μέλλον της Ελλάδος.»*
+        > «Мы убили не Каподистриаса. Мы убили будущее Греции.»
+
+        > *«Ο Ράμφος λέει ότι μας έπεσε ένα λαχείο ο Καποδίστριας και το πετάξαμε.»*
+        > «Рампос говорит, что Каподистриас был нашим лотерейным билетом — и мы его выбросили.»
+
+        ### **4. Первые конфликты**
+        """),
         _img(5),
         mo.md(r"""
-        *   **Первые шаги:** В 1828 году в Навплионе была основана первая **Военная школа эвелпидов**.
-        *   Ставился вопрос: может ли образование изменить будущее страны и важнее ли организованность, чем сила.
+        Многие влиятельные люди не соглашались с Каподистриасом. Они считали, что его перемены вредят их **интересам**. Ситуация стала трудной, и возникло много **противодействий**.
+
+        ### **5. Ситуация становится опасной**
         """),
         _img(6),
         mo.md(r"""
-        #### **3. Управление и столица**
-        *   **Навплион** был первой столицей Греции до переноса в Афины.
-        *   Каподистриасу предстояло решить, с чего начать: с еды, законов, безопасности или управления.
+        Политическая ситуация в Греции стала очень **опасной**. У Каподистриаса было много **врагов** и сильное **давление**. **Конфликты** в стране не прекращались.
+
+        ### **6. Убийство**
         """),
         _img(7),
         mo.md(r"""
-        ### **Основная лексика и понятия (Занятие 8/5/2026)**
+        **27 сентября 1831 года** Иоаннис Каподистриас был **убит** перед церковью Святого Спиридона в Нафплионе.
 
-        На занятии особое внимание уделялось словам, описывающим деятельность Губернатора и социальное положение:
+        *(Картина: Дионисиос Цокос, «Убийство Каподистриаса»)*
 
-        *   **Ουσιαστικά:** φτώχεια (бедность), πείνα (голод), κράτος (государство), νόμος (закон), εκπαίδευση (образование), διοίκηση (управление), οργάνωση (организация), μέλλον (будущее).
-        *   **Ρήματα:** οργανώνω (организовывать), βοηθάω (помогать), κυβερνώ (управлять), δημιουργώ (создавать), μορφώνω (обучать), χτίζω (строить).
-        *   **Επίθετα:** οργανωμένος (организованный), κατεστραμμένος (разрушенный), ελεύθερος (свободный), ισχυρός (сильный), μορφωμένος (образованный).
+        ### **7. Каподистриас сегодня**
+        """),
+        _img(9),
+        mo.md(r"""
+        Иоаннис Каподистриас остаётся важной фигурой греческой истории. Люди до сих пор **помнят** его дела и идеи — **статуи** и **бюсты** по всей стране **чтят** его **память**.
 
-        Материалы занятия отражают усилия Каподистриаса превратить разрушенную страну в **современное и организованное европейское государство**.
+        ### **Основная лексика (Занятие 22/5/2026)**
+        *   **Ουσιαστικά:** ανάμνηση (воспоминание), γειτονιά (квартал), χωριό (деревня), νησί (остров), θάλασσα (море), λιμάνι (порт), βουνό (гора), ναός (храм), οικογένεια (семья), κοινωνία (общество), ελευθερία (свобода), κανόνες (правила), φύση (природа), νόημα (смысл), συμβολισμός (символизм), αλληγορία (аллегория), περιορισμός (ограничение), πίεση (давление), σύγκρουση (конфликт), αντίδραση (реакция), συμφέρον (интерес/выгода), εχθρός (враг), φόβος (страх), αγωνία (тревога), δολοφονία (убийство), θάνατος (смерть), προδοσία (предательство), εμφύλιος (гражданская война), ατμόσφαιρα (атмосфера), ένταση (напряжение), μνήμη (память), άγαλμα (статуя), προτομή (бюст).
+        *   **Ρήματα:** μεγαλώνω (расти), θυμάμαι (помнить), νιώθω (чувствовать), περνάω (проходить), περιγράφω (описывать), σκέφτομαι (думать), φαντάζομαι (представлять), αλλάζω (менять), γνωρίζω (знать), ταξιδεύω (путешествовать), διαφωνώ (не соглашаться), φοβάμαι (бояться), αντιδρώ (реагировать), συνεχίζω (продолжать), πιέζω (давить), αισθάνομαι (ощущать), δολοφονώ (убивать), τιμώ (чтить), επηρεάζω (влиять), χωρίζω (разделять), συγκρούομαι (сталкиваться).
+        *   **Επίθετα:** παλιός (старый), μικρός (маленький), μεγάλος (большой), ήσυχος (тихий), όμορφος (красивый), αυστηρός (строгий), ελεύθερος (свободный), διαφορετικός (другой), καταπράσινος (насыщенный зелёный), ανθρώπινος (человеческий), ονειροπόλος (мечтательный), επικίνδυνος (опасный), τραγικός (трагический), ήρεμος (спокойный), πολιτικός (политический), ιστορικός (исторический), μόνος (одинокий), δραματικός (драматический), διχασμένος (разделённый).
+
+        ### **Полезные фразы**
+        *   **Θυμάμαι ότι…** — Я помню, что…
+        *   **Νιώθω ότι…** — Я чувствую, что…
+        *   **Φοβάμαι ότι…** — Я боюсь, что…
+        *   **Διαφωνώ γιατί…** — Я не согласен, потому что…
+        *   **Κατά τη γνώμη μου, ο Καποδίστριας ήταν…** — По-моему, Каподистриас был…
         """),
     ])
     return
@@ -82,9 +117,22 @@ def _(mo, notebook_dir, os):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md("""
-    ## СУЩЕСТВИТЕЛЬНЫЕ
-    """)
+    # Ιωάννης Καποδίστριας — ταινία Σμαραγδή (OPEN TV documentary)
+    mo.Html('''<iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/IbXSgf8NVKI"
+        title="Ιωάννης Καποδίστριας — Ταινία Σμαραγδή"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+    </iframe>''')
+    return
+
+
+@app.cell(hide_code=True)
+def _(language_selector, mo, t_ui):
+    mo.md(t_ui("nouns_heading", language_selector.value))
     return
 
 
@@ -97,7 +145,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    file_upload_noun = mo.ui.file(label="Загрузить TSV существительных")
+    file_upload_noun = mo.ui.file(label="Upload nouns TSV")
     file_upload_noun
     return (file_upload_noun,)
 
@@ -108,22 +156,16 @@ def _(file_upload_noun, gu, notebook_dir, os, pd):
         df_noun = gu.load_data(file_upload_noun, [])
     else:
         try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns_ru.tsv'), sep='\t')
+            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
         except FileNotFoundError:
-            try:
-                df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
-            except FileNotFoundError:
-                df_noun = None
+            df_noun = None
     return (df_noun,)
 
 
 @app.cell(hide_code=True)
-def _(df_noun, mo, tbl_sel_n):
+def _(df_noun, language_selector, mo, t_ui, tbl_sel_n):
     table_noun = mo.ui.table(df_noun, selection="multi", initial_selection=tbl_sel_n()) if df_noun is not None else None
-    mo.vstack([
-        mo.md("### Выберите существительные для практики"),
-        table_noun,
-    ])
+    mo.vstack([mo.md(t_ui("select_nouns", language_selector.value)), table_noun])
     return (table_noun,)
 
 
@@ -140,8 +182,8 @@ def _(gu, mo, random, session_total_n, set_session_total_n, table_noun):
     captured_simple, set_captured_simple = mo.state(None)
     captured_article, set_captured_article = mo.state(None)
     _clk = lambda v: (v or 0) + 1
-    skip_button_n = mo.ui.button(label="Пропустить", on_click=_clk)
-    clear_button_n = mo.ui.button(label="Очистить", on_click=_clk)
+    skip_button_n = mo.ui.button(label="Skip", on_click=_clk)
+    clear_button_n = mo.ui.button(label="Clear", on_click=_clk)
     skip_count_n, set_skip_count_n = mo.state(0)
     clear_count_n, set_clear_count_n = mo.state(0)
     submit_count_n, set_submit_count_n = mo.state(0)
@@ -204,7 +246,7 @@ def _(
     _match_a = _snap_a is not None and [v.strip() for v in _vals_a] == [v.strip() for v in (_snap_a.value or [])]
     _dirty = (_has_s and not _match_s) or (_has_a and not _match_a)
     _clk = lambda v: (v or 0) + 1
-    submit_button_n = mo.ui.button(label="Проверить", on_click=_clk, kind="warn" if _dirty else "neutral")
+    submit_button_n = mo.ui.button(label="Submit", on_click=_clk, kind="warn" if _dirty else "neutral")
     set_submit_count_n(0)
     return (submit_button_n,)
 
@@ -214,6 +256,7 @@ def _(
     captured_simple,
     clear_button_n,
     gu,
+    language_selector,
     mo,
     noun_form,
     noun_trans,
@@ -221,8 +264,10 @@ def _(
     session_total_n,
     skip_button_n,
     submit_button_n,
+    t_ui,
     words4test_noun,
 ):
+    _lang = language_selector.value
     _feedback = mo.md("")
     if words4test_noun() and noun_word:
         _cs = captured_simple()
@@ -232,14 +277,14 @@ def _(
             if _buf.getvalue():
                 _feedback = mo.md(_buf.getvalue())
         _view = mo.vstack([
-            mo.md(f"**Простой тест по существительным** ({len(words4test_noun())}/{session_total_n()})"),
-            mo.md(f"Перевод: **{noun_trans}**"),
+            mo.md(t_ui("simple_noun_test", _lang).format(count=len(words4test_noun()), total=session_total_n())),
+            mo.md(f"{t_ui('translation_label', _lang)} **{noun_trans}**"),
             noun_form,
             _feedback,
             mo.hstack([skip_button_n, clear_button_n, submit_button_n], justify="end"),
         ])
     else:
-        _view = mo.md("_Выберите существительные из таблицы выше._")
+        _view = mo.md(t_ui("noun_empty", _lang))
     _view
     return
 
@@ -252,12 +297,15 @@ def _(
     captured_article,
     clear_button_n,
     gu,
+    language_selector,
     mo,
     session_total_n,
     skip_button_n,
     submit_button_n,
+    t_ui,
     words4test_noun,
 ):
+    _lang = language_selector.value
     _feedback_a = mo.md("")
     if words4test_noun() and art_noun_word:
         _ca = captured_article()
@@ -267,14 +315,14 @@ def _(
             if _buf_a.getvalue():
                 _feedback_a = mo.md(_buf_a.getvalue())
         _view_art = mo.vstack([
-            mo.md(f"**Тест с артиклями по существительным** ({len(words4test_noun())}/{session_total_n()})"),
-            mo.md(f"Перевод: **{art_noun_trans}**"),
+            mo.md(t_ui("article_noun_test", _lang).format(count=len(words4test_noun()), total=session_total_n())),
+            mo.md(f"{t_ui('translation_label', _lang)} **{art_noun_trans}**"),
             art_noun_form,
             _feedback_a,
             mo.hstack([skip_button_n, clear_button_n, submit_button_n], justify="end"),
         ])
     else:
-        _view_art = mo.md("_Выберите существительные из таблицы выше._")
+        _view_art = mo.md(t_ui("noun_empty", _lang))
     _view_art
     return
 
@@ -292,6 +340,7 @@ def _(
     current_noun,
     df_noun,
     gu,
+    language_selector,
     random,
     session_total_n,
     set_captured_article,
@@ -300,8 +349,10 @@ def _(
     set_noun_msg,
     set_tbl_sel_n,
     set_words4test_noun,
+    t_ui,
     words4test_noun,
 ):
+    _lang = language_selector.value
     _cn = current_noun()
     _cs = captured_simple()
     _ca = captured_article()
@@ -317,7 +368,7 @@ def _(
             if df_noun is not None:
                 _rem = {w['Word'] for w in _new}
                 set_tbl_sel_n([i for i, w in enumerate(df_noun['Word']) if w in _rem])
-            set_noun_msg(f'<span style="color:green;">Тест для <b>"{_cn["Word"]}"</b> пройден.\n\n{len(_new)} слов осталось из {session_total_n()}.</span>')
+            set_noun_msg(t_ui("noun_passed", _lang).format(word=_cn['Word'], remaining=len(_new), total=session_total_n()))
             set_captured_simple(None)
             set_captured_article(None)
             set_current_noun(random.choice(_new) if _new else None)
@@ -391,10 +442,8 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ## ГЛАГОЛЫ
-    """)
+def _(language_selector, mo, t_ui):
+    mo.md(t_ui("verbs_heading", language_selector.value))
     return
 
 
@@ -407,7 +456,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    file_upload_verb = mo.ui.file(label="Загрузить TSV глаголов")
+    file_upload_verb = mo.ui.file(label="Upload verbs TSV")
     file_upload_verb
     return (file_upload_verb,)
 
@@ -425,21 +474,19 @@ def _(file_upload_verb, gu, notebook_dir, os, pd):
 
 
 @app.cell(hide_code=True)
-def _(df_verb, mo, tbl_sel_v):
+def _(df_verb, language_selector, mo, t_ui, tbl_sel_v):
     table_verb = mo.ui.table(df_verb, selection="multi", initial_selection=tbl_sel_v()) if df_verb is not None else None
-    mo.vstack([mo.md("### Выберите глаголы для практики"), table_verb])
+    mo.vstack([mo.md(t_ui("select_verbs", language_selector.value)), table_verb])
     return (table_verb,)
 
 
 @app.cell(hide_code=True)
-def _(gu, mo):
+def _(gu, language_selector, mo, t_ui):
+    _lang = language_selector.value
     _b1_tenses = ['present', 'imperfect', 'aorist', 'future', 'future_continuous']
-    _tense_options = {gu.TENSE_LABELS[k]['dropdown']: k for k in _b1_tenses if k in gu.TENSE_LABELS}
-    tense_selector = mo.ui.dropdown(
-        options=_tense_options,
-        value=gu.TENSE_LABELS['present']['dropdown'],
-        label="Выберите время:",
-    )
+    _opts = {gu.TENSE_LABELS[k]['dropdown']: k for k in _b1_tenses if k in gu.TENSE_LABELS}
+    _default = gu.TENSE_LABELS['present']['dropdown']
+    tense_selector = mo.ui.dropdown(options=_opts, value=_default, label=t_ui("tense_label", _lang))
     tense_selector
     return (tense_selector,)
 
@@ -456,8 +503,8 @@ def _(gu, mo, random, session_total_v, set_session_total_v, table_verb):
     captured_verb, set_captured_verb = mo.state(None)
     cv_verb, set_cv_verb = mo.state(None)
     _clk = lambda v: (v or 0) + 1
-    skip_button_v = mo.ui.button(label="Пропустить", on_click=_clk)
-    clear_button_v = mo.ui.button(label="Очистить", on_click=_clk)
+    skip_button_v = mo.ui.button(label="Skip", on_click=_clk)
+    clear_button_v = mo.ui.button(label="Clear", on_click=_clk)
     skip_count_v, set_skip_count_v = mo.state(0)
     clear_count_v, set_clear_count_v = mo.state(0)
     submit_count_v, set_submit_count_v = mo.state(0)
@@ -506,7 +553,7 @@ def _(captured_verb, mo, set_submit_count_v, tense_selector, verb_fields):
     )
     _dirty = _has_input and not _matches_snap
     _clk = lambda v: (v or 0) + 1
-    submit_button_v = mo.ui.button(label="Проверить", on_click=_clk, kind="warn" if _dirty else "neutral")
+    submit_button_v = mo.ui.button(label="Submit", on_click=_clk, kind="warn" if _dirty else "neutral")
     set_submit_count_v(0)
     return (submit_button_v,)
 
@@ -517,32 +564,42 @@ def _(
     clear_button_v,
     cv_verb,
     gu,
+    language_selector,
     mo,
     session_total_v,
     skip_button_v,
     submit_button_v,
+    t_ui,
     tense_selector,
     verb_fields,
     verb_msg,
     words4test_verb,
 ):
+    _lang = language_selector.value
     _cv = cv_verb()
     if not words4test_verb():
-        _view_verb = mo.md("_Выберите глаголы из таблицы выше._")
+        _view_verb = mo.md(t_ui("verb_empty", _lang))
     elif not tense_selector.value:
-        _view_verb = mo.md("_Выберите время выше._")
+        _view_verb = mo.md(t_ui("verb_no_tense", _lang))
     else:
         _feedback_v = mo.md("")
         _c = captured_verb()
         if _cv and _c and getattr(_c, 'verb_word', None) == _cv['Word'] and getattr(_c, 'tense', None) == tense_selector.value:
             _, _msg = gu.check_verb_test(_cv['Word'], _c, tense_selector.value)
             _feedback_v = mo.md(_msg)
-        _label = gu.TENSE_LABELS.get(tense_selector.value, {}).get('greek', tense_selector.value)
-        _items = [mo.md(f"**Тест по глаголам — {_label}** ({len(words4test_verb())}/{session_total_v()})")]
+        _tense_key = tense_selector.value
+        _RU_LABELS = {"present": "Настоящее", "imperfect": "Имперфект", "aorist": "Аорист", "future": "Простое будущее", "future_continuous": "Длительное будущее"}
+        if _lang == "ru":
+            _label = _RU_LABELS.get(_tense_key, _tense_key)
+        elif _lang == "el":
+            _label = gu.TENSE_LABELS.get(_tense_key, {}).get('greek', _tense_key)
+        else:
+            _label = gu.TENSE_LABELS.get(_tense_key, {}).get('dropdown', _tense_key)
+        _items = [mo.md(t_ui("verb_test_heading", _lang).format(label=_label, count=len(words4test_verb()), total=session_total_v()))]
         if verb_msg():
             _items.append(mo.md(verb_msg()))
         _items += [
-            mo.md(f"Перевод: **{_cv['Translation']}**") if _cv else mo.md(""),
+            mo.md(f"{t_ui('translation_label', _lang)} **{_cv['Translation']}**") if _cv else mo.md(""),
             verb_fields,
             mo.hstack([skip_button_v, clear_button_v, submit_button_v], justify="end"),
             _feedback_v,
@@ -558,6 +615,7 @@ def _(
     cv_verb,
     df_verb,
     gu,
+    language_selector,
     random,
     session_total_v,
     set_captured_verb,
@@ -565,9 +623,11 @@ def _(
     set_tbl_sel_v,
     set_verb_msg,
     set_words4test_verb,
+    t_ui,
     tense_selector,
     words4test_verb,
 ):
+    _lang = language_selector.value
     _tense_key = tense_selector.value
     _c = captured_verb()
     _cv = cv_verb()
@@ -579,7 +639,7 @@ def _(
             if df_verb is not None:
                 _rem = {w['Word'] for w in _new}
                 set_tbl_sel_v([i for i, w in enumerate(df_verb['Word']) if w in _rem])
-            set_verb_msg(f'<span style="color:green;">Тест для <b>"{_cv["Word"]} — {_cv["Translation"]}"</b> пройден.\n\n{len(_new)} слов осталось из {session_total_v()}.</span>')
+            set_verb_msg(t_ui("verb_passed", _lang).format(word=_cv['Word'], trans=_cv['Translation'], remaining=len(_new), total=session_total_v()))
             set_captured_verb(None)
             set_cv_verb(random.choice(_new) if _new else None)
     return
@@ -640,10 +700,8 @@ def _(clear_button_v, clear_count_v, set_captured_verb, set_clear_count_v):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ## ПРИЛАГАТЕЛЬНЫЕ
-    """)
+def _(language_selector, mo, t_ui):
+    mo.md(t_ui("adjectives_heading", language_selector.value))
     return
 
 
@@ -656,7 +714,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    file_upload_adj = mo.ui.file(label="Загрузить TSV прилагательных")
+    file_upload_adj = mo.ui.file(label="Upload adjectives TSV")
     file_upload_adj
     return (file_upload_adj,)
 
@@ -674,22 +732,34 @@ def _(file_upload_adj, gu, notebook_dir, os, pd):
 
 
 @app.cell(hide_code=True)
-def _(df_adj, mo, tbl_sel_a):
+def _(df_adj, language_selector, mo, t_ui, tbl_sel_a):
     table_adj = mo.ui.table(df_adj, selection="multi", initial_selection=tbl_sel_a()) if df_adj is not None else None
-    mo.vstack([mo.md("### Выберите прилагательные для практики"), table_adj])
+    mo.vstack([mo.md(t_ui("select_adjs", language_selector.value)), table_adj])
     return (table_adj,)
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mode_selector = mo.ui.radio(
-        options={
+def _(language_selector, mo, t_ui):
+    _lang = language_selector.value
+    if _lang == "ru":
+        _opts = {
             "Простой: 3 рода × 2 числа (6 полей)": "simple",
             "Полный: все роды, числа и падежи (18 полей)": "complex",
-        },
-        value="Простой: 3 рода × 2 числа (6 полей)",
-        label="Режим теста:",
-    )
+        }
+        _default_mode = "Простой: 3 рода × 2 числа (6 полей)"
+    elif _lang == "el":
+        _opts = {
+            "Απλό: 3 γένη × 2 αριθμοί (6 πεδία)": "simple",
+            "Πλήρες: όλα τα γένη, αριθμοί και πτώσεις (18 πεδία)": "complex",
+        }
+        _default_mode = "Απλό: 3 γένη × 2 αριθμοί (6 πεδία)"
+    else:
+        _opts = {
+            "Simple: 3 genders × 2 numbers (6 fields)": "simple",
+            "Full: all genders, numbers and cases (18 fields)": "complex",
+        }
+        _default_mode = "Simple: 3 genders × 2 numbers (6 fields)"
+    mode_selector = mo.ui.radio(options=_opts, value=_default_mode, label=t_ui("mode_label", _lang))
     mo.md(f"{mode_selector}")
     return (mode_selector,)
 
@@ -706,8 +776,8 @@ def _(gu, mo, random, session_total_a, set_session_total_a, table_adj):
     adj_cv, set_adj_cv = mo.state(None)
     captured_adj, set_captured_adj = mo.state(None)
     _clk = lambda v: (v or 0) + 1
-    skip_button_a = mo.ui.button(label="Пропустить", on_click=_clk)
-    clear_button_a = mo.ui.button(label="Очистить", on_click=_clk)
+    skip_button_a = mo.ui.button(label="Skip", on_click=_clk)
+    clear_button_a = mo.ui.button(label="Clear", on_click=_clk)
     skip_count_a, set_skip_count_a = mo.state(0)
     clear_count_a, set_clear_count_a = mo.state(0)
     submit_count_a, set_submit_count_a = mo.state(0)
@@ -749,7 +819,7 @@ def _(adj_form, captured_adj, mo, set_submit_count_a):
     _matches_snap = _snap is not None and [v.strip() for v in _values] == [v.strip() for v in (_snap.value or [])]
     _dirty = _has_input and not _matches_snap
     _clk = lambda v: (v or 0) + 1
-    submit_button_a = mo.ui.button(label="Проверить", on_click=_clk, kind="warn" if _dirty else "neutral")
+    submit_button_a = mo.ui.button(label="Submit", on_click=_clk, kind="warn" if _dirty else "neutral")
     set_submit_count_a(0)
     return (submit_button_a,)
 
@@ -761,13 +831,16 @@ def _(
     captured_adj,
     clear_button_a,
     gu,
+    language_selector,
     mo,
     mode_selector,
     session_total_a,
     skip_button_a,
     submit_button_a,
+    t_ui,
     words4test_adj,
 ):
+    _lang = language_selector.value
     _adj = adj_cv()
     if words4test_adj() and _adj:
         _feedback_a = mo.md("")
@@ -777,14 +850,14 @@ def _(
             if _msg:
                 _feedback_a = mo.md(_msg)
         _view_adj = mo.vstack([
-            mo.md(f"**Тест: Склонение прилагательного** ({len(words4test_adj())}/{session_total_a()})"),
-            mo.md(f"Перевод: **{_adj['Translation']}**"),
+            mo.md(t_ui("adj_test_heading", _lang).format(count=len(words4test_adj()), total=session_total_a())),
+            mo.md(f"{t_ui('translation_label', _lang)} **{_adj['Translation']}**"),
             adj_form,
             _feedback_a,
             mo.hstack([skip_button_a, clear_button_a, submit_button_a], justify="end"),
         ])
     else:
-        _view_adj = mo.md("_Выберите прилагательные из таблицы выше._")
+        _view_adj = mo.md(t_ui("adj_empty", _lang))
     _view_adj
     return
 
@@ -801,6 +874,7 @@ def _(
     captured_adj,
     df_adj,
     gu,
+    language_selector,
     random,
     session_total_a,
     set_adj_cv,
@@ -808,8 +882,10 @@ def _(
     set_captured_adj,
     set_tbl_sel_a,
     set_words4test_adj,
+    t_ui,
     words4test_adj,
 ):
+    _lang = language_selector.value
     _adj = adj_cv()
     _c = captured_adj()
     if words4test_adj() and _adj and _c and getattr(_c, 'adj_word', None) == _adj['Word']:
@@ -820,7 +896,7 @@ def _(
             if df_adj is not None:
                 _rem = {w['Word'] for w in _new}
                 set_tbl_sel_a([i for i, w in enumerate(df_adj['Word']) if w in _rem])
-            set_adj_last_passed_mesg(f'<span style="color:green;">Тест для <b>"{_adj["Word"]} — {_adj["Translation"]}"</b> пройден.\n\n{len(_new)} слов осталось из {session_total_a()}.</span>')
+            set_adj_last_passed_mesg(t_ui("adj_passed", _lang).format(word=_adj['Word'], trans=_adj['Translation'], remaining=len(_new), total=session_total_a()))
             set_adj_cv(random.choice(_new) if _new else None)
             set_captured_adj(None)
     return
@@ -881,10 +957,100 @@ def _(clear_button_a, clear_count_a, set_captured_adj, set_clear_count_a):
 
 @app.cell(hide_code=True)
 def _():
-    import os, random, pandas as pd, marimo as mo
+    UI_STRINGS = {
+        "en": {
+            "nouns_heading": "## NOUNS",
+            "verbs_heading": "## VERBS",
+            "adjectives_heading": "## ADJECTIVES",
+            "select_nouns": "### Select nouns to practice",
+            "select_verbs": "### Select verbs to practice",
+            "select_adjs": "### Select adjectives to practice",
+            "translation_label": "Translation:",
+            "simple_noun_test": "**Simple noun test** ({count}/{total})",
+            "article_noun_test": "**Noun test with articles** ({count}/{total})",
+            "verb_test_heading": "**Verb test — {label}** ({count}/{total})",
+            "adj_test_heading": "**Test: Adjective declension** ({count}/{total})",
+            "noun_empty": "_Select nouns from the table above._",
+            "verb_empty": "_Select verbs from the table above._",
+            "verb_no_tense": "_Select a tense above._",
+            "adj_empty": "_Select adjectives from the table above._",
+            "tense_label": "Select tense:",
+            "mode_label": "Test mode:",
+            "noun_passed": '<span style="color:green;">Test for <b>"{word}"</b> passed.\n\n{remaining} words remaining out of {total}.</span>',
+            "verb_passed": '<span style="color:green;">Test for <b>"{word} — {trans}"</b> passed.\n\n{remaining} words remaining out of {total}.</span>',
+            "adj_passed":  '<span style="color:green;">Test for <b>"{word} — {trans}"</b> passed.\n\n{remaining} words remaining out of {total}.</span>',
+        },
+        "ru": {
+            "nouns_heading": "## СУЩЕСТВИТЕЛЬНЫЕ",
+            "verbs_heading": "## ГЛАГОЛЫ",
+            "adjectives_heading": "## ПРИЛАГАТЕЛЬНЫЕ",
+            "select_nouns": "### Выберите существительные для практики",
+            "select_verbs": "### Выберите глаголы для практики",
+            "select_adjs": "### Выберите прилагательные для практики",
+            "translation_label": "Перевод:",
+            "simple_noun_test": "**Простой тест: Существительные** ({count}/{total})",
+            "article_noun_test": "**Тест с артиклями: Существительные** ({count}/{total})",
+            "verb_test_heading": "**Тест глагола — {label}** ({count}/{total})",
+            "adj_test_heading": "**Тест: Склонение прилагательного** ({count}/{total})",
+            "noun_empty": "_Выберите существительные из таблицы выше._",
+            "verb_empty": "_Выберите глаголы из таблицы выше._",
+            "verb_no_tense": "_Выберите время выше._",
+            "adj_empty": "_Выберите прилагательные из таблицы выше._",
+            "tense_label": "Выбрать время:",
+            "mode_label": "Режим теста:",
+            "noun_passed": '<span style="color:green;">Тест для <b>"{word}"</b> пройден.\n\n{remaining} слов осталось из {total}.</span>',
+            "verb_passed": '<span style="color:green;">Тест для <b>"{word} — {trans}"</b> пройден.\n\n{remaining} слов осталось из {total}.</span>',
+            "adj_passed":  '<span style="color:green;">Тест для <b>"{word} — {trans}"</b> пройден.\n\n{remaining} слов осталось из {total}.</span>',
+        },
+        "el": {
+            "nouns_heading": "## ΟΥΣΙΑΣΤΙΚΑ",
+            "verbs_heading": "## ΡΗΜΑΤΑ",
+            "adjectives_heading": "## ΕΠΙΘΕΤΑ",
+            "select_nouns": "### Επιλέξτε ουσιαστικά για εξάσκηση",
+            "select_verbs": "### Επιλέξτε ρήματα για εξάσκηση",
+            "select_adjs": "### Επιλέξτε επίθετα για εξάσκηση",
+            "translation_label": "Μετάφραση:",
+            "simple_noun_test": "**Απλό τεστ: Ουσιαστικά** ({count}/{total})",
+            "article_noun_test": "**Τεστ με άρθρο: Ουσιαστικά** ({count}/{total})",
+            "verb_test_heading": "**Τεστ ρήματος — {label}** ({count}/{total})",
+            "adj_test_heading": "**Τεστ: Κλίση επιθέτου** ({count}/{total})",
+            "noun_empty": "_Επιλέξτε ουσιαστικά από τον πίνακα παραπάνω._",
+            "verb_empty": "_Επιλέξτε ρήματα από τον πίνακα παραπάνω._",
+            "verb_no_tense": "_Επιλέξτε χρόνο παραπάνω._",
+            "adj_empty": "_Επιλέξτε επίθετα από τον πίνακα παραπάνω._",
+            "tense_label": "Επιλέξτε χρόνο:",
+            "mode_label": "Λειτουργία τεστ:",
+            "noun_passed": '<span style="color:green;">Τεστ για <b>"{word}"</b> ολοκληρώθηκε.\n\n{remaining} λέξεις απομένουν από {total}.</span>',
+            "verb_passed": '<span style="color:green;">Τεστ για <b>"{word} — {trans}"</b> ολοκληρώθηκε.\n\n{remaining} λέξεις απομένουν από {total}.</span>',
+            "adj_passed":  '<span style="color:green;">Τεστ για <b>"{word} — {trans}"</b> ολοκληρώθηκε.\n\n{remaining} λέξεις απομένουν από {total}.</span>',
+        },
+    }
+
+    def t_ui(key, lang=None):
+        _l = lang if lang else "el"
+        return UI_STRINGS.get(_l, UI_STRINGS["el"]).get(key, UI_STRINGS["el"].get(key, key))
+
+    return (t_ui,)
+
+
+@app.cell(hide_code=True)
+def _():
+    class _Sel:
+        value = "ru"
+    language_selector = _Sel()
+    return (language_selector,)
+
+
+@app.cell(hide_code=True)
+def _():
+    import os
+    import random
+    import pandas as pd
+    import marimo as mo
     import eee_project as eee
     from eee_project import GreekUtils
     from modern_greek_backend_eee import ModernGreekBackend
+
     mg = ModernGreekBackend()
     eee.register_backend("el", mg)
     gu = GreekUtils(mg, mo, pd, eee_module=eee)

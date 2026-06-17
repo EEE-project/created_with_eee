@@ -19,6 +19,18 @@ app = marimo.App(width="medium")
 
 @app.cell(hide_code=True)
 def _(mo):
+    from eee_project import ConfigStore, eee_topbar
+    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _cfg = ConfigStore.from_url(
+        f"{_ROOT}/palaestra/ancient_greek.2026.summer/lessons.tsv",
+        ga=f"{_ROOT}/ga.json",
+    )
+    eee_topbar(mo, back_url=_cfg.index_url(), lang="ru", titles="Palaestra",
+               ga_config=_cfg.ga_config())
+
+
+@app.cell(hide_code=True)
+def _(mo):
     mo.md(r"""
     # Δίδαγμα α'
     **Palaestra — Древнегреческий язык, начальный уровень — Лето 2026**
@@ -114,10 +126,10 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _():
-    import csv as _csv
+def _(mo):
     import eee_project as eee
     from ancient_greek_backend_eee import AncientGreekBackend
+    from eee_project import GreekUtils, ANCIENT_GREEK
     from pathlib import Path as _Path
 
     ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt"])
@@ -125,36 +137,23 @@ def _():
     eee.register_backend("grc", ag, backend="ancient-greek")
     eee.set_chain("grc", ["ancient-greek"])
 
-    _all_vslots = eee.get_slot_templates("grc", "verb", "en") or []
-    _sg_slot = next((s for s in _all_vslots if s.tag == "PAD.2S"), None)
-    _pl_slot = next((s for s in _all_vslots if s.tag == "PAD.2P"), None)
+    gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
 
-    with open(_Path(__file__).parent / "verbs.tsv", encoding="utf-8") as _f:
-        _rows = list(_csv.DictReader(_f, delimiter="\t"))
-
-    VERBS = []
-    for _r in _rows:
-        _w = _r["Word"]
-        VERBS.append({
-            "verb": _w,
-            "meaning": _r["Translation"],
-            "sg": min(eee.inflect_slot(_w, _sg_slot, "verb", language="grc", backend="ancient-greek"), default="") if _sg_slot else "",
-            "pl": min(eee.inflect_slot(_w, _pl_slot, "verb", language="grc", backend="ancient-greek"), default="") if _pl_slot else "",
-        })
-    return VERBS, eee
+    _IMP = {"VerbForm": "Fin", "Tense": "Pres", "Voice": "Act", "Mood": "Imp"}
+    VERBS = gu.load_slot_drill(
+        _Path(__file__).parent / "verbs.tsv",
+        {"verb": None, "sg": {**_IMP, "Person": "2", "Number": "Sing"},
+                       "pl": {**_IMP, "Person": "2", "Number": "Plur"}},
+        pos="verb",
+    )
+    return VERBS, eee, gu
 
 
 @app.cell(hide_code=True)
 def _(mo):
-
-    import unicodedata
-
-    def strip_diacritics(s):
-        return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
-
     strict_v = mo.ui.switch(label="Учитывать диакритику", value=False)
     mo.hstack([strict_v], justify="end")
-    return strict_v, strip_diacritics
+    return (strict_v,)
 
 
 @app.cell(hide_code=True)
@@ -166,63 +165,34 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(VERBS, clear_btn_v, mo):
+def _(VERBS, clear_btn_v, gu, mo):
 
     _dep = clear_btn_v.value
     _clk = lambda v: (v or 0) + 1
     submit_btn_v = mo.ui.button(label="Проверить ✓", on_click=_clk)
-    _verb = [mo.ui.text(placeholder="глагол…") for _ in VERBS]
-    _sg   = [mo.ui.text(placeholder="ед. ч.…") for _ in VERBS]
-    _pl   = [mo.ui.text(placeholder="мн. ч.…") for _ in VERBS]
-    verb_word_v = _verb
-    verb_sg_v   = _sg
-    verb_pl_v   = _pl
-    _rows = [
-        mo.hstack([mo.md(f"**{v['meaning']}**"), _verb[i], _sg[i], _pl[i]], justify="start")
-        for i, v in enumerate(VERBS)
-    ]
+    verb_inputs_v, _rows = gu.make_item_drill_rows(
+        VERBS, ["verb", "sg", "pl"],
+        meaning_key="meaning",
+        placeholders=["глагол…", "ед. ч.…", "мн. ч.…"],
+    )
     mo.vstack([
         mo.md(r"## Упражнение 1 · Повелительное наклонение"),
         mo.md("Дано: **значение**. Введите: словарную форму глагола, затем повел. ед. и мн. ч."),
         *_rows,
         mo.hstack([clear_btn_v, submit_btn_v], justify="end"),
     ])
-    return submit_btn_v, verb_pl_v, verb_sg_v, verb_word_v
+    return submit_btn_v, verb_inputs_v
 
 
 @app.cell(hide_code=True)
-def _(
-    VERBS,
-    mo,
-    strict_v,
-    strip_diacritics,
-    submit_btn_v,
-    verb_pl_v,
-    verb_sg_v,
-    verb_word_v,
-):
+def _(VERBS, gu, mo, strict_v, submit_btn_v, verb_inputs_v):
 
-    _feedback = []
-    if submit_btn_v.value:
-        def _cmp(a, b):
-            return (a == b) if strict_v.value else (strip_diacritics(a) == strip_diacritics(b))
-        for _i, _v in enumerate(VERBS):
-            _w = verb_word_v[_i].value.strip()
-            _s = verb_sg_v[_i].value.strip()
-            _p = verb_pl_v[_i].value.strip()
-            _parts = []
-            if _w:
-                _ok = _cmp(_w, _v["verb"])
-                _parts.append(f"{'✓' if _ok else '✗'} глагол **{_w}**" + (f" ← *{_v['verb']}*" if not _ok else ""))
-            if _s:
-                _ok = _cmp(_s, _v["sg"])
-                _parts.append(f"{'✓' if _ok else '✗'} sg **{_s}**" + (f" ← *{_v['sg']}*" if not _ok else ""))
-            if _p:
-                _ok = _cmp(_p, _v["pl"])
-                _parts.append(f"{'✓' if _ok else '✗'} pl **{_p}**" + (f" ← *{_v['pl']}*" if not _ok else ""))
-            if _parts:
-                _feedback.append(mo.md(f"*{_v['meaning']}*: " + " · ".join(_parts)))
-    mo.vstack(_feedback) if _feedback else mo.md("")
+    _fb = gu.check_item_drill(
+        VERBS, verb_inputs_v, ["verb", "sg", "pl"],
+        field_labels=["глагол", "sg", "pl"],
+        strict=strict_v.value,
+    ) if submit_btn_v.value else []
+    mo.vstack(_fb) if _fb else mo.md("")
     return
 
 
@@ -267,6 +237,7 @@ def _(eee):
             "adj": _w,
             "meaning": _r["Translation"],
             "adv": min(eee.inflect_slot(_w, _adv_slot, "adjective", language="grc", backend="ancient-greek"), default="") if _adv_slot else "",
+            "label": f"{_w} — {_r['Translation']}",
         })
     return (ADJS,)
 
@@ -280,45 +251,36 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(ADJS, clear_btn_a, mo):
+def _(ADJS, clear_btn_a, gu, mo):
 
     _dep = clear_btn_a.value
     _clk_a = lambda v: (v or 0) + 1
     submit_btn_a = mo.ui.button(label="Проверить ✓", on_click=_clk_a)
-    _inputs = [
-        mo.ui.text(placeholder="наречие…", value="καλῶς" if i == 0 else "")
-        for i, _ in enumerate(ADJS)
-    ]
-    adv_inputs = _inputs
+    adv_inputs_v, _rows = gu.make_item_drill_rows(
+        ADJS, ["adv"],
+        meaning_key="label",
+        placeholders=["наречие…"],
+    )
     mo.vstack([
         mo.md(r"## Упражнение 2 · Образование наречий"),
         mo.md(r"**Правило:** замените окончание **-ός** на **-ῶς** (с облегчённым ударением: циркумфлекс)"),
         mo.md(r"*Пример:* καλ**ός** → καλ**ῶς**"),
-        *[
-            mo.hstack([mo.md(f"**{a['adj']}** — {a['meaning']}"), _inputs[i]], justify="start")
-            for i, a in enumerate(ADJS)
-        ],
+        *_rows,
         mo.hstack([clear_btn_a, submit_btn_a], justify="end"),
     ])
-    return adv_inputs, submit_btn_a
+    return adv_inputs_v, submit_btn_a
 
 
 @app.cell(hide_code=True)
-def _(ADJS, adv_inputs, mo, strict_v, strip_diacritics, submit_btn_a):
+def _(ADJS, adv_inputs_v, gu, mo, strict_v, submit_btn_a):
 
-    _feedback = []
-    if submit_btn_a.value:
-        def _cmp(a, b):
-            return (a == b) if strict_v.value else (strip_diacritics(a) == strip_diacritics(b))
-        for _i, _a in enumerate(ADJS):
-            _val = adv_inputs[_i].value.strip()
-            if _val:
-                _ok = _cmp(_val, _a["adv"])
-                _feedback.append(mo.md(
-                    f"{'✓' if _ok else '✗'} **{_a['adj']}** → **{_val}**" +
-                    (f" ← правильно: *{_a['adv']}*" if not _ok else "")
-                ))
-    mo.vstack(_feedback) if _feedback else mo.md("")
+    _fb = gu.check_item_drill(
+        ADJS, adv_inputs_v, ["adv"],
+        meaning_key="label",
+        field_labels=["нар."],
+        strict=strict_v.value,
+    ) if submit_btn_a.value else []
+    mo.vstack(_fb) if _fb else mo.md("")
     return
 
 
@@ -336,11 +298,12 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
+def _(mo):
+    from eee_project.notebook_utils import eee_footer
+    eee_footer(mo, lang="ru")
+
+
+@app.cell(hide_code=True)
 def _():
     import marimo as mo
-
     return (mo,)
-
-
-if __name__ == "__main__":
-    app.run()
