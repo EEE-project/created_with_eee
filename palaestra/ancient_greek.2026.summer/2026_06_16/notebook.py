@@ -2,13 +2,12 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.3",
+#     "pandas>=2.0",
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
-#     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
 # ]
 #
 # [tool.uv.sources]
 # eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
-# ancient-greek-backend-eee = { git = "https://codeberg.org/EEE-project/ancient-greek-backend-eee.git" }
 # ///
 
 import marimo
@@ -27,6 +26,7 @@ def _(mo):
     )
     eee_topbar(mo, back_url=_cfg.index_url(), lang="ru", titles="Palaestra",
                ga_config=_cfg.ga_config())
+    return
 
 
 @app.cell(hide_code=True)
@@ -43,12 +43,11 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Проверка домашнего задания · τὸ δεύτερον προστεταγμένον
+    ## Проверка домашнего задания · τὸ πρῶτον προστεταγμένον
 
     Файл: [дз+энклитики+заметки.pdf](./дз+энклитики+заметки.pdf)
 
-    **Задания 1–3** — ударения в barytona, oxytona / perispomena, на подчёркнутом слоге.
-    Правило: ударение *может быть* острым или облегчённым (по количеству мор); *должно быть* — то, которое определяется реальной формой слова.
+    **Задания 1–3** — ударения в barytona, oxytona/perispomena, на подчёркнутом слоге.
 
     **Задания 4–8** — ὁριστική ↔ προστακτική:
 
@@ -60,6 +59,10 @@ def _(mo):
     | λέγω | λέγε! | λέγετε! |
     | καταλαμβάνω | καταλάμβανε! | καταλαμβάνετε! |
 
+    Ударение рецессивное: краткое окончание → 3-й от конца; долгое → 2-й от конца.
+
+    εὖ / ὀρθῶς / καλῶς λέγεις, ἀναγιγνώσκεις… — хорошо, правильно говоришь, читаешь…
+
     **Задание 9** — антоним: δῆλόν ἐστιν ↔ **ἄδηλόν ἐστιν**
     """)
     return
@@ -68,112 +71,290 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Рецессивное ударение · τόνος ἐν ῥήμασι
+    ## αἱ μεταβολαί · Изменения при энклитиках
 
-    Ударение в глаголах **рецессивное** — стоит как можно дальше от конца:
+    Энклитика присоединяется к предыдущему слову; у некоторых типов появляется дополнительное ударение:
 
-    | Конечный гласный | Позиция ударения | Пример |
-    |:-----------------|:----------------:|:------:|
-    | Краткий (-ε, -ο) | 3-й от конца | ἀκούω → **ἄ**κουε! |
-    | Долгий (-η, -ω, дифтонг) | 2-й от конца | ἀκούω → ἀκού**ετε**! |
+    | Тип | + τίς | + ἐστί |
+    |:----|:-----:|:------:|
+    | ὀξύτονον: ἀγρός | ἀγρός τις | ἀγρός ἐστι |
+    | **παροξύτονον**: λίθος | λίθος τις | λίθος **ἐστί** |
+    | **προπαροξύτονον**: ἄνθρωπος | ἄνθρωπ**ό**ς τις | ἄνθρωπ**ό**ς ἐστι |
+    | περισπώμενον: φῶς | φῶς τι | φῶς ἐστι |
+    | **προπερισπώμενον**: οἶκος | οἶκ**ό**ς τις | οἶκ**ό**ς ἐστι |
 
-    εὖ / ὀρθῶς / καλῶς λέγεις, ἀναγιγνώσκεις… — *хорошо, правильно говоришь, читаешь…*
+    Цепочка проклитик и энклитик: εἴ τίς ποτέ μοι εἶπε…
 
-    | Греческий | Перевод |
-    |:----------|:--------|
-    | δῆλόν ἐστιν | это ясно |
-    | ἄδηλόν ἐστιν | это неясно |
+    φῶς = φόος (← φο + ος = 2 моры → περισπώμενον не на 2-м от конца — особый случай)
     """)
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    import eee_project as eee
-    from ancient_greek_backend_eee import AncientGreekBackend
-    from eee_project import GreekUtils, ANCIENT_GREEK
+def _():
+    import pandas as pd
     from pathlib import Path as _Path
+    import urllib.request as _urllib
+    import tempfile as _tempfile
 
-    ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt"])
-    eee.register_backend("grc", ag)
-    eee.register_backend("grc", ag, backend="ancient-greek")
-    eee.set_chain("grc", ["ancient-greek"])
-
-    gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
-
-    _IMP = {"VerbForm": "Fin", "Tense": "Pres", "Voice": "Act", "Mood": "Imp"}
-    VERBS = gu.load_slot_drill(
-        _Path(__file__).parent / "verbs.tsv",
-        {"verb": None, "sg": {**_IMP, "Person": "2", "Number": "Sing"},
-                       "pl": {**_IMP, "Person": "2", "Number": "Plur"}},
-        pos="verb",
+    _ROOT_RAW = (
+        "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+        "/palaestra/ancient_greek.2026.summer/2026_06_16"
     )
-    return VERBS, eee, gu
+
+    def _resolve_tsv(filename):
+        local = _Path(__file__).parent / filename
+        if local.exists():
+            return local
+        tmp = _Path(_tempfile.gettempdir()) / filename
+        _urllib.urlretrieve(f"{_ROOT_RAW}/{filename}", tmp)
+        return tmp
+
+    def load_tsv(filename):
+        return pd.read_csv(_resolve_tsv(filename), sep="\t")
+
+    return (load_tsv,)
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    strict_v = mo.ui.switch(label="Учитывать диакритику", value=False)
-    mo.hstack([strict_v], justify="end")
-    return (strict_v,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    _clk = lambda v: (v or 0) + 1
-    clear_btn_v = mo.ui.button(label="Очистить", on_click=_clk)
-    return (clear_btn_v,)
-
-
-@app.cell(hide_code=True)
-def _(VERBS, clear_btn_v, gu, mo):
-    _dep = clear_btn_v.value
-    _clk = lambda v: (v or 0) + 1
-    submit_btn_v = mo.ui.button(label="Проверить ✓", on_click=_clk)
-    verb_inputs_v, _rows = gu.make_item_drill_rows(
-        VERBS, ["verb", "sg", "pl"],
-        meaning_key="meaning",
-        placeholders=["глагол…", "ед. ч.…", "мн. ч.…"],
-    )
+def _(load_tsv, mo):
+    _verbs = load_tsv("verbs.tsv")
+    _nouns = load_tsv("nouns.tsv")
+    _adj = load_tsv("adjectives.tsv")
     mo.vstack([
-        mo.md(r"## Упражнение · Повелительное наклонение"),
-        mo.md("Дано: **значение**. Введите: словарную форму глагола, затем повел. ед. и мн. ч."),
-        *_rows,
-        mo.hstack([clear_btn_v, submit_btn_v], justify="end"),
+        mo.md("## Capitulum I · Словарь Athenaze"),
+        mo.md("Файл: [Athenaze_1_vocabula.pdf](./Athenaze_1_vocabula.pdf)"),
+        mo.md("**Verba (глаголы):**"),
+        mo.ui.table(_verbs, selection=None),
+        mo.md("**Nomina substantiva (существительные, 2-е скл.):**"),
+        mo.ui.table(_nouns, selection=None),
+        mo.md("**Nomina adjectiva (прилагательные):**"),
+        mo.ui.table(_adj, selection=None),
+        mo.md(r"""
+    **Praepositiones · Adverbia · Coniunctiones:**
+
+    | | | |
+    |:--|:--|:--|
+    | πρός + acc. — к (ad) | ἀεί — всегда (semper) | ἀλλά — но (sed) |
+    | ἐκ + gen. — из (ex) | μάλα — очень (valde) | γάρ — потому что, ведь (nam) |
+    | ἐν + dat. — в, где? (in) | οὐ/οὐκ/οὐχ — не (non) | οὖν — поэтому (ergo) |
+    | | οὐκέτι — уже не (iam non) | καί — и (et) |
+    | | πολλάκις — часто (saepe) | |
+    | | τέλος — наконец (tandem) | |
+
+    *Locutiones:* δι'ὀλίγου — спустя недолгое время · ἐν ταῖς Ἀθήναις — в Афинах
+        """),
     ])
-    return submit_btn_v, verb_inputs_v
+    return
 
 
 @app.cell(hide_code=True)
-def _(VERBS, gu, mo, strict_v, submit_btn_v, verb_inputs_v):
-    _fb = gu.check_item_drill(
-        VERBS, verb_inputs_v, ["verb", "sg", "pl"],
-        field_labels=["глагол", "sg", "pl"],
-        strict=strict_v.value,
-    ) if submit_btn_v.value else []
-    mo.vstack(_fb) if _fb else mo.md("")
+def _(load_tsv):
+    import pandas as _pd
+    _df = _pd.concat(
+        [load_tsv(f) for f in ("verbs.tsv", "nouns.tsv", "adjectives.tsv", "particles.tsv")],
+        ignore_index=True,
+    )
+    VOCAB_WORDS = [{"form": r["Word"], "meaning": r["Translation"]} for _, r in _df.iterrows()]
+    return (VOCAB_WORDS,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    cv_c, set_cv_c = mo.state(None)
+    score_c, set_score_c = mo.state({"correct": 0, "total": 0})
+    remaining_c, set_remaining_c = mo.state(None)
+    return cv_c, remaining_c, score_c, set_cv_c, set_remaining_c, set_score_c
+
+
+@app.cell(hide_code=True)
+def _(VOCAB_WORDS, random, remaining_c, set_cv_c, set_remaining_c):
+    if remaining_c() is None and VOCAB_WORDS:
+        _s = random.sample(VOCAB_WORDS, len(VOCAB_WORDS))
+        set_cv_c(_s[0])
+        set_remaining_c(_s[1:])
+    return
+
+
+@app.cell(hide_code=True)
+def _(VOCAB_WORDS, cv_c, mo, random):
+    if cv_c() is None:
+        _choices = ['']
+    else:
+        _correct = cv_c()['form']
+        _others = [w['form'] for w in VOCAB_WORDS if w['form'] != _correct]
+        _choices = sorted(
+            [_correct] + random.sample(_others, min(3, len(_others))),
+            key=lambda _x: random.random(),
+        )
+    answer_radio = mo.ui.radio(options=_choices)
+    return (answer_radio,)
+
+
+@app.cell(hide_code=True)
+def _(
+    VOCAB_WORDS,
+    answer_radio,
+    cv_c,
+    mo,
+    random,
+    remaining_c,
+    score_c,
+    set_cv_c,
+    set_remaining_c,
+    set_score_c,
+):
+    _done = cv_c() is None and remaining_c() is not None and len(remaining_c()) == 0
+
+    def _on_next_c(_):
+        if cv_c() is None:
+            _shuf = random.sample(VOCAB_WORDS, len(VOCAB_WORDS))
+            set_cv_c(_shuf[0])
+            set_remaining_c(_shuf[1:])
+            set_score_c({'correct': 0, 'total': 0})
+        else:
+            _ok = answer_radio.value == cv_c()['form']
+            set_score_c({'correct': score_c()['correct'] + int(_ok), 'total': score_c()['total'] + 1})
+            set_cv_c(remaining_c()[0] if remaining_c() else None)
+            set_remaining_c(remaining_c()[1:] if remaining_c() else [])
+
+    _s = score_c()
+
+    if _done:
+        _out = mo.vstack([
+            mo.callout(mo.md(f"Готово! Правильно: **{_s['correct']}** / **{_s['total']}**"), kind='success'),
+            mo.ui.button(label='Пройти снова', on_click=_on_next_c),
+        ])
+    elif cv_c() is None:
+        mo.stop(True, mo.md(''))
+    else:
+        _next_c = mo.ui.button(label='Следующий', on_click=_on_next_c)
+        _fb = mo.md('')
+        if answer_radio.value is not None:
+            _ok = answer_radio.value == cv_c()['form']
+            _color = '#2d9e2d' if _ok else '#d32f2f'
+            _mark = '✓' if _ok else '✗'
+            _fb = mo.md(f'<span style="color:{_color};font-weight:bold">{_mark} {cv_c()["meaning"]} → {cv_c()["form"]}</span>')
+        _out = mo.vstack([
+            mo.md(f'## Упражнение 1 · Выбрать слово\n\n**{_s["total"] + 1}** / {len(VOCAB_WORDS)} — правильно: {_s["correct"]}'),
+            mo.md(f'*{cv_c()["meaning"]}*'),
+            answer_radio,
+            _fb,
+            mo.hstack([_next_c], justify='start'),
+        ])
+    _out
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""
-    ## Ἡ εἰσαγωγή · Введение в Athenaze
+    cv_w, set_cv_w = mo.state(None)
+    score_w, set_score_w = mo.state({"correct": 0, "total": 0})
+    remaining_w, set_remaining_w = mo.state(None)
+    return cv_w, remaining_w, score_w, set_cv_w, set_remaining_w, set_score_w
 
-    Новые слова:
 
-    | Греческий | Часть речи | Перевод |
-    |:----------|:-----------|:--------|
-    | ὁ **οἶκος** | ὄνομα οὐσιαστικόν | дом |
-    | ὁ **ἀγρός** | ὄνομα οὐσιαστικόν | поле |
-    | ὁ **αὐτουργός** | ὄνομα οὐσιαστικόν | земледелец, работающий своими руками (αὐτός + ἔργον) |
-    | ὁ **διδάσκαλος** | ὄνομα οὐσιαστικόν | учитель |
-    | **Ἀθηναῖος** | ὄνομα ἐπίθετον | афинский |
-    | **οἰκεῖ** | ῥῆμα | живёт, обитает |
-    | **ἐστι(ν)** | ῥῆμα | есть, является |
+@app.cell(hide_code=True)
+def _(VOCAB_WORDS, random, remaining_w, set_cv_w, set_remaining_w):
+    if remaining_w() is None and VOCAB_WORDS:
+        _s = random.sample(VOCAB_WORDS, len(VOCAB_WORDS))
+        set_cv_w(_s[0])
+        set_remaining_w(_s[1:])
+    return
 
-    Порядок слов: английский / русский — **S V O**; древнегреческий — **S O V** (дополнение перед глаголом).
-    """)
+
+@app.cell(hide_code=True)
+def _(cv_w, mo):
+    _ = cv_w()
+    write_input_w = mo.ui.text(placeholder='греческое слово…', full_width=True)
+
+    return (write_input_w,)
+
+
+@app.cell(hide_code=True)
+def _(cv_w, mo, remaining_w):
+    _done = cv_w() is None and remaining_w() is not None and len(remaining_w()) == 0
+    next_btn_w = mo.ui.button(
+        label='Пройти снова' if _done else 'Следующий',
+        on_click=lambda v: (v or 0) + 1,
+    )
+
+    return (next_btn_w,)
+
+
+@app.cell(hide_code=True)
+def _(
+    VOCAB_WORDS,
+    cv_w,
+    gu,
+    next_btn_w,
+    random,
+    remaining_w,
+    score_w,
+    set_cv_w,
+    set_remaining_w,
+    set_score_w,
+    write_input_w,
+):
+    if next_btn_w.value:
+        _r = remaining_w()
+        if _r is None:
+            pass
+        elif cv_w() is None:
+            _shuf = random.sample(VOCAB_WORDS, len(VOCAB_WORDS))
+            set_cv_w(_shuf[0])
+            set_remaining_w(_shuf[1:])
+            set_score_w({'correct': 0, 'total': 0})
+        elif _r:
+            _ok = gu._ci(write_input_w.value.strip(), {cv_w()['form']})
+            set_score_w({'correct': score_w()['correct'] + int(_ok), 'total': score_w()['total'] + 1})
+            set_cv_w(_r[0])
+            set_remaining_w(_r[1:])
+        else:
+            _ok = gu._ci(write_input_w.value.strip(), {cv_w()['form']})
+            set_score_w({'correct': score_w()['correct'] + int(_ok), 'total': score_w()['total'] + 1})
+            set_cv_w(None)
+            set_remaining_w([])
+
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    VOCAB_WORDS,
+    cv_w,
+    gu,
+    mo,
+    next_btn_w,
+    remaining_w,
+    score_w,
+    write_input_w,
+):
+    _done = cv_w() is None and remaining_w() is not None and len(remaining_w()) == 0
+    _s = score_w()
+    if _done:
+        _out = mo.vstack([
+            mo.callout(mo.md(f"Готово! Правильно: **{_s['correct']}** / **{_s['total']}**"), kind='success'),
+            next_btn_w,
+        ])
+    elif cv_w() is None:
+        mo.stop(True, mo.md(''))
+    else:
+        if write_input_w.value:
+            _ok = gu._ci(write_input_w.value.strip(), {cv_w()['form']})
+            _color = '#2d9e2d' if _ok else '#d32f2f'
+            _mark = '✓' if _ok else '✗'
+            _question_row = mo.md(f'<span style="color:{_color};font-weight:bold">{_mark} {cv_w()["meaning"]} → {cv_w()["form"]}</span>')
+        else:
+            _question_row = mo.md(f'*{cv_w()["meaning"]}*')
+        _out = mo.vstack([
+            mo.md(f'## Упражнение 2 · Написать греческое слово\n\n**{_s["total"] + 1}** / {len(VOCAB_WORDS)} — правильно: {_s["correct"]}'),
+            _question_row,
+            write_input_w,
+            mo.hstack([next_btn_w], justify='start'),
+        ])
+    _out
+
     return
 
 
@@ -184,39 +365,30 @@ def _(mo):
 
     **Τίς…; — Кто?** → именительный падеж (ὀνομαστική):
 
-    > Τίς ἐστιν ὁ Ἀνδρέας; — Кто такой Андрей?
-    > ὁ Ἀνδρέας **διδάσκαλός** ἐστιν. — Андрей — учитель.
-    >
-    > Τίς ἐστιν ὁ Δ.;
-    > ὁ Δ. **αὐτουργός** ἐστιν.
+    > Τίς ἐστιν ὁ Ἀνδρέας; — ὁ Ἀνδρέας **διδάσκαλός** ἐστιν.
+    > Τίς ἐστιν ὁ Δ.; — ὁ Δ. **αὐτουργός** ἐστιν.
 
-    **Ποῦ; — Где?** → **ἐν** + дательный падеж (δοτική):
+    **Ποδαπός…; — Откуда? Какой национальности?** → именительный:
 
-    > Ποῦ οἰκεῖ ὁ Δ.;
-    > ὁ Δ. **ἐν τοῖς ἀγροῖς** οἰκεῖ.
+    > Ποδαπός ἐστιν ὁ Ἀνδρέας; — ὁ Ἀνδρέας **Ῥῶσσός** / **Ἕλλην** / **Ῥωμαῖος** ἐστιν.
+    > (Ῥῶσσος ← Ῥωσία, Γερμανός ← Γερμανία, Ἀμερικανός ← Ἀμέρικα…)
 
-    **Διὰ τί; — Почему?** → частица **γάρ** (ведь, ибо) на втором месте:
+    **Ποῦ; — Где?** → **ἐν** + дательный (δοτική):
 
-    > Διὰ τί ὁ Δ. ἐν τοῖς ἀγροῖς οἰκεῖ;
-    > αὐτουργὸς **γάρ** ἐστιν. — Ведь он земледелец.
-    > ὁ **γὰρ** Δ. αὐτουργός ἐστιν.
+    > Ποῦ οἰκεῖ ὁ Δ.; — ὁ Δ. **ἐν τοῖς ἀγροῖς** οἰκεῖ.
 
-    Частицы в древнегреческом стоят **на втором месте** (закон Ваккернагеля).
+    **Διὰ τί; — Почему?** → частица **γάρ** на втором месте:
 
-    **ἆρα** — вопрос, ожидающий «да» / «нет»:
+    > Διὰ τί ὁ Δ. ἐν τοῖς ἀγροῖς οἰκεῖ; — αὐτουργὸς **γάρ** ἐστιν.
 
-    > ἆρα ὁ Δ. αὐτουργός ἐστιν;
-    > Ναί, αὐτουργός ἐστιν.
+    **Ἆρα…; — Разве? (да/нет):**
 
-    *Ср. латынь: Est-ne Iulius agricola? — Ita / sic, agricola est.*
-    """)
-    return
+    > Ἆρα Ῥωμαῖός ἐστιν ὁ Δ.;
+    > Ναί, αὐτουργός ἐστιν. — Да, он земледелец.
+    > Οὐδαμῶς, οὐ Ῥωμαῖός ἐστιν, **ἀλλά** Ἀθηναῖος.
 
+    Частицы стоят **на втором месте** (закон Ваккернагеля): γάρ, ἀλλά, οὖν, καί.
 
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ---
     *ἡ γὰρ σιωπὴ μαρτυρεῖ τὸ μὴ θελεῖν.* — Ибо молчание свидетельствует о нежелании.
     """)
     return
@@ -225,28 +397,48 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## τὸ τρίτον προστεταγμένον · Домашнее задание
+    ## τὸ δεύτερον προστεταγμένον · Домашнее задание
 
-    1. Повторите парадигму повелительного наклонения пяти глаголов (упражнение выше).
-    2. Выучите новые слова: οἶκος, ἀγρός, αὐτουργός, διδάσκαλος.
-    3. Составьте 2–3 предложения по образцу:
-       - *Τίς ἐστιν ὁ …; — ὁ … … ἐστιν.*
-       - *Ποῦ οἰκεῖ ὁ …; — ὁ … ἐν … οἰκεῖ.*
-       - *Διὰ τί …; — … γάρ ἐστιν.*
+    **1. Вопросы о Δικαιόπολις** — файл: [κεφ\_Ι(0,5)\_ἀσκήματα.pdf](./κεφ_Ι(0,5)_ἀσκήματα.pdf)
+
+    Ответьте на вопросы (и составьте вопросы к ответам):
+    - Τίς ἐστιν ὁ Δικαιόπολις;
+    - Ποδαπός ἐστιν ὁ Δικαιόπολις;
+    - Ποῦ ὁ Δ. οὐκ οἰκεῖ; Ποῦ οἰκεῖ;
+    - Διὰ τί οἰκεῖ ὁ Δ. ἐν τοῖς ἀγροῖς;
+    - Ἆρα Ῥωμαῖός ἐστιν ὁ Δ.;
+
+    **2. Энклитики** — файл: [энклитики+немного\_алфавита\_и\_практики\_письма.pdf](./энклитики+немного_алфавита_и_практики_письма.pdf)
+
+    Упражнение 8: вставьте энклитику и при необходимости исправьте ударения.
+    - A) энклитическую частицу **τε**
+    - Б) энклитическую форму глагола **ἐστί**
+
+    Упражнение на алфавит: расположите слова в алфавитном порядке (строчными и заглавными буквами).
+
+    **3. Словарь** — файл: [Athenaze\_1\_vocabula.pdf](./Athenaze_1_vocabula.pdf)
+
+    Выучите слова Capitulum I (verba + nomina substantiva как минимум).
     """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
+    from eee_project import GreekUtils, ANCIENT_GREEK
     from eee_project.notebook_utils import eee_footer
-    eee_footer(mo, lang="ru")
+    gu = GreekUtils(config=ANCIENT_GREEK)
+    eee_footer(mo, lang='ru')
+
+    return (gu,)
 
 
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
-    return (mo,)
+    import random
+
+    return mo, random
 
 
 if __name__ == "__main__":
