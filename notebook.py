@@ -32,9 +32,9 @@ def _(lang_sel, mo):
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
     _HERO = {
-        "ru": ("Интерактивные тетради", "Курсы греческого языка"),
-        "el": ("Διαδραστικά Τετράδια", "Μαθήματα ελληνικής γλώσσας"),
-        "en": ("Interactive Notebooks", "Greek language courses"),
+        "ru": ("Курсы греческого языка", "Интерактивные тетради"),
+        "el": ("Μαθήματα ελληνικής γλώσσας", "Διαδραστικά Τετράδια"),
+        "en": ("Greek Language Courses", "Interactive Notebooks"),
     }
     _title, _subtitle = _HERO.get(lang_sel.value, _HERO["en"])
     mo.Html(f"""
