@@ -73,7 +73,7 @@ def _(mo, cfg):
     for _l in _LESSONS:
         _url = _l["nb"] if _l["nb"].startswith("http") else f"https://molab.marimo.io/notebooks/{_l['nb']}/app" if _l["nb"] else None
         if _url:
-            _inner = f"""<a class="eee-card" href="{_url}" target="_blank">
+            _inner = f"""<a class="eee-card" href="{_url}" target="_parent">
             <div class="eee-card-header">
               <div class="eee-card-icon">{_l['icon']}</div>
               <div>

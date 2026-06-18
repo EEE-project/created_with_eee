@@ -123,7 +123,7 @@ def _(lang_sel, mo):
         _title_text = _c['title'].get(_lang, _c['title']['en'])
         _desc_text = _c['desc'].get(_lang, _c['desc']['en'])
         if _url:
-            _inner = f"""<a class="eee-card" href="{_url}">
+            _inner = f"""<a class="eee-card" href="{_url}" target="_parent">
             <div class="eee-card-header">
               <div class="eee-card-icon">{_c['icon']}</div>
               <div>
