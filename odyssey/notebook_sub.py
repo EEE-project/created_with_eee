@@ -23,7 +23,7 @@ def _(lang_sel, mo):
         f"{_ROOT}/odyssey/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    _MAIN_URL = ""  # molab URL of created_with_eee/notebook.py — fill after deployment
+    _MAIN_URL = "https://molab.marimo.io/notebooks/nb_uSsB35QKHUXWXregdqcYg9/app"  # molab URL of created_with_eee/notebook.py — fill after deployment
     eee_topbar(mo, back_url=_MAIN_URL or None, lang=lang_sel.value, titles={
         "ru": "Древнегреческий с Гомером",
         "en": "Ancient Greek with Homer",
@@ -122,7 +122,7 @@ def _(lang_sel, mo):
 def _(mo):
     lang_sel = mo.ui.dropdown(
         options={"Ελληνικά": "el", "Русский": "ru", "English": "en"},
-        value="Ελληνικά",
+        value="English",
         label="🌐",
     )
     mo.Html(f"""

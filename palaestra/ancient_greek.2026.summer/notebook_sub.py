@@ -23,7 +23,7 @@ def _(mo):
         f"{_ROOT}/palaestra/ancient_greek.2026.summer/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    _MAIN_URL = ""  # molab URL of created_with_eee/notebook.py — fill after deployment
+    _MAIN_URL = "https://molab.marimo.io/notebooks/nb_uSsB35QKHUXWXregdqcYg9/app"  # molab URL of created_with_eee/notebook.py — fill after deployment
     eee_topbar(mo, back_url=_MAIN_URL or None, lang="ru", titles="Palaestra",
                ga_config=cfg.ga_config())
     return (cfg,)

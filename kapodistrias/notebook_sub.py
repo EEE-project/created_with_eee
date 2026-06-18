@@ -24,7 +24,7 @@ def _(lang_sel, mo):
         f"{_ROOT}/kapodistrias/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     ).ga_config()
-    _MAIN_URL = ""  # molab URL of created_with_eee/notebook.py — fill after deployment
+    _MAIN_URL = "https://molab.marimo.io/notebooks/nb_uSsB35QKHUXWXregdqcYg9/app"  # molab URL of created_with_eee/notebook.py — fill after deployment
     eee_topbar(mo, back_url=_MAIN_URL or None, lang=lang_sel.value, titles={
         "ru": "Каподистриас", "el": "Καποδίστριας", "en": "Kapodistrias",
     }, ga_config=_ga)
