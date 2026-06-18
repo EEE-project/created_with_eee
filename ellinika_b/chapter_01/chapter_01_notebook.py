@@ -1,13 +1,15 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo>=0.22.4",
+#     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
+#     "marimo>=0.23.3",
 #     "modern-greek-eee @ git+https://github.com/EEE-project/modern-greek-eee.git",
 #     "modern-greek-inflexion-eee @ git+https://github.com/EEE-project/modern-greek-inflexion-eee.git",
 #     "pandas",
 # ]
 #
 # [tool.uv.sources]
+# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
 # modern-greek-eee = { git = "https://github.com/EEE-project/modern-greek-eee" }
 # modern-greek-inflexion-eee = { git = "https://github.com/EEE-project/modern-greek-inflexion-eee" }
 # ///
@@ -16,6 +18,20 @@ import marimo
 
 __generated_with = "0.23.5"
 app = marimo.App(width="medium")
+
+
+@app.cell(hide_code=True)
+def _(language_selector, mo):
+    from eee_project import ConfigStore, eee_topbar
+    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _cfg = ConfigStore.from_url(
+        f"{_ROOT}/ellinika_b/lessons.tsv",
+        ga=f"{_ROOT}/ga.json",
+    )
+    eee_topbar(mo, back_url=_cfg.index_url(), lang=language_selector.value, titles={
+        "ru": "Ελληνικά Β", "el": "Ελληνικά Β", "en": "Ελληνικά Β",
+    }, ga_config=_cfg.ga_config())
+    return
 
 
 @app.cell(hide_code=True)
