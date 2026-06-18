@@ -49,7 +49,7 @@ def _(cfg, lang_sel, mo):
     _nb_id = _lesson["nb_id"]
     _url = f"https://molab.marimo.io/notebooks/{_nb_id}/app" if _nb_id else None
     if _url:
-        _card = f"""<a class="eee-card" href="{_url}" target="_parent">
+        _card = f"""<a class="eee-card" href="{_url}">
           <div class="eee-card-header">
             <div class="eee-card-icon">{_lesson['icon']}</div>
             <div>
