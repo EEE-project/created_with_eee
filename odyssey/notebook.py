@@ -121,7 +121,7 @@ def _(lang_sel, mo):
 def _(mo):
     lang_sel = mo.ui.dropdown(
         options={"Ελληνικά": "el", "Русский": "ru", "English": "en"},
-        value="Ελληνικά",
+        value="English",
         label="🌐",
     )
     mo.Html(f"""

@@ -67,7 +67,7 @@ def _(lang_sel, mo):
     _COURSES = [
         {
             "icon": "📖",
-            "nb": "",
+            "nb": "nb_WwAH5TcPv1GwasoBu8rM8b",
             "greek": "Ελληνικά Β",
             "label": {"ru": "Современный греческий Б", "el": "Σύγχρονα Ελληνικά Β", "en": "Modern Greek B"},
             "title": {"ru": "Ελληνικά Β — Интерактивные тетради", "el": "Ελληνικά Β — Διαδραστικά Τετράδια", "en": "Ελληνικά Β — Interactive Notebooks"},
@@ -79,7 +79,7 @@ def _(lang_sel, mo):
         },
         {
             "icon": "🏛️",
-            "nb": "",
+            "nb": "nb_DvTBdMDLxtKzYCY5cgTgRb",
             "greek": "Καποδίστριας",
             "label": {"ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture"},
             "title": {"ru": "Серия уроков — Каподистриас", "el": "Σειρά μαθημάτων — Καποδίστριας", "en": "Lesson series — Kapodistrias"},
@@ -91,7 +91,7 @@ def _(lang_sel, mo):
         },
         {
             "icon": "🏛",
-            "nb": "",
+            "nb": "nb_dNfJMtygPUh5dhfXA44AbJ",
             "greek": "Παλαίστρα",
             "label": {"ru": "Древнегреческий язык", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek"},
             "title": {"ru": "Παλαίστρα — Лето 2026", "el": "Παλαίστρα — Καλοκαίρι 2026", "en": "Palaestra — Summer 2026"},
@@ -103,7 +103,7 @@ def _(lang_sel, mo):
         },
         {
             "icon": "🏺",
-            "nb": "",  # fill with molab ID of odyssey/notebook_sub.py
+            "nb": "nb_kfCNB7ejMPX5EUj3AHTZWV",
             "greek": "Ὀδύσσεια Α.1–21",
             "label": {"ru": "Древнегреческий с Гомером", "el": "Αρχαία Ελληνικά με τον Όμηρο", "en": "Ancient Greek with Homer"},
             "title": {"ru": "Одиссея — Пробный урок", "el": "Οδύσσεια — Δοκιμαστικό Μάθημα", "en": "Odyssey — Pilot Lesson"},
@@ -197,7 +197,7 @@ def _(lang_sel, mo):
 def _(mo):
     lang_sel = mo.ui.dropdown(
         options={"Ελληνικά": "el", "Русский": "ru", "English": "en"},
-        value="Ελληνικά",
+        value="English",
         label="🌐",
     )
     mo.Html(f"""
