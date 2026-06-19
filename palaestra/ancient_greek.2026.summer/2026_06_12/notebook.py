@@ -185,24 +185,24 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
+def _(NB_REMOTE, mo):
+    mo.md(fr"""
     ## Дополнительные материалы
 
     Файлы в папке этого занятия:
 
-    - [Greek Letter Practice — Vanguard Education](./Greek%20Letter%20Practice%20-%20Vanguard%20Education.pdf) — прописи латиницей для сравнения
-    - [Прописи](./Прописи.pdf) — прописи для греческого алфавита
+    - [Greek Letter Practice — Vanguard Education]({NB_REMOTE}/Greek%20Letter%20Practice%20-%20Vanguard%20Education.pdf) — прописи латиницей для сравнения
+    - [Прописи]({NB_REMOTE}/Прописи.pdf) — прописи для греческого алфавита
     """)
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
+def _(NB_REMOTE, mo):
+    mo.md(fr"""
     ## τὸ δεύτερον προστεταγμένον · Домашнее задание
 
-    Файл: [τόνος+λέξεις(προλεγόμενον).pdf](./τόνος+λέξεις(προλεγόμενον).pdf)
+    Файл: [τόνος+λέξεις(προλεγόμενον).pdf]({NB_REMOTE}/τόνος+λέξεις(προλεγόμενον).pdf)
 
     1. **Задание 1** — barytona: укажите, какое ударение *может* иметь и какое *должно* иметь каждое слово.
     2. **Задание 2** — слова с ударением на последнем слоге: какие *должны* быть ὀξύτονα, а какие *могут* быть περισπώμενα?
@@ -222,15 +222,16 @@ def _(cfg, mo):
     from pathlib import Path as _Path
 
     _gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
-    _nb_remote = cfg.nb_remote(__file__)
+    NB_REMOTE = cfg.nb_remote("2026_06_12")
     for _pdf in (
         "Greek Letter Practice - Vanguard Education.pdf",
         "Прописи.pdf",
         "τόνος+λέξεις(προλεγόμενον).pdf",
     ):
-        _gu.ensure_file(_pdf, nb_dir=_Path(__file__).parent, remote_base=_nb_remote)
+        _gu.ensure_file(_pdf, nb_dir=_Path(__file__).parent, remote_base=NB_REMOTE)
 
     eee_footer(mo, lang="ru")
+    return (NB_REMOTE,)
 
 
 @app.cell(hide_code=True)

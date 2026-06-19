@@ -139,7 +139,7 @@ def _(cfg, mo):
 
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
 
-    NB_REMOTE = cfg.nb_remote(__file__)
+    NB_REMOTE = cfg.nb_remote("2026_06_09")
     _IMP = {"VerbForm": "Fin", "Tense": "Pres", "Voice": "Act", "Mood": "Imp"}
     VERBS = gu.load_slot_drill(
         gu.ensure_file("verbs.tsv", nb_dir=_Path(__file__).parent, remote_base=NB_REMOTE),
