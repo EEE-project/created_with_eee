@@ -222,7 +222,7 @@ def _(cfg, mo):
     from pathlib import Path as _Path
 
     _gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
-    NB_REMOTE = cfg.nb_remote("2026_06_12")
+    NB_REMOTE = f"{cfg.raw_base}/2026_06_12"
     for _pdf in (
         "Greek Letter Practice - Vanguard Education.pdf",
         "Прописи.pdf",
