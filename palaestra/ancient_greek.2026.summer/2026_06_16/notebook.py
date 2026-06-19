@@ -41,11 +41,11 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
+def _(NB_REMOTE, mo):
+    mo.md(fr"""
     ## Проверка домашнего задания · τὸ πρῶτον προστεταγμένον
 
-    Файл: [дз+энклитики+заметки.pdf](./дз+энклитики+заметки.pdf)
+    Файл: [дз+энклитики+заметки.pdf]({NB_REMOTE}/дз+энклитики+заметки.pdf)
 
     **Задания 1–3** — ударения в barytona, oxytona/perispomena, на подчёркнутом слоге.
 
@@ -111,13 +111,13 @@ def _(NB_DIR, NB_REMOTE, gu):
 
 
 @app.cell(hide_code=True)
-def _(load_tsv, mo):
+def _(NB_REMOTE, load_tsv, mo):
     _verbs = load_tsv("verbs.tsv")
     _nouns = load_tsv("nouns.tsv")
     _adj = load_tsv("adjectives.tsv")
     mo.vstack([
         mo.md("## Capitulum I · Словарь Athenaze"),
-        mo.md("Файл: [Athenaze_1_vocabula.pdf](./Athenaze_1_vocabula.pdf)"),
+        mo.md(f"Файл: [Athenaze_1_vocabula.pdf]({NB_REMOTE}/Athenaze_1_vocabula.pdf)"),
         mo.md("**Verba (глаголы):**"),
         mo.ui.table(_verbs, selection=None),
         mo.md("**Nomina substantiva (существительные, 2-е скл.):**"),
@@ -375,11 +375,11 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
+def _(NB_REMOTE, mo):
+    mo.md(fr"""
     ## τὸ δεύτερον προστεταγμένον · Домашнее задание
 
-    **1. Вопросы о Δικαιόπολις** — файл: [κεφ\_Ι(0,5)\_ἀσκήματα.pdf](./κεφ_Ι(0,5)_ἀσκήματα.pdf)
+    **1. Вопросы о Δικαιόπολις** — файл: [κεφ\_Ι(0,5)\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ_Ι(0,5)_ἀσκήματα.pdf)
 
     Ответьте на вопросы (и составьте вопросы к ответам):
     - Τίς ἐστιν ὁ Δικαιόπολις;
@@ -388,7 +388,7 @@ def _(mo):
     - Διὰ τί οἰκεῖ ὁ Δ. ἐν τοῖς ἀγροῖς;
     - Ἆρα Ῥωμαῖός ἐστιν ὁ Δ.;
 
-    **2. Энклитики** — файл: [энклитики+немного\_алфавита\_и\_практики\_письма.pdf](./энклитики+немного_алфавита_и_практики_письма.pdf)
+    **2. Энклитики** — файл: [энклитики+немного\_алфавита\_и\_практики\_письма.pdf]({NB_REMOTE}/энклитики+немного_алфавита_и_практики_письма.pdf)
 
     Упражнение 8: вставьте энклитику и при необходимости исправьте ударения.
     - A) энклитическую частицу **τε**
@@ -396,7 +396,7 @@ def _(mo):
 
     Упражнение на алфавит: расположите слова в алфавитном порядке (строчными и заглавными буквами).
 
-    **3. Словарь** — файл: [Athenaze\_1\_vocabula.pdf](./Athenaze_1_vocabula.pdf)
+    **3. Словарь** — файл: [Athenaze\_1\_vocabula.pdf]({NB_REMOTE}/Athenaze_1_vocabula.pdf)
 
     Выучите слова Capitulum I (verba + nomina substantiva как минимум).
     """)
@@ -410,7 +410,7 @@ def _(cfg, mo):
     from pathlib import Path as _Path
     gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
     NB_DIR = _Path(__file__).parent
-    NB_REMOTE = cfg.nb_remote(__file__)
+    NB_REMOTE = cfg.nb_remote("2026_06_16")
     eee_footer(mo, lang='ru')
     return NB_DIR, NB_REMOTE, gu
 
