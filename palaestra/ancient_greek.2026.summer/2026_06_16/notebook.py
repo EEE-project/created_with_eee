@@ -291,16 +291,11 @@ def _(
             set_cv_w(_shuf[0])
             set_remaining_w(_shuf[1:])
             set_score_w({'correct': 0, 'total': 0})
-        elif _r:
-            _ok = gu._ci(write_input_w.value.strip(), {cv_w()['form']})
-            set_score_w({'correct': score_w()['correct'] + int(_ok), 'total': score_w()['total'] + 1})
-            set_cv_w(_r[0])
-            set_remaining_w(_r[1:])
         else:
             _ok = gu._ci(write_input_w.value.strip(), {cv_w()['form']})
             set_score_w({'correct': score_w()['correct'] + int(_ok), 'total': score_w()['total'] + 1})
-            set_cv_w(None)
-            set_remaining_w([])
+            set_cv_w(_r[0] if _r else None)
+            set_remaining_w(_r[1:] if _r else [])
     return
 
 
