@@ -21,12 +21,12 @@ app = marimo.App(width="medium")
 def _(mo):
     from eee_project import ConfigStore, eee_topbar
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
-    _cfg = ConfigStore.from_url(
+    cfg = ConfigStore.from_url(
         f"{_ROOT}/palaestra/ancient_greek.2026.summer/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    eee_topbar(mo, back_url=_cfg.index_url(), lang="ru", titles="Palaestra",
-               ga_config=_cfg.ga_config())
+    eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles="Palaestra",
+               ga_config=cfg.ga_config())
 
 
 @app.cell(hide_code=True)
@@ -126,7 +126,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(cfg, mo):
     import eee_project as eee
     from ancient_greek_backend_eee import AncientGreekBackend
     from eee_project import GreekUtils, ANCIENT_GREEK
@@ -139,14 +139,15 @@ def _(mo):
 
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
 
+    NB_REMOTE = cfg.nb_remote(__file__)
     _IMP = {"VerbForm": "Fin", "Tense": "Pres", "Voice": "Act", "Mood": "Imp"}
     VERBS = gu.load_slot_drill(
-        _Path(__file__).parent / "verbs.tsv",
+        gu.ensure_file("verbs.tsv", nb_dir=_Path(__file__).parent, remote_base=NB_REMOTE),
         {"verb": None, "sg": {**_IMP, "Person": "2", "Number": "Sing"},
                        "pl": {**_IMP, "Person": "2", "Number": "Plur"}},
         pos="verb",
     )
-    return VERBS, eee, gu
+    return VERBS, NB_REMOTE, eee, gu
 
 
 @app.cell(hide_code=True)
@@ -220,14 +221,15 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(eee):
+def _(NB_REMOTE, eee, gu):
     import csv as _csv
     from pathlib import Path as _Path
 
     _all_aslots = eee.get_slot_templates("grc", "adjective", "en") or []
     _adv_slot = next((s for s in _all_aslots if s.tag == "ADV"), None)
 
-    with open(_Path(__file__).parent / "adjs.tsv", encoding="utf-8") as _f:
+    _adjs_path = gu.ensure_file("adjs.tsv", nb_dir=_Path(__file__).parent, remote_base=NB_REMOTE)
+    with open(_adjs_path, encoding="utf-8") as _f:
         _rows = list(_csv.DictReader(_f, delimiter="\t"))
 
     ADJS = []

@@ -21,12 +21,12 @@ app = marimo.App(width="medium")
 def _(mo):
     from eee_project import ConfigStore, eee_topbar
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
-    _cfg = ConfigStore.from_url(
+    cfg = ConfigStore.from_url(
         f"{_ROOT}/palaestra/ancient_greek.2026.summer/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    eee_topbar(mo, back_url=_cfg.index_url(), lang="ru", titles="Palaestra",
-               ga_config=_cfg.ga_config())
+    eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles="Palaestra",
+               ga_config=cfg.ga_config())
 
 
 @app.cell(hide_code=True)
@@ -216,8 +216,20 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(cfg, mo):
+    from eee_project import GreekUtils, ANCIENT_GREEK
     from eee_project.notebook_utils import eee_footer
+    from pathlib import Path as _Path
+
+    _gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
+    _nb_remote = cfg.nb_remote(__file__)
+    for _pdf in (
+        "Greek Letter Practice - Vanguard Education.pdf",
+        "Прописи.pdf",
+        "τόνος+λέξεις(προλεγόμενον).pdf",
+    ):
+        _gu.ensure_file(_pdf, nb_dir=_Path(__file__).parent, remote_base=_nb_remote)
+
     eee_footer(mo, lang="ru")
 
 
