@@ -410,7 +410,7 @@ def _(cfg, mo):
     from pathlib import Path as _Path
     gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
     NB_DIR = _Path(__file__).parent
-    NB_REMOTE = cfg.nb_remote("2026_06_16")
+    NB_REMOTE = f"{cfg.raw_base}/2026_06_16"
     eee_footer(mo, lang='ru')
     return NB_DIR, NB_REMOTE, gu
 
