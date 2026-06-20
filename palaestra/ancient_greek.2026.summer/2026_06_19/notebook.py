@@ -34,8 +34,6 @@ def _(mo):
     mo.md(r"""
     # Δίδαγμα δ'
     **Palaestra — Древнегреческий язык, начальный уровень — Лето 2026**
-
-    [![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_wwUfB5CVbosTB9gT4bddw1)
     """)
     return
 
@@ -440,7 +438,7 @@ def _(
         else:
             _fb = mo.md(f'*{_meaning}*') if _meaning else mo.md('')
         _out = mo.vstack([
-            mo.md(f'## Упражнение 2 · Написать греческое слово\n\n**{_s["total"] + 1}** / {len(VOCAB_WORDS)} — правильно: {_s["correct"]}'),
+            mo.md(f'## Упражнение 2 · Написать греческое слово\n\n**{_s["total"] + 1}** / {len(VOCAB_WORDS)} — правильно: {_s["correct"]}\n\n**Как пользоваться:** нажмите кнопку знака диакритики → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается. Можно **совмещать несколько знаков диакритики** (например, придыхание + ударение перед вводом буквы → ἆ).'),
             _fb,
             write_input_w,
             mo.hstack([check_btn_w, next_btn_w], justify='start'),
@@ -512,6 +510,3 @@ def _(cfg, mo):
     eee_footer(mo, lang='ru')
     return NB_DIR, NB_REMOTE, gu
 
-
-if __name__ == "__main__":
-    app.run()

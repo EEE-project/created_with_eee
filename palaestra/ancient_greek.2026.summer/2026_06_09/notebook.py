@@ -424,6 +424,3 @@ def _(mo):
     eee_footer(mo, lang="ru")
     return
 
-
-if __name__ == "__main__":
-    app.run()
