@@ -23,7 +23,7 @@ def _(mo):
         f"{_ROOT}/palaestra/ancient_greek.2026.summer/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    eee_topbar(mo, back_url=None, lang="ru", titles="Palaestra", style="index",
+    eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles="Palaestra", style="index",
                ga_config=cfg.ga_config())
     return (cfg,)
 

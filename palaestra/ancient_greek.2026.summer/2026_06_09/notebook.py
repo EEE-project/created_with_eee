@@ -13,8 +13,15 @@
 
 import marimo
 
-__generated_with = "0.23.8"
+__generated_with = "0.23.9"
 app = marimo.App(width="medium")
+
+
+@app.cell(hide_code=True)
+def _():
+    import marimo as mo
+
+    return (mo,)
 
 
 @app.cell(hide_code=True)
@@ -27,6 +34,7 @@ def _(mo):
     )
     eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles="Palaestra",
                ga_config=cfg.ga_config())
+    return (cfg,)
 
 
 @app.cell(hide_code=True)
@@ -74,6 +82,45 @@ def _(mo):
 
     *ε, ο — всегда краткие; η, ω — всегда долгие.
     σ — в начале и середине слова; ς — в конце слова.*
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Три традиции произношения
+
+    В истории изучения древнегреческого сложились три основные системы:
+
+    **Эразмовское** (*Erasmian*, XVI в., Эразм Роттердамский) — реконструкция классической аттической фонетики, принятая в западной академической традиции.
+    η ≈ долгое **ē** [ɛː], ω ≈ долгое **ō** [ɔː], υ ≈ нем. **ü** [y], β = **b**.
+    Ударение считается тональным (музыкальным) → в практике просто ударный слог.
+    Θ = придыхательный **t** (смычный + выдох, как санскр. *th*), δ = **d** (звонкий смычный).
+    Придыхание ῾ = **h**. Именно эту систему мы используем на курсе.
+
+    **Кóйне / Лукианово** (*Koine*, I в. до н. э. — II в. н. э.) — реконструкция разговорного греческого эпохи Нового Завета и Римской империи.
+    К этому периоду η и ι слились в **и**, υ сблизился с ι (уже ≈ **и** во многих диалектах), придыхание ослабевало.
+    Θ → фрикативный **th** (как англ. *thin*), δ → **ð** (как англ. *this*), β → **в**.
+
+    **Рейхлиново** (*Reuchlinian*, XVI в., Иоганн Рейхлин) — традиция, основанная на византийском и новогреческом произношении.
+    η = ι = υ = ει = οι = **и**, β = **в**, γ = звонкий фрикатив [**ɣ**] (как новогреч. γ), придыхание исчезло.
+    Θ = **th** (англ. *thin*), δ = **ð** (англ. *this*).
+    Используется в Греции при преподавании древнегреческого и в греческой церковной традиции.
+
+    ---
+
+    ### Диакритические знаки и их произношение
+
+    | Кнопка | Название | Произношение | Применение |
+    |:------:|:---------|:-------------|:-----------|
+    | ά | οξεῖα — острое ударение | высокий тон слога (→ ударение) | любой гласный |
+    | ὰ | βαρεῖα — тупое ударение | понижение тона (перед следующим словом) | любой гласный |
+    | ᾶ | περισπωμένη — облечённое | восходяще-нисходящий тон на долгом слоге | только долгие: α η ι υ ω |
+    | ἁ | δασεῖα — густое придыхание | звук **h** перед гласным (ἁ = *ha*) | любой гласный |
+    | ἀ | ψιλή — тонкое придыхание | нет придыхания (ἀ = *a*) | любой гласный |
+    | ᾳ | ὑπογεγραμμένη — йота подписная | в класс. период: дифтонг (ᾳ = *ai*); у эразмистов обычно не произносится | только α η ω |
+    | ϊ | διαίρεσις — диереза | два слога, не дифтонг: ναΐ = *na-i*, не *nai* | только ι υ |
     """)
     return
 
@@ -147,53 +194,82 @@ def _(cfg, mo):
                        "pl": {**_IMP, "Person": "2", "Number": "Plur"}},
         pos="verb",
     )
-    return VERBS, NB_REMOTE, eee, gu
+    return NB_REMOTE, VERBS, eee, gu
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    strict_v = mo.ui.switch(label="Учитывать диакритику", value=False)
-    mo.hstack([strict_v], justify="end")
-    return (strict_v,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-
-    _clk = lambda v: (v or 0) + 1
-    clear_btn_v = mo.ui.button(label="Очистить", on_click=_clk)
-    return (clear_btn_v,)
-
-
-@app.cell(hide_code=True)
-def _(VERBS, clear_btn_v, gu, mo):
-
-    _dep = clear_btn_v.value
-    _clk = lambda v: (v or 0) + 1
-    submit_btn_v = mo.ui.button(label="Проверить ✓", on_click=_clk)
-    verb_inputs_v, _rows = gu.make_item_drill_rows(
-        VERBS, ["verb", "sg", "pl"],
-        meaning_key="meaning",
-        placeholders=["глагол…", "ед. ч.…", "мн. ч.…"],
+def _(VERBS, mo):
+    import random as _rand
+    _shuf_v = _rand.sample(VERBS, len(VERBS))
+    cv_v, set_cv_v = mo.state(_shuf_v[0])
+    remaining_v, set_remaining_v = mo.state(_shuf_v[1:])
+    field_v, set_field_v = mo.state(0)
+    score_v, set_score_v = mo.state({'correct': 0, 'total': 0})
+    return (
+        cv_v,
+        field_v,
+        remaining_v,
+        score_v,
+        set_cv_v,
+        set_field_v,
+        set_remaining_v,
+        set_score_v,
     )
-    mo.vstack([
-        mo.md(r"## Упражнение 1 · Повелительное наклонение"),
-        mo.md("Дано: **значение**. Введите: словарную форму глагола, затем повел. ед. и мн. ч."),
-        *_rows,
-        mo.hstack([clear_btn_v, submit_btn_v], justify="end"),
-    ])
-    return submit_btn_v, verb_inputs_v
 
 
 @app.cell(hide_code=True)
-def _(VERBS, gu, mo, strict_v, submit_btn_v, verb_inputs_v):
+def _(cv_v, field_v, gu, mo):
+    _ = (cv_v(), field_v())
+    write_input_v = gu.diacritics_text(placeholder='греческое слово…')
+    check_btn_v = mo.ui.button(label='Проверить', on_click=lambda v: (v or 0) + 1)
+    next_btn_v = mo.ui.button(label='Далее →', on_click=lambda v: (v or 0) + 1)
+    return check_btn_v, next_btn_v, write_input_v
 
-    _fb = gu.check_item_drill(
-        VERBS, verb_inputs_v, ["verb", "sg", "pl"],
-        field_labels=["глагол", "sg", "pl"],
-        strict=strict_v.value,
-    ) if submit_btn_v.value else []
-    mo.vstack(_fb) if _fb else mo.md("")
+
+@app.cell(hide_code=True)
+def _(
+    VERBS,
+    cv_v,
+    field_v,
+    gu,
+    next_btn_v,
+    remaining_v,
+    score_v,
+    set_cv_v,
+    set_field_v,
+    set_remaining_v,
+    set_score_v,
+    write_input_v,
+):
+    import random as _rand
+    FIELDS_V = [('verb', 'словарная форма'), ('sg', 'повел. ед. ч.'), ('pl', 'повел. мн. ч.')]
+    gu.slot_drill_advance(
+        next_btn_v.value, write_input_v.value.strip(),
+        cv_v(), remaining_v(), field_v(), score_v(),
+        FIELDS_V, VERBS, _rand,
+        set_cv_v, set_remaining_v, set_field_v, set_score_v,
+    )
+    return (FIELDS_V,)
+
+
+@app.cell(hide_code=True)
+def _(
+    FIELDS_V,
+    VERBS,
+    check_btn_v,
+    cv_v,
+    field_v,
+    gu,
+    next_btn_v,
+    score_v,
+    write_input_v,
+):
+    gu.slot_drill_display(
+        cv_v(), field_v(), score_v(), write_input_v, check_btn_v, next_btn_v,
+        fields=FIELDS_V,
+        title='## Упражнение 1 · Повелительное наклонение\n\n**Как пользоваться:** нажмите кнопку знака → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается.',
+        n_items=len(VERBS),
+    )
     return
 
 
@@ -240,49 +316,92 @@ def _(NB_REMOTE, eee, gu):
             "meaning": _r["Translation"],
             "adv": min(eee.inflect_slot(_w, _adv_slot, "adjective", language="grc", backend="ancient-greek"), default="") if _adv_slot else "",
             "label": f"{_w} — {_r['Translation']}",
+                "prompt": f"{_w} ({_r['Translation']})",
         })
     return (ADJS,)
 
 
 @app.cell(hide_code=True)
-def _(mo):
-
-    _clk_a = lambda v: (v or 0) + 1
-    clear_btn_a = mo.ui.button(label="Очистить", on_click=_clk_a)
-    return (clear_btn_a,)
-
-
-@app.cell(hide_code=True)
-def _(ADJS, clear_btn_a, gu, mo):
-
-    _dep = clear_btn_a.value
-    _clk_a = lambda v: (v or 0) + 1
-    submit_btn_a = mo.ui.button(label="Проверить ✓", on_click=_clk_a)
-    adv_inputs_v, _rows = gu.make_item_drill_rows(
-        ADJS, ["adv"],
-        meaning_key="label",
-        placeholders=["наречие…"],
+def _(ADJS, mo):
+    import random as _rand
+    _shuf_a = _rand.sample(ADJS, len(ADJS))
+    cv_a, set_cv_a = mo.state(_shuf_a[0])
+    remaining_a, set_remaining_a = mo.state(_shuf_a[1:])
+    field_a, set_field_a = mo.state(0)
+    score_a, set_score_a = mo.state({'correct': 0, 'total': 0})
+    return (
+        cv_a,
+        field_a,
+        remaining_a,
+        score_a,
+        set_cv_a,
+        set_field_a,
+        set_remaining_a,
+        set_score_a,
     )
-    mo.vstack([
-        mo.md(r"## Упражнение 2 · Образование наречий"),
-        mo.md(r"**Правило:** замените окончание **-ός** на **-ῶς** (с облегчённым ударением: циркумфлекс)"),
-        mo.md(r"*Пример:* καλ**ός** → καλ**ῶς**"),
-        *_rows,
-        mo.hstack([clear_btn_a, submit_btn_a], justify="end"),
-    ])
-    return adv_inputs_v, submit_btn_a
 
 
 @app.cell(hide_code=True)
-def _(ADJS, adv_inputs_v, gu, mo, strict_v, submit_btn_a):
+def _(cv_a, field_a, gu, mo):
+    _ = (cv_a(), field_a())
+    write_input_a = gu.diacritics_text(placeholder='наречие…')
+    check_btn_a = mo.ui.button(label='Проверить', on_click=lambda v: (v or 0) + 1)
+    next_btn_a = mo.ui.button(label='Далее →', on_click=lambda v: (v or 0) + 1)
+    return check_btn_a, next_btn_a, write_input_a
 
-    _fb = gu.check_item_drill(
-        ADJS, adv_inputs_v, ["adv"],
-        meaning_key="label",
-        field_labels=["нар."],
-        strict=strict_v.value,
-    ) if submit_btn_a.value else []
-    mo.vstack(_fb) if _fb else mo.md("")
+
+@app.cell(hide_code=True)
+def _(
+    ADJS,
+    cv_a,
+    field_a,
+    gu,
+    next_btn_a,
+    remaining_a,
+    score_a,
+    set_cv_a,
+    set_field_a,
+    set_remaining_a,
+    set_score_a,
+    write_input_a,
+):
+    import random as _rand
+    FIELDS_A = [('adv', 'наречие')]
+    gu.slot_drill_advance(
+        next_btn_a.value, write_input_a.value.strip(),
+        cv_a(), remaining_a(), field_a(), score_a(),
+        FIELDS_A, ADJS, _rand,
+        set_cv_a, set_remaining_a, set_field_a, set_score_a,
+    )
+    return (FIELDS_A,)
+
+
+@app.cell(hide_code=True)
+def _(
+    ADJS,
+    FIELDS_A,
+    check_btn_a,
+    cv_a,
+    field_a,
+    gu,
+    mo,
+    next_btn_a,
+    score_a,
+    write_input_a,
+):
+    mo.vstack([
+        mo.md("""## Упражнение 2 · Образование наречий
+
+    **Правило:** замените окончание **-ός** на **-ῶς**
+
+    *Пример:* καλός (красивый) → καλῶς""") if cv_a() is not None else mo.md(""),
+        gu.slot_drill_display(
+            cv_a(), field_a(), score_a(), write_input_a, check_btn_a, next_btn_a,
+            fields=FIELDS_A,
+            n_items=len(ADJS),
+            meaning_key='prompt', prompt_sep='→',
+        ),
+    ])
     return
 
 
@@ -303,9 +422,8 @@ def _(mo):
 def _(mo):
     from eee_project.notebook_utils import eee_footer
     eee_footer(mo, lang="ru")
+    return
 
 
-@app.cell(hide_code=True)
-def _():
-    import marimo as mo
-    return (mo,)
+if __name__ == "__main__":
+    app.run()
