@@ -12,7 +12,7 @@
 
 import marimo
 
-__generated_with = "0.23.8"
+__generated_with = "0.23.9"
 app = marimo.App(width="medium")
 
 
@@ -346,7 +346,7 @@ def _(
         else:
             _fb = mo.md(f'*{_meaning}*') if _meaning else mo.md('')
         _out = mo.vstack([
-            mo.md(f'## Упражнение 2 · Написать греческое слово\n\n**{_s["total"] + 1}** / {len(VOCAB_WORDS)} — правильно: {_s["correct"]}'),
+            mo.md(f'## Упражнение 2 · Написать греческое слово\n\n**{_s["total"] + 1}** / {len(VOCAB_WORDS)} — правильно: {_s["correct"]}\n\n**Как пользоваться:** нажмите кнопку знака диакритики → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается. Можно **совмещать несколько знаков диакритики** (например, придыхание + ударение перед вводом буквы → ἆ).'),
             _fb,
             write_input_w,
             mo.hstack([check_btn_w, next_btn_w], justify='start'),
@@ -439,6 +439,3 @@ def _():
 
     return mo, random
 
-
-if __name__ == "__main__":
-    app.run()
