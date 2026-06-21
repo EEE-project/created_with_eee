@@ -4,10 +4,12 @@
 #     "marimo>=0.23.3",
 #     "pandas>=2.0",
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
+#     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
 # ]
 #
 # [tool.uv.sources]
 # eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
+# ancient-greek-backend-eee = { git = "https://codeberg.org/EEE-project/ancient-greek-backend-eee.git" }
 # ///
 
 import marimo
