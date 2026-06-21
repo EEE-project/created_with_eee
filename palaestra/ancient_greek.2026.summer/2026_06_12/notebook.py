@@ -13,7 +13,7 @@
 
 import marimo
 
-__generated_with = "0.23.8"
+__generated_with = "0.23.10"
 app = marimo.App(width="medium")
 
 
@@ -27,6 +27,7 @@ def _(mo):
     )
     eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles="Palaestra",
                ga_config=cfg.ga_config())
+    return (cfg,)
 
 
 @app.cell(hide_code=True)
@@ -237,4 +238,9 @@ def _(cfg, mo):
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
+
     return (mo,)
+
+
+if __name__ == "__main__":
+    app.run()
