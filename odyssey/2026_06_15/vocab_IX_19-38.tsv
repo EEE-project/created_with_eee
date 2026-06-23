@@ -1,0 +1,19 @@
+form	lemma	meaning	meaning_en	meaning_el	context	pos	grammar
+δόλοισιν	δόλος	хитростями	with tricks	με δόλια	IX.19: …πᾶσι δόλοισιν ἀνθρώποισι μέλω	noun	Case=Dat|Gender=Masc|Number=Plur
+ἀνθρώποισι	ἄνθρωπος	людям	among men	στους ανθρώπους	IX.20: ἀνθρώποισι μέλω…	noun	Case=Dat|Gender=Masc|Number=Plur
+κλέος	κλέος	слава	fame/glory	κλέος	IX.20: καί μευ κλέος οὐρανὸν ἵκει	noun	Case=Nom|Gender=Neut|Number=Sing
+οὐρανόν	οὐρανός	небо	sky/heaven	ουρανό	IX.20: κλέος οὐρανὸν ἵκει	noun	Case=Acc|Gender=Masc|Number=Sing
+ὄρος	ὄρος	гора	mountain	βουνό	IX.21: ἐν δ' ὄρος αὐτῇ Νήριτον	noun	Case=Nom|Gender=Neut|Number=Sing
+νῆσοι	νῆσος	острова	islands	νησιά	IX.22: ἀμφὶ δὲ νῆσοι πολλαί	noun	Case=Nom|Gender=Fem|Number=Plur
+ζόφον	ζόφος	мрак, запад	darkness/west	σκοτάδι/δύση	IX.26: πρὸς ζόφον…	noun	Case=Acc|Gender=Masc|Number=Sing
+ἀγαθή	ἀγαθός	благодатная	good/kind	αγαθή	IX.27: ἀλλ' ἀγαθὴ κουροτρόφος	adj	Case=Nom|Gender=Fem|Number=Sing
+γαίης	γαῖα	земли	of the land	γης	IX.28: ἧς γαίης δύναμαι…	noun	Case=Gen|Gender=Fem|Number=Sing
+δύναμαι	δύναμαι	могу	can/am able	μπορώ	IX.28: δύναμαι γλυκερώτερον ἄλλο ἰδέσθαι	verb	Mood=Ind|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin|Voice=Mid
+ἔρυκε	ἐρύκω	удерживала	kept/detained	κρατούσε	IX.29: ἦ μέν μ' αὐτόθ' ἔρυκε Καλυψώ	verb	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act
+θεάων	θεά	богинь	of goddesses	θεών	IX.29: δῖα θεάων	noun	Case=Gen|Gender=Fem|Number=Plur
+σπέσσι	σπέος	пещерах	in caves	σπήλαια	IX.30: ἐν σπέσσι γλαφυροῖσι	noun	Case=Dat|Gender=Neut|Number=Plur
+γλαφυροῖσι	γλαφυρός	глубоких	hollow/deep	βαθιά	IX.30: σπέσσι γλαφυροῖσι	adj	Case=Dat|Gender=Neut|Number=Plur
+θυμόν	θυμός	душу	heart/spirit	θυμό	IX.33: ἐμὸν οὔποτε θυμὸν ἐνὶ στήθεσσιν	noun	Case=Acc|Gender=Masc|Number=Sing
+πατρίδος	πατρίς	родины	of homeland	πατρίδας	IX.34: γλύκιον ἧς πατρίδος	noun	Case=Gen|Gender=Fem|Number=Sing
+τοκήων	τοκεύς	родителей	of parents	γονέων	IX.34: …πατρίδος οὐδὲ τοκήων	noun	Case=Gen|Gender=Masc|Number=Plur
+νόστον	νόστος	возвращение	homecoming	νόστο	IX.37: νόστον ἐμὸν πολυκηδέ' ἐνίσπω	noun	Case=Acc|Gender=Masc|Number=Sing

@@ -23,14 +23,11 @@ app = marimo.App(width="medium")
 def _(mo):
     from eee_project import ConfigStore, eee_topbar
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
-    _cfg = ConfigStore.from_url(
-        f"{_ROOT}/odyssey/lessons.tsv",
-        ga=f"{_ROOT}/ga.json",
-    )
-    eee_topbar(mo, back_url=_cfg.index_url(), lang="ru", titles={
-        "ru": "Древнегреческий с Гомером",
-    }, ga_config=_cfg.ga_config())
-    return
+    cfg = ConfigStore.from_url(f"{_ROOT}/odyssey/lessons.tsv", ga=f"{_ROOT}/ga.json")
+    eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles={
+        "ru": "Одиссея для отважных",
+    }, ga_config=cfg.ga_config())
+    return (cfg,)
 
 
 @app.cell(hide_code=True)
@@ -52,8 +49,10 @@ def _(img_b64, mo):
         mo.md("## Пилотное занятие · Odyss. I.1–21"),
     ])
     _img = mo.Html(
+        f'<a href="data:image/jpeg;base64,{img_b64}" target="_blank">'
         f'<img src="data:image/jpeg;base64,{img_b64}" '
-        f'style="max-width:340px;width:100%;border-radius:4px;object-fit:cover"/>'
+        f'style="max-width:340px;width:100%;border-radius:4px;object-fit:cover;cursor:pointer"/>'
+        f'</a>'
     )
     mo.hstack([_left, _img], align="start")
     return
@@ -63,8 +62,22 @@ def _(img_b64, mo):
 def _(mo):
     _MURRAY = "<b>Homer.</b> <a href='https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3atext%3a1999.01.0135'><i>The Odyssey</i></a> with an English Translation by A.T. Murray, PH.D. in two volumes. Cambridge, MA., Harvard University Press; London, William Heinemann, Ltd. 1919."
     mo.md(
-        "Текст поэмы с параллельными переводами. Слова, известные движку **eee** (базы `ancient-greek` и `unimorph grc`), выделены <span style='color:#b5451b;font-weight:bold'>цветом</span>.\n\n"
+        "Текст поэмы с параллельными переводами. "
+        "Икты (ударные слоги) каждой стопы выделены "
+        "<b style='color:#980000'>красным</b>. "
+        "Слова, известные движку eee, <u>подчёркнуты</u>.\n\n"
         + _MURRAY
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(NB_REMOTE, mo):
+    mo.md(
+        "**Материалы занятия:** "
+        f"[Одиссея. Зачин.pdf]({NB_REMOTE}/Одиссея.%20Зачин.pdf) · "
+        f"[Одиссея\_1-21\_словарь.pdf]({NB_REMOTE}/Одиссея_1-21_словарь.pdf) · "
+        f"[Греческий алфавит.pdf]({NB_REMOTE}/Греческий%20алфавит.pdf)"
     )
     return
 
@@ -689,6 +702,20 @@ def _(mo):
     from eee_project.notebook_utils import eee_footer
     eee_footer(mo, lang="ru")
     return
+
+
+@app.cell(hide_code=True)
+def _(cfg, gu):
+    from pathlib import Path as _P
+    NB_DIR = _P(__file__).parent
+    NB_REMOTE = f"{cfg.raw_base}/2026_06_01"
+    for _pdf in (
+        'Одиссея. Зачин.pdf',
+        'Одиссея_1-21_словарь.pdf',
+        'Греческий алфавит.pdf',
+    ):
+        gu.ensure_file(_pdf, nb_dir=NB_DIR, remote_base=NB_REMOTE)
+    return (NB_REMOTE,)
 
 
 if __name__ == "__main__":
