@@ -23,10 +23,7 @@ app = marimo.App(width="medium")
 def _(lang_sel, mo):
     from eee_project import ConfigStore, eee_topbar
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
-    _cfg = ConfigStore.from_url(
-        f"{_ROOT}/odyssey/lessons.tsv",
-        ga=f"{_ROOT}/ga.json",
-    )
+    _cfg = ConfigStore.from_url(f"{_ROOT}/odyssey/lessons.tsv", ga=f"{_ROOT}/ga.json")
     eee_topbar(mo, back_url=_cfg.index_url(), lang=lang_sel.value, titles={
         "ru": "Древнегреческий с Гомером",
         "en": "Ancient Greek with Homer",
@@ -36,39 +33,34 @@ def _(lang_sel, mo):
 
 
 @app.cell(hide_code=True)
-def _():
+def _(lang_sel, mo):
     import base64 as _b64
     from pathlib import Path as _Path
-
-    _img_path = _Path(__file__).parent / "Odysseus_Sirens_BM_E440_n2.jpg"
-    img_b64 = _b64.b64encode(_img_path.read_bytes()).decode()
-    return (img_b64,)
-
-
-@app.cell(hide_code=True)
-def _(img_b64, lang_sel, mo):
+    _img_path = _Path(__file__).parent.parent / "2026_06_01" / "Odysseus_Sirens_BM_E440_n2.jpg"
+    _img_tag = (
+        f'<img src="data:image/jpeg;base64,{_b64.b64encode(_img_path.read_bytes()).decode()}" '
+        f'style="max-width:280px;width:100%;border-radius:4px;object-fit:cover"/>'
+        if _img_path.exists() else ""
+    )
     _lang = lang_sel.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_32dyZq8gA6x14GL2Zwa6ZU)"
+    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io)"
     _TITLE = {
-        "ru": "Древнегреческий с Гомером",
-        "en": "Ancient Greek with Homer",
-        "el": "Αρχαία Ελληνικά με τον Όμηρο",
+        "ru": "Одиссея для отважных",
+        "en": "Odyssey for the Brave",
+        "el": "Οδύσσεια για τους Τολμηρούς",
     }
     _LESSON = {
-        "ru": "Пилотное занятие · Odyss. I.1–21",
-        "en": "Pilot Lesson · Odyss. I.1–21",
-        "el": "Δοκιμαστικό μάθημα · Οδ. Α.1–21",
+        "ru": "День 1 · Odyss. IX.19–38",
+        "en": "Day 1 · Odyss. IX.19–38",
+        "el": "Ημέρα 1 · Οδ. Θ.19–38",
     }
     _left = mo.vstack([
         mo.md(f"# {_TITLE.get(_lang, _TITLE['en'])}"),
         mo.md(_badge),
         mo.md(f"## {_LESSON.get(_lang, _LESSON['en'])}"),
     ])
-    _img = mo.Html(
-        f'<img src="data:image/jpeg;base64,{img_b64}" '
-        f'style="max-width:340px;width:100%;border-radius:4px;object-fit:cover"/>'
-    )
-    mo.hstack([_left, _img], align="start")
+    _right = mo.Html(_img_tag) if _img_tag else mo.Html("")
+    mo.hstack([_left, _right], align="start")
     return
 
 
@@ -76,43 +68,33 @@ def _(img_b64, lang_sel, mo):
 def _(lang_sel, mo):
     _lang = lang_sel.value
     _DESC = {
-        "ru": "Текст поэмы с параллельными переводами. Слова, известные движку **eee** (базы `ancient-greek` и `unimorph grc`), выделены <span style='color:#b5451b;font-weight:bold'>цветом</span>.",
-        "en": "Poem text with parallel translations. Words known to the **eee** engine (backends `ancient-greek` and `unimorph grc`) are highlighted <span style='color:#b5451b;font-weight:bold'>in color</span>.",
-        "el": "Κείμενο με παράλληλες μεταφράσεις. Λέξεις γνωστές στη μηχανή **eee** (βάσεις `ancient-greek` και `unimorph grc`) επισημαίνονται <span style='color:#b5451b;font-weight:bold'>με χρώμα</span>.",
+        "ru": (
+            "Текст поэмы с параллельными переводами. "
+            "Икты (ударные слоги) каждой стопы выделены "
+            "<b style='color:#980000'>красным</b>. "
+            "Слова из словаря занятия подчёркнуты "
+            "<span style='border-bottom:2px solid #b5451b'>оранжевым</span>."
+        ),
+        "en": (
+            "Poem text with parallel translations. "
+            "Metrical ictus of each foot in <b style='color:#980000'>red</b>. "
+            "Lesson vocabulary words underlined in "
+            "<span style='border-bottom:2px solid #b5451b'>orange</span>."
+        ),
+        "el": (
+            "Κείμενο με παράλληλες μεταφράσεις. "
+            "Μετρικός ίκτος κάθε ποδός <b style='color:#980000'>κόκκινος</b>. "
+            "Λέξεις λεξιλογίου υπογραμμισμένες "
+            "<span style='border-bottom:2px solid #b5451b'>πορτοκαλί</span>."
+        ),
     }
-    _MURRAY = "<b>Homer.</b> <a href='https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3atext%3a1999.01.0135'><i>The Odyssey</i></a> with an English Translation by A.T. Murray, PH.D. in two volumes. Cambridge, MA., Harvard University Press; London, William Heinemann, Ltd. 1919."
-    _desc = _DESC.get(_lang, _DESC["en"])
-    mo.md(f"{_desc}\n\n{_MURRAY}")
+    mo.md(_DESC.get(_lang, _DESC["en"]))
+
     return
 
 
 @app.cell(hide_code=True)
-def _(TRANS_DESC, lang_sel, mo, trans_selector):
-    _lang = lang_sel.value
-    _ILN_DESC = {
-        "ru": "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала",
-        "en": "**interlinear** · word-for-word literal translation preserving original word order",
-        "el": "**λέξη-λέξη** · κατά λέξη μετάφραση με διατήρηση της σειράς του πρωτοτύπου",
-    }
-    _TRANS_DESC = {
-        "подстрочник": _ILN_DESC.get(_lang, _ILN_DESC["ru"]),
-        **TRANS_DESC,
-    }
-    mo.md(_TRANS_DESC.get(trans_selector.value, ""))
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    QUIZ_WORDS,
-    STANZAS,
-    interlinear_el,
-    interlinear_en,
-    lang_sel,
-    mo,
-    stanza_selector,
-    trans_selector,
-):
+def _(STANZAS, WORDS_COMBINED, lang_sel, mo, stanza_selector, trans_selector):
     _lang = lang_sel.value
     _st_map = {s["ref"]: s for s in STANZAS}
     _stanza = _st_map[stanza_selector.value]
@@ -121,54 +103,54 @@ def _(
         "font-size:1.15em;line-height:2"
     )
 
-    _HIGHLIGHT = {q["form"] for q in QUIZ_WORDS}
-
     _R = "<b style='color:#980000'>"
     _E = "</b>"
 
     _RHYTHM_HTML = {
-        'Ἄνδρα μοι ἔννεπε, μοῦσα, πολύτροπον, ὃς μάλα πολλὰ':
-            "<b style='color:#980000'>Ἄ</b>νδρα μοι <b style='color:#980000'>ἔ</b>ννεπε, μ<b style='color:#980000'>οῦ</b>σα, πολ<b style='color:#980000'>ύ</b>τροπον, <b style='color:#980000'>ὃ</b>ς μάλα π<b style='color:#980000'>ο</b>λλὰ",
-        'πλάγχθη, ἐπεὶ Τροίης ἱερὸν πτολίεθρον ἔπερσεν·':
-            "πλ<b style='color:#980000'>ά</b>γχθη, ἐπ<b style='color:#980000'>εὶ</b> Τροί<b style='color:#980000'>η</b>ς ἱερ<b style='color:#980000'>ὸ</b>ν πτολί<b style='color:#980000'>ε</b>θρον ἔπ<b style='color:#980000'>ε</b>ρσεν·",
-        "πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα καὶ νόον ἔγνω,":
-            "π<b style='color:#980000'>ο</b>λλῶν δ' <b style='color:#980000'>ἀ</b>νθρώπων ἴδεν <b style='color:#980000'>ἄ</b>στεα κ<b style='color:#980000'>αὶ</b> νόον <b style='color:#980000'>ἔ</b>γνω,",
-        "πολλὰ δ' ὅ γ' ἐν πόντῳ πάθεν ἄλγεα ὃν κατὰ θυμόν,":
-            "π<b style='color:#980000'>ο</b>λλὰ δ' ὅ γ' <b style='color:#980000'>ἐ</b>ν πόντ<b style='color:#980000'>ῳ</b> πάθεν <b style='color:#980000'>ἄ</b>λγεα <b style='color:#980000'>ὃ</b>ν κατὰ θ<b style='color:#980000'>υ</b>μόν,",
-        'ἀρνύμενος ἥν τε ψυχὴν καὶ νόστον ἑταίρων.':
-            "<b style='color:#980000'>ἀ</b>ρνύμεν<b style='color:#980000'>ο</b>ς ἥν τ<b style='color:#980000'>ε</b> ψυχ<b style='color:#980000'>ὴ</b>ν καὶ ν<b style='color:#980000'>ό</b>στον ἑτ<b style='color:#980000'>αί</b>ρων.",
-        "ἀλλ' οὐδ' ὣς ἑτάρους ἐρρύσατο, ἱέμενός περ·":
-            "<b style='color:#980000'>ἀ</b>λλ' οὐδ' <b style='color:#980000'>ὣ</b>ς ἑτάρ<b style='color:#980000'>ου</b>ς ἐρρ<b style='color:#980000'>ύ</b>σατο, <b style='color:#980000'>ἱ</b>έμεν<b style='color:#980000'>ό</b>ς περ·",
-        'αὐτῶν γὰρ σφετέρῃσιν ἀτασθαλίῃσιν ὄλοντο,':
-            "<b style='color:#980000'>αὐ</b>τῶν γ<b style='color:#980000'>ὰ</b>ρ σφετέρ<b style='color:#980000'>ῃ</b>σιν ἀτ<b style='color:#980000'>α</b>σθαλίῃσιν ὄλ<b style='color:#980000'>ο</b>ντο,",
-        'νήπιοι, οἳ κατὰ βοῦς Ὑπερίονος Ἠελίοιο':
-            "ν<b style='color:#980000'>ή</b>πιοι, <b style='color:#980000'>οἳ</b> κατὰ β<b style='color:#980000'>οῦ</b>ς Ὑπερ<b style='color:#980000'>ί</b>ονος <b style='color:#980000'>Ἠ</b>ελί<b style='color:#980000'>οι</b>ο",
-        'ἤσθιον· αὐτὰρ ὁ τοῖσιν ἀφείλετο νόστιμον ἦμαρ.':
-            "<b style='color:#980000'>ἤ</b>σθιον· <b style='color:#980000'>αὐ</b>τὰρ ὁ τ<b style='color:#980000'>οῖ</b>σιν ἀφ<b style='color:#980000'>εί</b>λετο ν<b style='color:#980000'>ό</b>στιμον <b style='color:#980000'>ἦ</b>μαρ.",
-        'τῶν ἁμόθεν γε, θεά, θύγατερ Διός, εἰπὲ καὶ ἡμῖν.':
-            "τ<b style='color:#980000'>ῶ</b>ν ἁμόθ<b style='color:#980000'>ε</b>ν γε, θε<b style='color:#980000'>ά</b>, θύγατ<b style='color:#980000'>ε</b>ρ Διός, <b style='color:#980000'>εἰ</b>πὲ καὶ <b style='color:#980000'>ἡ</b>μῖν.",
-        "Ἔνθ' ἄλλοι μὲν πάντες, ὅσοι φύγον αἰπὺν ὄλεθρον,":
-            "<b style='color:#980000'>Ἔ</b>νθ' ἄλλ<b style='color:#980000'>οι</b> μὲν π<b style='color:#980000'>ά</b>ντες, ὅσ<b style='color:#980000'>οι</b> φύγον <b style='color:#980000'>αἰ</b>πὺν ὄλ<b style='color:#980000'>ε</b>θρον,",
-        'οἴκοι ἔσαν, πόλεμόν τε πεφευγότες ἠδὲ θάλασσαν·':
-            "<b style='color:#980000'>οἴ</b>κοι ἔσ<b style='color:#980000'>α</b>ν, πόλεμ<b style='color:#980000'>ό</b>ν τε πεφ<b style='color:#980000'>ευ</b>γότες <b style='color:#980000'>ἠ</b>δὲ θάλ<b style='color:#980000'>α</b>σσαν·",
-        "τὸν δ' οἶον νόστου κεχρημένον ἠδὲ γυναικὸς":
-            "τ<b style='color:#980000'>ὸ</b>ν δ' οἶ<b style='color:#980000'>ο</b>ν νόστ<b style='color:#980000'>ου</b> κεχρ<b style='color:#980000'>η</b>μένον <b style='color:#980000'>ἠ</b>δὲ γυν<b style='color:#980000'>αι</b>κὸς",
-        "νύμφη πόντι' ἔρυκε Καλυψὼ δῖα θεάων":
-            "ν<b style='color:#980000'>ύ</b>μφη π<b style='color:#980000'>ό</b>τνι' ἔρ<b style='color:#980000'>υ</b>κε Καλ<b style='color:#980000'>υ</b>ψὼ δ<b style='color:#980000'>ῖ</b>α θε<b style='color:#980000'>ά</b>ων",
-        'ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι.':
-            "<b style='color:#980000'>ἐ</b>ν σπέσσ<b style='color:#980000'>ι</b> γλαφυρ<b style='color:#980000'>οῖ</b>σι, λιλ<b style='color:#980000'>αι</b>ομέν<b style='color:#980000'>η</b> πόσιν <b style='color:#980000'>εἶ</b>ναι.",
-        "ἀλλ' ὅτε δὴ ἔτος ἦλθε περιπλομένων ἐνιαυτῶν,":
-            "<b style='color:#980000'>ἀ</b>λλ' ὅτε δ<b style='color:#980000'>ὴ</b> ἔτος <b style='color:#980000'>ἦ</b>λθε περ<b style='color:#980000'>ι</b>πλομέν<b style='color:#980000'>ω</b>ν ἐνι<b style='color:#980000'>αυ</b>τῶν,",
-        'τῷ οἱ ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι':
-            "τ<b style='color:#980000'>ῷ</b> οἱ ἐπ<b style='color:#980000'>ε</b>κλώσ<b style='color:#980000'>α</b>ντο θε<b style='color:#980000'>οὶ</b> οἶκ<b style='color:#980000'>ό</b>νδε νέ<b style='color:#980000'>ε</b>σθαι",
-        "εἰς Ἰθάκην, οὐδ' ἔνθα πεφυγμένος ἦεν ἀέθλων":
-            "<b style='color:#980000'>εἰ</b>ς Ἰθάκ<b style='color:#980000'>η</b>ν, οὐδ' <b style='color:#980000'>ἔ</b>νθα πεφ<b style='color:#980000'>υ</b>γμένος <b style='color:#980000'>ἦ</b>εν ἀ<b style='color:#980000'>έ</b>θλων",
-        "καὶ μετὰ οἷσι φίλοισι. θεοὶ δ' ἐλέαιρον ἅπαντες":
-            "κ<b style='color:#980000'>αὶ</b> μετὰ <b style='color:#980000'>οἷ</b>σι φίλ<b style='color:#980000'>οι</b>σι. θε<b style='color:#980000'>οὶ</b> δ' ἐλέ<b style='color:#980000'>αι</b>ρον ἅπ<b style='color:#980000'>α</b>ντες",
-        "νόσφι Ποσειδάωνος· ὁ δ' ἀσπερχὲς μενέαινεν":
-            "ν<b style='color:#980000'>ό</b>σφι Ποσ<b style='color:#980000'>ει</b>δά<b style='color:#980000'>ω</b>νος· ὁ δ' <b style='color:#980000'>ἀ</b>σπερχ<b style='color:#980000'>ὲ</b>ς μενέ<b style='color:#980000'>αι</b>νεν",
-        'ἀντιθέῳ Ὀδυσῆι πάρος ἥν γαῖαν ἱκέσθαι.':
-            "<b style='color:#980000'>ἀ</b>ντιθέ<b style='color:#980000'>ῳ</b> Ὀδυσ<b style='color:#980000'>ῆ</b>ι πάρ<b style='color:#980000'>ο</b>ς ἣν γ<b style='color:#980000'>αῖ</b>αν ἱκ<b style='color:#980000'>έ</b>σθαι.",
+        # IX 19–24
+        "εἶμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν":
+            f"{_R}εἶ{_E}μ' Ὀδυσ{_R}εὺ{_E}ς Λα{_R}ε{_E}ρτιάδ{_R}η{_E}ς, ὃς π{_R}ᾶ{_E}σι δόλ{_R}οι{_E}σιν",
+        "ἀνθρώποισι μέλω, καί μευ κλέος οὐρανὸν ἵκει.":
+            f"{_R}ἀ{_E}νθρώπ{_R}οι{_E}σι μέλ{_R}ω{_E}, καί μ{_R}ευ{_E} κλέος {_R}οὐ{_E}ρανὸν {_R}ἵ{_E}κει.",
+        "ναιετάω δ' Ἰθάκην εὐδείελον· ἐν δ' ὄρος αὐτῇ":
+            f"ν{_R}αι{_E}ετά{_R}ω{_E} δ' Ἰθάκ{_R}η{_E}ν εὐδ{_R}εί{_E}ελον· {_R}ἐ{_E}ν δ' ὄρος {_R}αὐ{_E}τῇ",
+        "Νήριτον εἰνοσίφυλλον, ἀριπρεπές· ἀμφὶ δὲ νῆσοι":
+            f"Ν{_R}ή{_E}ριτον {_R}εἰ{_E}νοσίφ{_R}υ{_E}λλον, ἀρ{_R}ι{_E}πρεπές· {_R}ἀ{_E}μφὶ δὲ ν{_R}ῆ{_E}σοι",
+        "πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι,":
+            f"π{_R}ο{_E}λλαὶ ν{_R}αι{_E}ετά{_R}ου{_E}σι μάλ{_R}α{_E} σχεδὸν {_R}ἀ{_E}λλήλ{_R}ῃ{_E}σι,",
+        "Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος.":
+            f"Δ{_R}ου{_E}λίχι{_R}ό{_E}ν τε Σάμ{_R}η{_E} τε καὶ {_R}ὑ{_E}λή{_R}ε{_E}σσα Ζάκ{_R}υ{_E}νθος.",
+        # IX 25–28
+        "αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται":
+            f"{_R}αὐ{_E}τὴ δ{_R}ὲ{_E} χθαμαλ{_R}ὴ{_E} πανυπ{_R}ε{_E}ρτάτη {_R}εἰ{_E}ν ἁλὶ κ{_R}εῖ{_E}ται",
+        "πρὸς ζόφον, αἱ δέ τ' ἄνευθε πρὸς ἠῶ τ' ἠέλιόν τε,":
+            f"πρ{_R}ὸ{_E}ς ζόφον, {_R}αἱ{_E} δέ τ' {_R}ἄ{_E}νευθε πρ{_R}ὸ{_E}ς {_R}ἠ{_E}ῶ τ' {_R}ἠ{_E}έλι{_R}ό{_E}ν τε,",
+        "τρηχεῖ', ἀλλ' ἀγαθὴ κουροτρόφος· οὔ τοι ἐγώ γε":
+            f"τρ{_R}η{_E}χεῖ', {_R}ἀ{_E}λλ' ἀγαθ{_R}ὴ{_E} κουρ{_R}ο{_E}τρόφος· {_R}οὔ{_E} τοι ἐγ{_R}ώ{_E} γε",
+        "ἧς γαίης δύναμαι γλυκερώτερον ἄλλο ἰδέσθαι.":
+            f"{_R}ἧ{_E}ς γαί{_R}η{_E}ς δύναμ{_R}αι{_E} γλυκερ{_R}ώ{_E}τερον {_R}ἄ{_E}λλο ἰδ{_R}έ{_E}σθαι.",
+        # IX 29–33
+        "ἦ μέν μ' αὐτόθ' ἔρυκε Καλυψώ, δῖα θεάων,":
+            f"{_R}ἦ{_E} μέν μ' {_R}αὐ{_E}τόθ' ἔρ{_R}υ{_E}κε Καλ{_R}υ{_E}ψώ, δ{_R}ῖ{_E}α θε{_R}ά{_E}ων,",
+        "ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι·":
+            f"{_R}ἐ{_E}ν σπέσσ{_R}ι{_E} γλαφυρ{_R}οῖ{_E}σι, λιλ{_R}αι{_E}ομέν{_R}η{_E} πόσιν {_R}εἶ{_E}ναι·",
+        "ὣς δ' αὔτως Κίρκη κατερήτυεν ἐν μεγάροισιν":
+            f"{_R}ὣ{_E}ς δ' αὔτ{_R}ω{_E}ς Κίρκ{_R}η{_E} κατερ{_R}ή{_E}τυεν {_R}ἐ{_E}ν μεγάρ{_R}οι{_E}σιν",
+        "Αἰαίη δολόεσσα, λιλαιομένη πόσιν εἶναι·":
+            f"{_R}Αἰ{_E}αί{_R}η{_E} δολό{_R}ε{_E}σσα, λιλ{_R}αι{_E}ομέν{_R}η{_E} πόσιν {_R}εἶ{_E}ναι·",
+        "ἀλλ' ἐμὸν οὔ ποτε θυμὸν ἐνὶ στήθεσσιν ἔπειθον.":
+            f"{_R}ἀ{_E}λλ' ἐμὸν {_R}οὔ{_E} ποτε θ{_R}υ{_E}μὸν ἐν{_R}ὶ{_E} στήθ{_R}ε{_E}σσιν ἔπ{_R}ει{_E}θον.",
+        # IX 34–38
+        "ὣς οὐδὲν γλύκιον ἧς πατρίδος οὐδὲ τοκήων":
+            f"{_R}ὣ{_E}ς οὐδ{_R}ὲ{_E}ν γλύκι{_R}ο{_E}ν ἧς π{_R}α{_E}τρίδος {_R}οὐ{_E}δὲ τοκ{_R}ή{_E}ων",
+        "γίγνεται, εἴ περ καί τις ἀπόπροθι πίονα οἶκον":
+            f"γ{_R}ί{_E}γνεται, {_R}εἴ{_E} περ κ{_R}αί{_E} τις ἀπ{_R}ό{_E}προθι π{_R}ί{_E}ονα {_R}οἶ{_E}κον",
+        "γαίῃ ἐν ἀλλοδαπῇ ναίει ἀπάνευθε τοκήων.":
+            f"γ{_R}αί{_E}ῃ ἐν {_R}ἀ{_E}λλοδαπ{_R}ῇ{_E} ναί{_R}ει{_E} ἀπάν{_R}ευ{_E}θε τοκ{_R}ή{_E}ων.",
+        "εἰ δ' ἄγε τοι καὶ νόστον ἐμὸν πολυκηδέ' ἐνίσπω,":
+            f"{_R}εἰ{_E} δ' ἄγε τ{_R}οι{_E} καὶ ν{_R}ό{_E}στον ἐμ{_R}ὸ{_E}ν πολυκ{_R}η{_E}δέ' ἐν{_R}ί{_E}σπω,",
+        "ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι.":
+            f"{_R}ὅ{_E}ν μοι Ζ{_R}εὺ{_E}ς ἐφέ{_R}η{_E}κεν ἀπ{_R}ὸ{_E} Τροί{_R}η{_E}θεν ἰ{_R}ό{_E}ντι.",
     }
 
     def _bare(html):
@@ -180,24 +162,13 @@ def _(
                 in_tag = False
             elif not in_tag:
                 text += ch
-        return text.strip("·,;.\'·,!?·")
-
-    def _split_html(s):
-        tokens, buf, depth = [], [], 0
-        for ch in s:
-            if ch == '<': depth += 1; buf.append(ch)
-            elif ch == '>': depth -= 1; buf.append(ch)
-            elif ch == ' ' and depth == 0:
-                tokens.append(''.join(buf)); buf = []
-            else: buf.append(ch)
-        if buf: tokens.append(''.join(buf))
-        return tokens
+        return text.strip("·,;.'·,!?·")
 
     def _hl(line):
         colored = _RHYTHM_HTML.get(line, line)
         parts = []
-        for w in _split_html(colored):
-            if _bare(w) in _HIGHLIGHT:
+        for w in colored.split(' '):
+            if _bare(w) in WORDS_COMBINED:
                 parts.append(
                     f"<span style='border-bottom:2px solid #b5451b;padding-bottom:0'>{w}</span>"
                 )
@@ -206,14 +177,8 @@ def _(
         return ' '.join(parts)
 
     if trans_selector.value == "подстрочник":
-        if _lang == "el":
-            from itertools import zip_longest as _zip
-            _el_lines = interlinear_el.get(_stanza["ref"], [])
-            _pairs = list(_zip(_stanza["lines"], _el_lines, fillvalue=""))
-        elif _lang == "en":
-            _pairs = interlinear_en.get(_stanza["ref"], [])
-        else:
-            _pairs = _stanza["interlinear"]
+        _iln = _stanza["interlinear"]
+        _pairs = _iln.get(_lang, _iln.get("ru", []))
         _rows = "".join(
             f'<tr>'
             f'<td style="{_GRK};padding-right:1.5em;vertical-align:top">{_hl(gl) if gl else ""}</td>'
@@ -231,7 +196,7 @@ def _(
         )
         _txt = _stanza["translations"].get(trans_selector.value, "—")
         _line_divs = "".join(
-            f'<div>{l.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")}</div>'
+            f'<div>{l.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")}</div>'
             for l in _txt.split("\n")
         )
         _right = mo.Html(
@@ -245,6 +210,45 @@ def _(
         mo.hstack([stanza_selector, trans_selector], justify="space-between"),
         _content,
     ])
+
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _lang = lang_sel.value
+    _ETYM = {
+        "ru": r"""---
+    ## Имя героя
+
+    **Ὀδυσσεύς** ← **ὀδύσσομαι** — гневаться, ненавидеть; причинять страдание
+
+    > *πολλοῖσιν γὰρ ἐγώ γε ὀδυσσάμενος* (Od. XIX.407)
+    > «ибо многим я причинил страдание»
+
+    Имя означает «тот, кто причиняет / претерпевает страдания». Гомер использует его как этимологический символ судьбы героя.
+    """,
+        "en": r"""---
+    ## The hero's name
+
+    **Ὀδυσσεύς** ← **ὀδύσσομαι** — to be angry at, to hate; to cause suffering
+
+    > *πολλοῖσιν γὰρ ἐγώ γε ὀδυσσάμενος* (Od. XIX.407)
+    > "for I have caused suffering to many"
+
+    The name encodes the hero's fate: one who suffers and causes suffering.
+    """,
+        "el": r"""---
+    ## Το όνομα του ήρωα
+
+    **Ὀδυσσεύς** ← **ὀδύσσομαι** — οργίζομαι, μισώ· προκαλώ πόνο
+
+    > *πολλοῖσιν γὰρ ἐγώ γε ὀδυσσάμενος* (Od. XIX.407)
+
+    Το όνομα συμβολίζει τη μοίρα του ήρωα: αυτός που υποφέρει και προκαλεί πόνο.
+    """,
+    }
+    mo.md(_ETYM.get(_lang, _ETYM["en"]))
     return
 
 
@@ -328,12 +332,11 @@ def _(QUIZ_WORDS, random, remaining, set_cv, set_remaining):
 
 
 @app.cell(hide_code=True)
-def _(STANZAS, lang_sel, mo):
-    _STANZA_LABEL = {"ru": "Строфа", "en": "Stanza", "el": "Στροφή"}
+def _(STANZAS, mo):
     stanza_selector = mo.ui.dropdown(
-        options=[st["ref"] for st in STANZAS],
+        options=[s["ref"] for s in STANZAS],
         value=STANZAS[0]["ref"],
-        label=_STANZA_LABEL.get(lang_sel.value, "Строфа"),
+        label="Строфа",
     )
     return (stanza_selector,)
 
@@ -343,17 +346,17 @@ def _(lang_sel, mo):
     _lang = lang_sel.value
     _ILN  = {"ru": "подстрочник", "en": "interlinear", "el": "λέξη-λέξη"}
     _ALL = {
-        _ILN.get(_lang, "подстрочник"):                   "подстрочник",
-        "Жуковский (1849) · рус., классический":           "Жуковский",
-        "Вересаев (1953) · рус., точный":                 "Вересаев",
-        "Pope (1725) · eng., classical":                  "Pope",
-        "Lattimore (1951) · eng., literal":               "Lattimore",
-        "Πολυλάς (1875) · ν.ε., κλασική":                "Πολυλάς",
-        "Καζαντζάκης–Κακριδής (1965) · ν.ε., σύγχρονη":  "Καζαντζάκης–Κακριδής",
+        _ILN.get(_lang, "подстрочник"):                       "подстрочник",
+        "Жуковский (1849) · рус., классический":               "Жуковский",
+        "Вересаев (1953) · рус., точный":                     "Вересаев",
+        "Murray (1919) · eng., prose":                         "Murray",
+        "Lattimore (1951) · eng., verse":                      "Lattimore",
+        "Πολυλάς (1875) · ν.ε., κλασική":                    "Πολυλάς",
+        "Καζαντζάκης–Κακριδής (1965) · ν.ε., σύγχρονη":      "Καζαντζάκης–Κακριδής",
     }
     _LANG_VALS = {
         "ru": {"подстрочник", "Жуковский", "Вересаев"},
-        "en": {"подстрочник", "Pope", "Lattimore"},
+        "en": {"подстрочник", "Murray", "Lattimore"},
         "el": {"подстрочник", "Πολυλάς", "Καζαντζάκης–Κακριδής"},
     }
     _LANG_DEF  = {"ru": "подстрочник", "en": "подстрочник", "el": "подстрочник"}
@@ -367,6 +370,7 @@ def _(lang_sel, mo):
         value=_def_k,
         label=_TRANS_LBL.get(_lang, "Translation"),
     )
+
     return (trans_selector,)
 
 
@@ -408,20 +412,18 @@ def _(
     if next_btn.value:
         r = remaining()
         if r is None:
-            pass  # not yet initialized
+            pass
         elif r:
             _record_answer()
             set_cv(r[0])
             set_remaining(r[1:])
         else:
             if cv() is None:
-                # done state → restart
                 _shuffled = random.sample(QUIZ_WORDS, len(QUIZ_WORDS))
                 set_cv(_shuffled[0])
                 set_remaining(_shuffled[1:])
                 set_score({"correct": 0, "total": 0})
             else:
-                # last word → score and transition to done
                 _record_answer()
                 set_cv(None)
     return
@@ -429,7 +431,7 @@ def _(
 
 @app.cell(hide_code=True)
 def _():
-    from pathlib import Path as _Path
+    from pathlib import Path as _P
 
     def _parse_greek(md):
         out, ref, buf = {}, None, []
@@ -472,9 +474,11 @@ def _():
         if tr and ref and buf: out.setdefault(tr, {})[ref] = "\n".join(buf)
         return out, desc
 
-    _root = _Path(__file__).parent
+    _root = _P(__file__).parent
     _greek = _parse_greek((_root / "greek.md").read_text(encoding="utf-8"))
     _iln_ru = _parse_iln((_root / "interlenear_ru.md").read_text(encoding="utf-8"))
+    _iln_en = _parse_iln((_root / "interlenear_en.md").read_text(encoding="utf-8"))
+    _iln_el = _parse_iln((_root / "interlenear_el.md").read_text(encoding="utf-8"))
     _trans_ru, _desc_ru = _parse_trans((_root / "translations_ru.md").read_text(encoding="utf-8"))
     _trans_en, _desc_en = _parse_trans((_root / "translations_en.md").read_text(encoding="utf-8"))
     _trans_el, _desc_el = _parse_trans((_root / "translations_el.md").read_text(encoding="utf-8"))
@@ -483,7 +487,11 @@ def _():
         {
             "ref": ref,
             "lines": lines,
-            "interlinear": _iln_ru.get(ref, []),
+            "interlinear": {
+                "ru": _iln_ru.get(ref, []),
+                "en": _iln_en.get(ref, []),
+                "el": _iln_el.get(ref, []),
+            },
             "translations": {
                 **{tr: d.get(ref, "—") for tr, d in _trans_ru.items()},
                 **{tr: d.get(ref, "—") for tr, d in _trans_en.items()},
@@ -492,16 +500,15 @@ def _():
         }
         for ref, lines in _greek.items()
     ]
-    return STANZAS, TRANS_DESC
+    return (STANZAS,)
 
 
 @app.cell(hide_code=True)
 def _():
-    # ── Quiz data ──────────────────────────────────────────────────────────────
     import csv
     from pathlib import Path
 
-    _vocab_path = Path(__file__).parent / "vocab_I_1-21.tsv"
+    _vocab_path = Path(__file__).parent / "vocab_IX_19-38.tsv"
     with open(_vocab_path, encoding="utf-8") as _f:
         QUIZ_WORDS_RAW = list(csv.DictReader(_f, delimiter="\t"))
     return (QUIZ_WORDS_RAW,)
@@ -518,89 +525,15 @@ def _(QUIZ_WORDS_RAW, build_paradigm_table):
         except Exception:
             return False
 
-    _flags            = [_has_displayable_form(w) for w in QUIZ_WORDS_RAW]
-    QUIZ_WORDS        = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
-    words_no_paradigm = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if not ok]
+    _flags     = [_has_displayable_form(w) for w in QUIZ_WORDS_RAW]
+    QUIZ_WORDS = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
     return (QUIZ_WORDS,)
 
 
 @app.cell(hide_code=True)
-def _():
-    from pathlib import Path as _Path
-
-    _md = (_Path(__file__).parent / "interlenear_en.md").read_text(encoding="utf-8")
-
-    # Parse pairs: **greek** then english translation
-    interlinear_en = {}
-    _ref = None
-    _grc = None
-    _pairs = []
-    for _line in _md.splitlines():
-        if _line.startswith("### Odyss. "):
-            if _ref and _pairs:
-                interlinear_en[_ref] = _pairs
-            _ref = _line.replace("### Odyss. ", "").strip()
-            _pairs = []
-            _grc = None
-        elif _line.startswith("**") and _line.endswith("**"):
-            _grc = _line[2:-2].strip()
-        elif _line.strip() and _grc is not None:
-            _pairs.append((_grc, _line.strip()))
-            _grc = None
-
-    if _ref and _pairs:
-        interlinear_en[_ref] = _pairs
-    return (interlinear_en,)
-
-
-@app.cell(hide_code=True)
-def _():
-    from pathlib import Path as _Path
-    from itertools import zip_longest as _zip_longest
-
-    _md = (_Path(__file__).parent / "interlenear_el.md").read_text(encoding="utf-8")
-
-    # Split into stanza blocks by "---" and "### Οδύσσεια" headers
-    interlinear_el = {}
-    _ref = None
-    _buf = []
-    _paras = []
-
-    for _line in _md.splitlines():
-        if _line.startswith("### Οδύσσεια"):
-            # save any open paragraph
-            if _buf:
-                _paras.append(" ".join(_buf))
-                _buf = []
-            # save current stanza
-            if _ref and _paras:
-                interlinear_el[_ref] = _paras
-            # start new stanza
-            _raw = _line.replace("### Οδύσσεια Α΄ ", "").strip()
-            _ref = "I." + _raw
-            _paras = []
-        elif _line.startswith("---") or _line.startswith("### ") or _line.startswith("|"):
-            # divider or notes section — close current stanza
-            if _buf:
-                _paras.append(" ".join(_buf))
-                _buf = []
-            if _ref and _paras:
-                interlinear_el[_ref] = _paras
-            _ref = None
-            _paras = []
-            _buf = []
-        elif _ref and _line.strip():
-            _buf.append(_line.strip())
-        elif not _line.strip() and _buf:
-            _paras.append(" ".join(_buf))
-            _buf = []
-
-    if _ref:
-        if _buf:
-            _paras.append(" ".join(_buf))
-        if _paras:
-            interlinear_el[_ref] = _paras
-    return (interlinear_el,)
+def _(QUIZ_WORDS_RAW):
+    WORDS_COMBINED = {w["form"] for w in QUIZ_WORDS_RAW}
+    return (WORDS_COMBINED,)
 
 
 @app.cell(hide_code=True)
@@ -610,9 +543,9 @@ def _(ag_backend, eee, um_backend):
 
     def _norm_grc(s):
         _STRIP = {
-            "̀","́","̂","̈",
-            "̓","̔","̓","͂",
-            "̄","̆",
+            "̀", "́", "̂", "̈",
+            "̓", "̔", "̓", "͂",
+            "̄", "̆",
         }
         s = unicodedata.normalize("NFD", s).lower()
         return unicodedata.normalize("NFC", "".join(c for c in s if c not in _STRIP))
@@ -693,7 +626,11 @@ def _(ag_backend, eee, um_backend):
 
             _ag_has = any(ag_rows.values())
             be_lbl = "ancient-greek" if _ag_has else "unimorph"
-            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><caption style="{CAP}">{be_lbl}</caption><tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
+            tbl = (
+                f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px">'
+                f'<caption style="{CAP}">{be_lbl}</caption>'
+                f'<tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
+            )
 
             if _ag_has:
                 for c in ["N", "G", "D", "A", "V"]:
@@ -737,7 +674,11 @@ def _(ag_backend, eee, um_backend):
             if not TENSES:
                 return None
 
-            tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><caption style="{CAP}">ancient-greek</caption><tr><th style="{TH}"></th>'
+            tbl = (
+                f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px">'
+                f'<caption style="{CAP}">ancient-greek</caption>'
+                f'<tr><th style="{TH}"></th>'
+            )
             tbl += "".join(f'<th style="{TH}">{lbl}</th>' for _, lbl in TENSES) + "</tr>"
             for ps in PS_TAGS:
                 tbl += f'<tr><td style="{ROW}">{prow.get(ps, ps)}</td>'
@@ -762,6 +703,38 @@ def _(ag_backend, eee, um_backend):
                     tbl += "</tr>"
 
             tbl += "</table>"
+
+        elif pos == "adj":
+            ag_nmap = _ag_slots("adjective", lang)
+            cl = _CL.get(lang, _CL["en"])
+            sg_lbl, pl_lbl = _NL.get(lang, _NL["en"])
+
+            ag_rows = {}
+            for c in ["N", "G", "D", "A"]:
+                for n in ("S", "P"):
+                    forms = set()
+                    for g in "MFN":
+                        slot = ag_nmap.get(f".{c}{n}{g}")
+                        if slot:
+                            forms |= eee.inflect_slot(lemma, slot, "adjective", language="grc", backend="ancient-greek")
+                    ag_rows[(c, n)] = forms
+
+            if not any(ag_rows.values()):
+                return None
+
+            tbl = (
+                f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px">'
+                f'<caption style="{CAP}">ancient-greek</caption>'
+                f'<tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
+            )
+            for c in ["N", "G", "D", "A"]:
+                case_key = {"N": "Nom", "G": "Gen", "D": "Dat", "A": "Acc"}[c]
+                tbl += f'<tr><td style="{ROW}">{cl.get(case_key, c)}</td>'
+                for n in ("S", "P"):
+                    tbl += td(ag_rows[(c, n)])
+                tbl += "</tr>"
+            tbl += "</table>"
+
         else:
             return None
 
