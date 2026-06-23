@@ -20,17 +20,15 @@ app = marimo.App(width="medium")
 
 
 @app.cell(hide_code=True)
-def _(lang_sel, mo):
+def _(mo):
     from eee_project import ConfigStore, eee_topbar
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     _cfg = ConfigStore.from_url(
         f"{_ROOT}/odyssey/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    eee_topbar(mo, back_url=_cfg.index_url(), lang=lang_sel.value, titles={
+    eee_topbar(mo, back_url=_cfg.index_url(), lang="ru", titles={
         "ru": "Древнегреческий с Гомером",
-        "en": "Ancient Greek with Homer",
-        "el": "Αρχαία Ελληνικά με τον Όμηρο",
     }, ga_config=_cfg.ga_config())
     return
 
@@ -46,23 +44,12 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(img_b64, lang_sel, mo):
-    _lang = lang_sel.value
+def _(img_b64, mo):
     _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_32dyZq8gA6x14GL2Zwa6ZU)"
-    _TITLE = {
-        "ru": "Древнегреческий с Гомером",
-        "en": "Ancient Greek with Homer",
-        "el": "Αρχαία Ελληνικά με τον Όμηρο",
-    }
-    _LESSON = {
-        "ru": "Пилотное занятие · Odyss. I.1–21",
-        "en": "Pilot Lesson · Odyss. I.1–21",
-        "el": "Δοκιμαστικό μάθημα · Οδ. Α.1–21",
-    }
     _left = mo.vstack([
-        mo.md(f"# {_TITLE.get(_lang, _TITLE['en'])}"),
+        mo.md("# Древнегреческий с Гомером"),
         mo.md(_badge),
-        mo.md(f"## {_LESSON.get(_lang, _LESSON['en'])}"),
+        mo.md("## Пилотное занятие · Odyss. I.1–21"),
     ])
     _img = mo.Html(
         f'<img src="data:image/jpeg;base64,{img_b64}" '
@@ -73,52 +60,28 @@ def _(img_b64, lang_sel, mo):
 
 
 @app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _lang = lang_sel.value
-    _DESC = {
-        "ru": "Текст поэмы с параллельными переводами. Слова, известные движку **eee** (базы `ancient-greek` и `unimorph grc`), выделены <span style='color:#b5451b;font-weight:bold'>цветом</span>.",
-        "en": "Poem text with parallel translations. Words known to the **eee** engine (backends `ancient-greek` and `unimorph grc`) are highlighted <span style='color:#b5451b;font-weight:bold'>in color</span>.",
-        "el": "Κείμενο με παράλληλες μεταφράσεις. Λέξεις γνωστές στη μηχανή **eee** (βάσεις `ancient-greek` και `unimorph grc`) επισημαίνονται <span style='color:#b5451b;font-weight:bold'>με χρώμα</span>.",
-    }
-    mo.md(_DESC.get(_lang, _DESC["en"]))
+def _(mo):
+    _MURRAY = "<b>Homer.</b> <a href='https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3atext%3a1999.01.0135'><i>The Odyssey</i></a> with an English Translation by A.T. Murray, PH.D. in two volumes. Cambridge, MA., Harvard University Press; London, William Heinemann, Ltd. 1919."
+    mo.md(
+        "Текст поэмы с параллельными переводами. Слова, известные движку **eee** (базы `ancient-greek` и `unimorph grc`), выделены <span style='color:#b5451b;font-weight:bold'>цветом</span>.\n\n"
+        + _MURRAY
+    )
     return
 
 
 @app.cell(hide_code=True)
-def _(lang_sel, mo, trans_selector):
-    _lang = lang_sel.value
-    _ILN_DESC = {
-        "ru": "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала",
-        "en": "**interlinear** · word-for-word literal translation preserving original word order",
-        "el": "**λέξη-λέξη** · κατά λέξη μετάφραση με διατήρηση της σειράς του πρωτοτύπου",
-    }
+def _(mo, trans_selector):
     _TRANS_DESC = {
-        "подстрочник":          _ILN_DESC.get(_lang, _ILN_DESC["ru"]),
-        "Жуковский":            "**Жуковский, 1849** · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский",
-        "Вересаев":             "**Вересаев, 1953** · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод",
-        "Pope":                 "**Pope, 1725–26** · eng., heroic couplets · elegant 18th-c. rhetorical style · poetic adaptation; long considered the standard English version",
-        "Lattimore":            "**Lattimore, 1951** · eng., blank verse · restrained academic style · closest to literal among English translations; standard for philological study",
-        "Πολυλάς":              "**Πολυλάς, 1875** · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος",
-        "Καζαντζάκης–Κακριδής": "**Καζαντζάκης–Κακριδής, 1965** · ν.ε., Δημοτική · καλλιτεχνική (Καζαντζάκης) + επιστημονική (Κακριδής) · σύγχρονη γλώσσα",
+        "подстрочник": "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала",
+        "Жуковский":   "**Жуковский, 1849** · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский",
+        "Вересаев":    "**Вересаев, 1953** · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод",
     }
     mo.md(_TRANS_DESC.get(trans_selector.value, ""))
     return
 
 
 @app.cell(hide_code=True)
-def _(
-    QUIZ_WORDS,
-    STANZAS,
-    interlinear_el,
-    interlinear_en,
-    lang_sel,
-    mo,
-    stanza_selector,
-    trans_selector,
-):
-    # ── Parallel text display ────────────────────────────────────────────────────
-    from itertools import zip_longest as _zip_longest
-    _lang = lang_sel.value
+def _(QUIZ_WORDS, STANZAS, mo, stanza_selector, trans_selector):
     _st_map = {s["ref"]: s for s in STANZAS}
     _stanza = _st_map[stanza_selector.value]
 
@@ -128,21 +91,84 @@ def _(
         "font-size:1.15em;line-height:2"
     )
 
+    _RHYTHM_HTML = {
+        'Ἄνδρα μοι ἔννεπε, μοῦσα, πολύτροπον, ὃς μάλα πολλὰ':
+            "<b style='color:#980000'>Ἄ</b>νδρα μοι <b style='color:#980000'>ἔ</b>ννεπε, μ<b style='color:#980000'>οῦ</b>σα, πολ<b style='color:#980000'>ύ</b>τροπον, <b style='color:#980000'>ὃ</b>ς μάλα π<b style='color:#980000'>ο</b>λλὰ",
+        'πλάγχθη, ἐπεὶ Τροίης ἱερὸν πτολίεθρον ἔπερσεν·':
+            "πλ<b style='color:#980000'>ά</b>γχθη, ἐπ<b style='color:#980000'>εὶ</b> Τροί<b style='color:#980000'>η</b>ς ἱερ<b style='color:#980000'>ὸ</b>ν πτολί<b style='color:#980000'>ε</b>θρον ἔπ<b style='color:#980000'>ε</b>ρσεν·",
+        "πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα καὶ νόον ἔγνω,":
+            "π<b style='color:#980000'>ο</b>λλῶν δ' <b style='color:#980000'>ἀ</b>νθρώπων ἴδεν <b style='color:#980000'>ἄ</b>στεα κ<b style='color:#980000'>αὶ</b> νόον <b style='color:#980000'>ἔ</b>γνω,",
+        "πολλὰ δ' ὅ γ' ἐν πόντῳ πάθεν ἄλγεα ὃν κατὰ θυμόν,":
+            "π<b style='color:#980000'>ο</b>λλὰ δ' ὅ γ' <b style='color:#980000'>ἐ</b>ν πόντ<b style='color:#980000'>ῳ</b> πάθεν <b style='color:#980000'>ἄ</b>λγεα <b style='color:#980000'>ὃ</b>ν κατὰ θ<b style='color:#980000'>υ</b>μόν,",
+        'ἀρνύμενος ἥν τε ψυχὴν καὶ νόστον ἑταίρων.':
+            "<b style='color:#980000'>ἀ</b>ρνύμεν<b style='color:#980000'>ο</b>ς ἥν τ<b style='color:#980000'>ε</b> ψυχ<b style='color:#980000'>ὴ</b>ν καὶ ν<b style='color:#980000'>ό</b>στον ἑτ<b style='color:#980000'>αί</b>ρων.",
+        "ἀλλ' οὐδ' ὣς ἑτάρους ἐρρύσατο, ἱέμενός περ·":
+            "<b style='color:#980000'>ἀ</b>λλ' οὐδ' <b style='color:#980000'>ὣ</b>ς ἑτάρ<b style='color:#980000'>ου</b>ς ἐρρ<b style='color:#980000'>ύ</b>σατο, <b style='color:#980000'>ἱ</b>έμεν<b style='color:#980000'>ό</b>ς περ·",
+        'αὐτῶν γὰρ σφετέρῃσιν ἀτασθαλίῃσιν ὄλοντο,':
+            "<b style='color:#980000'>αὐ</b>τῶν γ<b style='color:#980000'>ὰ</b>ρ σφετέρ<b style='color:#980000'>ῃ</b>σιν ἀτ<b style='color:#980000'>α</b>σθαλίῃσιν ὄλ<b style='color:#980000'>ο</b>ντο,",
+        'νήπιοι, οἳ κατὰ βοῦς Ὑπερίονος Ἠελίοιο':
+            "ν<b style='color:#980000'>ή</b>πιοι, <b style='color:#980000'>οἳ</b> κατὰ β<b style='color:#980000'>οῦ</b>ς Ὑπερ<b style='color:#980000'>ί</b>ονος <b style='color:#980000'>Ἠ</b>ελί<b style='color:#980000'>οι</b>ο",
+        'ἤσθιον· αὐτὰρ ὁ τοῖσιν ἀφείλετο νόστιμον ἦμαρ.':
+            "<b style='color:#980000'>ἤ</b>σθιον· <b style='color:#980000'>αὐ</b>τὰρ ὁ τ<b style='color:#980000'>οῖ</b>σιν ἀφ<b style='color:#980000'>εί</b>λετο ν<b style='color:#980000'>ό</b>στιμον <b style='color:#980000'>ἦ</b>μαρ.",
+        'τῶν ἁμόθεν γε, θεά, θύγατερ Διός, εἰπὲ καὶ ἡμῖν.':
+            "τ<b style='color:#980000'>ῶ</b>ν ἁμόθ<b style='color:#980000'>ε</b>ν γε, θε<b style='color:#980000'>ά</b>, θύγατ<b style='color:#980000'>ε</b>ρ Διός, <b style='color:#980000'>εἰ</b>πὲ καὶ <b style='color:#980000'>ἡ</b>μῖν.",
+        "Ἔνθ' ἄλλοι μὲν πάντες, ὅσοι φύγον αἰπὺν ὄλεθρον,":
+            "<b style='color:#980000'>Ἔ</b>νθ' ἄλλ<b style='color:#980000'>οι</b> μὲν π<b style='color:#980000'>ά</b>ντες, ὅσ<b style='color:#980000'>οι</b> φύγον <b style='color:#980000'>αἰ</b>πὺν ὄλ<b style='color:#980000'>ε</b>θρον,",
+        'οἴκοι ἔσαν, πόλεμόν τε πεφευγότες ἠδὲ θάλασσαν·':
+            "<b style='color:#980000'>οἴ</b>κοι ἔσ<b style='color:#980000'>α</b>ν, πόλεμ<b style='color:#980000'>ό</b>ν τε πεφ<b style='color:#980000'>ευ</b>γότες <b style='color:#980000'>ἠ</b>δὲ θάλ<b style='color:#980000'>α</b>σσαν·",
+        "τὸν δ' οἶον νόστου κεχρημένον ἠδὲ γυναικὸς":
+            "τ<b style='color:#980000'>ὸ</b>ν δ' οἶ<b style='color:#980000'>ο</b>ν νόστ<b style='color:#980000'>ου</b> κεχρ<b style='color:#980000'>η</b>μένον <b style='color:#980000'>ἠ</b>δὲ γυν<b style='color:#980000'>αι</b>κὸς",
+        "νύμφη πόντι' ἔρυκε Καλυψὼ δῖα θεάων":
+            "ν<b style='color:#980000'>ύ</b>μφη π<b style='color:#980000'>ό</b>τνι' ἔρ<b style='color:#980000'>υ</b>κε Καλ<b style='color:#980000'>υ</b>ψὼ δ<b style='color:#980000'>ῖ</b>α θε<b style='color:#980000'>ά</b>ων",
+        'ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι.':
+            "<b style='color:#980000'>ἐ</b>ν σπέσσ<b style='color:#980000'>ι</b> γλαφυρ<b style='color:#980000'>οῖ</b>σι, λιλ<b style='color:#980000'>αι</b>ομέν<b style='color:#980000'>η</b> πόσιν <b style='color:#980000'>εἶ</b>ναι.",
+        "ἀλλ' ὅτε δὴ ἔτος ἦλθε περιπλομένων ἐνιαυτῶν,":
+            "<b style='color:#980000'>ἀ</b>λλ' ὅτε δ<b style='color:#980000'>ὴ</b> ἔτος <b style='color:#980000'>ἦ</b>λθε περ<b style='color:#980000'>ι</b>πλομέν<b style='color:#980000'>ω</b>ν ἐνι<b style='color:#980000'>αυ</b>τῶν,",
+        'τῷ οἱ ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι':
+            "τ<b style='color:#980000'>ῷ</b> οἱ ἐπ<b style='color:#980000'>ε</b>κλώσ<b style='color:#980000'>α</b>ντο θε<b style='color:#980000'>οὶ</b> οἶκ<b style='color:#980000'>ό</b>νδε νέ<b style='color:#980000'>ε</b>σθαι",
+        "εἰς Ἰθάκην, οὐδ' ἔνθα πεφυγμένος ἦεν ἀέθλων":
+            "<b style='color:#980000'>εἰ</b>ς Ἰθάκ<b style='color:#980000'>η</b>ν, οὐδ' <b style='color:#980000'>ἔ</b>νθα πεφ<b style='color:#980000'>υ</b>γμένος <b style='color:#980000'>ἦ</b>εν ἀ<b style='color:#980000'>έ</b>θλων",
+        "καὶ μετὰ οἷσι φίλοισι. θεοὶ δ' ἐλέαιρον ἅπαντες":
+            "κ<b style='color:#980000'>αὶ</b> μετὰ <b style='color:#980000'>οἷ</b>σι φίλ<b style='color:#980000'>οι</b>σι. θε<b style='color:#980000'>οὶ</b> δ' ἐλέ<b style='color:#980000'>αι</b>ρον ἅπ<b style='color:#980000'>α</b>ντες",
+        "νόσφι Ποσειδάωνος· ὁ δ' ἀσπερχὲς μενέαινεν":
+            "ν<b style='color:#980000'>ό</b>σφι Ποσ<b style='color:#980000'>ει</b>δά<b style='color:#980000'>ω</b>νος· ὁ δ' <b style='color:#980000'>ἀ</b>σπερχ<b style='color:#980000'>ὲ</b>ς μενέ<b style='color:#980000'>αι</b>νεν",
+        'ἀντιθέῳ Ὀδυσῆι πάρος ἥν γαῖαν ἱκέσθαι.':
+            "<b style='color:#980000'>ἀ</b>ντιθέ<b style='color:#980000'>ῳ</b> Ὀδυσ<b style='color:#980000'>ῆ</b>ι πάρ<b style='color:#980000'>ο</b>ς ἣν γ<b style='color:#980000'>αῖ</b>αν ἱκ<b style='color:#980000'>έ</b>σθαι.",
+    }
+
+    def _bare(html):
+        text, in_tag = '', False
+        for ch in html:
+            if ch == '<': in_tag = True
+            elif ch == '>': in_tag = False
+            elif not in_tag: text += ch
+        return text.strip("·,;\.'·,!?·")
+
+    def _split_html(s):
+        tokens, buf, depth = [], [], 0
+        for ch in s:
+            if ch == '<': depth += 1; buf.append(ch)
+            elif ch == '>': depth -= 1; buf.append(ch)
+            elif ch == ' ' and depth == 0:
+                tokens.append(''.join(buf)); buf = []
+            else: buf.append(ch)
+        if buf: tokens.append(''.join(buf))
+        return tokens
+
     def _hl(line):
-        return " ".join(
-            f'<span style="color:#b5451b;font-weight:600">{w}</span>'
-            if w.strip("·,;.'") in _HIGHLIGHT else w
-            for w in line.split()
-        )
+        colored = _RHYTHM_HTML.get(line, line)
+        parts = []
+        for w in _split_html(colored):
+            if _bare(w) in _HIGHLIGHT:
+                parts.append(
+                    f"<span style='border-bottom:2px solid #b5451b;padding-bottom:0'>{w}</span>"
+                )
+            else:
+                parts.append(w)
+        return ' '.join(parts)
 
     if trans_selector.value == "подстрочник":
-        if _lang == "el":
-            _el_lines = interlinear_el.get(_stanza["ref"], [])
-            _pairs = list(_zip_longest(_stanza["lines"], _el_lines, fillvalue=""))
-        elif _lang == "en":
-            _pairs = interlinear_en.get(_stanza["ref"], [])
-        else:
-            _pairs = _stanza["interlinear"]
+        _pairs = _stanza["interlinear"]
         _rows = "".join(
             f'<tr>'
             f'<td style="{_GRK};padding-right:1.5em;vertical-align:top">{_hl(gl) if gl else ""}</td>'
@@ -179,28 +205,20 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _lang = lang_sel.value
-    _HEAD = {
-        "ru": "## Упражнение: словарная форма",
-        "en": "## Exercise: dictionary form",
-        "el": "## Άσκηση: λεξικός τύπος",
-    }
-    mo.md(f"""
+def _(mo):
+    mo.md("""
     ---
-    {_HEAD.get(_lang, _HEAD["en"])}
+    ## Упражнение: словарная форма
     """)
     return
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, lang_sel, mo, next_btn, score):
+def _(QUIZ_WORDS, cv, mo, next_btn, score):
     _s = score()
     _n = _s['total'] + (1 if cv() is not None else 0)
-    _lang = lang_sel.value
-    _LBL = {"ru": "Тесты:", "en": "Cards:", "el": "Κάρτες:"}
     mo.hstack(
-        [mo.md(f"{_LBL.get(_lang, 'Tests:')} **{_n}** / {len(QUIZ_WORDS)}"),
+        [mo.md(f"Тесты: **{_n}** / {len(QUIZ_WORDS)}"),
          mo.Html('<div style="width:2rem"></div>'),
          next_btn],
         justify="start",
@@ -210,34 +228,17 @@ def _(QUIZ_WORDS, cv, lang_sel, mo, next_btn, score):
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, gu, lang_sel, random):
-    answer_radio, w = gu.word_quiz_question(cv(), QUIZ_WORDS, lang_sel.value, random)
+def _(QUIZ_WORDS, cv, gu, random):
+    answer_radio, w = gu.word_quiz_question(cv(), QUIZ_WORDS, "ru", random)
     return answer_radio, w
 
 
 @app.cell(hide_code=True)
-def _(answer_radio, build_paradigm_table, gu, lang_sel, mo, score, w):
+def _(answer_radio, build_paradigm_table, gu, mo, score, w):
     mo.vstack([answer_radio,
-               gu.word_quiz_feedback(w, answer_radio.value, score(), lang_sel.value,
+               gu.word_quiz_feedback(w, answer_radio.value, score(), "ru",
                                      build_paradigm_table=build_paradigm_table)])
     return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    lang_sel = mo.ui.dropdown(
-        options={"Русский": "ru", "English": "en", "Ελληνικά": "el"},
-        value="Русский",
-        label="🌐",
-    )
-    mo.Html(f"""
-    <div style="position: fixed; top: 60px; right: 10px; z-index: 1000;
-         background: white; padding: 8px 12px; border-radius: 8px;
-         box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-        {lang_sel}
-    </div>
-    """)
-    return (lang_sel,)
 
 
 @app.cell(hide_code=True)
@@ -268,46 +269,25 @@ def _(STANZAS, mo):
 
 
 @app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _lang = lang_sel.value
-    _ILN  = {"ru": "подстрочник", "en": "interlinear", "el": "λέξη-λέξη"}
-    _ALL = {
-        _ILN.get(_lang, "подстрочник"):                   "подстрочник",
-        "Жуковский (1849) · рус., классический":           "Жуковский",
-        "Вересаев (1953) · рус., точный":                 "Вересаев",
-        "Pope (1725) · eng., classical":                  "Pope",
-        "Lattimore (1951) · eng., literal":               "Lattimore",
-        "Πολυλάς (1875) · ν.ε., κλασική":                "Πολυλάς",
-        "Καζαντζάκης–Κακριδής (1965) · ν.ε., σύγχρονη":  "Καζαντζάκης–Κακριδής",
-    }
-    _LANG_VALS = {
-        "ru": {"подстрочник", "Жуковский", "Вересаев"},
-        "en": {"подстрочник", "Pope", "Lattimore"},
-        "el": {"подстрочник", "Πολυλάς", "Καζαντζάκης–Κακριδής"},
-    }
-    _LANG_DEF  = {"ru": "подстрочник", "en": "подстрочник", "el": "подстрочник"}
-    _TRANS_LBL = {"ru": "Перевод", "en": "Translation", "el": "Μετάφραση"}
-    _valid  = _LANG_VALS.get(_lang, _LANG_VALS["ru"])
-    _opts   = {k: v for k, v in _ALL.items() if v in _valid}
-    _def_v  = _LANG_DEF.get(_lang, "подстрочник")
-    _def_k  = next((k for k, v in _opts.items() if v == _def_v), list(_opts.keys())[0])
+def _(mo):
     trans_selector = mo.ui.dropdown(
-        options=_opts,
-        value=_def_k,
-        label=_TRANS_LBL.get(_lang, "Translation"),
+        options={
+            "подстрочник":             "подстрочник",
+            "Жуковский (1849) · рус.": "Жуковский",
+            "Вересаев (1953) · рус.":  "Вересаев",
+        },
+        value="подстрочник",
+        label="Перевод",
     )
     return (trans_selector,)
 
 
 @app.cell(hide_code=True)
-def _(cv, lang_sel, mo, remaining):
+def _(cv, mo, remaining):
     _r = remaining()
     _done = cv() is None and _r is not None and len(_r) == 0
-    _lang = lang_sel.value
-    _NEXT = {"ru": "→ Следующее", "en": "→ Next", "el": "→ Επόμενο"}
-    _REST = {"ru": "Начать сначала", "en": "Start over", "el": "Αρχή"}
     next_btn = mo.ui.button(
-        label=_REST.get(_lang, "→") if _done else _NEXT.get(_lang, "→"),
+        label="Начать сначала" if _done else "→ Следующее",
         on_click=lambda v: (v or 0) + 1,
     )
     return (next_btn,)
@@ -337,20 +317,18 @@ def _(
     if next_btn.value:
         r = remaining()
         if r is None:
-            pass  # not yet initialized
+            pass
         elif r:
             _record_answer()
             set_cv(r[0])
             set_remaining(r[1:])
         else:
             if cv() is None:
-                # done state → restart
                 _shuffled = random.sample(QUIZ_WORDS, len(QUIZ_WORDS))
                 set_cv(_shuffled[0])
                 set_remaining(_shuffled[1:])
                 set_score({"correct": 0, "total": 0})
             else:
-                # last word → score and transition to done
                 _record_answer()
                 set_cv(None)
     return
@@ -358,10 +336,6 @@ def _(
 
 @app.cell(hide_code=True)
 def _():
-    # ── Text data ──────────────────────────────────────────────────────────────
-    # interlinear: list of (greek_line, russian_line) pairs
-    # translations: literary translations keyed by name
-
     STANZAS = [
         {
             "ref": "I.1–5",
@@ -399,37 +373,6 @@ def _():
                     "Много духом страдал на морях, о спасеньи заботясь\n"
                     "Жизни своей и возврате в отчизну товарищей верных."
                 ),
-                "Lattimore": (
-                    "Tell me, Muse, of the man of many ways, who was driven\n"
-                    "far journeys, after he had sacked Troy's sacred citadel.\n"
-                    "Many were they whose cities he saw, whose minds he learned of,\n"
-                    "many the pains he suffered in his spirit on the wide sea,\n"
-                    "struggling for his own life and the homecoming of his companions."
-                ),
-                "Pope": (
-                    "The man, for wisdom's various arts renown'd,\n"
-                    "Long exercis'd in woes, O Muse! resound;\n"
-                    "Who, when his arms had wrought the destin'd fall\n"
-                    "Of sacred Troy, and raz'd her heav'n-built wall,\n"
-                    "Wand'ring from clime to clime, observant stray'd,\n"
-                    "Their manners noted, and their states survey'd,\n"
-                    "On stormy seas unnumber'd toils he bore,\n"
-                    "Safe with his friends to gain his natal shore."
-                ),
-                "Πολυλάς": (
-                    "Πες μου, θεά, τ' ἀνδρὸς τὸν πολύτροπον, ὅπου πλανήθη τόσο\n"
-                    "ἀφότου τῆς Τροίας τὸ ἱερὸ κάστρο χάλασε·\n"
-                    "πολλῶν ἀνθρώπων τὰ ἄστη εἶδε κι ἔγνωσε τὸν νοῦ τους,\n"
-                    "πολλὰ κι ἔπαθε στὴ θάλασσα ἀλγέα μέσα στὴν ψυχή του,\n"
-                    "παλεύοντας γιὰ τὴ ζωή του καὶ γιὰ τὸ νόστο τῶν ἑταίρων."
-                ),
-                "Καζαντζάκης–Κακριδής": (
-                    "Πές μου, Μούσα, γιὰ τὸν ἄντρα τὸν πολύτροπο, ποὺ πλανήθηκε πολύ,\n"
-                    "ἀφότου τῆς Τροίας τὴν ἱερὴ πολιτεία χάλασε·\n"
-                    "πολλῶν ἀνθρώπων τὰ ἄστη εἶδε καὶ ἔμαθε τὴ σκέψη τους,\n"
-                    "πολλὰ ἔπαθε στὴ θάλασσα ἀλγέα στὰ βάθη τῆς ψυχῆς του,\n"
-                    "παλεύοντας γιὰ τὴ ζωή του καὶ γιὰ τὸν γυρισμὸ τῶν συντρόφων."
-                ),
             },
         },
         {
@@ -455,7 +398,6 @@ def _():
             ],
             "translations": {
                 "Жуковский": (
-                    "тщетны\n"
                     "Были, однако, заботы, не спас он сопутников: сами\n"
                     "Гибель они на себя навлекли святотатством, безумцы,\n"
                     "Съевши быков Гелиоса, над нами ходящего бога, —\n"
@@ -468,35 +410,6 @@ def _():
                     "Съели, безумцы, коров Гелиоса Гиперионида.\n"
                     "Дня возвращенья домой навсегда их за это лишил он.\n"
                     "Муза! Об этом и нам расскажи, начав с чего хочешь."
-                ),
-                "Lattimore": (
-                    "Even so he could not save his companions, hard though\n"
-                    "he strove to; they were destroyed by their own wild recklessness,\n"
-                    "fools, who devoured the oxen of Helios, the Sun God,\n"
-                    "and he took away the day of their homecoming.\n"
-                    "From some point here, goddess, daughter of Zeus, speak, and begin our story."
-                ),
-                "Pope": (
-                    "Vain toils! their impious folly dar'd to prey\n"
-                    "On herds devoted to the god of day;\n"
-                    "The god vindictive doom'd them then to die,\n"
-                    "For sacrilegious crimes — nor could his care\n"
-                    "Preserve from death a race of men so bold.\n"
-                    "Begin from hence, and all the truth unfold."
-                ),
-                "Πολυλάς": (
-                    "Μὰ μήτε ὡς τόσο τοὺς ἑταίρους του ἔσωσε, ποὺ τόσο φιλοτιμήθη·\n"
-                    "γιατὶ χάθηκαν ἀπὸ τὴ δική τους τὴν ἀτασθαλία,\n"
-                    "νήπιοι, ποὺ τοῦ Ἡλίου Ὑπερίωνα τοὺς βόες ἔφαγαν·\n"
-                    "κι αὐτὸς τοὺς ἀφαίρεσε τὴν ἡμέρα τοῦ γυρισμοῦ.\n"
-                    "Ἀπ' ὁπουδήποτε, θεά, κόρη τοῦ Δία, πές μας κι ἐμᾶς."
-                ),
-                "Καζαντζάκης–Κακριδής": (
-                    "Μὰ μήτε ἔτσι τοὺς συντρόφους του τοὺς ἔσωσε, κι ἄς ποθοῦσε·\n"
-                    "γιατὶ χάθηκαν ἀπ' τὴν τρέλα τους,\n"
-                    "ἀνόητοι, ποὺ τοῦ Ἡλίου τοῦ Ὑπερίωνα τὰ βόδια ἔφαγαν·\n"
-                    "κι ἐκεῖνος τοὺς ἀφαίρεσε τὴ μέρα τοῦ γυρισμοῦ.\n"
-                    "Ἀπ' ὁπουδήποτε, θεά, κόρη τοῦ Δία, πές μας κι ἐμᾶς."
                 ),
             },
         },
@@ -535,35 +448,6 @@ def _():
                     "Только его, по жене и отчизне болевшего сердцем,\n"
                     "Нимфа-царица Калипсо, богиня в богинях, держала\n"
                     "В гроте глубоком, желая, чтоб сделался ей он супругом."
-                ),
-                "Lattimore": (
-                    "So now all the others, as many as fled sheer destruction,\n"
-                    "were at home, having escaped both the sea and the fighting;\n"
-                    "but he alone, longing for his wife and his homecoming,\n"
-                    "was detained by the queenly nymph Calypso, a goddess,\n"
-                    "in her hollow caverns, desiring that he be her husband."
-                ),
-                "Pope": (
-                    "Now all the rest who 'scap'd the cruel fate\n"
-                    "In safety reach'd their long-desir'd retreat.\n"
-                    "Him, yet alone from Ithaca detain'd,\n"
-                    "Calypso long in her soft arms contain'd;\n"
-                    "Who, in her grottoes, fond of him remain'd,\n"
-                    "Desiring, fain would make the hero stay."
-                ),
-                "Πολυλάς": (
-                    "Ἐκεῖ οἱ ἄλλοι ὅλοι, ὅσοι γλύτωσαν τὸν αἰπὺν ὄλεθρο,\n"
-                    "ἦταν στὸ σπίτι, τὸν πόλεμο καὶ τὴ θάλασσα γλυτώσαντες·\n"
-                    "αὐτὸν μόνον, ποὺ λαχταροῦσε νόστο καὶ γυναίκα,\n"
-                    "νύμφη ἡ πότνια τὸν κρατοῦσε, ἡ Καλυψώ, θεία στὶς θεές,\n"
-                    "στὶς κοίλες σπηλιές, ποθώντας νὰ τὴν πάρει γιὰ ἄντρα της."
-                ),
-                "Καζαντζάκης–Κακριδής": (
-                    "Τότ' ἄλλοι μὲν ὅλοι, ὅσοι γλύτωσαν τὸν ἀπόκρημνο χαμό,\n"
-                    "ἦταν στὰ σπίτια τους, καὶ πόλεμο καὶ θάλασσα γλυτωμένοι·\n"
-                    "αὐτὸν μόνο, ποὺ ποθοῦσε νόστο καὶ γυναίκα,\n"
-                    "ἡ νύμφη ἡ πότνια τὸν κρατοῦσε, ἡ Καλυψώ, ἡ θεϊκὴ θεά,\n"
-                    "σὲ κοῖλες σπηλιές, λαχταρώντας νὰ τὴν κάνει ἄντρα της."
                 ),
             },
         },
@@ -608,40 +492,6 @@ def _():
                     "Были все боги к нему. Лишь один Посейдон непрерывно\n"
                     "Гнал Одиссея, покамест своей он земли не достигнул."
                 ),
-                "Lattimore": (
-                    "But when in the circling of the years that very year came\n"
-                    "in which the gods had spun for him his time of homecoming\n"
-                    "to Ithaca, not even then was he free of his trials,\n"
-                    "not even among his own people. All the gods pitied him\n"
-                    "except Poseidon; he remained relentlessly angry\n"
-                    "with godlike Odysseus, until he reached his own country."
-                ),
-                "Pope": (
-                    "But when the years, by great Jove's sister's will,\n"
-                    "Had fill'd their number on the rolling year,\n"
-                    "When Ithaca at last was destin'd nigh,\n"
-                    "New toils await him, and new dangers nigh.\n"
-                    "The gods relent, and all except the god\n"
-                    "Of ocean, who relentless still pursu'd\n"
-                    "With hatred fierce divine Ulysses' way,\n"
-                    "Till safe he landed on his native shore."
-                ),
-                "Πολυλάς": (
-                    "Μὰ ὅταν πέρασαν τὰ χρόνια κι ἦρθε ἐκεῖνο τὸ ἔτος,\n"
-                    "ποὺ οἱ θεοὶ τοῦ ἔκλωσαν νὰ γυρίσει στὸ σπίτι του,\n"
-                    "στὴν Ἰθάκη, μήτε ἐκεῖ γλύτωσε τοὺς ἄθλους\n"
-                    "μέσα στοὺς δικούς του. Οἱ θεοὶ τὸν λυπήθηκαν ὅλοι,\n"
-                    "ἐκτὸς ἀπὸ τὸν Ποσειδῶνα· αὐτὸς ἀδιάκοπα ὀργιζόταν\n"
-                    "στὸν ἰσόθεο Ὀδυσσέα, ὣς νὰ φτάσει στὴ γῆ του."
-                ),
-                "Καζαντζάκης–Κακριδής": (
-                    "Μὰ ὅταν κύλησαν τὰ χρόνια κι ἦρθε τὸ χρόνο ἐκεῖνο,\n"
-                    "ποὺ οἱ θεοὶ τοῦ ἔγνεσαν νὰ πάει σπίτι του,\n"
-                    "στὴν Ἰθάκη, μήτ' ἐκεῖ ξέφυγε τοὺς πόνους\n"
-                    "κι ἀνάμεσα στοὺς δικούς του. Τὸν λυπήθηκαν ὅλοι οἱ θεοί,\n"
-                    "μόνο ὄχι ὁ Ποσειδῶνας· αὐτὸς ἀδιάλειπτα μανιόταν\n"
-                    "ἐναντίον τοῦ ἰσόθεου Ὀδυσσέα, ὣς νὰ φτάσει στὸ χῶμα του."
-                ),
             },
         },
     ]
@@ -650,7 +500,6 @@ def _():
 
 @app.cell(hide_code=True)
 def _():
-    # ── Quiz data ──────────────────────────────────────────────────────────────
     import csv
     from pathlib import Path
 
@@ -664,7 +513,7 @@ def _():
 def _(QUIZ_WORDS_RAW, build_paradigm_table):
     def _has_displayable_form(w):
         try:
-            result = build_paradigm_table(w, lang="en")
+            result = build_paradigm_table(w)
             if not result:
                 return False
             return "#f97316" not in result
@@ -675,85 +524,6 @@ def _(QUIZ_WORDS_RAW, build_paradigm_table):
     QUIZ_WORDS        = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
     words_no_paradigm = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if not ok]
     return (QUIZ_WORDS,)
-
-
-@app.cell(hide_code=True)
-def _():
-    from pathlib import Path as _Path
-
-    _md = (_Path(__file__).parent / "interlenear_en.md").read_text(encoding="utf-8")
-
-    # Parse pairs: **greek** then english translation
-    interlinear_en = {}
-    _ref = None
-    _grc = None
-    _pairs = []
-    for _line in _md.splitlines():
-        if _line.startswith("### Odyss. "):
-            if _ref and _pairs:
-                interlinear_en[_ref] = _pairs
-            _ref = _line.replace("### Odyss. ", "").strip()
-            _pairs = []
-            _grc = None
-        elif _line.startswith("**") and _line.endswith("**"):
-            _grc = _line[2:-2].strip()
-        elif _line.strip() and _grc is not None:
-            _pairs.append((_grc, _line.strip()))
-            _grc = None
-
-    if _ref and _pairs:
-        interlinear_en[_ref] = _pairs
-    return (interlinear_en,)
-
-
-@app.cell(hide_code=True)
-def _():
-    from pathlib import Path as _Path
-    from itertools import zip_longest as _zip_longest
-
-    _md = (_Path(__file__).parent / "interlenear_el.md").read_text(encoding="utf-8")
-
-    # Split into stanza blocks by "---" and "### Οδύσσεια" headers
-    interlinear_el = {}
-    _ref = None
-    _buf = []
-    _paras = []
-
-    for _line in _md.splitlines():
-        if _line.startswith("### Οδύσσεια"):
-            # save any open paragraph
-            if _buf:
-                _paras.append(" ".join(_buf))
-                _buf = []
-            # save current stanza
-            if _ref and _paras:
-                interlinear_el[_ref] = _paras
-            # start new stanza
-            _raw = _line.replace("### Οδύσσεια Α΄ ", "").strip()
-            _ref = "I." + _raw
-            _paras = []
-        elif _line.startswith("---") or _line.startswith("### ") or _line.startswith("|"):
-            # divider or notes section — close current stanza
-            if _buf:
-                _paras.append(" ".join(_buf))
-                _buf = []
-            if _ref and _paras:
-                interlinear_el[_ref] = _paras
-            _ref = None
-            _paras = []
-            _buf = []
-        elif _ref and _line.strip():
-            _buf.append(_line.strip())
-        elif not _line.strip() and _buf:
-            _paras.append(" ".join(_buf))
-            _buf = []
-
-    if _ref:
-        if _buf:
-            _paras.append(" ".join(_buf))
-        if _paras:
-            interlinear_el[_ref] = _paras
-    return (interlinear_el,)
 
 
 @app.cell(hide_code=True)
@@ -771,41 +541,21 @@ def _(ag_backend, eee, um_backend):
         return unicodedata.normalize("NFC", "".join(c for c in s if c not in _STRIP))
 
     @functools.lru_cache(maxsize=None)
-    def _ag_slots(pos, lang):
-        t = ag_backend.get_slot_templates("grc", pos, lang)
+    def _ag_slots(pos):
+        t = ag_backend.get_slot_templates("grc", pos, "ru")
         return {} if t is None else {s.tag: s for s in t}
 
     @functools.lru_cache(maxsize=None)
-    def _um_noun_slots(lang):
-        t = um_backend.get_slot_templates("grc", "noun", lang)
+    def _um_noun_slots():
+        t = um_backend.get_slot_templates("grc", "noun", "ru")
         return {} if t is None else {s.tag: s for s in t}
 
-    _CL = {
-        "ru": {"Nom": "Им.", "Gen": "Род.", "Dat": "Дат.", "Acc": "Вин.", "Voc": "Зват."},
-        "en": {"Nom": "Nom.", "Gen": "Gen.", "Dat": "Dat.", "Acc": "Acc.", "Voc": "Voc."},
-        "el": {"Nom": "Ον.", "Gen": "Γεν.", "Dat": "Δοτ.", "Acc": "Αιτ.", "Voc": "Κλ."},
-    }
-    _NL = {
-        "ru": ("Ед.", "Мн."),
-        "en": ("Sg.", "Pl."),
-        "el": ("Εν.", "Πλ."),
-    }
-    _TCOL = {
-        "ru": {"PAI": "Наст.", "IAI": "Имп.", "AAI": "Аор.", "AMI": "Аор. М.", "API": "Аор. П."},
-        "en": {"PAI": "Pres.", "IAI": "Impf.", "AAI": "Aor.", "AMI": "Aor. M.", "API": "Aor. P."},
-        "el": {"PAI": "Ενεστ.", "IAI": "Παρατ.", "AAI": "Αορ.", "AMI": "Αορ. Μ.", "API": "Αορ. Π."},
-    }
-    _PROW = {
-        "ru": {"1S": "1 ед.", "2S": "2 ед.", "3S": "3 ед.", "1P": "1 мн.", "2P": "2 мн.", "3P": "3 мн."},
-        "en": {"1S": "1 sg.", "2S": "2 sg.", "3S": "3 sg.", "1P": "1 pl.", "2P": "2 pl.", "3P": "3 pl."},
-        "el": {"1S": "1 εν.", "2S": "2 εν.", "3S": "3 εν.", "1P": "1 πλ.", "2P": "2 πλ.", "3P": "3 πλ."},
-    }
-    _INF_LBL = {"ru": "Инф.", "en": "Inf.", "el": "Απρφ."}
-    _IMP_LBL = {
-        "ru": {"2S": "Пов. 2ед.", "2P": "Пов. 2мн."},
-        "en": {"2S": "Imp. 2sg.", "2P": "Imp. 2pl."},
-        "el": {"2S": "Προστ. 2εν.", "2P": "Προστ. 2πλ."},
-    }
+    _CL   = {"Nom": "Им.", "Gen": "Род.", "Dat": "Дат.", "Acc": "Вин.", "Voc": "Зват."}
+    _NL   = ("Ед.", "Мн.")
+    _TCOL = {"PAI": "Наст.", "IAI": "Имп.", "AAI": "Аор.", "AMI": "Аор. М.", "API": "Аор. П."}
+    _PROW = {"1S": "1 ед.", "2S": "2 ед.", "3S": "3 ед.", "1P": "1 мн.", "2P": "2 мн.", "3P": "3 мн."}
+    _INF_LBL = "Инф."
+    _IMP_LBL = {"2S": "Пов. 2ед.", "2P": "Пов. 2мн."}
 
     def build_paradigm_table(w, lang="ru"):
         lemma, pos, tested = w["lemma"], w["pos"], w["form"]
@@ -823,16 +573,9 @@ def _(ag_backend, eee, um_backend):
                 found[0] = True
             return f'<td style="{HL if hl else TD}">{"/ ".join(sorted(forms)) if forms else chr(8212)}</td>'
 
-        _SUPPL = {
-            "ru": f"нерегулярная форма, отсутствует в парадигме {lemma}",
-            "en": f"irregular form, not in the standard paradigm of {lemma}",
-            "el": f"ανώμαλος τύπος, λείπει από το παράδειγμα του {lemma}",
-        }
-
         if pos == "noun":
-            ag_nmap = _ag_slots("noun", lang)
-            cl = _CL.get(lang, _CL["en"])
-            sg_lbl, pl_lbl = _NL.get(lang, _NL["en"])
+            ag_nmap = _ag_slots("noun")
+            sg_lbl, pl_lbl = _NL
 
             ag_rows = {}
             for c in ["N", "G", "D", "A", "V"]:
@@ -851,15 +594,15 @@ def _(ag_backend, eee, um_backend):
             if _ag_has:
                 for c in ["N", "G", "D", "A", "V"]:
                     case_key = {"N": "Nom", "G": "Gen", "D": "Dat", "A": "Acc", "V": "Voc"}[c]
-                    tbl += f'<tr><td style="{ROW}">{cl.get(case_key, c)}</td>'
+                    tbl += f'<tr><td style="{ROW}">{_CL.get(case_key, c)}</td>'
                     for n in ("S", "P"):
                         tbl += td(ag_rows[(c, n)])
                     tbl += "</tr>"
             else:
-                um_nmap = _um_noun_slots(lang)
+                um_nmap = _um_noun_slots()
                 _UM_CASES = [("NOM", "Nom"), ("GEN", "Gen"), ("DAT", "Dat"), ("ACC", "Acc"), ("VOC", "Voc")]
                 for c, case_key in _UM_CASES:
-                    tbl += f'<tr><td style="{ROW}">{cl.get(case_key, c)}</td>'
+                    tbl += f'<tr><td style="{ROW}">{_CL.get(case_key, c)}</td>'
                     for ns in ("SG", "PL"):
                         slot = um_nmap.get(f"N;{c};{ns}")
                         forms = eee.inflect_slot(lemma, slot, "noun", language="grc", backend="unimorph") if slot else set()
@@ -869,7 +612,7 @@ def _(ag_backend, eee, um_backend):
             tbl += "</table>"
 
         elif pos == "verb":
-            slot_map = _ag_slots("verb", lang)
+            slot_map = _ag_slots("verb")
             PS_TAGS = ["1S", "2S", "3S", "1P", "2P", "3P"]
 
             _vcache = {}
@@ -882,10 +625,7 @@ def _(ag_backend, eee, um_backend):
                     )
                 return _vcache[tag]
 
-            tcol = _TCOL.get(lang, _TCOL["en"])
-            prow = _PROW.get(lang, _PROW["en"])
-
-            TENSES = [(t, tcol.get(t, t)) for t in ["PAI", "IAI", "AAI", "AMI", "API"]
+            TENSES = [(t, _TCOL.get(t, t)) for t in ["PAI", "IAI", "AAI", "AMI", "API"]
                       if any(_vf(f"{t}.{ps}") for ps in PS_TAGS)]
             if not TENSES:
                 return None
@@ -893,14 +633,14 @@ def _(ag_backend, eee, um_backend):
             tbl = f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px"><caption style="{CAP}">ancient-greek</caption><tr><th style="{TH}"></th>'
             tbl += "".join(f'<th style="{TH}">{lbl}</th>' for _, lbl in TENSES) + "</tr>"
             for ps in PS_TAGS:
-                tbl += f'<tr><td style="{ROW}">{prow.get(ps, ps)}</td>'
+                tbl += f'<tr><td style="{ROW}">{_PROW.get(ps, ps)}</td>'
                 for t, _ in TENSES:
                     tbl += td(_vf(f"{t}.{ps}"))
                 tbl += "</tr>"
 
             INF_MAP = {"PAI": "PAN", "IAI": "IAN", "AAI": "AAN", "AMI": "AMN", "API": "APN"}
             if any(_vf(INF_MAP.get(t, "")) for t, _ in TENSES):
-                tbl += f'<tr><td style="{ROW}">{_INF_LBL.get(lang, "Inf.")}</td>'
+                tbl += f'<tr><td style="{ROW}">{_INF_LBL}</td>'
                 for t, _ in TENSES:
                     tbl += td(_vf(INF_MAP.get(t, "")))
                 tbl += "</tr>"
@@ -908,7 +648,7 @@ def _(ag_backend, eee, um_backend):
             IMP_MAP = {"PAI": "PAD", "AAI": "AAD", "AMI": "AMD"}
             for imp_ps, imp_sfx in [("2S", ".2S"), ("2P", ".2P")]:
                 if any(_vf(f"{IMP_MAP[t]}{imp_sfx}") for t, _ in TENSES if t in IMP_MAP):
-                    tbl += f'<tr><td style="{ROW}">{_IMP_LBL.get(lang, _IMP_LBL["en"]).get(imp_ps, imp_ps)}</td>'
+                    tbl += f'<tr><td style="{ROW}">{_IMP_LBL.get(imp_ps, imp_ps)}</td>'
                     for t, _ in TENSES:
                         imp_t = IMP_MAP.get(t)
                         tbl += td(_vf(f"{imp_t}{imp_sfx}")) if imp_t else f'<td style="{TD}">—</td>'
@@ -920,7 +660,7 @@ def _(ag_backend, eee, um_backend):
 
         if not found[0]:
             NOTE = "background:#fff7ed;border-left:3px solid #f97316;padding:7px 12px;margin-top:8px;font-size:.9em;color:#7c2d12;"
-            note = f'<div style="{NOTE}"><b>{tested}</b> — {_SUPPL.get(lang, _SUPPL["en"])}</div>'
+            note = f'<div style="{NOTE}"><b>{tested}</b> — нерегулярная форма, отсутствует в парадигме {lemma}</div>'
             return note + tbl
         return tbl
 
@@ -941,14 +681,13 @@ def _():
     eee.register_backend("grc", um_backend, backend="unimorph")
     eee.set_chain("grc", ["ancient-greek", "unimorph"])
     gu = eee.GreekUtils(mo_module=mo)
-
     return ag_backend, eee, gu, mo, random, um_backend
 
 
 @app.cell(hide_code=True)
-def _(lang_sel, mo):
+def _(mo):
     from eee_project.notebook_utils import eee_footer
-    eee_footer(mo, lang=lang_sel.value)
+    eee_footer(mo, lang="ru")
     return
 
 
