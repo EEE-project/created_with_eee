@@ -35,7 +35,7 @@ def _(cfg, mo):
         _nb_id = lesson["nb_id"]
         _url = f"https://molab.marimo.io/notebooks/{_nb_id}/app" if _nb_id else None
         if _url:
-            return f"""<a class="eee-card" href="{_url}">
+            return f"""<a class="eee-card" href="{_url}" target="_blank" rel="noopener">
               <div class="eee-card-header">
                 <div class="eee-card-icon">{lesson['icon']}</div>
                 <div>
