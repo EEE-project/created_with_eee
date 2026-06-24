@@ -1,0 +1,25 @@
+form	lemma	meaning	meaning_en	meaning_el	context	pos	grammar
+ἄνεμος	ἄνεμος	ветер	wind	άνεμος	IX.39: ἄνεμος Κικόνεσσι πέλασσεν	noun	Case=Nom|Gender=Masc|Number=Sing
+πόλιν	πόλις	город	city	πόλη	IX.40: πόλιν ἔπραθον	noun	Case=Acc|Gender=Fem|Number=Sing
+κτήματα	κτῆμα	имущество	possessions	κτήματα	IX.41: κτήματα πολλὰ λαβόντες	noun	Case=Acc|Gender=Neut|Number=Plur
+νήπιοι	νήπιος	неразумные	foolish	ανόητοι	IX.44: μέγα νήπιοι οὐκ ἐπίθοντο	adj	Case=Nom|Gender=Masc|Number=Plur
+μῆλα	μῆλον	мелкий скот	flocks	κοπάδια	IX.45: πολλὰ δὲ μῆλα ἔσφαζον	noun	Case=Acc|Gender=Neut|Number=Plur
+βοῦς	βοῦς	быков	bulls/oxen	βόδια	IX.46: εἰλίποδας ἕλικας βοῦς	noun	Case=Acc|Gender=Masc|Number=Plur
+γείτονες	γείτων	соседи	neighbors	γείτονες	IX.48: γείτονες ἦσαν	noun	Case=Nom|Gender=Masc|Number=Plur
+ἤπειρον	ἤπειρος	материк	mainland	ήπειρος	IX.49: ἤπειρον ναίοντες	noun	Case=Acc|Gender=Fem|Number=Sing
+φύλλα	φύλλον	листья	leaves	φύλλα	IX.51: ὅσα φύλλα καὶ ἄνθεα	noun	Case=Nom|Gender=Neut|Number=Plur
+ἄνθεα	ἄνθος	цветы	flowers	άνθη	IX.51: φύλλα καὶ ἄνθεα γίνεται	noun	Case=Nom|Gender=Neut|Number=Plur
+αἶσα	αἶσα	судьба	fate	μοίρα	IX.52: κακὴ Διὸς αἶσα παρέστη	noun	Case=Nom|Gender=Fem|Number=Sing
+ἄλγεα	ἄλγος	страдания	suffering	πόνοι	IX.53: ἄλγεα πολλὰ πάθοιμεν	noun	Case=Acc|Gender=Neut|Number=Plur
+μάχην	μάχη	битву	battle	μάχη	IX.54: ἐμάχοντο μάχην παρὰ νηυσί	noun	Case=Acc|Gender=Fem|Number=Sing
+ἱερὸν	ἱερός	священный	sacred	ιερός	IX.56: ἀέξετο ἱερὸν ἦμαρ	adj	Case=Nom|Gender=Neut|Number=Sing
+ἑταῖροι	ἑταῖρος	товарищи	companions	σύντροφοι	IX.60: ἐϋκνήμιδες ἑταῖροι	noun	Case=Nom|Gender=Masc|Number=Plur
+θάνατόν	θάνατος	смерть	death	θάνατος	IX.61: θάνατόν τε μόρον τε	noun	Case=Acc|Gender=Masc|Number=Sing
+μόρον	μόρος	рок	fate/doom	μοίρα	IX.61: θάνατόν τε μόρον τε	noun	Case=Acc|Gender=Masc|Number=Sing
+πέλασσεν	πελάζω	притащил	drew near to	πλησίασε	IX.39: ἄνεμος Κικόνεσσι πέλασσεν	verb	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act
+ὤλεσα	ὄλλυμι	погубил	destroyed	κατέστρεψα	IX.40: ὤλεσα δ' αὐτούς	verb	Mood=Ind|Number=Sing|Person=1|Tense=Past|VerbForm=Fin|Voice=Act
+γίνεται	γίγνομαι	вырастает	grows/is born	γίνεται	IX.51: φύλλα καὶ ἄνθεα γίνεται ὥρῃ	verb	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Mid
+ἔσφαζον	σφάζω	резали	slaughtered	σφάζω	IX.46: ἔσφαζον παρὰ θῖνα	verb	Mood=Ind|Number=Plur|Person=3|Tense=Past|VerbForm=Fin|Voice=Act
+ἐμάχοντο	μάχομαι	сражались	fought	πολεμούσαν	IX.54: ἐμάχοντο μάχην παρὰ νηυσί	verb	Mood=Ind|Number=Plur|Person=3|Tense=Past|VerbForm=Fin|Voice=Mid
+μένομεν	μένω	оставались	remained	μένουμε	IX.57: μένομεν πλέονάς περ ἐόντας	verb	Mood=Ind|Number=Plur|Person=1|Tense=Past|VerbForm=Fin|Voice=Act
+φύγομεν	φεύγω	избежали	escaped	φύγαμε	IX.61: φύγομεν θάνατόν τε μόρον τε	verb	Mood=Ind|Number=Plur|Person=1|Tense=Past|VerbForm=Fin|Voice=Act

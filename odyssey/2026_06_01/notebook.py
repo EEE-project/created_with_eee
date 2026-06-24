@@ -31,27 +31,17 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _():
-    import base64 as _b64
-    from pathlib import Path as _Path
-
-    _img_path = _Path(__file__).parent / "Odysseus_Sirens_BM_E440_n2.jpg"
-    img_b64 = _b64.b64encode(_img_path.read_bytes()).decode()
-    return (img_b64,)
-
-
-@app.cell(hide_code=True)
-def _(img_b64, mo):
+def _(mo):
     _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_32dyZq8gA6x14GL2Zwa6ZU)"
     _left = mo.vstack([
-        mo.md("# Древнегреческий с Гомером"),
+        mo.md("# Одиссея для отважных"),
         mo.md(_badge),
         mo.md("## Пилотное занятие · Odyss. I.1–21"),
     ])
+    _img_url = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_01/Odysseus_Sirens_BM_E440_n2.jpg"
     _img = mo.Html(
-        f'<a href="data:image/jpeg;base64,{img_b64}" target="_blank">'
-        f'<img src="data:image/jpeg;base64,{img_b64}" '
-        f'style="max-width:340px;width:100%;border-radius:4px;object-fit:cover;cursor:pointer"/>'
+        f'<a href="{_img_url}" target="_blank" rel="noopener">'
+        f'<img src="{_img_url}" style="max-width:340px;width:100%;border-radius:4px;object-fit:cover;cursor:pointer"/>'
         f'</a>'
     )
     mo.hstack([_left, _img], align="start")
@@ -72,12 +62,13 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(NB_REMOTE, mo):
+def _(mo):
+    _base = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_01"
     mo.md(
-        "**Материалы занятия:** "
-        f"[Одиссея. Зачин.pdf]({NB_REMOTE}/Одиссея.%20Зачин.pdf) · "
-        f"[Одиссея\_1-21\_словарь.pdf]({NB_REMOTE}/Одиссея_1-21_словарь.pdf) · "
-        f"[Греческий алфавит.pdf]({NB_REMOTE}/Греческий%20алфавит.pdf)"
+        f"**Материалы занятия:** "
+        f"[Одиссея. Зачин.pdf]({_base}/Одиссея.%20Зачин.pdf) · "
+        f"[Одиссея\_1-21\_словарь.pdf]({_base}/Одиссея_1-21_словарь.pdf) · "
+        f"[Греческий алфавит.pdf]({_base}/Греческий%20алфавит.pdf)"
     )
     return
 
@@ -227,9 +218,9 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, mo, next_btn, score):
-    _s = score()
-    _n = _s['total'] + (1 if cv() is not None else 0)
+def _(QUIZ_WORDS, mo, next_btn, remaining):
+    _r = remaining()
+    _n = (len(QUIZ_WORDS) - len(_r)) if _r is not None else 0
     mo.hstack(
         [mo.md(f"Тесты: **{_n}** / {len(QUIZ_WORDS)}"),
          mo.Html('<div style="width:2rem"></div>'),
@@ -241,13 +232,18 @@ def _(QUIZ_WORDS, cv, mo, next_btn, score):
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, gu, random):
-    answer_radio, w = gu.word_quiz_question(cv(), QUIZ_WORDS, "ru", random)
+def _(QUIZ_WORDS, cv, gu, mo, random):
+    if cv() is None:
+        answer_radio = mo.ui.radio(options={"—": "—"})
+        w = None
+    else:
+        answer_radio, w = gu.word_quiz_question(cv(), QUIZ_WORDS, "ru", random)
     return answer_radio, w
 
 
 @app.cell(hide_code=True)
-def _(answer_radio, build_paradigm_table, gu, mo, score, w):
+def _(answer_radio, build_paradigm_table, cv, gu, mo, score, w):
+    mo.stop(cv() is None)
     mo.vstack([answer_radio,
                gu.word_quiz_feedback(w, answer_radio.value, score(), "ru",
                                      build_paradigm_table=build_paradigm_table)])
@@ -715,7 +711,7 @@ def _(cfg, gu):
         'Греческий алфавит.pdf',
     ):
         gu.ensure_file(_pdf, nb_dir=NB_DIR, remote_base=NB_REMOTE)
-    return (NB_REMOTE,)
+    return
 
 
 if __name__ == "__main__":

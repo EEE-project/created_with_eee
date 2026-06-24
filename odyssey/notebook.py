@@ -16,65 +16,51 @@ app = marimo.App(width="medium")
 
 
 @app.cell(hide_code=True)
-def _(lang_sel, mo):
+def _(mo):
     from eee_project import ConfigStore, eee_topbar
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_url(
         f"{_ROOT}/odyssey/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    eee_topbar(mo, back_url=None, lang=lang_sel.value, titles={
-        "ru": "Древнегреческий с Гомером",
-        "en": "Ancient Greek with Homer",
-        "el": "Αρχαία Ελληνικά με τον Όμηρο",
+    eee_topbar(mo, back_url=None, lang="ru", titles={
+        "ru": "Одиссея для отважных",
     }, style="index", ga_config=cfg.ga_config())
     return (cfg,)
 
 
 @app.cell(hide_code=True)
-def _(cfg, lang_sel, mo):
-    _lang = lang_sel.value
-    _LABELS = {"ru": "Пробный урок", "en": "Pilot Lesson", "el": "Δοκιμαστικό Μάθημα"}
-    _TITLES = {
-        "ru": "Одиссея I.1–21",
-        "en": "Odyssey I.1–21",
-        "el": "Οδύσσεια Α.1–21",
-    }
-    _DESCS = {
-        "ru": "Чтение Одиссеи с морфологическим анализом, парадигмами и переводом.",
-        "en": "Reading the Odyssey with morphological analysis, paradigms, and translation.",
-        "el": "Ανάγνωση Οδύσσειας με μορφολογική ανάλυση, παραδείγματα και μετάφραση.",
-    }
-    _lesson = cfg.lessons()[0]
-    _nb_id = _lesson["nb_id"]
-    _url = f"https://molab.marimo.io/notebooks/{_nb_id}/app" if _nb_id else None
-    if _url:
-        _card = f"""<a class="eee-card" href="{_url}">
+def _(cfg, mo):
+    def _make_card(lesson):
+        _nb_id = lesson["nb_id"]
+        _url = f"https://molab.marimo.io/notebooks/{_nb_id}/app" if _nb_id else None
+        if _url:
+            return f"""<a class="eee-card" href="{_url}">
+              <div class="eee-card-header">
+                <div class="eee-card-icon">{lesson['icon']}</div>
+                <div>
+                  <div class="eee-card-label">{lesson['label']}</div>
+                  <div class="eee-card-title">{lesson['title']}</div>
+                  <div class="eee-card-greek">{lesson['greek']}</div>
+                </div>
+              </div>
+              <div class="eee-card-desc">{lesson['desc']}</div>
+              <div class="eee-card-arrow">◀</div>
+            </a>"""
+        return f"""<div class="eee-card eee-card-disabled">
           <div class="eee-card-header">
-            <div class="eee-card-icon">{_lesson['icon']}</div>
+            <div class="eee-card-icon">{lesson['icon']}</div>
             <div>
-              <div class="eee-card-label">{_LABELS.get(_lang, _LABELS['en'])}</div>
-              <div class="eee-card-title">{_TITLES.get(_lang, _TITLES['en'])}</div>
-              <div class="eee-card-greek">{_lesson['greek']}</div>
+              <div class="eee-card-label">{lesson['label']}</div>
+              <div class="eee-card-title">{lesson['title']}</div>
+              <div class="eee-card-greek">{lesson['greek']}</div>
             </div>
           </div>
-          <div class="eee-card-desc">{_DESCS.get(_lang, _DESCS['en'])}</div>
-          <div class="eee-card-arrow">◀</div>
-        </a>"""
-    else:
-        _SOON = {"ru": "скоро", "el": "σύντομα", "en": "coming soon"}
-        _card = f"""<div class="eee-card eee-card-disabled">
-          <div class="eee-card-header">
-            <div class="eee-card-icon">{_lesson['icon']}</div>
-            <div>
-              <div class="eee-card-label">{_LABELS.get(_lang, _LABELS['en'])}</div>
-              <div class="eee-card-title">{_TITLES.get(_lang, _TITLES['en'])}</div>
-              <div class="eee-card-greek">{_lesson['greek']}</div>
-            </div>
-          </div>
-          <div class="eee-card-desc">{_DESCS.get(_lang, _DESCS['en'])}</div>
-          <div class="eee-card-arrow">{_SOON.get(_lang, 'soon')}</div>
+          <div class="eee-card-desc">{lesson['desc']}</div>
+          <div class="eee-card-arrow">скоро</div>
         </div>"""
+
+    _cards = "\n".join(_make_card(l) for l in cfg.lessons())
 
     mo.Html("""
     <style>
@@ -106,32 +92,15 @@ def _(cfg, lang_sel, mo):
       font-family: "DM Mono", monospace; font-size: 11px; color: #5f27cd;
     }
     </style>
-    """ + _card)
-    return
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    from eee_project.notebook_utils import eee_footer
-    eee_footer(mo, lang=lang_sel.value)
+    """ + _cards)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    lang_sel = mo.ui.dropdown(
-        options={"Ελληνικά": "el", "Русский": "ru", "English": "en"},
-        value="English",
-        label="🌐",
-    )
-    mo.Html(f"""
-    <div style="position:fixed;top:56px;right:12px;z-index:1000;
-                background:white;padding:6px 10px;border-radius:8px;
-                box-shadow:0 2px 8px rgba(0,0,0,.12);">
-      {lang_sel}
-    </div>
-    """)
-    return (lang_sel,)
+    from eee_project.notebook_utils import eee_footer
+    eee_footer(mo, lang="ru")
+    return
 
 
 @app.cell(hide_code=True)
