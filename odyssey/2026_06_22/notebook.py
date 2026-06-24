@@ -240,6 +240,18 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
+def _(mo):
+    filter_mode = mo.ui.radio(
+        options={"Текущая": "current", "Только Гомер": "homer", "Без фильтрации": "none"},
+        value="Текущая",
+        label="Лексикон",
+        inline=True,
+    )
+    mo.hstack([mo.md("**Лексикон:**"), filter_mode], align="center", gap=1)
+    return (filter_mode,)
+
+
+@app.cell(hide_code=True)
 def _(QUIZ_WORDS, mo, next_btn, remaining):
     _r = remaining()
     _n = (len(QUIZ_WORDS) - len(_r)) if _r is not None else 0
@@ -439,7 +451,15 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, build_paradigm_table):
+def _(
+    QUIZ_WORDS_RAW,
+    ag_homer,
+    build_paradigm_table,
+    eee,
+    filter_mode,
+    set_cv,
+    set_remaining,
+):
     def _has_displayable_form(w):
         try:
             result = build_paradigm_table(w)
@@ -449,8 +469,28 @@ def _(QUIZ_WORDS_RAW, build_paradigm_table):
         except Exception:
             return False
 
-    _flags     = [_has_displayable_form(w) for w in QUIZ_WORDS_RAW]
-    QUIZ_WORDS = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
+    def _in_homer(w):
+        try:
+            pos = "adjective" if w["pos"] == "adj" else w["pos"]
+            slots = ag_homer.get_slot_templates("grc", pos, "ru") or []
+            if not slots:
+                return False
+            forms = eee.inflect_slot(w["lemma"], slots[0], pos, language="grc", backend="ag-homer")
+            return bool(forms)
+        except Exception:
+            return False
+
+    _mode = filter_mode.value
+    if _mode == "none":
+        QUIZ_WORDS = list(QUIZ_WORDS_RAW)
+    elif _mode == "homer":
+        QUIZ_WORDS = [w for w in QUIZ_WORDS_RAW if _in_homer(w)]
+    else:
+        _flags = [_has_displayable_form(w) for w in QUIZ_WORDS_RAW]
+        QUIZ_WORDS = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
+
+    set_cv(None)
+    set_remaining(None)
     return (QUIZ_WORDS,)
 
 
@@ -500,8 +540,11 @@ def _(ag_backend, eee, um_backend):
         ROW = "padding:3px 8px;color:#9ca3af;font-size:.82em;text-align:right;"
         CAP = "font-size:.75em;color:#9ca3af;text-align:right;padding:2px 4px;"
         found = [False]
+        any_forms = [False]
 
         def td(forms):
+            if forms:
+                any_forms[0] = True
             hl = any(_norm_grc(f.replace("(ν)", "ν")) == tn for f in forms)
             if hl:
                 found[0] = True
@@ -631,6 +674,8 @@ def _(ag_backend, eee, um_backend):
         else:
             return None
 
+        if not any_forms[0]:
+            return None
         if not found[0]:
             NOTE = "background:#fff7ed;border-left:3px solid #f97316;padding:7px 12px;margin-top:8px;font-size:.9em;color:#7c2d12;"
             note = f'<div style="{NOTE}"><b>{tested}</b> — нерегулярная форма, отсутствует в парадигме {lemma}</div>'
@@ -649,12 +694,14 @@ def _():
     from unimorph_backend_eee import UniMorphBackend
 
     ag_backend = AncientGreekBackend(lexicons=["homer", "lxx", "morphgnt"])
+    ag_homer = AncientGreekBackend(lexicons=["homer"])
     um_backend = UniMorphBackend(language="grc")
     eee.register_backend("grc", ag_backend, backend="ancient-greek")
+    eee.register_backend("grc", ag_homer, backend="ag-homer")
     eee.register_backend("grc", um_backend, backend="unimorph")
     eee.set_chain("grc", ["ancient-greek", "unimorph"])
     gu = eee.GreekUtils(mo_module=mo)
-    return ag_backend, eee, gu, mo, random, um_backend
+    return ag_backend, ag_homer, eee, gu, mo, random, um_backend
 
 
 @app.cell(hide_code=True)
