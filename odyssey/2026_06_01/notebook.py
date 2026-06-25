@@ -669,7 +669,7 @@ def _(ag_backend, eee, um_backend):
 
         if not found[0]:
             NOTE = "background:#fff7ed;border-left:3px solid #f97316;padding:7px 12px;margin-top:8px;font-size:.9em;color:#7c2d12;"
-            note = f'<div style="{NOTE}"><b>{tested}</b> — нерегулярная форма, отсутствует в парадигме {lemma}</div>'
+            note = f'<div style="{NOTE}"><b>{tested}</b> — отсутствует в парадигме {lemma}</div>'
             return note + tbl
         return tbl
 
