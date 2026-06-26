@@ -50,24 +50,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    _MURRAY = (
-        "<b>Homer.</b> <a href='https://www.perseus.tufts.edu/hopper/text?"
-        "doc=Perseus%3atext%3a1999.01.0136%3abook%3d9'><i>The Odyssey</i></a>"
-        " with an English Translation by A.T. Murray, PH.D. in two volumes."
-        " Cambridge, MA., Harvard University Press; London, William Heinemann, Ltd. 1919."
-    )
-    mo.md(
-        "Текст поэмы с параллельными переводами. "
-        "Икты (ударные слоги) каждой стопы выделены "
-        "<b style='color:#980000'>красным</b>. "
-        "Слова, известные движку eee, <u>подчёркнуты</u>.\n\n"
-        + _MURRAY
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
     _base = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_15"
     mo.md(
         f"**Материалы занятия:** "
@@ -79,7 +61,70 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(STANZAS, WORDS_COMBINED, mo, stanza_selector, trans_selector):
+def _(mo):
+    mo.md(r"""
+    ---
+    ## Имя героя
+
+    **Ὀδυσσεύς** ← **ὀδύσσομαι** — гневаться, ненавидеть; причинять страдание
+
+    > *πολλοῖσιν γὰρ ἐγώ γε ὀδυσσάμενος* (Od. XIX.407)
+    > «ибо многим я причинил страдание»
+
+    Имя означает «тот, кто причиняет / претерпевает страдания». Гомер использует его как этимологический символ судьбы героя.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ---
+    ## Текст поэмы с параллельными переводами.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    _MURRAY = (
+        "<b>Homer.</b> <a href='https://www.perseus.tufts.edu/hopper/text?"
+        "doc=Perseus%3atext%3a1999.01.0136%3abook%3d9'><i>The Odyssey</i></a>"
+        " with an English Translation by A.T. Murray, PH.D. in two volumes."
+        " Cambridge, MA., Harvard University Press; London, William Heinemann, Ltd. 1919."
+    )
+    mo.md(_MURRAY)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo, trans_selector):
+    _TRANS_DESC = {
+        "подстрочник": "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала",
+        "Жуковский":   "**Жуковский, 1849** · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский",
+        "Вересаев":    "**Вересаев, 1953** · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод",
+    }
+    mo.md(_TRANS_DESC.get(trans_selector.value, ""))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    Икты (ударные слоги) каждой стопы выделены <b style='color:#980000'>красным</b>.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    SHOW_COVERAGE,
+    STANZAS,
+    WORDS_COMBINED,
+    mo,
+    stanza_selector,
+    trans_selector,
+):
     _st_map = {s["ref"]: s for s in STANZAS}
     _stanza = _st_map[stanza_selector.value]
     _GRK = (
@@ -145,6 +190,13 @@ def _(STANZAS, WORDS_COMBINED, mo, stanza_selector, trans_selector):
             elif not in_tag: text += ch
         return text.strip("·,;.'·,!?·")
 
+
+    def _norm(s):
+        import unicodedata as _u
+        nfd = _u.normalize("NFD", s)
+        no_mn = "".join(c for c in nfd if _u.category(c) != "Mn")
+        return _u.normalize("NFC", no_mn)
+
     def _split_html(s):
         tokens, buf, depth = [], [], 0
         for ch in s:
@@ -160,7 +212,7 @@ def _(STANZAS, WORDS_COMBINED, mo, stanza_selector, trans_selector):
         colored = _RHYTHM_HTML.get(line, line)
         parts = []
         for w in _split_html(colored):
-            if _bare(w) in WORDS_COMBINED:
+            if SHOW_COVERAGE.value is not None and _norm(_bare(w)) in WORDS_COMBINED:
                 parts.append(
                     f"<span style='border-bottom:2px solid #b5451b;padding-bottom:0'>{w}</span>"
                 )
@@ -206,18 +258,14 @@ def _(STANZAS, WORDS_COMBINED, mo, stanza_selector, trans_selector):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""
-    ---
-    ## Имя героя
-
-    **Ὀδυσσεύς** ← **ὀδύσσομαι** — гневаться, ненавидеть; причинять страдание
-
-    > *πολλοῖσιν γὰρ ἐγώ γε ὀδυσσάμενος* (Od. XIX.407)
-    > «ибо многим я причинил страдание»
-
-    Имя означает «тот, кто причиняет / претерпевает страдания». Гомер использует его как этимологический символ судьбы героя.
-    """)
-    return
+    SHOW_COVERAGE = mo.ui.radio(
+        options={"выкл.": None, "словоформы": "current", "только Гомер": "homer", "все слова": "none"},
+        value="выкл.",
+        label="**Подсветка слов в тексте:**",
+        inline=True,
+    )
+    SHOW_COVERAGE
+    return (SHOW_COVERAGE,)
 
 
 @app.cell(hide_code=True)
@@ -227,6 +275,18 @@ def _(mo):
     ## Упражнение: словарная форма
     """)
     return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    filter_mode = mo.ui.radio(
+        options={"словоформы": "current", "только Гомер": "homer", "все слова": "none"},
+        value="словоформы",
+        label="**Лексикон:**",
+        inline=True,
+    )
+    filter_mode
+    return (filter_mode,)
 
 
 @app.cell(hide_code=True)
@@ -244,21 +304,58 @@ def _(QUIZ_WORDS, mo, next_btn, remaining):
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, gu, mo, random):
+def _(QUIZ_WORDS, cv, mo, random):
     if cv() is None:
         answer_radio = mo.ui.radio(options={"—": "—"})
         w = None
     else:
-        answer_radio, w = gu.word_quiz_question(cv(), QUIZ_WORDS, "ru", random)
+        w = cv()
+        _ctx     = w.get("context", "")
+        _meaning = w.get("meaning", "")
+        _lbl     = f"{_ctx} – {_meaning}" if _ctx else f"«{_meaning}»"
+        _others  = list({q["form"] for q in QUIZ_WORDS if q["form"] != w["form"]})
+        _choices = sorted([w["form"]] + _others[:3], key=lambda x: random.random())
+        answer_radio = mo.ui.radio(options=_choices, label=_lbl)
     return answer_radio, w
 
 
 @app.cell(hide_code=True)
-def _(answer_radio, build_paradigm_table, cv, gu, mo, score, w):
+def _(answer_radio, build_lexicon_tabs, cv, gu, mo, score, w):
     mo.stop(cv() is None)
     mo.vstack([answer_radio,
                gu.word_quiz_feedback(w, answer_radio.value, score(), "ru",
-                                     build_paradigm_table=build_paradigm_table)])
+                                     build_paradigm_table=build_lexicon_tabs)])
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ---
+
+    ### О проверке форм (EEE)
+
+    Упражнение использует [EEE](https://codeberg.org/EEE-project) — систему для построения интерактивных учебных материалов.
+    В данном случае задействованы [модули морфологического анализа](https://codeberg.org/EEE-project/eee-project/src/branch/main/docs/backends.md):
+
+    * [**unimorph-backend-eee**](https://codeberg.org/EEE-project/unimorph-backend-eee) — база данных UniMorph:
+      для древнегреческого парадигмы существительных и прилагательных (глаголы отсутствуют);
+      покрытие лучше для греческого НЗ, чем для гомеровского текста
+    * [**ancient-greek-backend-eee**](https://codeberg.org/EEE-project/ancient-greek-backend-eee) — анализ на основе морфологических словарей с лексиконами:
+      * **Homer** — лексикон гомеровского эпоса (Илиада, Одиссея); эпический/ионийский, ~VIII в. до н.э.
+      * **LXX** — лексикон Септуагинты; эллинистический койне, ~III–I вв. до н.э.
+      * **MorphGNT** — лексикон греческого Нового Завета; койне, I в. н.э.
+
+    **Лексикон** (фильтр):
+
+    - *словоформы* — слова, для которых движку удаётся построить парадигму,
+      используя unimorph-backend-eee и ancient-greek-backend-eee с лексиконами Homer, LXX, MorphGNT
+    - *только Гомер* — слова из гомеровского лексикона ancient-greek-backend-eee
+    - *все слова* — весь словарь занятия без фильтрации
+
+    В таблице словоформ можно переключаться между лексиконами разных исторических периодов,
+    если соответствующие данные для данного слова в системе есть.
+    """)
     return
 
 
@@ -418,18 +515,62 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _():
+def _(ag_backend, ag_homer, ag_lxx, ag_morphgnt, gu):
     import csv
     from pathlib import Path
 
     _vocab_path = Path(__file__).parent / "vocab_IX_19-38.tsv"
     with open(_vocab_path, encoding="utf-8") as _f:
-        QUIZ_WORDS_RAW = list(csv.DictReader(_f, delimiter="\t"))
+        QUIZ_WORDS_RAW = gu.resolve_word_grammar(
+            list(csv.DictReader(_f, delimiter="\t")), ag_backend, "ru"
+        )
+
+    _POS_MAP = {"adj": "adjective"}
+    _QUIZZABLE = {"noun", "verb", "adj"}
+    _LEXICONS = [("homer", ag_homer), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt)]
+
+    def _lexicon_tag(w):
+        if w.get("pos") not in _QUIZZABLE:
+            return ""
+        pos = _POS_MAP.get(w["pos"], w["pos"])
+        form = w.get("form", "")
+        sources = []
+        for name, backend in _LEXICONS:
+            try:
+                para = backend.paradigm(w["lemma"], pos)
+                if any(form in forms for forms in para.values()):
+                    sources.append(name)
+            except Exception:
+                pass
+        if not sources:
+            for name, backend in _LEXICONS:
+                try:
+                    if any(backend.paradigm(w["lemma"], pos).values()):
+                        sources.append(name)
+                except Exception:
+                    pass
+        if not sources:
+            return ""
+        lexicons = ", ".join(f'"{s}"' for s in sources)
+        return f"ancient-greek[{lexicons}]"
+
+    for _w in QUIZ_WORDS_RAW:
+        _tag = _lexicon_tag(_w)
+        if _tag:
+            _w["lexicon_tag"] = _tag
     return (QUIZ_WORDS_RAW,)
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, build_paradigm_table):
+def _(
+    QUIZ_WORDS_RAW,
+    ag_homer,
+    build_paradigm_table,
+    eee,
+    filter_mode,
+    set_cv,
+    set_remaining,
+):
     def _has_displayable_form(w):
         try:
             result = build_paradigm_table(w)
@@ -439,199 +580,90 @@ def _(QUIZ_WORDS_RAW, build_paradigm_table):
         except Exception:
             return False
 
-    _flags     = [_has_displayable_form(w) for w in QUIZ_WORDS_RAW]
-    QUIZ_WORDS = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
+    def _in_homer(w):
+        try:
+            pos = "adjective" if w["pos"] == "adj" else w["pos"]
+            slots = ag_homer.get_slot_templates("grc", pos, "ru") or []
+            if not slots:
+                return False
+            forms = eee.inflect_slot(w["lemma"], slots[0], pos, language="grc", backend="ag-homer")
+            return bool(forms)
+        except Exception:
+            return False
+
+    _mode = filter_mode.value
+    if _mode == "none":
+        QUIZ_WORDS = list(QUIZ_WORDS_RAW)
+    elif _mode == "homer":
+        QUIZ_WORDS = [w for w in QUIZ_WORDS_RAW if _in_homer(w)]
+    else:
+        _flags = [_has_displayable_form(w) for w in QUIZ_WORDS_RAW]
+        QUIZ_WORDS = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
+
+    set_cv(None)
+    set_remaining(None)
     return (QUIZ_WORDS,)
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS):
-    WORDS_COMBINED = {w["form"] for w in QUIZ_WORDS}
+def _(QUIZ_WORDS_RAW, SHOW_COVERAGE, ag_homer, build_paradigm_table, eee):
+    import unicodedata as _u
+
+    def _norm_f(s):
+        nfd = _u.normalize("NFD", s)
+        no_mn = "".join(c for c in nfd if _u.category(c) != "Mn")
+        nfc = _u.normalize("NFC", no_mn)
+        return nfc.strip("',.᾽᾿ʼ")
+
+    def _words_for_coverage(mode):
+        if mode is None:
+            return set()
+        if mode == "none":
+            return {_norm_f(w["form"]) for w in QUIZ_WORDS_RAW}
+        if mode == "homer":
+            result = set()
+            for w in QUIZ_WORDS_RAW:
+                try:
+                    pos = "adjective" if w["pos"] == "adj" else w["pos"]
+                    slots = ag_homer.get_slot_templates("grc", pos, "ru") or []
+                    if slots and eee.inflect_slot(w["lemma"], slots[0], pos, language="grc", backend="ag-homer"):
+                        result.add(_norm_f(w["form"]))
+                except Exception:
+                    pass
+            return result
+        result = set()
+        for w in QUIZ_WORDS_RAW:
+            try:
+                r = build_paradigm_table(w)
+                if r and "#f97316" not in r:
+                    result.add(_norm_f(w["form"]))
+            except Exception:
+                pass
+        return result
+
+    WORDS_COMBINED = _words_for_coverage(SHOW_COVERAGE.value)
     return (WORDS_COMBINED,)
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, eee, um_backend):
-    import unicodedata
-    import functools
-
-    def _norm_grc(s):
-        _STRIP = {
-            "̀", "́", "̂", "̈",
-            "̓", "̔", "̓", "͂",
-            "̄", "̆",
-        }
-        s = unicodedata.normalize("NFD", s).lower()
-        return unicodedata.normalize("NFC", "".join(c for c in s if c not in _STRIP))
-
-    @functools.lru_cache(maxsize=None)
-    def _ag_slots(pos):
-        t = ag_backend.get_slot_templates("grc", pos, "ru")
-        return {} if t is None else {s.tag: s for s in t}
-
-    @functools.lru_cache(maxsize=None)
-    def _um_noun_slots():
-        t = um_backend.get_slot_templates("grc", "noun", "ru")
-        return {} if t is None else {s.tag: s for s in t}
-
-    _CL   = {"Nom": "Им.", "Gen": "Род.", "Dat": "Дат.", "Acc": "Вин.", "Voc": "Зват."}
-    _NL   = ("Ед.", "Мн.")
-    _TCOL = {"PAI": "Наст.", "IAI": "Имп.", "AAI": "Аор.", "AMI": "Аор. М.", "API": "Аор. П."}
-    _PROW = {"1S": "1 ед.", "2S": "2 ед.", "3S": "3 ед.", "1P": "1 мн.", "2P": "2 мн.", "3P": "3 мн."}
-    _INF_LBL = "Инф."
-    _IMP_LBL = {"2S": "Пов. 2ед.", "2P": "Пов. 2мн."}
-
-    def build_paradigm_table(w, lang="ru"):
-        lemma, pos, tested = w["lemma"], w["pos"], w["form"]
-        tn  = _norm_grc(tested)
-        HL  = "background:#fef3c7;font-weight:bold;color:#92400e;padding:3px 10px;text-align:center;font-family:serif;"
-        TD  = "padding:3px 10px;text-align:center;font-family:serif;"
-        TH  = "padding:3px 8px;font-weight:600;border-bottom:1px solid #e5e7eb;color:#6b7280;font-size:.82em;text-align:center;"
-        ROW = "padding:3px 8px;color:#9ca3af;font-size:.82em;text-align:right;"
-        CAP = "font-size:.75em;color:#9ca3af;text-align:right;padding:2px 4px;"
-        found = [False]
-
-        def td(forms):
-            hl = any(_norm_grc(f.replace("(ν)", "ν")) == tn for f in forms)
-            if hl:
-                found[0] = True
-            return f'<td style="{HL if hl else TD}">{"/ ".join(sorted(forms)) if forms else chr(8212)}</td>'
-
-        if pos == "noun":
-            ag_nmap = _ag_slots("noun")
-            sg_lbl, pl_lbl = _NL
-
-            ag_rows = {}
-            for c in ["N", "G", "D", "A", "V"]:
-                for n in ("S", "P"):
-                    forms = set()
-                    for g in "MFN":
-                        slot = ag_nmap.get(f".{c}{n}{g}")
-                        if slot:
-                            forms |= eee.inflect_slot(lemma, slot, "noun", language="grc", backend="ancient-greek")
-                    ag_rows[(c, n)] = forms
-
-            _ag_has = any(ag_rows.values())
-            be_lbl = "ancient-greek" if _ag_has else "unimorph"
-            tbl = (
-                f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px">'
-                f'<caption style="{CAP}">{be_lbl}</caption>'
-                f'<tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
-            )
-
-            if _ag_has:
-                for c in ["N", "G", "D", "A", "V"]:
-                    case_key = {"N": "Nom", "G": "Gen", "D": "Dat", "A": "Acc", "V": "Voc"}[c]
-                    tbl += f'<tr><td style="{ROW}">{_CL.get(case_key, c)}</td>'
-                    for n in ("S", "P"):
-                        tbl += td(ag_rows[(c, n)])
-                    tbl += "</tr>"
-            else:
-                um_nmap = _um_noun_slots()
-                _UM_CASES = [("NOM", "Nom"), ("GEN", "Gen"), ("DAT", "Dat"), ("ACC", "Acc"), ("VOC", "Voc")]
-                for c, case_key in _UM_CASES:
-                    tbl += f'<tr><td style="{ROW}">{_CL.get(case_key, c)}</td>'
-                    for ns in ("SG", "PL"):
-                        slot = um_nmap.get(f"N;{c};{ns}")
-                        forms = eee.inflect_slot(lemma, slot, "noun", language="grc", backend="unimorph") if slot else set()
-                        tbl += td(forms)
-                    tbl += "</tr>"
-
-            tbl += "</table>"
-
-        elif pos == "verb":
-            slot_map = _ag_slots("verb")
-            PS_TAGS = ["1S", "2S", "3S", "1P", "2P", "3P"]
-
-            _vcache = {}
-            def _vf(tag):
-                if tag not in _vcache:
-                    slot = slot_map.get(tag)
-                    _vcache[tag] = (
-                        eee.inflect_slot(lemma, slot, "verb", language="grc", backend="ancient-greek")
-                        if slot else set()
-                    )
-                return _vcache[tag]
-
-            TENSES = [(t, _TCOL.get(t, t)) for t in ["PAI", "IAI", "AAI", "AMI", "API"]
-                      if any(_vf(f"{t}.{ps}") for ps in PS_TAGS)]
-            if not TENSES:
-                return None
-
-            tbl = (
-                f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px">'
-                f'<caption style="{CAP}">ancient-greek</caption>'
-                f'<tr><th style="{TH}"></th>'
-            )
-            tbl += "".join(f'<th style="{TH}">{lbl}</th>' for _, lbl in TENSES) + "</tr>"
-            for ps in PS_TAGS:
-                tbl += f'<tr><td style="{ROW}">{_PROW.get(ps, ps)}</td>'
-                for t, _ in TENSES:
-                    tbl += td(_vf(f"{t}.{ps}"))
-                tbl += "</tr>"
-
-            INF_MAP = {"PAI": "PAN", "IAI": "IAN", "AAI": "AAN", "AMI": "AMN", "API": "APN"}
-            if any(_vf(INF_MAP.get(t, "")) for t, _ in TENSES):
-                tbl += f'<tr><td style="{ROW}">{_INF_LBL}</td>'
-                for t, _ in TENSES:
-                    tbl += td(_vf(INF_MAP.get(t, "")))
-                tbl += "</tr>"
-
-            IMP_MAP = {"PAI": "PAD", "AAI": "AAD", "AMI": "AMD"}
-            for imp_ps, imp_sfx in [("2S", ".2S"), ("2P", ".2P")]:
-                if any(_vf(f"{IMP_MAP[t]}{imp_sfx}") for t, _ in TENSES if t in IMP_MAP):
-                    tbl += f'<tr><td style="{ROW}">{_IMP_LBL.get(imp_ps, imp_ps)}</td>'
-                    for t, _ in TENSES:
-                        imp_t = IMP_MAP.get(t)
-                        tbl += td(_vf(f"{imp_t}{imp_sfx}")) if imp_t else f'<td style="{TD}">—</td>'
-                    tbl += "</tr>"
-
-            tbl += "</table>"
-
-        elif pos == "adj":
-            ag_nmap = _ag_slots("adjective")
-            sg_lbl, pl_lbl = _NL
-
-            ag_rows = {}
-            for c in ["N", "G", "D", "A"]:
-                for n in ("S", "P"):
-                    forms = set()
-                    for g in "MFN":
-                        slot = ag_nmap.get(f".{c}{n}{g}")
-                        if slot:
-                            forms |= eee.inflect_slot(lemma, slot, "adjective", language="grc", backend="ancient-greek")
-                    ag_rows[(c, n)] = forms
-
-            if not any(ag_rows.values()):
-                return None
-
-            tbl = (
-                f'<table style="border-collapse:collapse;font-size:.95em;margin-top:8px">'
-                f'<caption style="{CAP}">ancient-greek</caption>'
-                f'<tr><th style="{TH}"></th><th style="{TH}">{sg_lbl}</th><th style="{TH}">{pl_lbl}</th></tr>'
-            )
-            for c in ["N", "G", "D", "A"]:
-                case_key = {"N": "Nom", "G": "Gen", "D": "Dat", "A": "Acc"}[c]
-                tbl += f'<tr><td style="{ROW}">{_CL.get(case_key, c)}</td>'
-                for n in ("S", "P"):
-                    tbl += td(ag_rows[(c, n)])
-                tbl += "</tr>"
-            tbl += "</table>"
-
-        else:
-            return None
-
-        if not found[0]:
-            NOTE = "background:#fff7ed;border-left:3px solid #f97316;padding:7px 12px;margin-top:8px;font-size:.9em;color:#7c2d12;"
-            note = f'<div style="{NOTE}"><b>{tested}</b> — отсутствует в парадигме {lemma}</div>'
-            return note + tbl
-        return tbl
-
-    return (build_paradigm_table,)
+def _(ag_backend, ag_homer, ag_lxx, ag_morphgnt, eee, um_backend):
+    build_paradigm_table = eee.build_grc_paradigm_table(ag_backend, um_backend)
+    build_lexicon_tabs = eee.build_grc_lexicon_tabs(
+        ag_backend, um_backend,
+        lexicons={"homer": ag_homer, "lxx": ag_lxx, "morphgnt": ag_morphgnt},
+    )
+    return build_lexicon_tabs, build_paradigm_table
 
 
 @app.cell(hide_code=True)
 def _():
+    import sys as _sys, pathlib as _pl
+    for _pth in _pl.Path(_sys.prefix).glob("lib/python*/site-packages/_editable_impl_*.pth"):
+        _src = _pth.read_text().strip()
+        if _src not in _sys.path:
+            _sys.path.insert(0, _src)
+    del _sys, _pl, _pth, _src
+
     import marimo as mo
     import random
     import eee_project as eee
@@ -639,12 +671,26 @@ def _():
     from unimorph_backend_eee import UniMorphBackend
 
     ag_backend = AncientGreekBackend(lexicons=["homer", "lxx", "morphgnt"])
+    ag_homer = AncientGreekBackend(lexicons=["homer"])
+    ag_lxx = AncientGreekBackend(lexicons=["lxx"])
+    ag_morphgnt = AncientGreekBackend(lexicons=["morphgnt"])
     um_backend = UniMorphBackend(language="grc")
     eee.register_backend("grc", ag_backend, backend="ancient-greek")
+    eee.register_backend("grc", ag_homer, backend="ag-homer")
     eee.register_backend("grc", um_backend, backend="unimorph")
     eee.set_chain("grc", ["ancient-greek", "unimorph"])
     gu = eee.GreekUtils(mo_module=mo)
-    return ag_backend, eee, gu, mo, random, um_backend
+    return (
+        ag_backend,
+        ag_homer,
+        ag_lxx,
+        ag_morphgnt,
+        eee,
+        gu,
+        mo,
+        random,
+        um_backend,
+    )
 
 
 @app.cell(hide_code=True)
@@ -666,6 +712,7 @@ def _(cfg, gu):
         'map_ithaca_full.jpg',
     ):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)
+
     return
 
 

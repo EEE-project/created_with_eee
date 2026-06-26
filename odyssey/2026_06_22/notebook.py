@@ -46,24 +46,6 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    _MURRAY = (
-        "<b>Homer.</b> <a href='https://www.perseus.tufts.edu/hopper/text?"
-        "doc=Perseus%3atext%3a1999.01.0136%3abook%3d9'><i>The Odyssey</i></a>"
-        " with an English Translation by A.T. Murray, PH.D. in two volumes."
-        " Cambridge, MA., Harvard University Press; London, William Heinemann, Ltd. 1919."
-    )
-    mo.md(
-        "Текст поэмы с параллельными переводами. "
-        "Икты (ударные слоги) каждой стопы выделены "
-        "<b style='color:#980000'>красным</b>. "
-        "Слова, известные движку eee, <u>подчёркнуты</u>.\n\n"
-        + _MURRAY
-    )
-    return
-
-
-@app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
     _txt = f"**Материалы занятия:** [Od_IX_39-61.pdf]({NB_REMOTE}/Od_IX_39-61.pdf) · [Od_IX_39-61_vocabula.pdf]({NB_REMOTE}/Od_IX_39-61_vocabula.pdf)"
     mo.md(_txt)
@@ -71,7 +53,89 @@ def _(NB_REMOTE, mo):
 
 
 @app.cell(hide_code=True)
-def _(STANZAS, WORDS_COMBINED, mo, stanza_selector, trans_selector):
+def _(mo):
+    mo.md(r"""
+    ---
+    ## Слова, слова…
+
+    **μῆλον** (τό) — и *мелкий скот, овцы*, и *яблоко*.
+
+    В нашем тексте (IX.45): *πολλὰ δὲ **μῆλα** ἔσφαζον* — «много скота они резали».
+    Никаких яблок.
+
+    ---
+
+    **ἀγαθός** → **ἀρείων** → **ἄριστος** — суплетивное сравнение («хороший, доблестный»):
+
+    | степень | ед. ч. | мн. ч. |
+    |---------|--------|--------|
+    | сравнительная | ἀρείων | ἀρείονες |
+    | превосходная | ἄριστος | — |
+
+    В тексте (IX.48): *πλέονες καὶ **ἀρείους*** — «более многочисленные и более доблестные».
+
+    ср. англ. *good → better → best*.
+
+    ---
+
+    **μόρος** (ὁ) — *рок, судьба, гибель* (муж. род)
+    **μόρον** (τό) — *тут, шелковица* (ср. род)
+
+    В последней строке (IX.61): *φύγομεν **θάνατόν** τε **μόρον** τε* — «мы избежали смерти и рока».
+    Но μόρον можно прочитать и как «тут»: избежали смерти и шелковицы.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ---
+    ## Текст поэмы с параллельными переводами.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    _MURRAY = (
+        "<b>Homer.</b> <a href='https://www.perseus.tufts.edu/hopper/text?"
+        "doc=Perseus%3atext%3a1999.01.0136%3abook%3d9'><i>The Odyssey</i></a>"
+        " with an English Translation by A.T. Murray, PH.D. in two volumes."
+        " Cambridge, MA., Harvard University Press; London, William Heinemann, Ltd. 1919."
+    )
+    mo.md(_MURRAY)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo, trans_selector):
+    _TRANS_DESC = {
+        "подстрочник": "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала",
+        "Жуковский":   "**Жуковский, 1849** · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский",
+        "Вересаев":    "**Вересаев, 1953** · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод",
+    }
+    mo.md(_TRANS_DESC.get(trans_selector.value, ""))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    Икты (ударные слоги) каждой стопы выделены <b style='color:#980000'>красным</b>.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    SHOW_COVERAGE,
+    STANZAS,
+    WORDS_COMBINED,
+    mo,
+    stanza_selector,
+    trans_selector,
+):
     _st_map = {s["ref"]: s for s in STANZAS}
     _stanza = _st_map[stanza_selector.value]
     _GRK = (
@@ -136,6 +200,13 @@ def _(STANZAS, WORDS_COMBINED, mo, stanza_selector, trans_selector):
             elif not in_tag: text += ch
         return text.strip("·,;.'·,!?·")
 
+
+    def _norm(s):
+        import unicodedata as _u
+        nfd = _u.normalize("NFD", s)
+        no_mn = "".join(c for c in nfd if _u.category(c) != "Mn")
+        return _u.normalize("NFC", no_mn)
+
     def _split_html(s):
         tokens, buf, depth = [], [], 0
         for ch in s:
@@ -151,7 +222,7 @@ def _(STANZAS, WORDS_COMBINED, mo, stanza_selector, trans_selector):
         colored = _RHYTHM_HTML.get(line, line)
         parts = []
         for w in _split_html(colored):
-            if _bare(w) in WORDS_COMBINED:
+            if SHOW_COVERAGE.value is not None and _norm(_bare(w)) in WORDS_COMBINED:
                 parts.append(
                     f"<span style='border-bottom:2px solid #b5451b;padding-bottom:0'>{w}</span>"
                 )
@@ -197,37 +268,14 @@ def _(STANZAS, WORDS_COMBINED, mo, stanza_selector, trans_selector):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""
-    ---
-    ## Слова, слова…
-
-    **μῆλον** (τό) — и *мелкий скот, овцы*, и *яблоко*.
-
-    В нашем тексте (IX.45): *πολλὰ δὲ **μῆλα** ἔσφαζον* — «много скота они резали».
-    Никаких яблок.
-
-    ---
-
-    **ἀγαθός** → **ἀρείων** → **ἄριστος** — суплетивное сравнение («хороший, доблестный»):
-
-    | степень | ед. ч. | мн. ч. |
-    |---------|--------|--------|
-    | сравнительная | ἀρείων | ἀρείονες |
-    | превосходная | ἄριστος | — |
-
-    В тексте (IX.48): *πλέονες καὶ **ἀρείους*** — «более многочисленные и более доблестные».
-
-    ср. англ. *good → better → best*.
-
-    ---
-
-    **μόρος** (ὁ) — *рок, судьба, гибель* (муж. род)
-    **μόρον** (τό) — *тут, шелковица* (ср. род)
-
-    В последней строке (IX.61): *φύγομεν **θάνατόν** τε **μόρον** τε* — «мы избежали смерти и рока».
-    Но μόρον можно прочитать и как «тут»: избежали смерти и шелковицы.
-    """)
-    return
+    SHOW_COVERAGE = mo.ui.radio(
+        options={"выкл.": None, "словоформы": "current", "только Гомер": "homer", "все слова": "none"},
+        value="выкл.",
+        label="**Подсветка слов в тексте:**",
+        inline=True,
+    )
+    SHOW_COVERAGE
+    return (SHOW_COVERAGE,)
 
 
 @app.cell(hide_code=True)
@@ -244,10 +292,10 @@ def _(mo):
     filter_mode = mo.ui.radio(
         options={"словоформы": "current", "только Гомер": "homer", "все слова": "none"},
         value="словоформы",
-        label="Лексикон",
+        label="**Лексикон:**",
         inline=True,
     )
-    mo.hstack([mo.md("**Лексикон:**"), filter_mode], align="center", gap=1)
+    filter_mode
     return (filter_mode,)
 
 
@@ -287,6 +335,37 @@ def _(answer_radio, build_lexicon_tabs, cv, gu, mo, score, w):
     mo.vstack([answer_radio,
                gu.word_quiz_feedback(w, answer_radio.value, score(), "ru",
                                      build_paradigm_table=build_lexicon_tabs)])
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ---
+
+    ### О проверке форм (EEE)
+
+    Упражнение использует [EEE](https://codeberg.org/EEE-project) — систему для построения интерактивных учебных материалов.
+    В данном случае задействованы [модули морфологического анализа](https://codeberg.org/EEE-project/eee-project/src/branch/main/docs/backends.md):
+
+    * [**unimorph-backend-eee**](https://codeberg.org/EEE-project/unimorph-backend-eee) — база данных UniMorph:
+      для древнегреческого парадигмы существительных и прилагательных (глаголы отсутствуют);
+      покрытие лучше для греческого НЗ, чем для гомеровского текста
+    * [**ancient-greek-backend-eee**](https://codeberg.org/EEE-project/ancient-greek-backend-eee) — анализ на основе морфологических словарей с лексиконами:
+      * **Homer** — лексикон гомеровского эпоса (Илиада, Одиссея); эпический/ионийский, ~VIII в. до н.э.
+      * **LXX** — лексикон Септуагинты; эллинистический койне, ~III–I вв. до н.э.
+      * **MorphGNT** — лексикон греческого Нового Завета; койне, I в. н.э.
+
+    **Лексикон** (фильтр):
+
+    - *словоформы* — слова, для которых движку удаётся построить парадигму,
+      используя unimorph-backend-eee и ancient-greek-backend-eee с лексиконами Homer, LXX, MorphGNT
+    - *только Гомер* — слова из гомеровского лексикона ancient-greek-backend-eee
+    - *все слова* — весь словарь занятия без фильтрации
+
+    В таблице словоформ можно переключаться между лексиконами разных исторических периодов,
+    если соответствующие данные для данного слова в системе есть.
+    """)
     return
 
 
@@ -537,8 +616,43 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS):
-    WORDS_COMBINED = {w["form"] for w in QUIZ_WORDS}
+def _(QUIZ_WORDS_RAW, SHOW_COVERAGE, ag_homer, build_paradigm_table, eee):
+    import unicodedata as _u
+
+    def _norm_f(s):
+        nfd = _u.normalize("NFD", s)
+        no_mn = "".join(c for c in nfd if _u.category(c) != "Mn")
+        nfc = _u.normalize("NFC", no_mn)
+        return nfc.strip("',.᾽᾿ʼ")
+
+    # words for coverage highlighting: computed from SHOW_COVERAGE.value
+    def _words_for_coverage(mode):
+        if mode is None:
+            return set()
+        if mode == "none":
+            return {_norm_f(w["form"]) for w in QUIZ_WORDS_RAW}
+        if mode == "homer":
+            result = set()
+            for w in QUIZ_WORDS_RAW:
+                try:
+                    pos = "adjective" if w["pos"] == "adj" else w["pos"]
+                    slots = ag_homer.get_slot_templates("grc", pos, "ru") or []
+                    if slots and eee.inflect_slot(w["lemma"], slots[0], pos, language="grc", backend="ag-homer"):
+                        result.add(_norm_f(w["form"]))
+                except Exception:
+                    pass
+            return result
+        result = set()
+        for w in QUIZ_WORDS_RAW:
+            try:
+                r = build_paradigm_table(w)
+                if r and "#f97316" not in r:
+                    result.add(_norm_f(w["form"]))
+            except Exception:
+                pass
+        return result
+
+    WORDS_COMBINED = _words_for_coverage(SHOW_COVERAGE.value)
     return (WORDS_COMBINED,)
 
 
@@ -554,6 +668,13 @@ def _(ag_backend, ag_homer, ag_lxx, ag_morphgnt, eee, um_backend):
 
 @app.cell(hide_code=True)
 def _():
+    import sys as _sys, pathlib as _pl
+    for _pth in _pl.Path(_sys.prefix).glob("lib/python*/site-packages/_editable_impl_*.pth"):
+        _src = _pth.read_text().strip()
+        if _src not in _sys.path:
+            _sys.path.insert(0, _src)
+    del _sys, _pl, _pth, _src
+
     import marimo as mo
     import random
     import eee_project as eee
@@ -584,13 +705,6 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    from eee_project.notebook_utils import eee_footer
-    eee_footer(mo, lang="ru")
-    return
-
-
-@app.cell(hide_code=True)
 def _(cfg, gu):
     from pathlib import Path as _P
     NB_DIR = _P(__file__).parent
@@ -602,7 +716,16 @@ def _(cfg, gu):
         'map_ortelius_full.jpg',
     ):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)
+
+    # Set True to underline words known to eee in the poem text (coverage view)
     return (NB_REMOTE,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    from eee_project.notebook_utils import eee_footer
+    eee_footer(mo, lang="ru")
+    return
 
 
 if __name__ == "__main__":
