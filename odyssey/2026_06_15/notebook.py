@@ -15,7 +15,7 @@
 
 import marimo
 
-__generated_with = "0.23.10"
+__generated_with = "0.23.11"
 app = marimo.App(width="medium")
 
 
@@ -290,41 +290,54 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, mo, next_btn, remaining):
-    _r = remaining()
-    _n = (len(QUIZ_WORDS) - len(_r)) if _r is not None else 0
-    mo.hstack(
-        [mo.md(f"Тесты: **{_n}** / {len(QUIZ_WORDS)}"),
-         mo.Html('<div style="width:2rem"></div>'),
-         next_btn],
-        justify="start",
-        align="center",
-    )
+def _():
+    pass
     return
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, mo, random):
-    if cv() is None:
-        answer_radio = mo.ui.radio(options={"—": "—"})
-        w = None
-    else:
-        w = cv()
-        _ctx     = w.get("context", "")
-        _meaning = w.get("meaning", "")
-        _lbl     = f"{_ctx} – {_meaning}" if _ctx else f"«{_meaning}»"
-        _others  = list({q["form"] for q in QUIZ_WORDS if q["form"] != w["form"]})
-        _choices = sorted([w["form"]] + _others[:3], key=lambda x: random.random())
-        answer_radio = mo.ui.radio(options=_choices, label=_lbl)
-    return answer_radio, w
+def _(QUIZ_WORDS, cv, gu, history, remaining, restore_entry):
+    _ = cv()
+    answer_radio, next_btn, prev_btn = gu.word_quiz_widgets(
+        cv=cv(),
+        vocab=QUIZ_WORDS,
+        restore_entry=restore_entry(),
+        done=cv() is None and remaining() is not None and len(remaining()) == 0,
+        history_len=len(history()),
+    )
+    return answer_radio, next_btn, prev_btn
 
 
 @app.cell(hide_code=True)
-def _(answer_radio, build_lexicon_tabs, cv, gu, mo, score, w):
-    mo.stop(cv() is None)
-    mo.vstack([answer_radio,
-               gu.word_quiz_feedback(w, answer_radio.value, score(), "ru",
-                                     build_paradigm_table=build_lexicon_tabs)])
+def _(
+    QUIZ_WORDS,
+    answer_radio,
+    cv,
+    future,
+    gu,
+    history,
+    next_btn,
+    prev_btn,
+    remaining,
+    restore_entry,
+    score,
+    set_cv,
+    set_future,
+    set_history,
+    set_remaining,
+    set_restore_entry,
+    set_score,
+):
+    gu.word_quiz_form(
+        cv, set_cv, remaining, set_remaining,
+        score, set_score, restore_entry, set_restore_entry,
+        history, set_history, future, set_future,
+        answer_radio, next_btn, prev_btn,
+        vocab=QUIZ_WORDS,
+        title='## Упражнение: словарная форма',
+        meaning_key='_label',
+        form_key='form',
+    )
     return
 
 
@@ -364,15 +377,28 @@ def _(mo):
     cv, set_cv = mo.state(None)
     score, set_score = mo.state({"correct": 0, "total": 0})
     remaining, set_remaining = mo.state(None)
-    return cv, remaining, score, set_cv, set_remaining, set_score
+    history, set_history = mo.state([])
+    future, set_future = mo.state([])
+    restore_entry, set_restore_entry = mo.state(None)
+    return (
+        cv,
+        future,
+        history,
+        remaining,
+        restore_entry,
+        score,
+        set_cv,
+        set_future,
+        set_history,
+        set_remaining,
+        set_restore_entry,
+        set_score,
+    )
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, random, remaining, set_cv, set_remaining):
-    if remaining() is None and QUIZ_WORDS:
-        _shuffled = random.sample(QUIZ_WORDS, len(QUIZ_WORDS))
-        set_cv(_shuffled[0])
-        set_remaining(_shuffled[1:])
+def _():
+    pass
     return
 
 
@@ -401,54 +427,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(cv, mo, remaining):
-    _r = remaining()
-    _done = cv() is None and _r is not None and len(_r) == 0
-    next_btn = mo.ui.button(
-        label="Начать сначала" if _done else "→ Следующее",
-        on_click=lambda v: (v or 0) + 1,
-    )
-    return (next_btn,)
+def _():
+    pass
+    return
 
 
 @app.cell(hide_code=True)
-def _(
-    QUIZ_WORDS,
-    answer_radio,
-    cv,
-    next_btn,
-    random,
-    remaining,
-    score,
-    set_cv,
-    set_remaining,
-    set_score,
-):
-    def _record_answer():
-        if answer_radio.value is not None and cv() is not None:
-            s = score()
-            set_score({
-                "correct": s["correct"] + (1 if answer_radio.value == cv()["form"] else 0),
-                "total": s["total"] + 1,
-            })
-
-    if next_btn.value:
-        r = remaining()
-        if r is None:
-            pass
-        elif r:
-            _record_answer()
-            set_cv(r[0])
-            set_remaining(r[1:])
-        else:
-            if cv() is None:
-                _shuffled = random.sample(QUIZ_WORDS, len(QUIZ_WORDS))
-                set_cv(_shuffled[0])
-                set_remaining(_shuffled[1:])
-                set_score({"correct": 0, "total": 0})
-            else:
-                _record_answer()
-                set_cv(None)
+def _():
+    pass
     return
 
 
@@ -600,6 +586,11 @@ def _(
         _flags = [_has_displayable_form(w) for w in QUIZ_WORDS_RAW]
         QUIZ_WORDS = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
 
+    for w in QUIZ_WORDS:
+        _ctx = w.get("context", "")
+        _meaning = w.get("meaning", "")
+        w["_label"] = f"{_ctx} – {_meaning}" if _ctx else f"«{_meaning}»"
+
     set_cv(None)
     set_remaining(None)
     return (QUIZ_WORDS,)
@@ -652,7 +643,7 @@ def _(ag_backend, ag_homer, ag_lxx, ag_morphgnt, eee, um_backend):
         ag_backend, um_backend,
         lexicons={"homer": ag_homer, "lxx": ag_lxx, "morphgnt": ag_morphgnt},
     )
-    return build_lexicon_tabs, build_paradigm_table
+    return (build_paradigm_table,)
 
 
 @app.cell(hide_code=True)
@@ -662,7 +653,6 @@ def _():
         _src = _pth.read_text().strip()
         if _src not in _sys.path:
             _sys.path.insert(0, _src)
-    del _sys, _pl, _pth, _src
 
     import marimo as mo
     import random
@@ -680,17 +670,7 @@ def _():
     eee.register_backend("grc", um_backend, backend="unimorph")
     eee.set_chain("grc", ["ancient-greek", "unimorph"])
     gu = eee.GreekUtils(mo_module=mo)
-    return (
-        ag_backend,
-        ag_homer,
-        ag_lxx,
-        ag_morphgnt,
-        eee,
-        gu,
-        mo,
-        random,
-        um_backend,
-    )
+    return ag_backend, ag_homer, ag_lxx, ag_morphgnt, eee, gu, mo, um_backend
 
 
 @app.cell(hide_code=True)
@@ -712,7 +692,6 @@ def _(cfg, gu):
         'map_ithaca_full.jpg',
     ):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)
-
     return
 
 

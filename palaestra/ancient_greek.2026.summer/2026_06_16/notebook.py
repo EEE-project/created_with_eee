@@ -176,27 +176,38 @@ def _(NB_DIR, NB_REMOTE, gu):
 @app.cell(hide_code=True)
 def _(mo):
     cv_c, set_cv_c = mo.state(None)
-    score_c, set_score_c = mo.state({"correct": 0, "total": 0})
+    score_c, set_score_c = mo.state({'correct': 0, 'total': 0})
     remaining_c, set_remaining_c = mo.state(None)
-    return cv_c, remaining_c, score_c, set_cv_c, set_remaining_c, set_score_c
+    history_c, set_history_c = mo.state([])
+    future_c, set_future_c = mo.state([])
+    restore_entry_c, set_restore_entry_c = mo.state(None)
+    return (
+        cv_c,
+        future_c,
+        history_c,
+        remaining_c,
+        restore_entry_c,
+        score_c,
+        set_cv_c,
+        set_future_c,
+        set_history_c,
+        set_remaining_c,
+        set_restore_entry_c,
+        set_score_c,
+    )
 
 
 @app.cell(hide_code=True)
-def _(VOCAB_WORDS, random, remaining_c, set_cv_c, set_remaining_c):
-    if remaining_c() is None and VOCAB_WORDS:
-        _s = random.sample(VOCAB_WORDS, len(VOCAB_WORDS))
-        set_cv_c(_s[0])
-        set_remaining_c(_s[1:])
-    return
-
-
-@app.cell(hide_code=True)
-def _(VOCAB_WORDS, cv_c, gu, mo, random):
-    if cv_c() is None:
-        answer_radio = mo.ui.radio(options=[''])
-    else:
-        answer_radio, _ = gu.word_quiz_question(cv_c(), VOCAB_WORDS, 'ru', random)
-    return (answer_radio,)
+def _(VOCAB_WORDS, cv_c, gu, history_c, remaining_c, restore_entry_c):
+    _ = cv_c()
+    answer_radio, next_btn_c, prev_btn_c = gu.word_quiz_widgets(
+        cv=cv_c(),
+        vocab=VOCAB_WORDS,
+        restore_entry=restore_entry_c(),
+        done=cv_c() is None and remaining_c() is not None and len(remaining_c()) == 0,
+        history_len=len(history_c()),
+    )
+    return answer_radio, next_btn_c, prev_btn_c
 
 
 @app.cell(hide_code=True)
@@ -204,118 +215,65 @@ def _(
     VOCAB_WORDS,
     answer_radio,
     cv_c,
-    mo,
-    random,
+    future_c,
+    gu,
+    history_c,
+    next_btn_c,
+    prev_btn_c,
     remaining_c,
+    restore_entry_c,
     score_c,
     set_cv_c,
+    set_future_c,
+    set_history_c,
     set_remaining_c,
+    set_restore_entry_c,
     set_score_c,
 ):
-    _done = cv_c() is None and remaining_c() is not None and len(remaining_c()) == 0
-
-    def _on_next_c(_):
-        if cv_c() is None:
-            _shuf = random.sample(VOCAB_WORDS, len(VOCAB_WORDS))
-            set_cv_c(_shuf[0])
-            set_remaining_c(_shuf[1:])
-            set_score_c({'correct': 0, 'total': 0})
-        else:
-            _ok = answer_radio.value == cv_c()['form']
-            set_score_c({'correct': score_c()['correct'] + int(_ok), 'total': score_c()['total'] + 1})
-            set_cv_c(remaining_c()[0] if remaining_c() else None)
-            set_remaining_c(remaining_c()[1:] if remaining_c() else [])
-
-    _s = score_c()
-    if _done:
-        _out = mo.vstack([
-            mo.callout(mo.md(f"Готово! Правильно: **{_s['correct']}** / **{_s['total']}**"), kind='success'),
-            mo.ui.button(label='Пройти снова', on_click=_on_next_c),
-        ])
-    elif cv_c() is None:
-        mo.stop(True, mo.md(''))
-    else:
-        _next_c = mo.ui.button(label='Следующий', on_click=_on_next_c)
-        _fb = mo.md('')
-        if answer_radio.value is not None:
-            _ok = answer_radio.value == cv_c()['form']
-            _color = '#2d9e2d' if _ok else '#d32f2f'
-            _mark = '✓' if _ok else '✗'
-            _fb = mo.md(f'<span style="color:{_color};font-weight:bold">{_mark} {cv_c()["meaning"]} → {cv_c()["form"]}</span>')
-        _out = mo.vstack([
-            mo.md(f'## Упражнение 1 · Выбрать слово\n\n**{_s["total"] + 1}** / {len(VOCAB_WORDS)} — правильно: {_s["correct"]}'),
-            answer_radio,
-            _fb,
-            mo.hstack([_next_c], justify='start'),
-        ])
-    _out
+    gu.word_quiz_form(
+        cv_c, set_cv_c, remaining_c, set_remaining_c,
+        score_c, set_score_c, restore_entry_c, set_restore_entry_c,
+        history_c, set_history_c, future_c, set_future_c,
+        answer_radio, next_btn_c, prev_btn_c,
+        vocab=VOCAB_WORDS,
+        title='## Упражнение 1 · Выбрать слово',
+    )
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
     cv_w, set_cv_w = mo.state(None)
-    score_w, set_score_w = mo.state({"correct": 0, "total": 0})
+    score_w, set_score_w = mo.state({'correct': 0, 'total': 0})
     remaining_w, set_remaining_w = mo.state(None)
-    return cv_w, remaining_w, score_w, set_cv_w, set_remaining_w, set_score_w
-
-
-@app.cell(hide_code=True)
-def _(VOCAB_WORDS, random, remaining_w, set_cv_w, set_remaining_w):
-    if remaining_w() is None and VOCAB_WORDS:
-        _s = random.sample(VOCAB_WORDS, len(VOCAB_WORDS))
-        set_cv_w(_s[0])
-        set_remaining_w(_s[1:])
-    return
-
-
-@app.cell(hide_code=True)
-def _(cv_w, gu, mo):
-    _ = cv_w()
-    write_input_w = gu.diacritics_text(placeholder='греческое слово…')
-    check_btn_w = mo.ui.button(label='Проверить', on_click=lambda v: (v or 0) + 1)
-    return check_btn_w, write_input_w
-
-
-@app.cell(hide_code=True)
-def _(cv_w, mo, remaining_w):
-    _done = cv_w() is None and remaining_w() is not None and len(remaining_w()) == 0
-    next_btn_w = mo.ui.button(
-        label='Пройти снова' if _done else 'Следующий',
-        on_click=lambda v: (v or 0) + 1,
+    history_w, set_history_w = mo.state([])
+    future_w, set_future_w = mo.state([])
+    restore_entry_w, set_restore_entry_w = mo.state(None)
+    return (
+        cv_w,
+        future_w,
+        history_w,
+        remaining_w,
+        restore_entry_w,
+        score_w,
+        set_cv_w,
+        set_future_w,
+        set_history_w,
+        set_remaining_w,
+        set_restore_entry_w,
+        set_score_w,
     )
-    return (next_btn_w,)
 
 
 @app.cell(hide_code=True)
-def _(
-    VOCAB_WORDS,
-    cv_w,
-    gu,
-    next_btn_w,
-    random,
-    remaining_w,
-    score_w,
-    set_cv_w,
-    set_remaining_w,
-    set_score_w,
-    write_input_w,
-):
-    if next_btn_w.value:
-        _r = remaining_w()
-        if _r is None:
-            pass
-        elif cv_w() is None:
-            _shuf = random.sample(VOCAB_WORDS, len(VOCAB_WORDS))
-            set_cv_w(_shuf[0])
-            set_remaining_w(_shuf[1:])
-            set_score_w({'correct': 0, 'total': 0})
-        else:
-            _ok = gu._ci(write_input_w.value.strip(), {cv_w()['form']})
-            set_score_w({'correct': score_w()['correct'] + int(_ok), 'total': score_w()['total'] + 1})
-            set_cv_w(_r[0] if _r else None)
-            set_remaining_w(_r[1:] if _r else [])
-    return
+def _(cv_w, gu, history_w, remaining_w, restore_entry_w):
+    _ = cv_w()
+    write_input_w, dia_w, check_btn_w, prev_btn_w, next_btn_w = gu.word_drill_widgets(
+        restore_entry=restore_entry_w(),
+        done=cv_w() is None and remaining_w() is not None and len(remaining_w()) == 0,
+        history_len=len(history_w()),
+    )
+    return check_btn_w, dia_w, next_btn_w, prev_btn_w, write_input_w
 
 
 @app.cell(hide_code=True)
@@ -323,39 +281,32 @@ def _(
     VOCAB_WORDS,
     check_btn_w,
     cv_w,
+    dia_w,
+    future_w,
     gu,
-    mo,
+    history_w,
     next_btn_w,
+    prev_btn_w,
     remaining_w,
+    restore_entry_w,
     score_w,
+    set_cv_w,
+    set_future_w,
+    set_history_w,
+    set_remaining_w,
+    set_restore_entry_w,
+    set_score_w,
     write_input_w,
 ):
-    _done = cv_w() is None and remaining_w() is not None and len(remaining_w()) == 0
-    _s = score_w()
-    if _done:
-        _out = mo.vstack([
-            mo.callout(mo.md(f"Готово! Правильно: **{_s['correct']}** / **{_s['total']}**"), kind='success'),
-            next_btn_w,
-        ])
-    else:
-        _meaning = cv_w().get('meaning', '') if cv_w() is not None else ''
-        _typed = write_input_w.value.strip()
-        if check_btn_w.value and _typed and cv_w() is not None:
-            _ok = gu._ci(_typed, {cv_w()['form']})
-            _color = '#2d9e2d' if _ok else '#d32f2f'
-            _mark = '✓' if _ok else '✗'
-            _fb = mo.md(f'<span style="color:{_color};font-weight:bold">{_mark} {_meaning} → {cv_w()["form"]}</span>')
-        else:
-            _fb = mo.md(f'*{_meaning}*') if _meaning else mo.md('')
-        _out = mo.vstack([
-            mo.md('## Упражнение 2 · Написать греческое слово'),
-            mo.md('Для ввода используйте **polytonic Greek keyboard** или кнопки диакритики ниже.<br>**Как пользоваться:** нажмите кнопку знака диакритики → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается. Можно **совмещать несколько знаков диакритики** (например, придыхание + ударение перед вводом буквы → ἆ).'),
-            mo.md(f'**{_s["total"] + 1}** / {len(VOCAB_WORDS)} — правильно: {_s["correct"]}'),
-            _fb,
-            write_input_w,
-            mo.hstack([check_btn_w, next_btn_w], justify='start'),
-        ])
-    _out
+    gu.word_drill_form(
+        cv_w, set_cv_w, remaining_w, set_remaining_w,
+        score_w, set_score_w, restore_entry_w, set_restore_entry_w,
+        history_w, set_history_w, future_w, set_future_w,
+        write_input_w, dia_w, check_btn_w, prev_btn_w, next_btn_w,
+        vocab=VOCAB_WORDS,
+        title='## Упражнение 2 · Написать греческое слово',
+        comment='Для ввода используйте **polytonic Greek keyboard** или кнопки диакритики ниже.<br>**Как пользоваться:** нажмите кнопку знака диакритики → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается. Можно **совмещать несколько знаков диакритики** (например, придыхание + ударение перед вводом буквы → ἆ).',
+    )
     return
 
 
@@ -441,7 +392,7 @@ def _():
     import marimo as mo
     import random
 
-    return mo, random
+    return (mo,)
 
 
 if __name__ == "__main__":
