@@ -20,7 +20,6 @@ interlenear_ru.md          ← interlinear translation (do NOT hardcode)
 translations_ru.md         ← literary translations (do NOT hardcode)
 vocab_{ref}.tsv            ← vocabulary for the quiz
 vocab_content_problems.md  ← known coverage gaps (read before adding TSV entries)
-*.toml                     ← LEGACY — not used by current code (see below)
 ```
 
 ---
@@ -142,12 +141,6 @@ Which grammatical slots appear is determined by the **top-level eee_project libr
 
 Do NOT modify per-lesson files to change paradigm coverage — edit the library data files instead.
 
-### The `*.toml` files in lesson directories are LEGACY
-
-Files matching `*-slots_grc_*.toml` (e.g. `ancient-greek-backend-eee-slots_grc_ru.toml`)
-are not loaded by any current notebook code. They predate the current slot system and
-can be ignored. Do not create new ones or reference them in new notebooks.
-
 ---
 
 ## Vocabulary sources
@@ -179,7 +172,6 @@ for _pth in _pl.Path(_sys.prefix).glob("lib/python*/site-packages/_editable_impl
     _src = _pth.read_text().strip()
     if _src not in _sys.path:
         _sys.path.insert(0, _src)
-del _sys, _pl, _pth, _src
 ```
 
 Without this, the "словоформы" and "только Гомер" quiz filters show "Тесты: 0 / 0"

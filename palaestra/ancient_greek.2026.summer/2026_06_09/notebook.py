@@ -13,7 +13,7 @@
 
 import marimo
 
-__generated_with = "0.23.10"
+__generated_with = "0.23.11"
 app = marimo.App(width="medium")
 
 
@@ -194,83 +194,86 @@ def _(cfg, mo):
                        "pl": {**_IMP, "Person": "2", "Number": "Plur"}},
         pos="verb",
     )
-    return NB_REMOTE, VERBS, eee, gu
+    _FIELDS_V = [('verb', 'словарная форма'), ('sg', 'повел. ед. ч.'), ('pl', 'повел. мн. ч.')]
+    VERB_ENTRIES = [
+        {"meaning": f"{v['meaning']} ({lbl})", "form": v[key]}
+        for v in VERBS
+        for key, lbl in _FIELDS_V
+    ]
+
+    return NB_REMOTE, VERB_ENTRIES, eee, gu
 
 
 @app.cell(hide_code=True)
-def _(VERBS, mo):
-    import random as _rand
-    _shuf_v = _rand.sample(VERBS, len(VERBS))
-    cv_v, set_cv_v = mo.state(_shuf_v[0])
-    remaining_v, set_remaining_v = mo.state(_shuf_v[1:])
-    field_v, set_field_v = mo.state(0)
+def _(mo):
+    cv_v, set_cv_v = mo.state(None)
+    remaining_v, set_remaining_v = mo.state(None)
     score_v, set_score_v = mo.state({'correct': 0, 'total': 0})
+    history_v, set_history_v = mo.state([])
+    future_v, set_future_v = mo.state([])
+    restore_entry_v, set_restore_entry_v = mo.state(None)
+
     return (
         cv_v,
-        field_v,
+        future_v,
+        history_v,
         remaining_v,
+        restore_entry_v,
         score_v,
         set_cv_v,
-        set_field_v,
+        set_future_v,
+        set_history_v,
         set_remaining_v,
+        set_restore_entry_v,
         set_score_v,
     )
 
 
 @app.cell(hide_code=True)
-def _(cv_v, field_v, gu, mo):
-    _ = (cv_v(), field_v())
-    write_input_v = gu.diacritics_text(placeholder='греческое слово…')
-    check_btn_v = mo.ui.button(label='Проверить', on_click=lambda v: (v or 0) + 1)
-    next_btn_v = mo.ui.button(label='Далее →', on_click=lambda v: (v or 0) + 1)
-    return check_btn_v, next_btn_v, write_input_v
+def _(cv_v, gu, history_v, remaining_v, restore_entry_v):
+    _ = cv_v()
+    write_input_v, dia_v, check_btn_v, prev_btn_v, next_btn_v = gu.word_drill_widgets(
+        restore_entry=restore_entry_v(),
+        done=cv_v() is None and remaining_v() is not None and len(remaining_v()) == 0,
+        history_len=len(history_v()),
+    )
+
+    return check_btn_v, dia_v, next_btn_v, prev_btn_v, write_input_v
 
 
 @app.cell(hide_code=True)
 def _(
-    VERBS,
+    VERB_ENTRIES,
+    check_btn_v,
     cv_v,
-    field_v,
+    dia_v,
+    future_v,
     gu,
+    history_v,
     next_btn_v,
+    prev_btn_v,
     remaining_v,
+    restore_entry_v,
     score_v,
     set_cv_v,
-    set_field_v,
+    set_future_v,
+    set_history_v,
     set_remaining_v,
+    set_restore_entry_v,
     set_score_v,
     write_input_v,
 ):
-    import random as _rand
-    FIELDS_V = [('verb', 'словарная форма'), ('sg', 'повел. ед. ч.'), ('pl', 'повел. мн. ч.')]
-    gu.slot_drill_advance(
-        next_btn_v.value, write_input_v.value.strip(),
-        cv_v(), remaining_v(), field_v(), score_v(),
-        FIELDS_V, VERBS, _rand,
-        set_cv_v, set_remaining_v, set_field_v, set_score_v,
-    )
-    return (FIELDS_V,)
-
-
-@app.cell(hide_code=True)
-def _(
-    FIELDS_V,
-    VERBS,
-    check_btn_v,
-    cv_v,
-    field_v,
-    gu,
-    next_btn_v,
-    score_v,
-    write_input_v,
-):
-    gu.slot_drill_display(
-        cv_v(), field_v(), score_v(), write_input_v, check_btn_v, next_btn_v,
-        fields=FIELDS_V,
+    gu.word_drill_form(
+        cv_v, set_cv_v, remaining_v, set_remaining_v,
+        score_v, set_score_v, restore_entry_v, set_restore_entry_v,
+        history_v, set_history_v, future_v, set_future_v,
+        write_input_v, dia_v, check_btn_v, prev_btn_v, next_btn_v,
+        vocab=VERB_ENTRIES,
         title='## Упражнение 1 · Повелительное наклонение',
         comment='Для ввода используйте **polytonic Greek keyboard** или кнопки диакритики ниже.<br>**Как пользоваться:** нажмите кнопку знака диакритики → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается. Можно **совмещать несколько знаков диакритики** (например, придыхание + ударение перед вводом буквы → ἆ).',
-        n_items=len(VERBS),
+        form_key='form',
     )
+
     return
 
 
@@ -328,81 +331,70 @@ def _(ADJS, mo):
     _shuf_a = _rand.sample(ADJS, len(ADJS))
     cv_a, set_cv_a = mo.state(_shuf_a[0])
     remaining_a, set_remaining_a = mo.state(_shuf_a[1:])
-    field_a, set_field_a = mo.state(0)
     score_a, set_score_a = mo.state({'correct': 0, 'total': 0})
+    history_a, set_history_a = mo.state([])
+    future_a, set_future_a = mo.state([])
+    restore_entry_a, set_restore_entry_a = mo.state(None)
     return (
         cv_a,
-        field_a,
+        future_a,
+        history_a,
         remaining_a,
+        restore_entry_a,
         score_a,
         set_cv_a,
-        set_field_a,
+        set_future_a,
+        set_history_a,
         set_remaining_a,
+        set_restore_entry_a,
         set_score_a,
     )
 
 
 @app.cell(hide_code=True)
-def _(cv_a, field_a, gu, mo):
-    _ = (cv_a(), field_a())
-    write_input_a = gu.diacritics_text(placeholder='наречие…')
-    check_btn_a = mo.ui.button(label='Проверить', on_click=lambda v: (v or 0) + 1)
-    next_btn_a = mo.ui.button(label='Далее →', on_click=lambda v: (v or 0) + 1)
-    return check_btn_a, next_btn_a, write_input_a
+def _(cv_a, gu, history_a, remaining_a, restore_entry_a):
+    _ = cv_a()
+    write_input_a, dia_a, check_btn_a, prev_btn_a, next_btn_a = gu.word_drill_widgets(
+        restore_entry=restore_entry_a(),
+        done=cv_a() is None and remaining_a() is not None and len(remaining_a()) == 0,
+        history_len=len(history_a()),
+        placeholder='наречие…',
+    )
+    return check_btn_a, dia_a, next_btn_a, prev_btn_a, write_input_a
 
 
 @app.cell(hide_code=True)
 def _(
     ADJS,
+    check_btn_a,
     cv_a,
-    field_a,
+    dia_a,
+    future_a,
     gu,
+    history_a,
     next_btn_a,
+    prev_btn_a,
     remaining_a,
+    restore_entry_a,
     score_a,
     set_cv_a,
-    set_field_a,
+    set_future_a,
+    set_history_a,
     set_remaining_a,
+    set_restore_entry_a,
     set_score_a,
     write_input_a,
 ):
-    import random as _rand
-    FIELDS_A = [('adv', 'наречие')]
-    gu.slot_drill_advance(
-        next_btn_a.value, write_input_a.value.strip(),
-        cv_a(), remaining_a(), field_a(), score_a(),
-        FIELDS_A, ADJS, _rand,
-        set_cv_a, set_remaining_a, set_field_a, set_score_a,
+    gu.word_drill_form(
+        cv_a, set_cv_a, remaining_a, set_remaining_a,
+        score_a, set_score_a, restore_entry_a, set_restore_entry_a,
+        history_a, set_history_a, future_a, set_future_a,
+        write_input_a, dia_a, check_btn_a, prev_btn_a, next_btn_a,
+        vocab=ADJS,
+        title='## Упражнение 2 · Образование наречий\n\n**Правило:** замените окончание **-ός** на **-ῶς**\n\n*Пример:* καλός (красивый) → καλῶς',
+        meaning_key='prompt',
+        form_key='adv',
     )
-    return (FIELDS_A,)
-
-
-@app.cell(hide_code=True)
-def _(
-    ADJS,
-    FIELDS_A,
-    check_btn_a,
-    cv_a,
-    field_a,
-    gu,
-    mo,
-    next_btn_a,
-    score_a,
-    write_input_a,
-):
-    mo.vstack([
-        mo.md("""## Упражнение 2 · Образование наречий
-
-    **Правило:** замените окончание **-ός** на **-ῶς**
-
-    *Пример:* καλός (красивый) → καλῶς""") if cv_a() is not None else mo.md(""),
-        gu.slot_drill_display(
-            cv_a(), field_a(), score_a(), write_input_a, check_btn_a, next_btn_a,
-            fields=FIELDS_A,
-            n_items=len(ADJS),
-            meaning_key='prompt', prompt_sep='→',
-        ),
-    ])
     return
 
 
