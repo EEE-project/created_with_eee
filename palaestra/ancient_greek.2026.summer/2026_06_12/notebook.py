@@ -42,6 +42,12 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
+def _(NB_REMOTE, mo):
+    mo.md(f"**Материалы занятия:** [Greek Letter Practice]({NB_REMOTE}/Greek%20Letter%20Practice%20-%20Vanguard%20Education.pdf) · [Прописи.pdf]({NB_REMOTE}/Прописи.pdf) · [τόνος+λέξεις(προλεγόμενον).pdf]({NB_REMOTE}/τόνος+λέξεις(προλεγόμενον).pdf)")
+    return
+
+
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     ## ἡ προσῳδία · Система ударений
@@ -181,19 +187,6 @@ def _(mo):
     | **προπερισπώμενον**: οἶκος | οἶκ**ό**ς τις | οἶκ**ό**ς ἐστι |
 
     У проп.-оксит. и проперисп. слов появляется **дополнительное ударение** на последнем слоге.
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(NB_REMOTE, mo):
-    mo.md(fr"""
-    ## Дополнительные материалы
-
-    Файлы в папке этого занятия:
-
-    - [Greek Letter Practice — Vanguard Education]({NB_REMOTE}/Greek%20Letter%20Practice%20-%20Vanguard%20Education.pdf) — прописи латиницей для сравнения
-    - [Прописи]({NB_REMOTE}/Прописи.pdf) — прописи для греческого алфавита
     """)
     return
 

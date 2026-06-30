@@ -49,6 +49,12 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
+def _(NB_REMOTE, mo):
+    mo.md(f"**Материалы занятия:** [Δίδαγμα α'.pdf]({NB_REMOTE}/Δίδαγμα%20α'.pdf) · [ΣΤΟΙΧΕΙΑ.pdf]({NB_REMOTE}/ΣΤΟΙΧΕΙΑ.pdf) · [ΤΟ ΠΡΟΛΕΓΟΜΕΝΟΝ ΔΙΔΑΓΜΑ (2).pdf]({NB_REMOTE}/ΤΟ%20ΠΡΟΛΕΓΟΜΕΝΟΝ%20ΔΙΔΑΓΜΑ%20(2).pdf) · [πρῶτον προστεταγμένον.pdf]({NB_REMOTE}/πρῶτον%20προστεταγμένον.pdf)")
+    return
+
+
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     ## τὰ στοιχεῖα — τὰ γράμματα · Алфавит
@@ -187,6 +193,13 @@ def _(cfg, mo):
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
 
     NB_REMOTE = f"{cfg.raw_base}/2026_06_09"
+    for _pdf in (
+        "Δίδαγμα α'.pdf",
+        "ΣΤΟΙΧΕΙΑ.pdf",
+        "ΤΟ ΠΡΟΛΕΓΟΜΕΝΟΝ ΔΙΔΑΓΜΑ (2).pdf",
+        "πρῶτον προστεταγμένον.pdf",
+    ):
+        gu.ensure_file(_pdf, nb_dir=_Path(__file__).parent, remote_base=NB_REMOTE)
     _IMP = {"VerbForm": "Fin", "Tense": "Pres", "Voice": "Act", "Mood": "Imp"}
     VERBS = gu.load_slot_drill(
         gu.ensure_file("verbs.tsv", nb_dir=_Path(__file__).parent, remote_base=NB_REMOTE),
