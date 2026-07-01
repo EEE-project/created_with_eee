@@ -1,0 +1,89 @@
+# Athenaze Chapter I — 2nd declension masculine nouns (o-stem)
+# APM form overrides: the library defaults all nouns to oxytone accent in acc pl,
+# but non-oxytone nouns must preserve their accent under the 3-syllable rule.
+
+ἀγρός:
+    stems:
+        noun: ἀγρο
+
+ἄνθρωπος:
+    stems:
+        noun: ἀνθρωπο
+    forms:
+        APM: ἀνθρώπους
+
+αὐτουργός:
+    stems:
+        noun: αὐτουργο
+
+γεωργός:
+    stems:
+        noun: γεωργο
+
+δένδρον:
+    stems:
+        noun: δενδρο
+
+δοῦλος:
+    stems:
+        noun: δουλο
+    forms:
+        APM: δούλους
+
+θέατρον:
+    stems:
+        noun: θεατρο
+
+βίος:
+    stems:
+        noun: βιο
+    forms:
+        APM: βίους
+
+ἥλιος:
+    stems:
+        noun: ἡλιο
+    forms:
+        APM: ἡλίους
+
+κλῆρος:
+    stems:
+        noun: κληρο
+    forms:
+        APM: κλήρους
+
+λίθος:
+    stems:
+        noun: λιθο
+    forms:
+        APM: λίθους
+
+μόσχος:
+    stems:
+        noun: μοσχο
+    forms:
+        APM: μόσχους
+
+οἶκος:
+    stems:
+        noun: οικο
+    forms:
+        APM: οἴκους
+
+πόνος:
+    stems:
+        noun: πονο
+    forms:
+        APM: πόνους
+
+σῖτος:
+    stems:
+        noun: σιτο
+    forms:
+        APM: σίτους
+
+χρόνος:
+    stems:
+        noun: χρονο
+    forms:
+        APM: χρόνους

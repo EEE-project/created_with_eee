@@ -1,0 +1,72 @@
+# Athenaze Chapter I — present-tense verb stems
+# Stems taken from existing lexicons; καταδύνω and κατατρίβω are new.
+# Only 1-: (present stem without augment) is needed for present-tense drill.
+
+αἴρω:
+    stems:
+        1-: αἰρ
+
+βαδίζω:
+    stems:
+        1-: βαδιζ
+
+γεωργέω:
+    stems:
+        1-: γεωργε
+
+ἡσυχάζω:
+    stems:
+        1-: ἡσυχαζ
+
+καθίζω:
+    stems:
+        1-: καθιζ
+
+καλέω:
+    stems:
+        1-: καλε
+
+κάμνω:
+    stems:
+        1-: καμν
+
+καταδύνω:
+    stems:
+        1-: καταδῡν
+
+κατατρίβω:
+    stems:
+        1-: κατατριβ
+
+οἰκέω:
+    stems:
+        1-: οἰκε
+
+παρέχω:
+    stems:
+        1-: παρεχ
+
+πονέω:
+    stems:
+        1-: πονε
+
+σκάπτω:
+    stems:
+        1-: σκαπτ
+
+στενάζω:
+    stems:
+        1-: στεναζ
+
+φέρω:
+    stems:
+        1-: φερ
+        1+: ἐφερ
+
+φλέγω:
+    stems:
+        1-: φλεγ
+
+χαίρω:
+    stems:
+        1-: χαιρ

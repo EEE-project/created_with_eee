@@ -42,6 +42,14 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
+    _cap1_remote = NB_REMOTE.replace("/2026_06_26", "/2026_06_16")
+    _course_remote = NB_REMOTE.replace("/2026_06_26", "")
+    mo.md(f"**Материалы занятия:** [заметки\\_26.06.pdf]({NB_REMOTE}/заметки_26.06.pdf) · [τόνος+κλίσις β'.pdf]({NB_REMOTE}/τόνος+κλίσις β'.pdf) · [κεφ(Ι)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ(Ι)_ἀσκήματα.pdf) · [κεφ.I, (3)\\_ἀσκήματα\\_τέλος.pdf]({NB_REMOTE}/κεφ.I, (3)_ἀσκήματα_τέλος.pdf) · [Athenaze\\_1\\_vocabula.pdf]({_cap1_remote}/Athenaze_1_vocabula.pdf) · [CONSPECTVS GRAMMATICVS I\\_graecus.pdf]({_course_remote}/CONSPECTVS GRAMMATICVS I_graecus.pdf)")
+    return
+
+
+@app.cell(hide_code=True)
+def _(NB_REMOTE, mo):
     mo.md(fr"""
     ## Проверка домашнего задания · τὸ τέταρτον προστεταγμένον
 
@@ -128,6 +136,31 @@ def _(mo):
     | τέλος δέ | **καταδύνει** — заходит |
 
     *ἡ ἀνατολή, -ῆς* (восход, восток) ↔ *ἡ δύσις, -εως* (закат, запад)
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Про порядок падежей
+
+    **Откуда порядок Nom–Gen–Dat–Acc–Voc?**
+    Александрийская традиция — [Дионисий Фракийский](https://www.academia.edu/52422942/The_Origin_of_the_Opposition_%CF%80%CF%84%CF%89%CE%B9%CF%83%CF%82_%D0%BE%CF%81%CE%B8%CE%AE_%CE%B5%CF%85%CE%B8%CE%B5%CE%AF%CE%B1_%CF%80%CF%84%CF%8E%CF%83%CE%B5%CE%B9%CF%82_%CF%80%CE%BB%CE%AC%CE%B3%CE%B9%CE%B1%CE%B9_i_Casus_Rectus_Casus_Obliqui_i_in_the_Linguistics_of_Ancient_Greece) (II–I вв. до н.э.) кодифицировал его для нужд школы (чтение Гомера). Он унаследовал стоический приоритет генитива, но лишил его философского содержания: порядок стал просто каноном парадигм.
+
+    **Почему стоики ставили генитив первым?**
+    Для стоиков падеж — логико-семантическая категория ([λεκτόν](https://www.degruyterbrill.com/document/doi/10.1515/apeiron-2023-0115/html)), не морфологическая. Генитив выражает *отношение* одной вещи к другой (Σωκράτους = Сократ, рассматриваемый через связь), а это согласуется с их учением о взаимосвязи вещей в космосе. Аккузатив выражает объект *действия* — он появляется уже внутри события, потому вторичен.
+
+    **Почему в практике аккузатив?**
+    Синтаксически самый частотный: прямое дополнение + большинство предлогов. У Аполлония Дискола (II в. н.э., теория управления глагола) выходит на первый план.
+
+    | Эпоха | Что такое падеж |
+    |:---|:---|
+    | [Аристотель](https://classics.washington.edu/events/2024-02-22/two-notions-case-aristotle), IV в. до н.э. | πτῶσις = любое отклонение от основной формы (*Поэтика*, гл. 20) |
+    | Стоики, III–II вв. до н.э. | логическое отношение предмета (λεκτόν) |
+    | Дионисий Фракийский, II–I вв. до н.э. | морфологическая парадигма для школы |
+    | Аполлоний Дискол, II в. н.э. | синтаксическое управление |
+    | Византия, V–XV вв. → сегодня | школьный канон |
     """)
     return
 
@@ -319,6 +352,183 @@ def _(
 
 
 @app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Склонение существительных · II-е склонение (о-основа)
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    from eee_project import make_paradigm_form
+
+    return (make_paradigm_form,)
+
+
+@app.cell(hide_code=True)
+def _(NB_DIR, NB_REMOTE, gu):
+    WORDS_NOUN_N3 = [
+        {"Word": w["form"], "Translation": w["meaning"]}
+        for w in gu.load_vocab_tsv('cap1_nouns.tsv', nb_dir=NB_DIR, remote_base=NB_REMOTE)
+    ]
+    return (WORDS_NOUN_N3,)
+
+
+@app.cell(hide_code=True)
+def _(WORDS_NOUN_N3, mo):
+    w4t_n3, set_w4t_n3 = mo.state(list(WORDS_NOUN_N3))
+    hist_n3, set_hist_n3 = mo.state([])
+    msg_n3, set_msg_n3 = mo.state("")
+    cap_n3, set_cap_n3 = mo.state(None)
+    sub_cnt_n3, set_sub_cnt_n3 = mo.state(0)
+    prev_cnt_n3, set_prev_cnt_n3 = mo.state(0)
+    nxt_cnt_n3, set_nxt_cnt_n3 = mo.state(0)
+    prev_btn_n3 = mo.ui.button(label="Предыдущее", on_click=lambda v: (v or 0) + 1)
+    nxt_btn_n3 = mo.ui.button(label="Следующее", on_click=lambda v: (v or 0) + 1)
+    return (
+        cap_n3,
+        hist_n3,
+        msg_n3,
+        nxt_btn_n3,
+        nxt_cnt_n3,
+        prev_btn_n3,
+        prev_cnt_n3,
+        set_cap_n3,
+        set_hist_n3,
+        set_msg_n3,
+        set_nxt_cnt_n3,
+        set_prev_cnt_n3,
+        set_sub_cnt_n3,
+        set_w4t_n3,
+        sub_cnt_n3,
+        w4t_n3,
+    )
+
+
+@app.cell(hide_code=True)
+def _(gu, make_paradigm_form, mo, set_sub_cnt_n3, w4t_n3):
+    cv_n3 = w4t_n3()[0] if w4t_n3() else None
+    _, _, noun_meta_n3 = gu.create_noun_test_ui([cv_n3] if cv_n3 else [])
+    _ac_n3 = getattr(noun_meta_n3, "active_cases", [])
+    noun_form_n3 = make_paradigm_form(mo, [f"{n} {c}:" for n, c in _ac_n3])
+    check_btn_n3 = mo.ui.button(label="Проверить", on_click=lambda v: (v or 0) + 1)
+    set_sub_cnt_n3(0)
+    return check_btn_n3, cv_n3, noun_form_n3, noun_meta_n3
+
+
+@app.cell(hide_code=True)
+def _(
+    WORDS_NOUN_N3,
+    check_btn_n3,
+    cv_n3,
+    mo,
+    msg_n3,
+    noun_fb_n3,
+    noun_form_n3,
+    nxt_btn_n3,
+    prev_btn_n3,
+    w4t_n3,
+):
+    if not w4t_n3():
+        _out_n3 = mo.md("**✅ Все существительные пройдены!**")
+    else:
+        _fback_n3 = mo.md(noun_fb_n3) if noun_fb_n3 else mo.md("")
+        _done = len(WORDS_NOUN_N3) - len(w4t_n3())
+        _total = len(WORDS_NOUN_N3)
+        _items = [mo.md(f"## Упражнение 3 · Склонение существительных ({_done + 1}/{_total})")]
+        if msg_n3():
+            _items.append(mo.md(msg_n3()))
+        _items += [
+            mo.md(f"Перевод: **{cv_n3['Translation']}**") if cv_n3 else mo.md(""),
+            noun_form_n3,
+            mo.hstack([check_btn_n3, prev_btn_n3, nxt_btn_n3], justify="end"),
+            _fback_n3,
+        ]
+        _out_n3 = mo.vstack(_items)
+    _out_n3
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    check_btn_n3,
+    cv_n3,
+    noun_form_n3,
+    noun_meta_n3,
+    set_cap_n3,
+    set_sub_cnt_n3,
+    sub_cnt_n3,
+):
+    import types as _tn3
+    if (check_btn_n3.value or 0) > sub_cnt_n3():
+        set_sub_cnt_n3(check_btn_n3.value)
+        if cv_n3 and noun_meta_n3 and noun_form_n3.widget.values:
+            _snap_n3 = _tn3.SimpleNamespace(
+                test_word=cv_n3["Word"],
+                is_pluralia_tantum=getattr(noun_meta_n3, "is_pluralia_tantum", False),
+                active_cases=getattr(noun_meta_n3, "active_cases", []),
+                value=list(noun_form_n3.widget.values),
+            )
+            set_cap_n3(_snap_n3)
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    cv_n3,
+    hist_n3,
+    noun_ok_n3,
+    set_cap_n3,
+    set_hist_n3,
+    set_msg_n3,
+    set_w4t_n3,
+    w4t_n3,
+):
+    if noun_ok_n3:
+        set_hist_n3(hist_n3() + [cv_n3])
+        set_w4t_n3([w for w in w4t_n3() if w["Word"] != cv_n3["Word"]])
+        set_msg_n3(f"\u2705 {cv_n3['Word']} \u2014 {cv_n3['Translation']}")
+        set_cap_n3(None)
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    cv_n3,
+    hist_n3,
+    nxt_btn_n3,
+    nxt_cnt_n3,
+    prev_btn_n3,
+    prev_cnt_n3,
+    set_cap_n3,
+    set_hist_n3,
+    set_nxt_cnt_n3,
+    set_prev_cnt_n3,
+    set_sub_cnt_n3,
+    set_w4t_n3,
+    w4t_n3,
+):
+    if (nxt_btn_n3.value or 0) > nxt_cnt_n3():
+        set_nxt_cnt_n3(nxt_btn_n3.value)
+        set_cap_n3(None)
+        set_sub_cnt_n3(0)
+        if w4t_n3() and cv_n3:
+            set_hist_n3(hist_n3() + [cv_n3])
+            set_w4t_n3([w for w in w4t_n3() if w["Word"] != cv_n3["Word"]])
+
+    if (prev_btn_n3.value or 0) > prev_cnt_n3():
+        set_prev_cnt_n3(prev_btn_n3.value)
+        set_cap_n3(None)
+        set_sub_cnt_n3(0)
+        if hist_n3():
+            _prev_n3 = hist_n3()[-1]
+            set_hist_n3(hist_n3()[:-1])
+            set_w4t_n3([_prev_n3] + [w for w in w4t_n3() if w["Word"] != _prev_n3["Word"]])
+    return
+
+
+@app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
     mo.md(f"""
     ## τὸ πέμπτον προστεταγμένον · Домашнее задание
@@ -327,21 +537,6 @@ def _(NB_REMOTE, mo):
 
     2. **ἀσκήματα ποιεῖτε** из [κεφ(Ι)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ(Ι)_ἀσκήματα.pdf).
     """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(NB_REMOTE, mo):
-    _course_remote = NB_REMOTE.replace("/2026_06_26", "")
-    mo.md(f"""
-## Дополнительные материалы
-
-- [заметки\\_26.06.pdf]({NB_REMOTE}/заметки_26.06.pdf)
-- [τόνος+κλίσις β'.pdf]({NB_REMOTE}/τόνος+κλίσις β'.pdf)
-- [κεφ(Ι)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ(Ι)_ἀσκήματα.pdf)
-- [κεφ.I, (3)\\_ἀσκήματα\\_τέλος.pdf]({NB_REMOTE}/κεφ.I, (3)_ἀσκήματα_τέλος.pdf)
-- [CONSPECTVS GRAMMATICVS I\\_graecus.pdf]({_course_remote}/CONSPECTVS GRAMMATICVS I_graecus.pdf)
-""")
     return
 
 
@@ -424,7 +619,7 @@ def _(
         history_a, set_history_a, future_a, set_future_a,
         answer_radio_a, next_btn_a, prev_btn_a,
         vocab=VOCAB_ALL,
-        title='## Упражнение 3 · Выбрать слово',
+        title='## Упражнение 4 · Выбрать слово',
     )
     return
 
@@ -492,7 +687,7 @@ def _(
         history_aw, set_history_aw, future_aw, set_future_aw,
         write_input_aw, dia_aw, check_btn_aw, prev_btn_aw, next_btn_aw,
         vocab=VOCAB_ALL,
-        title='## Упражнение 4 · Написать греческое слово',
+        title='## Упражнение 5 · Написать греческое слово',
         comment='Для ввода используйте **polytonic Greek keyboard** или кнопки диакритики ниже.<br>**Как пользоваться:** нажмите кнопку знака диакритики → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается.',
     )
     return
@@ -528,14 +723,35 @@ def _():
 
 @app.cell(hide_code=True)
 def _(cfg, mo):
+    import eee_project as eee
+    from ancient_greek_backend_eee import AncientGreekBackend
     from eee_project import GreekUtils, ANCIENT_GREEK
     from eee_project.notebook_utils import eee_footer
     from pathlib import Path as _Path
-    gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
     NB_DIR = _Path(__file__).parent
     NB_REMOTE = f"{cfg.raw_base}/2026_06_26"
+    _noun_yaml = NB_DIR.parent / "athenaze_cap1_nouns.yaml"
+    _verb_yaml = NB_DIR.parent / "athenaze_cap1_verbs.yaml"
+    if not _noun_yaml.exists():
+        import urllib.request as _ur
+        _ur.urlretrieve(f"{cfg.raw_base}/athenaze_cap1_nouns.yaml", str(_noun_yaml))
+    ag = AncientGreekBackend(lexicons=["pratt", "ltrg", str(_verb_yaml), str(_noun_yaml)])
+    eee.register_backend("grc", ag)
+    eee.register_backend("grc", ag, backend="ancient-greek")
+    eee.set_chain("grc", ["ancient-greek"])
+    gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
     eee_footer(mo, lang='ru')
     return NB_DIR, NB_REMOTE, gu
+
+
+@app.cell(hide_code=True)
+def _(cap_n3, cv_n3, gu):
+    _c = cap_n3()
+    noun_ok_n3 = False
+    noun_fb_n3 = ""
+    if cv_n3 and _c:
+        noun_ok_n3, noun_fb_n3 = gu.check_noun_test(cv_n3["Word"], _c, article=True)
+    return noun_fb_n3, noun_ok_n3
 
 
 if __name__ == "__main__":
