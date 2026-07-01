@@ -10,6 +10,8 @@ ancient_greek.2026.summer/
   2026_06_12/          # Занятие 2 · Ударения и просодия
   2026_06_16/          # Занятие 3 · Глаголы и синтаксис
   2026_06_19/          # Занятие 4 · Средний залог и II склонение
+  2026_06_23/          # Занятие 5 · Спряжение и падежи
+  2026_06_26/          # Занятие 6 · II склонение и падежи
 ```
 
 Each lesson directory:
@@ -26,7 +28,7 @@ adjs.tsv           ← adjective base forms for ADV drill (lessons with adverb e
 
 ---
 
-## Two notebook patterns
+## Notebook patterns
 
 ### Pattern A — word_drill × 2  (2026_06_09)
 
@@ -43,6 +45,26 @@ Used when the exercise **presents the form from the TSV as-is** — either as a
 multiple-choice quiz or a write-the-word drill from `VOCAB_WORDS`.
 
 Does NOT need a backend: `gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)`.
+
+### Pattern C — paradigm drill  (2026_06_23, 2026_06_26)
+
+Used when the exercise asks the learner to fill in **all forms of a paradigm at
+once** — e.g. all 6 conjugation slots for a verb, or all 8 declension slots for
+a noun. Uses `ParadigmFormWidget` (anywidget) which renders N labeled text
+inputs sharing a single polytonic diacritics bar.
+
+Two variants exist:
+
+**C-verb** (2026_06_23 — Present Active Indicative, 6 forms per verb)
+- Words come from `gu.load_slot_drill` (backend required)
+- Skip / Clear buttons; word selected with `random.choice(w4t_v3())`
+- Variable suffix: `_v3`
+
+**C-noun** (2026_06_26 — II declension, 8 forms per noun including article)
+- Words come from a hardcoded list `WORDS_NOUN_N3 = [{"Word": "ὁ ἀγρός", ...}]`
+- Prev / Next navigation; word selected as `w4t_n3()[0]` (sequential)
+- Article validation via `ARTS_N3` and `strip_art_n3` (see below)
+- Variable suffix: `_n3`
 
 ---
 
@@ -239,14 +261,269 @@ For Pattern A adverb drill, `meaning_key='prompt'` and `form_key='adv'` (matchin
 
 ---
 
+### Hidden cells — Pattern C (paradigm drill)
+
+The paradigm drill cells follow this fixed chain. Cell IDs change after each
+save — identify by the key expression shown below.
+
+| key expression | role | suffix |
+|---|---|---|
+| `import anywidget as _aw` | `ParadigmFormWidget` class + `make_paradigm_form` factory | — (widget lib) |
+| `WORDS_VERB_V3 = [...]` or `WORDS_NOUN_N3 = [...]` | static word list | — |
+| `ARTS_N3 = {'ὁ': ..., 'ἡ': ..., 'τό': ...}` | static article lookup (noun only) | — |
+| `w4t_v3, set_w4t_v3 = mo.state(...)` | STATE — queue, history, msg, cap, counters, buttons | `_v3` / `_n3` |
+| `cv_v3 = random.choice(w4t_v3())` or `cv_n3 = w4t_n3()[0]` | FORM — current word, widget, check button | `_v3` / `_n3` |
+| `import types as _tv3` + `set_cap_v3(_snap_v3)` | SUBMIT — captures widget values into state | `_v3` / `_n3` |
+| `verb_ok_v3 = False` / `noun_ok_n3 = False` | CHECK — single `check_*_test` call → bool + feedback string | `_v3` / `_n3` |
+| `if not w4t_v3():` … `mo.vstack(...)` | DISPLAY — renders title, form, buttons, feedback | `_v3` / `_n3` |
+| `if verb_ok_v3:` / `if noun_ok_n3:` | PASS — advances word on correct answer | `_v3` / `_n3` |
+| `if (nxt_btn_n3.value or 0) > nxt_cnt_n3():` | PREV/NEXT handler (noun only) | `_n3` |
+| `if (skip_btn_v3.value or 0) > skp_cnt_v3():` | SKIP/CLEAR handler (verb only) | `_v3` |
+
+---
+
+## Exercise code patterns (Pattern C)
+
+### ParadigmFormWidget
+
+Defined once per notebook in a hidden cell. The widget renders N labeled text
+inputs with a shared polytonic diacritics bar above them.
+
+```python
+import anywidget as _aw
+import traitlets as _tr
+
+class ParadigmFormWidget(_aw.AnyWidget):
+    labels = _tr.List(_tr.Unicode()).tag(sync=True)
+    values = _tr.List(_tr.Unicode()).tag(sync=True)
+    _esm = "..."   # JS: diacritics bar + input rows
+    _css = "..."   # styles
+
+def make_paradigm_form(mo, labels):
+    w = ParadigmFormWidget()
+    w.labels = labels
+    w.values = [""] * len(labels)
+    return mo.ui.anywidget(w)
+```
+
+Access typed values via `form.widget.values` (a list of strings, one per label).
+
+### Verb paradigm drill (Pattern C-verb)
+
+```python
+# Static cell — slot definition
+_PAI = {"VerbForm": "Fin", "Tense": "Pres", "Voice": "Act", "Mood": "Ind"}
+_raw_v3 = gu.load_slot_drill(
+    gu.ensure_file("cap1_verbs.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE),
+    {"verb": None,
+     "1sg": {**_PAI, "Person": "1", "Number": "Sing"},
+     "2sg": {**_PAI, "Person": "2", "Number": "Sing"},
+     ...},
+    pos="verb",
+)
+WORDS_VERB_V3 = [{"Word": v["verb"], "Translation": v["meaning"]} for v in _raw_v3]
+
+# STATE cell
+w4t_v3, set_w4t_v3   = mo.state(list(WORDS_VERB_V3))
+msg_v3, set_msg_v3   = mo.state("")
+cap_v3, set_cap_v3   = mo.state(None)
+sub_cnt_v3, set_sub_cnt_v3 = mo.state(0)
+skp_cnt_v3, set_skp_cnt_v3 = mo.state(0)
+skip_btn_v3 = mo.ui.button(label="Пропустить", on_click=lambda v: (v or 0) + 1)
+clear_btn_v3 = mo.ui.button(label="Очистить",  on_click=lambda v: (v or 0) + 1)
+
+# FORM cell (re-runs on every word change)
+import random as _r_v3
+cv_v3 = _r_v3.choice(w4t_v3()) if w4t_v3() else None
+verb_form_v3 = make_paradigm_form(mo, ["1 sg:", "2 sg:", "3 sg:", "1 pl:", "2 pl:", "3 pl:"])
+submit_btn_v3 = mo.ui.button(label="Проверить", on_click=lambda v: (v or 0) + 1)
+set_sub_cnt_v3(0)
+
+# SUBMIT cell
+import types as _tv3
+if (submit_btn_v3.value or 0) > sub_cnt_v3():
+    set_sub_cnt_v3(submit_btn_v3.value)
+    if cv_v3:
+        _snap_v3 = _tv3.SimpleNamespace(
+            verb_word=cv_v3["Word"], tense="present",
+            value=list(verb_form_v3.widget.values),
+        )
+        set_cap_v3(_snap_v3)
+
+# CHECK cell — single check_verb_test call
+_c = cap_v3()
+verb_ok_v3 = False
+verb_fb_v3 = ""
+if cv_v3 and _c and getattr(_c, "verb_word", None) == cv_v3["Word"]:
+    verb_ok_v3, verb_fb_v3 = gu.check_verb_test(cv_v3["Word"], _c, "present")
+
+# DISPLAY cell
+if not w4t_v3():
+    _out_v3 = mo.md("**✅ Все глаголы пройдены!**")
+else:
+    _fback_v3 = mo.md(verb_fb_v3) if verb_fb_v3 else mo.md("")
+    _done = len(WORDS_VERB_V3) - len(w4t_v3())
+    _items = [mo.md(f"## Упражнение 3 · Спряжение в настоящем времени ({_done + 1}/{len(WORDS_VERB_V3)})")]
+    if msg_v3():
+        _items.append(mo.md(msg_v3()))
+    _items += [
+        mo.md(f"Перевод: **{cv_v3['Translation']}**") if cv_v3 else mo.md(""),
+        verb_form_v3,
+        mo.hstack([skip_btn_v3, clear_btn_v3, submit_btn_v3], justify="end"),
+        _fback_v3,
+    ]
+    _out_v3 = mo.vstack(_items)
+_out_v3
+
+# PASS cell
+if verb_ok_v3:
+    set_w4t_v3([w for w in w4t_v3() if w["Word"] != cv_v3["Word"]])
+    set_msg_v3(f"✅ {cv_v3['Word']} — {cv_v3['Translation']}")
+    set_cap_v3(None)
+```
+
+### Noun paradigm drill (Pattern C-noun)
+
+```python
+# Static cell — article lookup (built once, not per word)
+ARTS_N3 = {
+    'ὁ': {('sg','nom'):{'ὁ'}, ('sg','acc'):{'τόν','τὸν'}, ('sg','gen'):{'τοῦ'}, ('sg','dat'):{'τῷ'},
+          ('pl','nom'):{'οἱ'}, ('pl','acc'):{'τούς','τοὺς'}, ('pl','gen'):{'τῶν'}, ('pl','dat'):{'τοῖς'}},
+    'ἡ': {('sg','nom'):{'ἡ'},  ('sg','acc'):{'τήν','τὴν'}, ('sg','gen'):{'τῆς'}, ('sg','dat'):{'τῇ'},
+          ('pl','nom'):{'αἱ'}, ('pl','acc'):{'τάς','τὰς'}, ('pl','gen'):{'τῶν'}, ('pl','dat'):{'ταῖς'}},
+    'τό': {('sg','nom'):{'τό'}, ('sg','acc'):{'τό'}, ('sg','gen'):{'τοῦ'}, ('sg','dat'):{'τῷ'},
+           ('pl','nom'):{'τά'}, ('pl','acc'):{'τά'}, ('pl','gen'):{'τῶν'}, ('pl','dat'):{'τοῖς'}},
+}
+
+# Static cell — word list
+WORDS_NOUN_N3 = [
+    {"Word": "ὁ ἀγρός",    "Translation": "поле"},
+    ...
+]
+
+# STATE cell
+w4t_n3, set_w4t_n3   = mo.state(list(WORDS_NOUN_N3))
+hist_n3, set_hist_n3  = mo.state([])
+msg_n3, set_msg_n3    = mo.state("")
+cap_n3, set_cap_n3    = mo.state(None)
+sub_cnt_n3, set_sub_cnt_n3 = mo.state(0)
+nxt_cnt_n3, set_nxt_cnt_n3 = mo.state(0)
+prev_cnt_n3, set_prev_cnt_n3 = mo.state(0)
+prev_btn_n3 = mo.ui.button(label="Предыдущее", on_click=lambda v: (v or 0) + 1)
+nxt_btn_n3  = mo.ui.button(label="Следующее",  on_click=lambda v: (v or 0) + 1)
+
+# FORM cell
+cv_n3 = w4t_n3()[0] if w4t_n3() else None
+_, _, noun_meta_n3 = gu.create_noun_test_ui([cv_n3] if cv_n3 else [])
+_ac_n3 = getattr(noun_meta_n3, "active_cases", [])
+noun_form_n3 = make_paradigm_form(mo, [f"{n} {c}:" for n, c in _ac_n3])
+check_btn_n3 = mo.ui.button(label="Проверить", on_click=lambda v: (v or 0) + 1)
+set_sub_cnt_n3(0)
+art_table_n3 = ARTS_N3.get(cv_n3["Word"].split()[0], {}) if cv_n3 else {}
+def strip_art_n3(val, num, case):
+    ws = val.strip().split()
+    return " ".join(ws[1:]) if len(ws) > 1 and ws[0] in art_table_n3.get((num, case), set()) else val.strip()
+
+# SUBMIT cell
+import types as _tn3
+if (check_btn_n3.value or 0) > sub_cnt_n3():
+    set_sub_cnt_n3(check_btn_n3.value)
+    if cv_n3 and noun_meta_n3 and noun_form_n3.widget.values:
+        set_cap_n3(_tn3.SimpleNamespace(
+            test_word=cv_n3["Word"],
+            is_pluralia_tantum=getattr(noun_meta_n3, "is_pluralia_tantum", False),
+            active_cases=getattr(noun_meta_n3, "active_cases", []),
+            value=list(noun_form_n3.widget.values),
+        ))
+
+# CHECK cell — single check_noun_test call + article validation
+import types as _types_n3
+_c = cap_n3()
+noun_ok_n3 = False
+noun_fb_n3 = ""
+if cv_n3 and _c and getattr(_c, "test_word", None) == cv_n3["Word"]:
+    _bare = [strip_art_n3(v, n, c) for (n, c), v in zip(_c.active_cases, _c.value)]
+    _snap = _types_n3.SimpleNamespace(
+        test_word=_c.test_word, is_pluralia_tantum=_c.is_pluralia_tantum,
+        active_cases=_c.active_cases, value=_bare,
+    )
+    _art_errs, _art_ok = [], True
+    for (_num, _case), _val in zip(_c.active_cases, _c.value):
+        _ws = _val.strip().split()
+        if len(_ws) > 1:
+            _allowed = art_table_n3.get((_num, _case), set())
+            if _allowed and _ws[0] not in _allowed:
+                _art_errs.append("❌ артикль **" + _ws[0] + "**, должен быть **" + "** / **".join(sorted(_allowed)) + "**")
+                _art_ok = False
+    with mo.capture_stdout() as _buf:
+        noun_ok_n3 = gu.check_noun_test(cv_n3["Word"], _snap)
+    _noun_lines = [l for l in _buf.getvalue().splitlines() if l.strip() and "]: article" not in l]
+    _fb = ("<br>".join(_art_errs) + "<br>" if _art_errs else "") + ("<br>".join(_noun_lines) + "<br>" if _noun_lines else "")
+    noun_fb_n3 = _fb
+    noun_ok_n3 = noun_ok_n3 and _art_ok
+
+# DISPLAY cell
+if not w4t_n3():
+    _out_n3 = mo.md("**✅ Все существительные пройдены!**")
+else:
+    _fback_n3 = mo.md(noun_fb_n3) if noun_fb_n3 else mo.md("")
+    _done = len(WORDS_NOUN_N3) - len(w4t_n3())
+    _items = [mo.md(f"## Упражнение 3 · Склонение существительных ({_done + 1}/{len(WORDS_NOUN_N3)})")]
+    if msg_n3():
+        _items.append(mo.md(msg_n3()))
+    _items += [
+        mo.md(f"Перевод: **{cv_n3['Translation']}**") if cv_n3 else mo.md(""),
+        noun_form_n3,
+        mo.hstack([check_btn_n3, prev_btn_n3, nxt_btn_n3], justify="end"),
+        _fback_n3,
+    ]
+    _out_n3 = mo.vstack(_items)
+_out_n3
+
+# PASS cell
+if noun_ok_n3:
+    set_hist_n3(hist_n3() + [cv_n3])
+    set_w4t_n3([w for w in w4t_n3() if w["Word"] != cv_n3["Word"]])
+    set_msg_n3(f"✅ {cv_n3['Word']} — {cv_n3['Translation']}")
+    set_cap_n3(None)
+
+# PREV/NEXT cell
+if (nxt_btn_n3.value or 0) > nxt_cnt_n3():
+    set_nxt_cnt_n3(nxt_btn_n3.value)
+    set_cap_n3(None); set_sub_cnt_n3(0)
+    if w4t_n3() and cv_n3:
+        set_hist_n3(hist_n3() + [cv_n3])
+        set_w4t_n3([w for w in w4t_n3() if w["Word"] != cv_n3["Word"]])
+if (prev_btn_n3.value or 0) > prev_cnt_n3():
+    set_prev_cnt_n3(prev_btn_n3.value)
+    set_cap_n3(None); set_sub_cnt_n3(0)
+    if hist_n3():
+        _prev_n3 = hist_n3()[-1]
+        set_hist_n3(hist_n3()[:-1])
+        set_w4t_n3([_prev_n3] + [w for w in w4t_n3() if w["Word"] != _prev_n3["Word"]])
+```
+
+**Why `strip_art_n3`:** `check_noun_test` expects bare forms (no articles). Learners type
+the article with the form (e.g. `τὸν ἀγρόν`). `strip_art_n3` removes the article before
+the check call; article correctness is validated separately via `art_table_n3`.
+
+**Why `ARTS_N3` instead of relying on `check_noun_test`:** the grc backend returns
+identical forms regardless of gender, so `check_noun_test` cannot detect a wrong-gender
+article (e.g. `ἡ ἀγρός`). `ARTS_N3` encodes the expected article for each gender × case;
+`cv_n3["Word"].split()[0]` extracts the dictionary-form article to key into it.
+
+---
+
 ## State variable suffix convention
 
 | suffix | exercise | example |
 |--------|----------|---------|
-| `_v`   | word_drill verbs | `cv_v`, `score_v`, `restore_entry_v` |
+| `_v`   | word_drill verbs (Pattern A/B) | `cv_v`, `score_v`, `restore_entry_v` |
 | `_a`   | word_drill adverbs (Pattern A) | `cv_a`, `score_a`, `restore_entry_a` |
-| `_c`   | word_quiz choices | `cv_c`, `score_c`, `restore_entry_c`, `answer_radio` |
-| `_w`   | word_drill words | `cv_w`, `score_w`, `restore_entry_w` |
+| `_c`   | word_quiz choices (Pattern B) | `cv_c`, `score_c`, `restore_entry_c`, `answer_radio` |
+| `_w`   | word_drill words (Pattern B) | `cv_w`, `score_w`, `restore_entry_w` |
+| `_v3`  | verb paradigm drill (Pattern C) | `cv_v3`, `w4t_v3`, `cap_v3`, `verb_ok_v3`, `verb_fb_v3` |
+| `_n3`  | noun paradigm drill (Pattern C) | `cv_n3`, `w4t_n3`, `cap_n3`, `noun_ok_n3`, `noun_fb_n3` |
 
 Use these suffixes consistently so cell dependencies stay unambiguous when two exercises share a notebook.
 
@@ -304,5 +581,8 @@ Add a row here when creating a new lesson notebook; the `nb_id` comes from molab
 5. Choose the pattern:
    - **Pattern A** if exercises need backend-inflected forms (`slot_drill` or ADV drill).
    - **Pattern B** if exercises use TSV forms as-is (`word_quiz` + `word_drill`).
+   - **Pattern C** if the exercise requires filling in a full paradigm (all conjugation or
+     declension slots at once). Use C-verb for verbs, C-noun for nouns (which needs article
+     validation via `ARTS_N3`).
 6. Upload to molab, copy the `nb_id`, add a row to `lessons.tsv`.
 7. Update the molab badge URL in the title cell.

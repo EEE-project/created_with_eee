@@ -42,6 +42,13 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
+    _cap1_remote = NB_REMOTE.replace("/2026_06_23", "/2026_06_16")
+    mo.md(f"**Материалы занятия:** [заметки\\_23.06.pdf]({NB_REMOTE}/заметки_23.06.pdf) · [I(1,5).pdf]({NB_REMOTE}/I(1,5).pdf) · [κεφ.I, (3)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ.I, (3)_ἀσκήματα.pdf) · [Athenaze\\_1\\_vocabula.pdf]({_cap1_remote}/Athenaze_1_vocabula.pdf)")
+    return
+
+
+@app.cell(hide_code=True)
+def _(NB_REMOTE, mo):
     mo.md(fr"""
     ## Проверка домашнего задания · τὸ τρίτον προστεταγμένον
 
@@ -142,6 +149,18 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    ## Заметки
+
+    - **ν подвижное ([ν ἐφελκυστικόν](https://en.wiktionary.org/wiki/ephelcystic_nu)):** ἐστι(ν) может принимать конечное **ν** перед гласным и в конце предложения.
+    - **[εἰμί](https://mysite.du.edu/~etuttle/classics/nugreek/lesson6.htm):** большинство форм настоящего времени — энклитические (кроме εἶ).
+    - **[Стяжение](https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D1%8F%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5) (συναίρεσις):** слияние двух соседних гласных в один долгий гласный или дифтонг ([φιλέω](https://www.greek-language.gr/digitalResources/ancient_greek/tools/liddel-scott/search.html?lq=%CF%86%CE%B9%CE%BB%CE%B5%CF%89) → φιλῶ, ε + ω → ω). [См. про класс стяжённых глаголов, где сама основа заканчивается на гласную, и происходит стяжение гласного с начальным (тематическим) гласным окончаний.](http://www.languagreek.ru/glagoly.html)
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ## Ἄσκησις α' · Γεμίζετε
 
     **Слова для вставки:** ὁ ἀγρός (2×) · μέγας · πολύς · τὸ δένδρον (2×) · τὸ ἕρμα
@@ -159,18 +178,6 @@ def _(mo):
     > ὁ οὖν αὐτουργὸς μάλα **κάμνει**. βαδίζει οὖν καὶ **καθίζει** ὑπὸ **δένδρῳ**,
     > ἀλλὰ **δι᾿ ὀλίγου** ἐπαίρει ἑαυτὸν καὶ βαδίζει πρὸς τὸν ἀγρόν. τέλος δὲ ἐν τῷ οἴκῳ **ἡσυχάζει**.
     """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(NB_REMOTE, mo):
-    mo.md(f"""
-## Дополнительные материалы
-
-- [заметки\\_23.06.pdf]({NB_REMOTE}/заметки_23.06.pdf)
-- [I(1,5).pdf]({NB_REMOTE}/I(1,5).pdf)
-- [κεφ.I, (3)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ.I, (3)_ἀσκήματα.pdf)
-""")
     return
 
 
@@ -358,6 +365,194 @@ def _(
 
 
 @app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Спряжение глаголов · Present Active Indicative
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    from eee_project import make_paradigm_form
+
+    return (make_paradigm_form,)
+
+
+@app.cell(hide_code=True)
+def _(NB_DIR, NB_REMOTE, gu):
+    _PAI = {"VerbForm": "Fin", "Tense": "Pres", "Voice": "Act", "Mood": "Ind"}
+    _raw_v3 = gu.load_slot_drill(
+        gu.ensure_file("cap1_verbs.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE),
+        {
+            "verb": None,
+            "1sg": {**_PAI, "Person": "1", "Number": "Sing"},
+            "2sg": {**_PAI, "Person": "2", "Number": "Sing"},
+            "3sg": {**_PAI, "Person": "3", "Number": "Sing"},
+            "1pl": {**_PAI, "Person": "1", "Number": "Plur"},
+            "2pl": {**_PAI, "Person": "2", "Number": "Plur"},
+            "3pl": {**_PAI, "Person": "3", "Number": "Plur"},
+        },
+        pos="verb",
+    )
+    WORDS_VERB_V3 = [
+        {"Word": v["verb"], "Translation": v["meaning"]}
+        for v in _raw_v3
+        if all(v.get(k) for k in ["1sg", "2sg", "3sg", "1pl", "2pl", "3pl"])
+    ]
+    return (WORDS_VERB_V3,)
+
+
+@app.cell(hide_code=True)
+def _(WORDS_VERB_V3, mo):
+    w4t_v3, set_w4t_v3 = mo.state(list(WORDS_VERB_V3))
+    hist_v3, set_hist_v3 = mo.state([])
+    msg_v3, set_msg_v3 = mo.state("")
+    cap_v3, set_cap_v3 = mo.state(None)
+    sub_cnt_v3, set_sub_cnt_v3 = mo.state(0)
+    prev_cnt_v3, set_prev_cnt_v3 = mo.state(0)
+    nxt_cnt_v3, set_nxt_cnt_v3 = mo.state(0)
+    prev_btn_v3 = mo.ui.button(label="Предыдущее", on_click=lambda v: (v or 0) + 1)
+    nxt_btn_v3 = mo.ui.button(label="Следующее", on_click=lambda v: (v or 0) + 1)
+    return (
+        cap_v3,
+        hist_v3,
+        msg_v3,
+        nxt_btn_v3,
+        nxt_cnt_v3,
+        prev_btn_v3,
+        prev_cnt_v3,
+        set_cap_v3,
+        set_hist_v3,
+        set_msg_v3,
+        set_nxt_cnt_v3,
+        set_prev_cnt_v3,
+        set_sub_cnt_v3,
+        set_w4t_v3,
+        sub_cnt_v3,
+        w4t_v3,
+    )
+
+
+@app.cell(hide_code=True)
+def _(make_paradigm_form, mo, set_sub_cnt_v3, w4t_v3):
+    cv_v3 = w4t_v3()[0] if w4t_v3() else None
+    verb_form_v3 = make_paradigm_form(mo, ["1 sg:", "2 sg:", "3 sg:", "1 pl:", "2 pl:", "3 pl:"])
+    check_btn_v3 = mo.ui.button(label="Проверить", on_click=lambda v: (v or 0) + 1)
+    set_sub_cnt_v3(0)
+    return check_btn_v3, cv_v3, verb_form_v3
+
+
+@app.cell(hide_code=True)
+def _(
+    WORDS_VERB_V3,
+    check_btn_v3,
+    cv_v3,
+    mo,
+    msg_v3,
+    nxt_btn_v3,
+    prev_btn_v3,
+    verb_fb_v3,
+    verb_form_v3,
+    w4t_v3,
+):
+    if not w4t_v3():
+        _out_v3 = mo.md("**✅ Все глаголы пройдены!**")
+    else:
+        _fback_v3 = mo.md(verb_fb_v3) if verb_fb_v3 else mo.md("")
+        _done = len(WORDS_VERB_V3) - len(w4t_v3())
+        _total = len(WORDS_VERB_V3)
+        _items = [mo.md(f"## Упражнение 3 · Спряжение в настоящем времени ({_done + 1}/{_total})")]
+        if msg_v3():
+            _items.append(mo.md(msg_v3()))
+        _items += [
+            mo.md(f"Перевод: **{cv_v3['Translation']}**") if cv_v3 else mo.md(""),
+            verb_form_v3,
+            mo.hstack([check_btn_v3, prev_btn_v3, nxt_btn_v3], justify="end"),
+            _fback_v3,
+        ]
+        _out_v3 = mo.vstack(_items)
+    _out_v3
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    check_btn_v3,
+    cv_v3,
+    set_cap_v3,
+    set_sub_cnt_v3,
+    sub_cnt_v3,
+    verb_form_v3,
+):
+    import types as _tv3
+    if (check_btn_v3.value or 0) > sub_cnt_v3():
+        set_sub_cnt_v3(check_btn_v3.value)
+        if cv_v3:
+            _snap_v3 = _tv3.SimpleNamespace(
+                verb_word=cv_v3["Word"],
+                tense="present",
+                value=list(verb_form_v3.widget.values),
+            )
+            set_cap_v3(_snap_v3)
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    cv_v3,
+    hist_v3,
+    set_cap_v3,
+    set_hist_v3,
+    set_msg_v3,
+    set_w4t_v3,
+    verb_ok_v3,
+    w4t_v3,
+):
+    if verb_ok_v3:
+        set_hist_v3(hist_v3() + [cv_v3])
+        set_w4t_v3([w for w in w4t_v3() if w["Word"] != cv_v3["Word"]])
+        set_msg_v3(f"✅ {cv_v3['Word']} — {cv_v3['Translation']}")
+        set_cap_v3(None)
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    cv_v3,
+    hist_v3,
+    nxt_btn_v3,
+    nxt_cnt_v3,
+    prev_btn_v3,
+    prev_cnt_v3,
+    set_cap_v3,
+    set_hist_v3,
+    set_nxt_cnt_v3,
+    set_prev_cnt_v3,
+    set_sub_cnt_v3,
+    set_w4t_v3,
+    w4t_v3,
+):
+    if (nxt_btn_v3.value or 0) > nxt_cnt_v3():
+        set_nxt_cnt_v3(nxt_btn_v3.value)
+        set_cap_v3(None)
+        set_sub_cnt_v3(0)
+        if w4t_v3() and cv_v3:
+            set_hist_v3(hist_v3() + [cv_v3])
+            set_w4t_v3([w for w in w4t_v3() if w["Word"] != cv_v3["Word"]])
+
+    if (prev_btn_v3.value or 0) > prev_cnt_v3():
+        set_prev_cnt_v3(prev_btn_v3.value)
+        set_cap_v3(None)
+        set_sub_cnt_v3(0)
+        if hist_v3():
+            _prev_v3 = hist_v3()[-1]
+            set_hist_v3(hist_v3()[:-1])
+            set_w4t_v3([_prev_v3] + [w for w in w4t_v3() if w["Word"] != _prev_v3["Word"]])
+    return
+
+
+@app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
     mo.md(fr"""
     ## τὸ τέταρτον προστεταγμένον · Домашнее задание
@@ -453,7 +648,7 @@ def _(
         history_a, set_history_a, future_a, set_future_a,
         answer_radio_a, next_btn_a, prev_btn_a,
         vocab=VOCAB_ALL,
-        title='## Упражнение 3 · Выбрать слово',
+        title='## Упражнение 4 · Выбрать слово',
     )
     return
 
@@ -521,7 +716,7 @@ def _(
         history_aw, set_history_aw, future_aw, set_future_aw,
         write_input_aw, dia_aw, check_btn_aw, prev_btn_aw, next_btn_aw,
         vocab=VOCAB_ALL,
-        title='## Упражнение 4 · Написать греческое слово',
+        title='## Упражнение 5 · Написать греческое слово',
         comment='Для ввода используйте **polytonic Greek keyboard** или кнопки диакритики ниже.<br>**Как пользоваться:** нажмите кнопку знака диакритики → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается.',
     )
     return
@@ -557,14 +752,34 @@ def _():
 
 @app.cell(hide_code=True)
 def _(cfg, mo):
+    import eee_project as eee
+    from ancient_greek_backend_eee import AncientGreekBackend
     from eee_project import GreekUtils, ANCIENT_GREEK
     from eee_project.notebook_utils import eee_footer
     from pathlib import Path as _Path
-    gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
     NB_DIR = _Path(__file__).parent
     NB_REMOTE = f"{cfg.raw_base}/2026_06_23"
+    _verb_yaml = NB_DIR.parent / "athenaze_cap1_verbs.yaml"
+    if not _verb_yaml.exists():
+        import urllib.request as _ur
+        _ur.urlretrieve(f"{cfg.raw_base}/athenaze_cap1_verbs.yaml", str(_verb_yaml))
+    ag = AncientGreekBackend(lexicons=["pratt", "ltrg", str(_verb_yaml)])
+    eee.register_backend("grc", ag)
+    eee.register_backend("grc", ag, backend="ancient-greek")
+    eee.set_chain("grc", ["ancient-greek"])
+    gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
     eee_footer(mo, lang='ru')
     return NB_DIR, NB_REMOTE, gu
+
+
+@app.cell(hide_code=True)
+def _(cap_v3, cv_v3, gu):
+    _c = cap_v3()
+    verb_ok_v3 = False
+    verb_fb_v3 = ""
+    if cv_v3 and _c and getattr(_c, "verb_word", None) == cv_v3["Word"]:
+        verb_ok_v3, verb_fb_v3 = gu.check_verb_test(cv_v3["Word"], _c, "present")
+    return verb_fb_v3, verb_ok_v3
 
 
 if __name__ == "__main__":
