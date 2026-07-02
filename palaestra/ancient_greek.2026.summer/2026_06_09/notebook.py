@@ -182,13 +182,11 @@ def _(mo):
 def _(cfg, mo):
     import eee_project as eee
     from ancient_greek_backend_eee import AncientGreekBackend
-    from eee_project import GreekUtils, ANCIENT_GREEK
+    from eee_project import GreekUtils, ANCIENT_GREEK, setup_ancient_greek
     from pathlib import Path as _Path
 
     ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt"])
-    eee.register_backend("grc", ag)
-    eee.register_backend("grc", ag, backend="ancient-greek")
-    eee.set_chain("grc", ["ancient-greek"])
+    setup_ancient_greek(ag)
 
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
 

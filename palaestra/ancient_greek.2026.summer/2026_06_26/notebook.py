@@ -725,7 +725,7 @@ def _():
 def _(cfg, mo):
     import eee_project as eee
     from ancient_greek_backend_eee import AncientGreekBackend
-    from eee_project import GreekUtils, ANCIENT_GREEK
+    from eee_project import GreekUtils, ANCIENT_GREEK, setup_ancient_greek
     from eee_project.notebook_utils import eee_footer
     from pathlib import Path as _Path
     NB_DIR = _Path(__file__).parent
@@ -736,9 +736,7 @@ def _(cfg, mo):
         import urllib.request as _ur
         _ur.urlretrieve(f"{cfg.raw_base}/athenaze_cap1_nouns.yaml", str(_noun_yaml))
     ag = AncientGreekBackend(lexicons=["pratt", "ltrg", str(_verb_yaml), str(_noun_yaml)])
-    eee.register_backend("grc", ag)
-    eee.register_backend("grc", ag, backend="ancient-greek")
-    eee.set_chain("grc", ["ancient-greek"])
+    setup_ancient_greek(ag)
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
     eee_footer(mo, lang='ru')
     return NB_DIR, NB_REMOTE, gu
