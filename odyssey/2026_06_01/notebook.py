@@ -602,10 +602,7 @@ def _(
         _flags = [_has_displayable_form(w) for w in QUIZ_WORDS_RAW]
         QUIZ_WORDS = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
 
-    for w in QUIZ_WORDS:
-        _ctx = w.get("context", "")
-        _meaning = w.get("meaning", "")
-        w["_label"] = f"{_ctx} – {_meaning}" if _ctx else f"«{_meaning}»"
+    eee.add_labels(QUIZ_WORDS)
 
     set_cv(None)
     set_remaining(None)

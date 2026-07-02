@@ -198,3 +198,35 @@ Built from vocab TSV `form` column. Normalization (both vocab and poem sides):
 
 Stem vowel differences block matching (e.g. `ἑταῖρ-` vs `ἑτάρ-`) — add the
 attested form as a separate TSV entry if it should highlight.
+
+## Quiz word filtering and poem-text highlighting share one check
+
+Two independent `mo.ui.radio` controls exist in every lesson notebook, both
+defaulting to the same mode:
+
+- `filter_mode` (options: `словоформы`/`current`, `только Гомер`/`homer`,
+  `все слова`/`none`) — which TSV rows enter the quiz question pool
+  (`QUIZ_WORDS`)
+- `SHOW_COVERAGE` (adds a fourth `выкл.`/`None` "off" option) — which words
+  get underlined in the poem text (`WORDS_COMBINED`)
+
+Their default (`current`) branch runs the identical check in both cells:
+build the word's full ag paradigm via `build_paradigm_table(w)` and require
+the tested form to appear without the orange `#f97316` "irregular form"
+marker — i.e. `result and "#f97316" not in result`. (Each cell defines its
+own private closure for this — `_has_displayable_form` in the quiz-filter
+cell — since marimo cell-local `_`-prefixed names aren't shared across
+cells.)
+
+**Why words get excluded:** vocab TSVs mix content words (noun/verb/adj/
+proper name) with function words (pronouns, particles, prepositions,
+conjunctions). Function words have no noun/verb/adj paradigm to check, so
+they're excluded from the default filter by design — that's normal, not a
+coverage bug. The interesting gaps are content words still missing backend
+paradigm coverage; this set changes as vocab TSVs grow and as
+`ancient-greek-backend-eee` gains coverage, so don't hardcode a snapshot of
+it in docs. To see the current list, open the notebook (`marimo edit
+notebook.py --sandbox`) and check `QUIZ_WORDS_RAW` against
+`build_paradigm_table` directly — or drive it headless via the
+WebSocket+HTTP smoke-test pattern in the marimo-pair skill reference when no
+browser is available.
