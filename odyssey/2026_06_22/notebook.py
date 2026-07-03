@@ -15,7 +15,7 @@
 
 import marimo
 
-__generated_with = "0.23.11"
+__generated_with = "0.23.8"
 app = marimo.App(width="medium")
 
 
@@ -269,8 +269,13 @@ def _(
 @app.cell(hide_code=True)
 def _(mo):
     SHOW_COVERAGE = mo.ui.radio(
-        options={"выкл.": None, "словоформы": "current", "только Гомер": "homer", "все слова": "none"},
-        value="выкл.",
+        options={
+            "Гомер": "homer",
+            "выкл.": None,
+            # "словоформы": "current",
+            # "все слова": "none",
+        },
+        value="Гомер",
         label="**Подсветка слов в тексте:**",
         inline=True,
     )
@@ -290,8 +295,12 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     filter_mode = mo.ui.radio(
-        options={"словоформы": "current", "только Гомер": "homer", "все слова": "none"},
-        value="словоформы",
+        options={
+            # "словоформы": "current",
+            "Гомер": "homer",
+            "все слова": "none",
+        },
+        value="Гомер",
         label="**Лексикон:**",
         inline=True,
     )
@@ -322,6 +331,7 @@ def _(QUIZ_WORDS, cv, gu, history, remaining, restore_entry):
 def _(
     QUIZ_WORDS,
     answer_radio,
+    build_lexicon_tabs,
     cv,
     future,
     gu,
@@ -347,6 +357,7 @@ def _(
         title='## Упражнение: словарная форма',
         meaning_key='_label',
         form_key='form',
+        build_paradigm_table=build_lexicon_tabs,
     )
     return
 
@@ -371,9 +382,9 @@ def _(mo):
 
     **Лексикон** (фильтр):
 
-    - *словоформы* — слова, для которых движку удаётся построить парадигму,
-      используя unimorph-backend-eee и ancient-greek-backend-eee с лексиконами Homer, LXX, MorphGNT
-    - *только Гомер* — слова из гомеровского лексикона ancient-greek-backend-eee
+    <!-- - *словоформы* — слова, для которых движку удаётся построить парадигму,
+      используя unimorph-backend-eee и ancient-greek-backend-eee с лексиконами Homer, LXX, MorphGNT -->
+    - *Гомер* — слова из гомеровского лексикона ancient-greek-backend-eee
     - *все слова* — весь словарь занятия без фильтрации
 
     В таблице словоформ можно переключаться между лексиконами разных исторических периодов,
@@ -567,34 +578,10 @@ def _(
     set_cv,
     set_remaining,
 ):
-    def _has_displayable_form(w):
-        try:
-            result = build_paradigm_table(w)
-            if not result:
-                return False
-            return "#f97316" not in result
-        except Exception:
-            return False
-
-    def _in_homer(w):
-        try:
-            pos = "adjective" if w["pos"] == "adj" else w["pos"]
-            slots = ag_homer.get_slot_templates("grc", pos, "ru") or []
-            if not slots:
-                return False
-            forms = eee.inflect_slot(w["lemma"], slots[0], pos, language="grc", backend="ag-homer")
-            return bool(forms)
-        except Exception:
-            return False
-
-    _mode = filter_mode.value
-    if _mode == "none":
-        QUIZ_WORDS = list(QUIZ_WORDS_RAW)
-    elif _mode == "homer":
-        QUIZ_WORDS = [w for w in QUIZ_WORDS_RAW if _in_homer(w)]
-    else:
-        _flags = [_has_displayable_form(w) for w in QUIZ_WORDS_RAW]
-        QUIZ_WORDS = [w for w, ok in zip(QUIZ_WORDS_RAW, _flags) if ok]
+    QUIZ_WORDS = eee.filter_grc_quiz_words(
+        QUIZ_WORDS_RAW, filter_mode.value,
+        build_paradigm_table=build_paradigm_table, ag_homer=ag_homer, eee=eee,
+    )
 
     eee.add_labels(QUIZ_WORDS)
 
@@ -605,42 +592,10 @@ def _(
 
 @app.cell(hide_code=True)
 def _(QUIZ_WORDS_RAW, SHOW_COVERAGE, ag_homer, build_paradigm_table, eee):
-    import unicodedata as _u
-
-    def _norm_f(s):
-        nfd = _u.normalize("NFD", s)
-        no_mn = "".join(c for c in nfd if _u.category(c) != "Mn")
-        nfc = _u.normalize("NFC", no_mn)
-        return nfc.strip("',.᾽᾿ʼ")
-
-    # words for coverage highlighting: computed from SHOW_COVERAGE.value
-    def _words_for_coverage(mode):
-        if mode is None:
-            return set()
-        if mode == "none":
-            return {_norm_f(w["form"]) for w in QUIZ_WORDS_RAW}
-        if mode == "homer":
-            result = set()
-            for w in QUIZ_WORDS_RAW:
-                try:
-                    pos = "adjective" if w["pos"] == "adj" else w["pos"]
-                    slots = ag_homer.get_slot_templates("grc", pos, "ru") or []
-                    if slots and eee.inflect_slot(w["lemma"], slots[0], pos, language="grc", backend="ag-homer"):
-                        result.add(_norm_f(w["form"]))
-                except Exception:
-                    pass
-            return result
-        result = set()
-        for w in QUIZ_WORDS_RAW:
-            try:
-                r = build_paradigm_table(w)
-                if r and "#f97316" not in r:
-                    result.add(_norm_f(w["form"]))
-            except Exception:
-                pass
-        return result
-
-    WORDS_COMBINED = _words_for_coverage(SHOW_COVERAGE.value)
+    WORDS_COMBINED = eee.grc_coverage_words(
+        QUIZ_WORDS_RAW, SHOW_COVERAGE.value,
+        build_paradigm_table=build_paradigm_table, ag_homer=ag_homer, eee=eee,
+    )
     return (WORDS_COMBINED,)
 
 
@@ -651,7 +606,7 @@ def _(ag_backend, ag_homer, ag_lxx, ag_morphgnt, eee, um_backend):
         ag_backend, um_backend,
         lexicons={"homer": ag_homer, "lxx": ag_lxx, "morphgnt": ag_morphgnt},
     )
-    return (build_paradigm_table,)
+    return build_lexicon_tabs, build_paradigm_table
 
 
 @app.cell(hide_code=True)
