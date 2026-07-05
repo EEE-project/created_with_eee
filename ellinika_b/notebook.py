@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
-#     "marimo>=0.23.9",
+#     "marimo>=0.23.13",
 #     "pandas==3.0.2",
 # ]
 #

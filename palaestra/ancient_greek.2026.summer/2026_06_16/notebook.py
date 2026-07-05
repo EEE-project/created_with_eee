@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo>=0.23.3",
+#     "marimo>=0.23.13",
 #     "pandas>=2.0",
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
 #     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
