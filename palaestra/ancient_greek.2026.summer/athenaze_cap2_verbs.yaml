@@ -1,0 +1,55 @@
+# Athenaze Chapter II — present-tense verb stems
+# Only 1-: (present stem without augment) is needed for present-tense drill.
+# ἄγω, βαίνω, λαμβάνω, ποιέω, καλέω already covered by pratt/ltrg (+cap1).
+
+τύπτω:
+    stems:
+        1-: τυπτ
+
+ἀκολουθέω:
+    stems:
+        1-: ἀκολουθε
+
+ἅπτω:
+    stems:
+        1-: ἁπτ
+
+ἀροτρεύω:
+    stems:
+        1-: ἀροτρευ
+
+βλέπω:
+    stems:
+        1-: βλεπ
+
+ἐλαύνω:
+    stems:
+        1-: ἐλαυν
+
+ἕλκω:
+    stems:
+        1-: ἑλκ
+
+καθεύδω:
+    stems:
+        1-: καθευδ
+
+κεντέω:
+    stems:
+        1-: κεντε
+
+μένω:
+    stems:
+        1-: μεν
+
+πληθύνω:
+    stems:
+        1-: πληθυν
+
+σπεύδω:
+    stems:
+        1-: σπευδ
+
+συλλαμβάνω:
+    stems:
+        1-: συλλαμβαν
