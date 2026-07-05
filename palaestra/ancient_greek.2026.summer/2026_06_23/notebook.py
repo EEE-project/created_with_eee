@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo>=0.23.3",
+#     "marimo>=0.23.13",
 #     "pandas>=2.0",
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
 #     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.11"
+__generated_with = "0.23.13"
 app = marimo.App(width="medium")
 
 
@@ -376,7 +376,7 @@ def _(mo):
 def _():
     from eee_project import make_paradigm_form
 
-    return (make_paradigm_form,)
+    return
 
 
 @app.cell(hide_code=True)
@@ -409,24 +409,29 @@ def _(WORDS_VERB_V3, mo):
     hist_v3, set_hist_v3 = mo.state([])
     msg_v3, set_msg_v3 = mo.state("")
     cap_v3, set_cap_v3 = mo.state(None)
+    entered_v3, set_entered_v3 = mo.state({})
     sub_cnt_v3, set_sub_cnt_v3 = mo.state(0)
     prev_cnt_v3, set_prev_cnt_v3 = mo.state(0)
     nxt_cnt_v3, set_nxt_cnt_v3 = mo.state(0)
-    prev_btn_v3 = mo.ui.button(label="Предыдущее", on_click=lambda v: (v or 0) + 1)
-    nxt_btn_v3 = mo.ui.button(label="Следующее", on_click=lambda v: (v or 0) + 1)
+    restart_cnt_v3, set_restart_cnt_v3 = mo.state(0)
+    entercnt_v3, set_entercnt_v3 = mo.state(0)
     return (
         cap_v3,
+        entercnt_v3,
+        entered_v3,
         hist_v3,
         msg_v3,
-        nxt_btn_v3,
         nxt_cnt_v3,
-        prev_btn_v3,
         prev_cnt_v3,
+        restart_cnt_v3,
         set_cap_v3,
+        set_entercnt_v3,
+        set_entered_v3,
         set_hist_v3,
         set_msg_v3,
         set_nxt_cnt_v3,
         set_prev_cnt_v3,
+        set_restart_cnt_v3,
         set_sub_cnt_v3,
         set_w4t_v3,
         sub_cnt_v3,
@@ -435,120 +440,77 @@ def _(WORDS_VERB_V3, mo):
 
 
 @app.cell(hide_code=True)
-def _(make_paradigm_form, mo, set_sub_cnt_v3, w4t_v3):
+def _(
+    entered_v3,
+    gu,
+    hist_v3,
+    set_entercnt_v3,
+    set_nxt_cnt_v3,
+    set_prev_cnt_v3,
+    w4t_v3,
+):
     cv_v3 = w4t_v3()[0] if w4t_v3() else None
-    verb_form_v3 = make_paradigm_form(mo, ["1 sg:", "2 sg:", "3 sg:", "1 pl:", "2 pl:", "3 pl:"])
-    check_btn_v3 = mo.ui.button(label="Проверить", on_click=lambda v: (v or 0) + 1)
-    set_sub_cnt_v3(0)
-    return check_btn_v3, cv_v3, verb_form_v3
+    _entered_form_v3 = entered_v3().get(cv_v3["Word"]) if cv_v3 else None
+    verb_form_v3, prev_btn_v3, nxt_btn_v3, restart_btn_v3 = gu.paradigm_drill_widgets(
+        labels=["1 sg:", "2 sg:", "3 sg:", "1 pl:", "2 pl:", "3 pl:"],
+        values=_entered_form_v3,
+        history_len=len(hist_v3()),
+        remaining_len=len(w4t_v3()),
+        next_label="Следующее",
+        prev_label="Предыдущее",
+    )
+    set_prev_cnt_v3(0)
+    set_nxt_cnt_v3(0)
+    set_entercnt_v3(0)
+    return cv_v3, nxt_btn_v3, prev_btn_v3, restart_btn_v3, verb_form_v3
 
 
 @app.cell(hide_code=True)
 def _(
     WORDS_VERB_V3,
+    cap_v3,
     check_btn_v3,
     cv_v3,
-    mo,
+    entercnt_v3,
+    entered_v3,
+    gu,
+    hist_v3,
     msg_v3,
-    nxt_btn_v3,
-    prev_btn_v3,
-    verb_fb_v3,
-    verb_form_v3,
-    w4t_v3,
-):
-    if not w4t_v3():
-        _out_v3 = mo.md("**✅ Все глаголы пройдены!**")
-    else:
-        _fback_v3 = mo.md(verb_fb_v3) if verb_fb_v3 else mo.md("")
-        _done = len(WORDS_VERB_V3) - len(w4t_v3())
-        _total = len(WORDS_VERB_V3)
-        _items = [mo.md(f"## Упражнение 3 · Спряжение в настоящем времени ({_done + 1}/{_total})")]
-        if msg_v3():
-            _items.append(mo.md(msg_v3()))
-        _items += [
-            mo.md(f"Перевод: **{cv_v3['Translation']}**") if cv_v3 else mo.md(""),
-            verb_form_v3,
-            mo.hstack([check_btn_v3, prev_btn_v3, nxt_btn_v3], justify="end"),
-            _fback_v3,
-        ]
-        _out_v3 = mo.vstack(_items)
-    _out_v3
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    check_btn_v3,
-    cv_v3,
-    set_cap_v3,
-    set_sub_cnt_v3,
-    sub_cnt_v3,
-    verb_form_v3,
-):
-    import types as _tv3
-    if (check_btn_v3.value or 0) > sub_cnt_v3():
-        set_sub_cnt_v3(check_btn_v3.value)
-        if cv_v3:
-            _snap_v3 = _tv3.SimpleNamespace(
-                verb_word=cv_v3["Word"],
-                tense="present",
-                value=list(verb_form_v3.widget.values),
-            )
-            set_cap_v3(_snap_v3)
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    cv_v3,
-    hist_v3,
-    set_cap_v3,
-    set_hist_v3,
-    set_msg_v3,
-    set_w4t_v3,
-    verb_ok_v3,
-    w4t_v3,
-):
-    if verb_ok_v3:
-        set_hist_v3(hist_v3() + [cv_v3])
-        set_w4t_v3([w for w in w4t_v3() if w["Word"] != cv_v3["Word"]])
-        set_msg_v3(f"✅ {cv_v3['Word']} — {cv_v3['Translation']}")
-        set_cap_v3(None)
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    cv_v3,
-    hist_v3,
     nxt_btn_v3,
     nxt_cnt_v3,
     prev_btn_v3,
     prev_cnt_v3,
+    restart_btn_v3,
+    restart_cnt_v3,
     set_cap_v3,
+    set_entercnt_v3,
+    set_entered_v3,
     set_hist_v3,
+    set_msg_v3,
     set_nxt_cnt_v3,
     set_prev_cnt_v3,
+    set_restart_cnt_v3,
     set_sub_cnt_v3,
     set_w4t_v3,
+    sub_cnt_v3,
+    verb_form_v3,
     w4t_v3,
 ):
-    if (nxt_btn_v3.value or 0) > nxt_cnt_v3():
-        set_nxt_cnt_v3(nxt_btn_v3.value)
-        set_cap_v3(None)
-        set_sub_cnt_v3(0)
-        if w4t_v3() and cv_v3:
-            set_hist_v3(hist_v3() + [cv_v3])
-            set_w4t_v3([w for w in w4t_v3() if w["Word"] != cv_v3["Word"]])
-
-    if (prev_btn_v3.value or 0) > prev_cnt_v3():
-        set_prev_cnt_v3(prev_btn_v3.value)
-        set_cap_v3(None)
-        set_sub_cnt_v3(0)
-        if hist_v3():
-            _prev_v3 = hist_v3()[-1]
-            set_hist_v3(hist_v3()[:-1])
-            set_w4t_v3([_prev_v3] + [w for w in w4t_v3() if w["Word"] != _prev_v3["Word"]])
+    gu.verb_paradigm_drill_form(
+        w4t_v3, set_w4t_v3, hist_v3, set_hist_v3, msg_v3, set_msg_v3,
+        cap_v3, set_cap_v3, entered_v3, set_entered_v3,
+        sub_cnt_v3, set_sub_cnt_v3, prev_cnt_v3, set_prev_cnt_v3,
+        nxt_cnt_v3, set_nxt_cnt_v3, entercnt_v3, set_entercnt_v3,
+        restart_cnt_v3, set_restart_cnt_v3,
+        cv_v3, verb_form_v3, check_btn_v3, prev_btn_v3, nxt_btn_v3, restart_btn_v3,
+        vocab=WORDS_VERB_V3,
+        tense="present",
+        word_key="Word",
+        meaning_key="Translation",
+        meaning_label="Перевод",
+        title="## Упражнение 3 · Спряжение в настоящем времени",
+        done_message="✅ Все глаголы пройдены!",
+    )
     return
 
 
@@ -771,13 +733,12 @@ def _(cfg, mo):
 
 
 @app.cell(hide_code=True)
-def _(cap_v3, cv_v3, gu):
-    _c = cap_v3()
-    verb_ok_v3 = False
-    verb_fb_v3 = ""
-    if cv_v3 and _c and getattr(_c, "verb_word", None) == cv_v3["Word"]:
-        verb_ok_v3, verb_fb_v3 = gu.check_verb_test(cv_v3["Word"], _c, "present")
-    return verb_fb_v3, verb_ok_v3
+def _(cap_v3, cv_v3, gu, set_sub_cnt_v3, verb_form_v3):
+    check_btn_v3 = gu.dirty_check_button(
+        verb_form_v3, cap_v3, cv_v3, "verb_word", word_key="Word", label="Проверить"
+    )
+    set_sub_cnt_v3(0)
+    return (check_btn_v3,)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo>=0.23.3",
+#     "marimo>=0.23.13",
 #     "pandas>=2.0",
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
 #     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.11"
+__generated_with = "0.23.13"
 app = marimo.App(width="medium")
 
 
@@ -363,7 +363,7 @@ def _(mo):
 def _():
     from eee_project import make_paradigm_form
 
-    return (make_paradigm_form,)
+    return
 
 
 @app.cell(hide_code=True)
@@ -381,24 +381,29 @@ def _(WORDS_NOUN_N3, mo):
     hist_n3, set_hist_n3 = mo.state([])
     msg_n3, set_msg_n3 = mo.state("")
     cap_n3, set_cap_n3 = mo.state(None)
+    entered_n3, set_entered_n3 = mo.state({})
     sub_cnt_n3, set_sub_cnt_n3 = mo.state(0)
     prev_cnt_n3, set_prev_cnt_n3 = mo.state(0)
     nxt_cnt_n3, set_nxt_cnt_n3 = mo.state(0)
-    prev_btn_n3 = mo.ui.button(label="Предыдущее", on_click=lambda v: (v or 0) + 1)
-    nxt_btn_n3 = mo.ui.button(label="Следующее", on_click=lambda v: (v or 0) + 1)
+    restart_cnt_n3, set_restart_cnt_n3 = mo.state(0)
+    entercnt_n3, set_entercnt_n3 = mo.state(0)
     return (
         cap_n3,
+        entercnt_n3,
+        entered_n3,
         hist_n3,
         msg_n3,
-        nxt_btn_n3,
         nxt_cnt_n3,
-        prev_btn_n3,
         prev_cnt_n3,
+        restart_cnt_n3,
         set_cap_n3,
+        set_entercnt_n3,
+        set_entered_n3,
         set_hist_n3,
         set_msg_n3,
         set_nxt_cnt_n3,
         set_prev_cnt_n3,
+        set_restart_cnt_n3,
         set_sub_cnt_n3,
         set_w4t_n3,
         sub_cnt_n3,
@@ -407,124 +412,87 @@ def _(WORDS_NOUN_N3, mo):
 
 
 @app.cell(hide_code=True)
-def _(gu, make_paradigm_form, mo, set_sub_cnt_n3, w4t_n3):
+def _(
+    entered_n3,
+    gu,
+    hist_n3,
+    set_entercnt_n3,
+    set_nxt_cnt_n3,
+    set_prev_cnt_n3,
+    w4t_n3,
+):
     cv_n3 = w4t_n3()[0] if w4t_n3() else None
     _, _, noun_meta_n3 = gu.create_noun_test_ui([cv_n3] if cv_n3 else [])
     _ac_n3 = getattr(noun_meta_n3, "active_cases", [])
-    noun_form_n3 = make_paradigm_form(mo, [f"{n} {c}:" for n, c in _ac_n3])
-    check_btn_n3 = mo.ui.button(label="Проверить", on_click=lambda v: (v or 0) + 1)
-    set_sub_cnt_n3(0)
-    return check_btn_n3, cv_n3, noun_form_n3, noun_meta_n3
+    _entered_form_n3 = entered_n3().get(cv_n3["Word"]) if cv_n3 else None
+    noun_form_n3, prev_btn_n3, nxt_btn_n3, restart_btn_n3 = gu.paradigm_drill_widgets(
+        labels=[f"{n} {c}:" for n, c in _ac_n3],
+        values=_entered_form_n3,
+        history_len=len(hist_n3()),
+        remaining_len=len(w4t_n3()),
+        next_label="Следующее",
+        prev_label="Предыдущее",
+    )
+    set_prev_cnt_n3(0)
+    set_nxt_cnt_n3(0)
+    set_entercnt_n3(0)
+    return (
+        cv_n3,
+        noun_form_n3,
+        noun_meta_n3,
+        nxt_btn_n3,
+        prev_btn_n3,
+        restart_btn_n3,
+    )
 
 
 @app.cell(hide_code=True)
 def _(
     WORDS_NOUN_N3,
+    cap_n3,
     check_btn_n3,
     cv_n3,
-    mo,
+    entercnt_n3,
+    entered_n3,
+    gu,
+    hist_n3,
     msg_n3,
-    noun_fb_n3,
-    noun_form_n3,
-    nxt_btn_n3,
-    prev_btn_n3,
-    w4t_n3,
-):
-    if not w4t_n3():
-        _out_n3 = mo.md("**✅ Все существительные пройдены!**")
-    else:
-        _fback_n3 = mo.md(noun_fb_n3) if noun_fb_n3 else mo.md("")
-        _done = len(WORDS_NOUN_N3) - len(w4t_n3())
-        _total = len(WORDS_NOUN_N3)
-        _items = [mo.md(f"## Упражнение 3 · Склонение существительных ({_done + 1}/{_total})")]
-        if msg_n3():
-            _items.append(mo.md(msg_n3()))
-        _items += [
-            mo.md(f"Перевод: **{cv_n3['Translation']}**") if cv_n3 else mo.md(""),
-            noun_form_n3,
-            mo.hstack([check_btn_n3, prev_btn_n3, nxt_btn_n3], justify="end"),
-            _fback_n3,
-        ]
-        _out_n3 = mo.vstack(_items)
-    _out_n3
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    check_btn_n3,
-    cv_n3,
     noun_form_n3,
     noun_meta_n3,
-    set_cap_n3,
-    set_sub_cnt_n3,
-    sub_cnt_n3,
-):
-    import types as _tn3
-    if (check_btn_n3.value or 0) > sub_cnt_n3():
-        set_sub_cnt_n3(check_btn_n3.value)
-        if cv_n3 and noun_meta_n3 and noun_form_n3.widget.values:
-            _snap_n3 = _tn3.SimpleNamespace(
-                test_word=cv_n3["Word"],
-                is_pluralia_tantum=getattr(noun_meta_n3, "is_pluralia_tantum", False),
-                active_cases=getattr(noun_meta_n3, "active_cases", []),
-                value=list(noun_form_n3.widget.values),
-            )
-            set_cap_n3(_snap_n3)
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    cv_n3,
-    hist_n3,
-    noun_ok_n3,
-    set_cap_n3,
-    set_hist_n3,
-    set_msg_n3,
-    set_w4t_n3,
-    w4t_n3,
-):
-    if noun_ok_n3:
-        set_hist_n3(hist_n3() + [cv_n3])
-        set_w4t_n3([w for w in w4t_n3() if w["Word"] != cv_n3["Word"]])
-        set_msg_n3(f"\u2705 {cv_n3['Word']} \u2014 {cv_n3['Translation']}")
-        set_cap_n3(None)
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    cv_n3,
-    hist_n3,
     nxt_btn_n3,
     nxt_cnt_n3,
     prev_btn_n3,
     prev_cnt_n3,
+    restart_btn_n3,
+    restart_cnt_n3,
     set_cap_n3,
+    set_entercnt_n3,
+    set_entered_n3,
     set_hist_n3,
+    set_msg_n3,
     set_nxt_cnt_n3,
     set_prev_cnt_n3,
+    set_restart_cnt_n3,
     set_sub_cnt_n3,
     set_w4t_n3,
+    sub_cnt_n3,
     w4t_n3,
 ):
-    if (nxt_btn_n3.value or 0) > nxt_cnt_n3():
-        set_nxt_cnt_n3(nxt_btn_n3.value)
-        set_cap_n3(None)
-        set_sub_cnt_n3(0)
-        if w4t_n3() and cv_n3:
-            set_hist_n3(hist_n3() + [cv_n3])
-            set_w4t_n3([w for w in w4t_n3() if w["Word"] != cv_n3["Word"]])
-
-    if (prev_btn_n3.value or 0) > prev_cnt_n3():
-        set_prev_cnt_n3(prev_btn_n3.value)
-        set_cap_n3(None)
-        set_sub_cnt_n3(0)
-        if hist_n3():
-            _prev_n3 = hist_n3()[-1]
-            set_hist_n3(hist_n3()[:-1])
-            set_w4t_n3([_prev_n3] + [w for w in w4t_n3() if w["Word"] != _prev_n3["Word"]])
+    gu.noun_paradigm_drill_form(
+        w4t_n3, set_w4t_n3, hist_n3, set_hist_n3, msg_n3, set_msg_n3,
+        cap_n3, set_cap_n3, entered_n3, set_entered_n3,
+        sub_cnt_n3, set_sub_cnt_n3, prev_cnt_n3, set_prev_cnt_n3,
+        nxt_cnt_n3, set_nxt_cnt_n3, entercnt_n3, set_entercnt_n3,
+        restart_cnt_n3, set_restart_cnt_n3,
+        cv_n3, noun_form_n3, check_btn_n3, prev_btn_n3, nxt_btn_n3, restart_btn_n3,
+        vocab=WORDS_NOUN_N3,
+        noun_meta=noun_meta_n3,
+        word_key="Word",
+        meaning_key="Translation",
+        meaning_label="Перевод",
+        title="## Упражнение 3 · Склонение существительных",
+        done_message="✅ Все существительные пройдены!",
+    )
     return
 
 
@@ -743,13 +711,12 @@ def _(cfg, mo):
 
 
 @app.cell(hide_code=True)
-def _(cap_n3, cv_n3, gu):
-    _c = cap_n3()
-    noun_ok_n3 = False
-    noun_fb_n3 = ""
-    if cv_n3 and _c:
-        noun_ok_n3, noun_fb_n3 = gu.check_noun_test(cv_n3["Word"], _c, article=True)
-    return noun_fb_n3, noun_ok_n3
+def _(cap_n3, cv_n3, gu, noun_form_n3, set_sub_cnt_n3):
+    check_btn_n3 = gu.dirty_check_button(
+        noun_form_n3, cap_n3, cv_n3, "test_word", word_key="Word", label="Проверить"
+    )
+    set_sub_cnt_n3(0)
+    return (check_btn_n3,)
 
 
 if __name__ == "__main__":
