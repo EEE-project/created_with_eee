@@ -32,47 +32,80 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_LtJRZFGZ4wFNFPk4edTAbL)"
+    from pathlib import Path as _Path
+    _thumb_path = _Path(__file__).parent / "odysseus_bust.jpg"
+    _badge = ""  # молаб-бейдж добавить после загрузки в molab
     _left = mo.vstack([
         mo.md("# Одиссея для отважных"),
         mo.md(_badge),
-        mo.md("## День 1 · Odyss. IX.19–38"),
+        mo.md("## День 3 · Odyss. IX.62–81"),
     ])
-    _img_url = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_15/map_ithaca.jpg"
-    _img = mo.Html(
-        f'<a href="{_img_url}" target="_blank" rel="noopener">'
-        f'<img src="{_img_url}" style="max-width:280px;width:100%;border-radius:4px;object-fit:cover;cursor:pointer"/>'
-        f'</a>'
-    )
-    mo.hstack([_left, _img], align="start")
+    _right = mo.image(src=_thumb_path.read_bytes(), width=280) if _thumb_path.exists() else mo.Html("")
+    mo.hstack([_left, _right], align="start")
+    return
+
+
+@app.cell(hide_code=True)
+def _(NB_REMOTE, mo):
+    _txt = f"**Материалы занятия:** [Od_IX_62-81.pdf]({NB_REMOTE}/Od_IX_62-81.pdf) · [Od_IX_62-81_vocabula.docx]({NB_REMOTE}/Od_IX_62-81_vocabula.docx)"
+    mo.md(_txt)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    _base = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_15"
-    mo.md(
-        f"**Материалы занятия:** "
-        f"[Одиссея 1.pdf]({_base}/Одиссея%201.pdf) · "
-        f"[слова день 1.pdf]({_base}/слова%20день%201.pdf) · "
-        "[odysseus-unbound.org ↗](https://www.odysseus-unbound.org/mystery/)"
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
+    from pathlib import Path as _Pp
+    _prep = _Pp(__file__).parent / "prepositions.jpg"
+    _pimg = mo.image(src=_prep.read_bytes(), width=440) if _prep.exists() else mo.Html("")
+    mo.vstack([
+        mo.md(r"""
     ---
-    ## Имя героя
+    ## Грамматическая памятка для начинающих моряков
 
-    **Ὀδυσσεύς** ← **ὀδύσσομαι** — гневаться, ненавидеть; причинять страдание
+    - Обычно показатель прошедшего времени — приставка **ἐ-** перед корнем глагола
+      (*аугмент*). Но **у Гомера** аугмента вполне может и не быть: тогда прошедшее
+      опознаётся по окончаниям и иногда по изменившейся основе.
+      *πλέομεν* — и «мы поплыли», и «мы плывём»: формы настоящего и имперфекта совпали.
+    - В древнегреческом есть **артикль** — всегда определённый; ставится перед словом
+      и повторяет его падеж. В большинстве падежей начинается на **τ-**: *τῶν δειλῶν*.
+    - У древнегреческого глагола три **залога**: *активный* (я делаю), *медиальный*
+      (я делаю сам, для себя, в своих интересах) и *пассивный* (со мной делают).
 
-    > *πολλοῖσιν γὰρ ἐγώ γε ὀδυσσάμενος* (Od. XIX.407)
-    > «ибо многим я причинил страдание»
+    Предлоги движения — **куда**, **откуда**, **где** — вокруг «сосуда» ἐν:
+    """),
+        _pimg,
+    ])
+    return
 
-    Имя означает «тот, кто причиняет / претерпевает страдания». Гомер использует его как этимологический символ судьбы героя.
-    """)
+
+@app.cell(hide_code=True)
+def _(mo):
+    from pathlib import Path as _Pm
+    _d = _Pm(__file__).parent
+    _c, _m = _d / "malea_cliff.jpg", _d / "malea_map.jpg"
+    _imgs = mo.hstack([
+        mo.image(src=_c.read_bytes(), width=300) if _c.exists() else mo.Html(""),
+        mo.image(src=_m.read_bytes(), width=300) if _m.exists() else mo.Html(""),
+    ], justify="start", align="center")
+    mo.vstack([
+        mo.md(r"""
+    ---
+    ### Μάλεια — мыс Малея
+
+    Юго-восточная оконечность Пелопоннеса. Обогнув её, Одиссей был бы уже почти дома —
+    но волна, течение и Борей отбросили его от Киферы (*Κύθηρα*) в открытое море, к лотофагам.
+    Плавание вокруг Малеи славилось опасностью: встречные ветры и течения у мыса
+    нередко сносили корабли в открытое море — как и Одиссея. Отсюда морская
+    поговорка, которую приводит **Страбон** (*География* 8.6.20):
+
+    > **Μαλέας δὲ κάμψας ἐπιλάθου τῶν οἴκαδε** — «обогнув Малею, забудь о доме».
+
+    (*κάμψας* «обогнув» — аор. причастие от *κάμπτω*; *ἐπιλάθου* «забудь» — аор.
+    императив от *ἐπιλανθάνομαι*.) По смыслу — как наше «пуститься в рискованное
+    плавание»: за Малеей о возвращении можно уже и не думать.
+    """),
+        _imgs,
+    ])
     return
 
 
@@ -132,54 +165,47 @@ def _(
         "font-size:1.15em;line-height:2"
     )
 
-    _R = "<b style='color:#980000'>"
-    _E = "</b>"
-
     _RHYTHM_HTML = {
-        # IX 19–24
-        "εἶμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν":
-            f"{_R}εἶ{_E}μ' Ὀδυσ{_R}εὺ{_E}ς Λα{_R}ε{_E}ρτιάδ{_R}η{_E}ς, ὃς π{_R}ᾶ{_E}σι δόλ{_R}οι{_E}σιν",
-        "ἀνθρώποισι μέλω, καί μευ κλέος οὐρανὸν ἵκει.":
-            f"{_R}ἀ{_E}νθρώπ{_R}οι{_E}σι μέλ{_R}ω{_E}, καί μ{_R}ευ{_E} κλέος {_R}οὐ{_E}ρανὸν {_R}ἵ{_E}κει.",
-        "ναιετάω δ' Ἰθάκην εὐδείελον· ἐν δ' ὄρος αὐτῇ":
-            f"ν{_R}αι{_E}ετά{_R}ω{_E} δ' Ἰθάκ{_R}η{_E}ν εὐδ{_R}εί{_E}ελον· {_R}ἐ{_E}ν δ' ὄρος {_R}αὐ{_E}τῇ",
-        "Νήριτον εἰνοσίφυλλον, ἀριπρεπές· ἀμφὶ δὲ νῆσοι":
-            f"Ν{_R}ή{_E}ριτον {_R}εἰ{_E}νοσίφ{_R}υ{_E}λλον, ἀρ{_R}ι{_E}πρεπές· {_R}ἀ{_E}μφὶ δὲ ν{_R}ῆ{_E}σοι",
-        "πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι,":
-            f"π{_R}ο{_E}λλαὶ ν{_R}αι{_E}ετά{_R}ου{_E}σι μάλ{_R}α{_E} σχεδὸν {_R}ἀ{_E}λλήλ{_R}ῃ{_E}σι,",
-        "Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος.":
-            f"Δ{_R}ου{_E}λίχι{_R}ό{_E}ν τε Σάμ{_R}η{_E} τε καὶ {_R}ὑ{_E}λή{_R}ε{_E}σσα Ζάκ{_R}υ{_E}νθος.",
-        # IX 25–28
-        "αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται":
-            f"{_R}αὐ{_E}τὴ δ{_R}ὲ{_E} χθαμαλ{_R}ὴ{_E} πανυπ{_R}ε{_E}ρτάτη {_R}εἰ{_E}ν ἁλὶ κ{_R}εῖ{_E}ται",
-        "πρὸς ζόφον, αἱ δέ τ' ἄνευθε πρὸς ἠῶ τ' ἠέλιόν τε,":
-            f"πρ{_R}ὸ{_E}ς ζόφον, {_R}αἱ{_E} δέ τ' {_R}ἄ{_E}νευθε πρ{_R}ὸ{_E}ς {_R}ἠ{_E}ῶ τ' {_R}ἠ{_E}έλι{_R}ό{_E}ν τε,",
-        "τρηχεῖ', ἀλλ' ἀγαθὴ κουροτρόφος· οὔ τοι ἐγώ γε":
-            f"τρ{_R}η{_E}χεῖ', {_R}ἀ{_E}λλ' ἀγαθ{_R}ὴ{_E} κουρ{_R}ο{_E}τρόφος· {_R}οὔ{_E} τοι ἐγ{_R}ώ{_E} γε",
-        "ἧς γαίης δύναμαι γλυκερώτερον ἄλλο ἰδέσθαι.":
-            f"{_R}ἧ{_E}ς γαί{_R}η{_E}ς δύναμ{_R}αι{_E} γλυκερ{_R}ώ{_E}τερον {_R}ἄ{_E}λλο ἰδ{_R}έ{_E}σθαι.",
-        # IX 29–33
-        "ἦ μέν μ' αὐτόθ' ἔρυκε Καλυψώ, δῖα θεάων,":
-            f"{_R}ἦ{_E} μέν μ' {_R}αὐ{_E}τόθ' ἔρ{_R}υ{_E}κε Καλ{_R}υ{_E}ψώ, δ{_R}ῖ{_E}α θε{_R}ά{_E}ων,",
-        "ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι·":
-            f"{_R}ἐ{_E}ν σπέσσ{_R}ι{_E} γλαφυρ{_R}οῖ{_E}σι, λιλ{_R}αι{_E}ομέν{_R}η{_E} πόσιν {_R}εἶ{_E}ναι·",
-        "ὣς δ' αὔτως Κίρκη κατερήτυεν ἐν μεγάροισιν":
-            f"{_R}ὣ{_E}ς δ' αὔτ{_R}ω{_E}ς Κίρκ{_R}η{_E} κατερ{_R}ή{_E}τυεν {_R}ἐ{_E}ν μεγάρ{_R}οι{_E}σιν",
-        "Αἰαίη δολόεσσα, λιλαιομένη πόσιν εἶναι·":
-            f"{_R}Αἰ{_E}αί{_R}η{_E} δολό{_R}ε{_E}σσα, λιλ{_R}αι{_E}ομέν{_R}η{_E} πόσιν {_R}εἶ{_E}ναι·",
-        "ἀλλ' ἐμὸν οὔ ποτε θυμὸν ἐνὶ στήθεσσιν ἔπειθον.":
-            f"{_R}ἀ{_E}λλ' ἐμὸν {_R}οὔ{_E} ποτε θ{_R}υ{_E}μὸν ἐν{_R}ὶ{_E} στήθ{_R}ε{_E}σσιν ἔπ{_R}ει{_E}θον.",
-        # IX 34–38
-        "ὣς οὐδὲν γλύκιον ἧς πατρίδος οὐδὲ τοκήων":
-            f"{_R}ὣ{_E}ς οὐδ{_R}ὲ{_E}ν γλύκι{_R}ο{_E}ν ἧς π{_R}α{_E}τρίδος {_R}οὐ{_E}δὲ τοκ{_R}ή{_E}ων",
-        "γίγνεται, εἴ περ καί τις ἀπόπροθι πίονα οἶκον":
-            f"γ{_R}ί{_E}γνεται, {_R}εἴ{_E} περ κ{_R}αί{_E} τις ἀπ{_R}ό{_E}προθι π{_R}ί{_E}ονα {_R}οἶ{_E}κον",
-        "γαίῃ ἐν ἀλλοδαπῇ ναίει ἀπάνευθε τοκήων.":
-            f"γ{_R}αί{_E}ῃ ἐν {_R}ἀ{_E}λλοδαπ{_R}ῇ{_E} ναί{_R}ει{_E} ἀπάν{_R}ευ{_E}θε τοκ{_R}ή{_E}ων.",
-        "εἰ δ' ἄγε τοι καὶ νόστον ἐμὸν πολυκηδέ' ἐνίσπω,":
-            f"{_R}εἰ{_E} δ' ἄγε τ{_R}οι{_E} καὶ ν{_R}ό{_E}στον ἐμ{_R}ὸ{_E}ν πολυκ{_R}η{_E}δέ' ἐν{_R}ί{_E}σπω,",
-        "ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι.":
-            f"{_R}ὅ{_E}ν μοι Ζ{_R}εὺ{_E}ς ἐφέ{_R}η{_E}κεν ἀπ{_R}ὸ{_E} Τροί{_R}η{_E}θεν ἰ{_R}ό{_E}ντι.",
+        'ἔνθεν δὲ προτέρω πλέομεν ἀκαχήμενοι ἦτορ,':
+            "<b style='color:#980000'>ἔ</b>νθεν δ<b style='color:#980000'>ὲ</b> προτέρ<b style='color:#980000'>ω</b> πλέομ<b style='color:#980000'>εν</b> ἀκαχ<b style='color:#980000'>ή</b>μενοι <b style='color:#980000'>ἦ</b>τορ,",
+        'ἄσμενοι ἐκ θανάτοιο, φίλους ὀλέσαντες ἑταίρους.':
+            "<b style='color:#980000'>ἄ</b>σμενοι <b style='color:#980000'>ἐ</b>κ θανάτ<b style='color:#980000'>οι</b>ο, φίλ<b style='color:#980000'>ους</b> ὀλέσ<b style='color:#980000'>α</b>ντες ἑτ<b style='color:#980000'>αί</b>ρους.",
+        "οὐδ' ἄρα μοι προτέρω νῆες κίον ἀμφιέλισσαι,":
+            "<b style='color:#980000'>οὐ</b>δ' ἄρα μ<b style='color:#980000'>οι</b> προτέρ<b style='color:#980000'>ω</b> νῆ<b style='color:#980000'>ες</b> κίον ἀμφιέλ<b style='color:#980000'>ι</b>σσαι,",
+        'πρίν τινα τῶν δειλῶν ἑτάρων τρὶς ἕκαστον ἀῦσαι,':
+            "πρ<b style='color:#980000'>ί</b>ν τινα τ<b style='color:#980000'>ῶν</b> δειλ<b style='color:#980000'>ῶν</b> ἑτάρ<b style='color:#980000'>ων</b> τρὶς ἕκ<b style='color:#980000'>α</b>στον ἀ<b style='color:#980000'>ῦ</b>σαι,",
+        'οἳ θάνον ἐν πεδίῳ Κικόνων ὕπο δῃωθέντες.':
+            "<b style='color:#980000'>οἳ</b> θάνον <b style='color:#980000'>ἐ</b>ν πεδί<b style='color:#980000'>ῳ</b> Κικόν<b style='color:#980000'>ων</b> ὕπο δ<b style='color:#980000'>ῃ</b>ωθ<b style='color:#980000'>έ</b>ντες.",
+        "νηυσὶ δ' ἐπῶρσ' ἄνεμον Βορέην νεφεληγερέτα Ζεὺς":
+            "ν<b style='color:#980000'>ηυ</b>σὶ δ' ἐπ<b style='color:#980000'>ῶ</b>ρσ' ἄνεμ<b style='color:#980000'>ον</b> Βορέ<b style='color:#980000'>η</b>ν νεφελ<b style='color:#980000'>η</b>γερέτ<b style='color:#980000'>α</b> Ζεὺς",
+        'λαίλαπι θεσπεσίῃ, σὺν δὲ νεφέεσσι κάλυψε':
+            "λ<b style='color:#980000'>αί</b>λαπι θ<b style='color:#980000'>ε</b>σπεσί<b style='color:#980000'>ῃ</b>, σὺν δ<b style='color:#980000'>ὲ</b> νεφέ<b style='color:#980000'>ε</b>σσι κάλ<b style='color:#980000'>υ</b>ψε",
+        "γαῖαν ὁμοῦ καὶ πόντον· ὀρώρει δ' οὐρανόθεν νύξ.":
+            "γ<b style='color:#980000'>αῖ</b>αν ὁμ<b style='color:#980000'>οῦ</b> καὶ π<b style='color:#980000'>ό</b>ντον· ὀρ<b style='color:#980000'>ώ</b>ρει δ' <b style='color:#980000'>οὐ</b>ρανόθεν νύξ.",
+        "αἱ μὲν ἔπειτ' ἐφέροντ' ἐπικάρσιαι, ἱστία δέ σφιν":
+            "<b style='color:#980000'>αἱ</b> μὲν ἔπ<b style='color:#980000'>ει</b>τ' ἐφέρ<b style='color:#980000'>ο</b>ντ' ἐπικ<b style='color:#980000'>ά</b>ρσιαι, <b style='color:#980000'>ἱ</b>στία δ<b style='color:#980000'>έ</b> σφιν",
+        'τριχθά τε καὶ τετραχθὰ διέσχισεν ἲς ἀνέμοιο.':
+            "τρ<b style='color:#980000'>ι</b>χθά τε κ<b style='color:#980000'>αὶ</b> τετρ<b style='color:#980000'>α</b>χθὰ δι<b style='color:#980000'>έ</b>σχισεν <b style='color:#980000'>ἲ</b>ς ἀνέμ<b style='color:#980000'>οι</b>ο.",
+        'καὶ τὰ μὲν ἐς νῆας κάθεμεν, δείσαντες ὄλεθρον,':
+            "κ<b style='color:#980000'>αὶ</b> τὰ μὲν <b style='color:#980000'>ἐ</b>ς νῆ<b style='color:#980000'>α</b>ς κάθεμ<b style='color:#980000'>εν</b>, δείσ<b style='color:#980000'>α</b>ντες <b style='color:#980000'>ὄ</b>λεθρον,",
+        "αὐτὰς δ' ἐσσυμένως προερέσσαμεν ἤπειρόνδε.":
+            "<b style='color:#980000'>αὐ</b>τὰς δ' <b style='color:#980000'>ἐ</b>σσυμέν<b style='color:#980000'>ως</b> προερ<b style='color:#980000'>έ</b>σσαμεν <b style='color:#980000'>ἤ</b>πειρ<b style='color:#980000'>ό</b>νδε.",
+        "ἔνθα δύω νύκτας δύο τ' ἤματα συνεχὲς αἰεὶ":
+            "<b style='color:#980000'>ἔ</b>νθα δύ<b style='color:#980000'>ω</b> νύκτ<b style='color:#980000'>ας</b> δύο τ' <b style='color:#980000'>ἤ</b>ματα σ<b style='color:#980000'>υ</b>νεχὲς <b style='color:#980000'>αἰ</b>εὶ",
+        "κείμεθ', ὁμοῦ καμάτῳ τε καὶ ἄλγεσι θυμὸν ἔδοντες.":
+            "κ<b style='color:#980000'>εί</b>μεθ', ὁμ<b style='color:#980000'>οῦ</b> καμάτ<b style='color:#980000'>ῳ</b> τε καὶ <b style='color:#980000'>ἄ</b>λγεσι θ<b style='color:#980000'>υ</b>μὸν <b style='color:#980000'>ἔ</b>δοντες.",
+        "ἀλλ' ὅτε δὴ τρίτον ἦμαρ ἐυπλόκαμος τέλεσ' Ἠώς,":
+            "<b style='color:#980000'>ἀ</b>λλ' ὅτε δ<b style='color:#980000'>ὴ</b> τρίτον <b style='color:#980000'>ἦ</b>μαρ ἐ<b style='color:#980000'>υ</b>πλόκαμ<b style='color:#980000'>ο</b>ς τέλεσ' <b style='color:#980000'>Ἠ</b>ώς,",
+        "ἱστοὺς στησάμενοι ἀνά θ' ἱστία λεύκ' ἐρύσαντες":
+            "<b style='color:#980000'>ἱ</b>στοὺς στ<b style='color:#980000'>η</b>σάμεν<b style='color:#980000'>οι</b> ἀνά θ' <b style='color:#980000'>ἱ</b>στία λ<b style='color:#980000'>εύ</b>κ' ἐρύσ<b style='color:#980000'>α</b>ντες",
+        "ἥμεθα, τὰς δ' ἄνεμός τε κυβερνῆταί τ' ἴθυνον.":
+            "<b style='color:#980000'>ἥ</b>μεθα, τ<b style='color:#980000'>ὰς</b> δ' ἄνεμ<b style='color:#980000'>ό</b>ς τε κυβ<b style='color:#980000'>ε</b>ρνῆτ<b style='color:#980000'>αί</b> τ' <b style='color:#980000'>ἴ</b>θυνον.",
+        'καί νύ κεν ἀσκηθὴς ἱκόμην ἐς πατρίδα γαῖαν·':
+            "κ<b style='color:#980000'>αί</b> νύ κεν <b style='color:#980000'>ἀ</b>σκηθ<b style='color:#980000'>ὴ</b>ς ἱκόμ<b style='color:#980000'>η</b>ν ἐς π<b style='color:#980000'>α</b>τρίδα γ<b style='color:#980000'>αῖ</b>αν·",
+        'ἀλλά με κῦμα ῥόος τε περιγνάμπτοντα Μάλειαν':
+            "<b style='color:#980000'>ἀ</b>λλά με κ<b style='color:#980000'>ῦ</b>μα ῥό<b style='color:#980000'>ος</b> τε περ<b style='color:#980000'>ι</b>γνάμπτ<b style='color:#980000'>ο</b>ντα Μάλ<b style='color:#980000'>ει</b>αν",
+        'καὶ Βορέης ἀπέωσε, παρέπλαγξεν δὲ Κυθήρων.':
+            "κ<b style='color:#980000'>αὶ</b> Βορέ<b style='color:#980000'>η</b>ς ἀπέ<b style='color:#980000'>ω</b>σε, παρ<b style='color:#980000'>έ</b>πλαγξ<b style='color:#980000'>ε</b>ν δὲ Κυθ<b style='color:#980000'>ή</b>ρων.",
     }
 
     def _bare(html):
@@ -517,7 +543,7 @@ def _(ag_lsj, ag_backend, ag_homer, ag_lxx, ag_morphgnt, gu):
     import csv
     from pathlib import Path
 
-    _vocab_path = Path(__file__).parent / "vocab_IX_19-38.tsv"
+    _vocab_path = Path(__file__).parent / "vocab_IX_62-81.tsv"
     with open(_vocab_path, encoding="utf-8") as _f:
         QUIZ_WORDS_RAW = gu.resolve_word_grammar(
             list(csv.DictReader(_f, delimiter="\t")), ag_backend, "ru"
@@ -549,7 +575,7 @@ def _(ag_lsj, ag_backend, ag_homer, ag_lxx, ag_morphgnt, gu):
                     pass
         if not sources:
             return ""
-        lexicons = ", ".join(f'"{s}"' for s in sources)
+        lexicons = ", ".join(f'\"{s}\"' for s in sources)
         return f"ancient-greek[{lexicons}]"
 
     for _w in QUIZ_WORDS_RAW:
@@ -631,24 +657,30 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    from eee_project.notebook_utils import eee_footer
-    eee_footer(mo, lang="ru")
-    return
-
-
-@app.cell(hide_code=True)
 def _(cfg, gu):
     from pathlib import Path as _P
     NB_DIR = _P(__file__).parent
-    NB_REMOTE = f"{cfg.raw_base}/2026_06_15"
+    NB_REMOTE = f"{cfg.raw_base}/2026_06_29"
     for _f in (
-        'Одиссея 1.pdf',
-        'слова день 1.pdf',
-        'map_ithaca.jpg',
-        'map_ithaca_full.jpg',
+        'map_ortelius.jpg',
+        'map_ortelius_full.jpg',
+        'odysseus_bust.jpg',
+        'prepositions.jpg',
+        'malea_cliff.jpg',
+        'malea_map.jpg',
+        'Od_IX_62-81.pdf',
+        'Od_IX_62-81_vocabula.docx',
     ):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)
+
+    # Set True to underline words known to eee in the poem text (coverage view)
+    return (NB_REMOTE,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    from eee_project.notebook_utils import eee_footer
+    eee_footer(mo, lang="ru")
     return
 
 

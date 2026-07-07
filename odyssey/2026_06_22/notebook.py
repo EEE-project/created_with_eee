@@ -375,10 +375,11 @@ def _(mo):
     * [**unimorph-backend-eee**](https://codeberg.org/EEE-project/unimorph-backend-eee) — база данных UniMorph:
       для древнегреческого парадигмы существительных и прилагательных (глаголы отсутствуют);
       покрытие лучше для греческого НЗ, чем для гомеровского текста
-    * [**ancient-greek-backend-eee**](https://codeberg.org/EEE-project/ancient-greek-backend-eee) — анализ на основе морфологических словарей с лексиконами:
-      * **Homer** — лексикон гомеровского эпоса (Илиада, Одиссея); эпический/ионийский, ~VIII в. до н.э.
-      * **LXX** — лексикон Септуагинты; эллинистический койне, ~III–I вв. до н.э.
-      * **MorphGNT** — лексикон греческого Нового Завета; койне, I в. н.э.
+    * [**ancient-greek-backend-eee**](https://codeberg.org/EEE-project/ancient-greek-backend-eee) — анализ на основе морфологических словарей; лексиконы по эпохам:
+      * **Homer** — гомеровский эпос (Илиада, Одиссея); эпический/ионийский, ~VIII в. до н.э.
+      * **Словарь классического аттического** — (pratt + ltrg + lsj); аттика V–IV вв. до н.э.
+      * **LXX** — Септуагинта; эллинистический койне, IV–I вв. до н.э.
+      * **MorphGNT** — греческий Новый Завет; римский койне, I–III вв. н.э.
 
     **Лексикон** (фильтр):
 
@@ -522,7 +523,7 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, ag_homer, ag_lxx, ag_morphgnt, gu):
+def _(ag_lsj, ag_backend, ag_homer, ag_lxx, ag_morphgnt, gu):
     import csv
     from pathlib import Path
 
@@ -534,7 +535,7 @@ def _(ag_backend, ag_homer, ag_lxx, ag_morphgnt, gu):
 
     _POS_MAP = {"adj": "adjective"}
     _QUIZZABLE = {"noun", "verb", "adj"}
-    _LEXICONS = [("homer", ag_homer), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt)]
+    _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt)]
 
     def _lexicon_tag(w):
         if w.get("pos") not in _QUIZZABLE:
@@ -571,16 +572,16 @@ def _(ag_backend, ag_homer, ag_lxx, ag_morphgnt, gu):
 @app.cell(hide_code=True)
 def _(
     QUIZ_WORDS_RAW,
-    ag_homer,
     build_paradigm_table,
     eee,
     filter_mode,
+    grc_lexicons,
     set_cv,
     set_remaining,
 ):
     QUIZ_WORDS = eee.filter_grc_quiz_words(
         QUIZ_WORDS_RAW, filter_mode.value,
-        build_paradigm_table=build_paradigm_table, ag_homer=ag_homer, eee=eee,
+        build_paradigm_table=build_paradigm_table, lexicons=grc_lexicons,
     )
 
     eee.add_labels(QUIZ_WORDS)
@@ -591,20 +592,20 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, SHOW_COVERAGE, ag_homer, build_paradigm_table, eee):
+def _(QUIZ_WORDS_RAW, SHOW_COVERAGE, build_paradigm_table, eee, grc_lexicons):
     WORDS_COMBINED = eee.grc_coverage_words(
         QUIZ_WORDS_RAW, SHOW_COVERAGE.value,
-        build_paradigm_table=build_paradigm_table, ag_homer=ag_homer, eee=eee,
+        build_paradigm_table=build_paradigm_table, lexicons=grc_lexicons,
     )
     return (WORDS_COMBINED,)
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, ag_homer, ag_lxx, ag_morphgnt, eee, um_backend):
+def _(ag_backend, eee, grc_lexicons, um_backend):
     build_paradigm_table = eee.build_grc_paradigm_table(ag_backend, um_backend)
     build_lexicon_tabs = eee.build_grc_lexicon_tabs(
         ag_backend, um_backend,
-        lexicons={"homer": ag_homer, "lxx": ag_lxx, "morphgnt": ag_morphgnt},
+        lexicons=grc_lexicons,
     )
     return build_lexicon_tabs, build_paradigm_table
 
@@ -623,17 +624,20 @@ def _():
     from ancient_greek_backend_eee import AncientGreekBackend
     from unimorph_backend_eee import UniMorphBackend
 
-    ag_backend = AncientGreekBackend(lexicons=["homer", "lxx", "morphgnt"])
+    # union recognizer for coverage + quiz — all diachronic rungs, incl. Classical Attic (pratt + ltrg + lsj)
+    ag_backend = AncientGreekBackend(lexicons=["homer", "lxx", "morphgnt", "pratt", "ltrg", "lsj"])
     ag_homer = AncientGreekBackend(lexicons=["homer"])
+    ag_lsj = AncientGreekBackend(lexicons=["pratt", "ltrg", "lsj"])
     ag_lxx = AncientGreekBackend(lexicons=["lxx"])
     ag_morphgnt = AncientGreekBackend(lexicons=["morphgnt"])
+    grc_lexicons = {"homer": ag_homer, "lsj": ag_lsj, "lxx": ag_lxx, "morphgnt": ag_morphgnt}
     um_backend = UniMorphBackend(language="grc")
     eee.register_backend("grc", ag_backend, backend="ancient-greek")
     eee.register_backend("grc", ag_homer, backend="ag-homer")
     eee.register_backend("grc", um_backend, backend="unimorph")
     eee.set_chain("grc", ["ancient-greek", "unimorph"])
     gu = eee.GreekUtils(mo_module=mo)
-    return ag_backend, ag_homer, ag_lxx, ag_morphgnt, eee, gu, mo, um_backend
+    return ag_lsj, ag_backend, ag_homer, ag_lxx, ag_morphgnt, eee, grc_lexicons, gu, mo, um_backend
 
 
 @app.cell(hide_code=True)
