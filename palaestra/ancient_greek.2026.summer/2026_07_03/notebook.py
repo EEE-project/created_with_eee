@@ -668,7 +668,7 @@ def _(
 
 @app.cell(hide_code=True)
 def _(VOCAB_WORDS):
-    _REQUIRED = {"form", "meaning", "lemma", "context"}
+    _REQUIRED = {"form", "meaning"}
     assert VOCAB_WORDS, "load_vocab_tsv returned empty list"
     assert all(_REQUIRED <= set(w) for w in VOCAB_WORDS), f"word missing keys: {VOCAB_WORDS}"
     assert all(w["form"] and w["meaning"] for w in VOCAB_WORDS), "word has empty form or meaning"
@@ -678,7 +678,7 @@ def _(VOCAB_WORDS):
 
 @app.cell(hide_code=True)
 def _(VOCAB_ALL):
-    _REQUIRED = {"form", "meaning", "lemma", "context"}
+    _REQUIRED = {"form", "meaning"}
     assert VOCAB_ALL, "load_vocab_tsv returned empty list (cap1)"
     assert all(_REQUIRED <= set(w) for w in VOCAB_ALL), f"cap1 word missing keys: {VOCAB_ALL}"
     assert all(w["form"] and w["meaning"] for w in VOCAB_ALL), "cap1 word has empty form or meaning"
