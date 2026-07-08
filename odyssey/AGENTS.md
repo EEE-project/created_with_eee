@@ -24,6 +24,35 @@ vocab_content_problems.md  ← known coverage gaps (read before adding TSV entri
 
 ---
 
+## Source discipline — CRITICAL
+
+**Base every cell on the lecture's own materials in
+`~/work/greek/lectures/Odyssey/<date>/`** — the presentation PDF (`Одиссея N.pdf` /
+`Od_IX_*.pdf`), **`notes.md`**, the vocab `*.docx/.md`, and the images/diagrams in
+the presentation. **`notes.md` is a valid source — transcribe / distill it** (that
+is how the День-4 lotus material got in).
+
+**Do not do your own research beyond these files** — no web search, no invented
+proverbs / etymologies / historical asides / cross-references. **If research seems
+useful — or `notes.md` itself raises a question or points at a line of inquiry —
+ASK the user first; don't research or add it on your own.** (User rules,
+2026-07-07: *"use the lecture materials and notes as the basis; ask me if you want
+to research something — e.g. if the notes suggest it."*)
+
+- **Greek / interlinear / translations** (`greek.md`, `interlenear_ru.md`,
+  `translations_ru.md`) — transcribe from the presentation slides only.
+- **Rhythm (икты)** — transcribe the presentation's colour-marked stressed
+  syllables faithfully (render red in the notebook); don't re-derive scansion.
+- **Images** — extract the presentation's own pictures/diagrams and wire them.
+- **Materials cell + `ensure_file`** — link every PDF the lecture uses
+  (presentation + vocab); if a vocab PDF doesn't exist, ship the `.docx`.
+  Clean ASCII names (`Od_IX_NN-MM.pdf`, `Od_IX_NN-MM_vocabula.{pdf,docx}`).
+  Commit all of them.
+- **Lexicon labels** — name a composite lexicon by what it is, not one component:
+  "Словарь классического аттического (pratt + ltrg + lsj)", never "LSJ".
+
+---
+
 ## Notebook cell structure (visual order, top → bottom)
 
 Identify cells by content, not by ID — IDs change after each save.

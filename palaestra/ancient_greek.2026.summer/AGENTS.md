@@ -28,6 +28,27 @@ adjs.tsv           ← adjective base forms for ADV drill (lessons with adverb e
 
 ---
 
+## Source discipline — CRITICAL
+
+**Base every cell on the session's own materials in
+`~/work/greek/lectures/Palaestra/ancient_greek.2026.summer/<date>/`** — that date's
+**`notes.md`**, handout PDFs, and vocab files. **`notes.md` is a valid source —
+transcribe / distill it.** (User rules, 2026-07-07.)
+
+- A session's `notes.md` goes into **that session's** notebook only — never another
+  course's (Palaestra notes ≠ Odyssey).
+- Transcribe grammar/vocab from `notes.md`; **don't add your own examples,
+  etymologies, or tangents beyond it, and don't do your own research** (web search,
+  etc.). **If research seems useful — or `notes.md` itself suggests a line of
+  inquiry — ASK the user first** before pursuing or adding it.
+- **Do not copy one-off asides forward.** A note written for one session (e.g. the
+  case-order history in `2026_06_26`) must not be duplicated into later sessions
+  built from the same template — cut template-inherited cells that don't belong
+  to the new lesson.
+- Handout PDFs: link them in the materials cell and commit them.
+
+---
+
 ## Notebook patterns
 
 ### Pattern A — word_drill × 2  (2026_06_09)
