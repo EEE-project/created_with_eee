@@ -402,6 +402,7 @@ def _(mo):
       * **Словарь классического аттического** — (pratt + ltrg + lsj); аттика V–IV вв. до н.э.
       * **LXX** — Септуагинта; эллинистический койне, IV–I вв. до н.э.
       * **MorphGNT** — греческий Новый Завет; римский койне, I–III вв. н.э.
+    * [**modern-greek-backend-eee**](https://codeberg.org/EEE-project/modern-greek-backend-eee) — новогреческий (демотика); показывает, как древнее слово склоняется/спрягается сегодня — последняя «ступень» в таблице словоформ (если у слова есть живой новогреческий рефлекс)
 
     **Лексикон** (фильтр):
 
@@ -623,11 +624,12 @@ def _(QUIZ_WORDS_RAW, SHOW_COVERAGE, build_paradigm_table, eee, grc_lexicons):
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, eee, grc_lexicons, um_backend):
+def _(ag_backend, eee, grc_lexicons, mg, um_backend):
     build_paradigm_table = eee.build_grc_paradigm_table(ag_backend, um_backend)
     build_lexicon_tabs = eee.build_grc_lexicon_tabs(
         ag_backend, um_backend,
         lexicons=grc_lexicons,
+        el_backend=mg,
     )
     return build_lexicon_tabs, build_paradigm_table
 
@@ -645,6 +647,7 @@ def _():
     import eee_project as eee
     from ancient_greek_backend_eee import AncientGreekBackend
     from unimorph_backend_eee import UniMorphBackend
+    from modern_greek_backend_eee import ModernGreekBackend
 
     # union recognizer for coverage + quiz — all diachronic rungs, incl. Classical Attic (pratt + ltrg + lsj)
     ag_backend = AncientGreekBackend(lexicons=["homer", "lxx", "morphgnt", "pratt", "ltrg", "lsj"])
@@ -654,6 +657,7 @@ def _():
     ag_morphgnt = AncientGreekBackend(lexicons=["morphgnt"])
     grc_lexicons = {"homer": ag_homer, "lsj": ag_lsj, "lxx": ag_lxx, "morphgnt": ag_morphgnt}
     um_backend = UniMorphBackend(language="grc")
+    mg = ModernGreekBackend()   # Modern-Greek rung of the diachronic dropdown
     eee.register_backend("grc", ag_backend, backend="ancient-greek")
     eee.register_backend("grc", ag_homer, backend="ag-homer")
     eee.register_backend("grc", um_backend, backend="unimorph")
@@ -668,6 +672,7 @@ def _():
         eee,
         grc_lexicons,
         gu,
+        mg,
         mo,
         um_backend,
     )
