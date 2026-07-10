@@ -5,12 +5,14 @@
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
 #     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
 #     "unimorph-backend-eee @ git+https://codeberg.org/EEE-project/unimorph-backend-eee.git",
+#     "modern-greek-backend-eee @ git+https://codeberg.org/EEE-project/modern-greek-backend-eee.git",
 # ]
 #
 # [tool.uv.sources]
 # eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
 # ancient-greek-backend-eee = { git = "https://codeberg.org/EEE-project/ancient-greek-backend-eee.git" }
 # unimorph-backend-eee = { git = "https://codeberg.org/EEE-project/unimorph-backend-eee.git" }
+# modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
 # ///
 
 import marimo
