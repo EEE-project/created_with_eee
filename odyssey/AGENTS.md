@@ -16,11 +16,15 @@ Each lesson directory:
 ```
 notebook.py
 greek.md                   ← Greek source text (do NOT hardcode in notebook)
-interlenear_ru.md          ← interlinear translation (do NOT hardcode)
-translations_ru.md         ← literary translations (do NOT hardcode)
+translations_ru.md         ← literary translations, incl. подстрочник gloss (do NOT hardcode)
 vocab_{ref}.tsv            ← vocabulary for the quiz
 vocab_content_problems.md  ← known coverage gaps (read before adding TSV entries)
 ```
+
+`2026_06_01` only: the interlinear gloss lives as a `## подстрочник` section inside
+`translations_ru.md` (merged 2026-07-10). The other 4 lessons haven't been migrated
+yet and still carry a separate `interlenear_ru.md` alongside `translations_ru.md` —
+same rules as documented below for whichever structure a given lesson currently has.
 
 ---
 
@@ -39,8 +43,9 @@ ASK the user first; don't research or add it on your own.** (User rules,
 2026-07-07: *"use the lecture materials and notes as the basis; ask me if you want
 to research something — e.g. if the notes suggest it."*)
 
-- **Greek / interlinear / translations** (`greek.md`, `interlenear_ru.md`,
-  `translations_ru.md`) — transcribe from the presentation slides only.
+- **Greek / interlinear / translations** (`greek.md`, `translations_ru.md` — the
+  latter's `## подстрочник` section is the interlinear gloss, see below) —
+  transcribe from the presentation slides only.
 - **Rhythm (икты)** — transcribe the presentation's colour-marked stressed
   syllables faithfully (render red in the notebook); don't re-derive scansion.
 - **Images** — extract the presentation's own pictures/diagrams and wire them.
@@ -99,9 +104,9 @@ Identify cells by content, not by ID — IDs change after each save.
 
 ## CRITICAL: Text from `.md` files, never hardcoded
 
-Greek text, interlinear, and translations live in three Markdown files read at
-runtime by the `_parse_*` functions. Never copy poem lines or translations into
-Python cells.
+Greek text and translations (incl. the interlinear gloss, see below) live in two
+Markdown files read at runtime by the `_parse_*` functions. Never copy poem
+lines or translations into Python cells.
 
 ### `greek.md` — Greek source text (Murray 1919)
 
@@ -118,24 +123,18 @@ Python cells.
 Rules: `### Odyss. X.XX–XX` → stanza ref key (stripped of the 11-char prefix).
 Lines under heading → `stanza["lines"]`. Lines starting `<!--` are skipped.
 
-### `interlenear_ru.md` — word-for-word Russian gloss
+### `translations_ru.md` — literary translations + interlinear gloss
 
 ```markdown
+## подстрочник
+
 ### Odyss. IX.39–42
 
-**Ἰλιόθεν με φέρων ἄνεμος Κικόνεσσι πέλασσεν,**
 Из Илиона меня неся ветер к киконам притащил,
-
-**Ἰσμάρῳ· ἔνθα δ' ἐγὼ πόλιν ἔπραθον, ὤλεσα δ' αὐτούς.**
 к Исмару; а там я город разрушил и погубил их.
-```
 
-Rules: `**greek line**` (bold entire line) → Greek prompt; next non-empty line →
-Russian gloss. Produces `stanza["interlinear"]` = list of `(greek, russian)` tuples.
+---
 
-### `translations_ru.md` — literary translations
-
-```markdown
 ## Жуковский
 
 <!-- **Жуковский, 1849** · рус., белый стих · ... -->
@@ -153,8 +152,22 @@ Russian gloss. Produces `stanza["interlinear"]` = list of `(greek, russian)` tup
 ```
 
 Rules: `## Name` → translator key; `<!-- **...** -->` on next line → display
-description (goes into `TRANS_DESC` dict). `### Odyss.` → stanza ref.
-`---` separates translators. Produces `stanza["translations"]` = `{"Жуковский": "...", ...}`.
+description (goes into `TRANS_DESC` dict). `### Odyss.` → stanza ref. `---`
+separates translators. Every non-empty line under a `### Odyss.` heading (up to
+the next heading or `---`) is one poem line's translation — **one line in, one
+line out**: the block must have exactly as many lines as `greek.md`'s matching
+stanza, in the same order (this is what lets the notebook zip translation lines
+against `stanza["lines"]` positionally). Produces `stanza["translations"]` =
+`{"подстрочник": "...", "Жуковский": "...", ...}` — подстрочник is a translator
+like any other here, not a special case.
+
+**`## подстрочник` is special only by convention, not by markdown structure:**
+unlike the other translators its lines are a word-for-word gloss (not verse),
+and it deliberately has **no** `<!-- **...** -->` description comment — the
+notebook hardcodes подстрочник's description separately (the cell building
+`_desc_map`), so adding one here would silently start overriding it. If you add
+a new corpus-level translator, give it a real `<!-- **...** -->` comment like
+Жуковский/Вересаев; only подстрочник skips it.
 
 ---
 

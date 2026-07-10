@@ -164,10 +164,7 @@ def _(
         show_ictus=SHOW_ICTUS.value,
     )
 
-    if trans_selector.value == "подстрочник":
-        _txt_lines = [tl for _gl, tl in _stanza["interlinear"]]
-    else:
-        _txt_lines = _stanza["translations"].get(trans_selector.value, "—").split("\n")
+    _txt_lines = _stanza["translations"].get(trans_selector.value, "—").split("\n")
 
     _line_divs = "".join(
         f'<div>{l.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")}</div>'
@@ -588,20 +585,6 @@ def _():
         if ref: out[ref] = buf
         return out
 
-    def _parse_iln(md):
-        out, ref, grc, buf = {}, None, None, []
-        for L in md.splitlines():
-            if L.startswith("### Odyss. "):
-                if ref: out[ref] = buf
-                ref, grc, buf = L[11:].strip(), None, []
-            elif L.startswith("**") and L.endswith("**"):
-                grc = L[2:-2].strip()
-            elif ref and L.strip() and grc is not None:
-                buf.append((grc, L.strip()))
-                grc = None
-        if ref: out[ref] = buf
-        return out
-
     def _parse_trans(md):
         out, desc, tr, ref, buf = {}, {}, None, None, []
         for L in md.splitlines():
@@ -620,14 +603,12 @@ def _():
 
     _root = _P(__file__).parent
     _greek = _parse_greek((_root / "greek.md").read_text(encoding="utf-8"))
-    _iln_ru = _parse_iln((_root / "interlenear_ru.md").read_text(encoding="utf-8"))
     _trans_ru, _desc_ru = _parse_trans((_root / "translations_ru.md").read_text(encoding="utf-8"))
     TRANS_DESC = _desc_ru
     STANZAS = [
         {
             "ref": ref,
             "lines": lines,
-            "interlinear": _iln_ru.get(ref, []),
             "translations": {tr: d.get(ref, "—") for tr, d in _trans_ru.items()},
         }
         for ref, lines in _greek.items()
