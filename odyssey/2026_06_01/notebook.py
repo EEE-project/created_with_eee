@@ -712,8 +712,8 @@ def _():
     from modern_greek_backend_eee import ModernGreekBackend
 
     # union recognizer for coverage + quiz — all diachronic rungs, incl. Classical Attic (pratt + ltrg + lsj)
-    ag_backend = AncientGreekBackend(lexicons=["homer", "lxx", "morphgnt", "pratt", "ltrg", "lsj"])
-    ag_homer = AncientGreekBackend(lexicons=["homer"])
+    ag_backend = AncientGreekBackend(lexicons=["homer", "morpheus", "lxx", "morphgnt", "pratt", "ltrg", "lsj"])
+    ag_homer = AncientGreekBackend(lexicons=["homer", "morpheus"])
     ag_lsj = AncientGreekBackend(lexicons=["pratt", "ltrg", "lsj"])
     ag_lxx = AncientGreekBackend(lexicons=["lxx"])
     ag_morphgnt = AncientGreekBackend(lexicons=["morphgnt"])
