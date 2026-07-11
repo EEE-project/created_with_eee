@@ -17,7 +17,7 @@
 
 import marimo
 
-__generated_with = "0.23.8"
+__generated_with = "0.23.13"
 app = marimo.App(width="medium")
 
 
@@ -542,7 +542,7 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(ag_lsj, ag_backend, ag_homer, ag_lxx, ag_morphgnt, gu):
+def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
     import csv
     from pathlib import Path
 
@@ -554,7 +554,7 @@ def _(ag_lsj, ag_backend, ag_homer, ag_lxx, ag_morphgnt, gu):
 
     _POS_MAP = {"adj": "adjective"}
     _QUIZZABLE = {"noun", "verb", "adj"}
-    _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt)]
+    _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt), ("byzantine", ag_byzantine)]
 
     def _lexicon_tag(w):
         if w.get("pos") not in _QUIZZABLE:
@@ -578,7 +578,7 @@ def _(ag_lsj, ag_backend, ag_homer, ag_lxx, ag_morphgnt, gu):
                     pass
         if not sources:
             return ""
-        lexicons = ", ".join(f'\"{s}\"' for s in sources)
+        lexicons = ", ".join(f'"{s}"' for s in sources)
         return f"ancient-greek[{lexicons}]"
 
     for _w in QUIZ_WORDS_RAW:
@@ -646,12 +646,18 @@ def _():
     from modern_greek_backend_eee import ModernGreekBackend
 
     # union recognizer for coverage + quiz — all diachronic rungs, incl. Classical Attic (pratt + ltrg + lsj)
-    ag_backend = AncientGreekBackend(lexicons=["homer", "lxx", "morphgnt", "pratt", "ltrg", "lsj"])
-    ag_homer = AncientGreekBackend(lexicons=["homer"])
+    ag_backend = AncientGreekBackend(lexicons=["homer", "odyssey_morpheus", "lxx", "morphgnt", "pratt", "ltrg", "lsj"])
+    # odyssey_morpheus is Epic-register, Odyssey-course-vocabulary-specific --
+    # merged alongside homer (same register), not lsj/byzantine (Attic/Koine).
+    ag_homer = AncientGreekBackend(lexicons=["homer", "odyssey_morpheus"])
     ag_lsj = AncientGreekBackend(lexicons=["pratt", "ltrg", "lsj"])
     ag_lxx = AncientGreekBackend(lexicons=["lxx"])
     ag_morphgnt = AncientGreekBackend(lexicons=["morphgnt"])
-    grc_lexicons = {"homer": ag_homer, "lsj": ag_lsj, "lxx": ag_lxx, "morphgnt": ag_morphgnt}
+    # byzantine is a sparse exceptions layer, not a standalone engine -- merge
+    # onto the same Koine/Attic base the other rungs use so it inherits their
+    # lemma coverage and only overrides the specific cells it documents.
+    ag_byzantine = AncientGreekBackend(lexicons=["lxx", "morphgnt", "pratt", "ltrg", "lsj", "byzantine"])
+    grc_lexicons = {"homer": ag_homer, "lsj": ag_lsj, "lxx": ag_lxx, "morphgnt": ag_morphgnt, "byzantine": ag_byzantine}
     um_backend = UniMorphBackend(language="grc")
     mg = ModernGreekBackend()   # Modern-Greek rung of the diachronic dropdown
     eee.register_backend("grc", ag_backend, backend="ancient-greek")
@@ -659,7 +665,20 @@ def _():
     eee.register_backend("grc", um_backend, backend="unimorph")
     eee.set_chain("grc", ["ancient-greek", "unimorph"])
     gu = eee.GreekUtils(mo_module=mo)
-    return ag_lsj, ag_backend, ag_homer, ag_lxx, ag_morphgnt, eee, grc_lexicons, gu, mg, mo, um_backend
+    return (
+        ag_backend,
+        ag_byzantine,
+        ag_homer,
+        ag_lsj,
+        ag_lxx,
+        ag_morphgnt,
+        eee,
+        grc_lexicons,
+        gu,
+        mg,
+        mo,
+        um_backend,
+    )
 
 
 @app.cell(hide_code=True)

@@ -89,18 +89,72 @@ def _(TRANS_DESC, mo, trans_selector):
 @app.cell(hide_code=True)
 def _(mo):
     SHOW_ICTUS = mo.ui.switch(value=True)
-    mo.hstack(
-        [SHOW_ICTUS, mo.md(
-            "Икты (ударные слоги) каждой стопы выделены <b style='color:#980000'>красным</b>."
-        )],
-        justify="start", align="center", gap=1.5,
+    SHOW_HOMER = mo.ui.switch(value=True)
+
+    EEE_NOTE = """
+    Используется [EEE](https://t.me/eee_greek) — система для построения интерактивных учебных материалов.
+    Модули морфологического анализа строят таблицы словоформ из набора лексиконов (словарей основ и
+    засвидетельствованных форм); подробности — в документации
+    [ancient-greek-backend-eee](https://codeberg.org/EEE-project/ancient-greek-backend-eee) и
+    [eee-project](https://codeberg.org/EEE-project/eee-project):
+
+    * **homer** — гомеровский корпус (Илиада, Одиссея): 2322 глаг. + 15 им. основ
+    * **morpheus** — формы, независимо подтверждённые анализатором Perseids Morpheus, для лемм, которые
+      словарные лексиконы не могут покрыть (атематические, стяжённые, отложительные глаголы и т.п.):
+      46 глаг. + 62 им. леммы
+    * **odyssey_morpheus** — формы из словаря занятий по Одиссее, не покрытые остальными лексиконами,
+      тоже подтверждённые Perseids Morpheus: 56 глаг. + 58 им. + 48 прил. лемм
+    * **pratt / ltrg** — учебные лексиконы (Pratt, LTRG): 22 + 34 глаг., 26 им. основ
+    * **lsj** — по LSJ и Wiktionary: 9 глаг. + 18 им. основ
+    * **lxx** — Септуагинта: 1905 глаг. основ
+    * **morphgnt** — греческий Новый Завет: 1848 глаг. основ
+    * **byzantine** — словарь Sophocles (1887), византийские отличия от койне/аттического: 61 лемма
+
+    Периоды на шкале истории греческого языка — это комбинации лексиконов выше:
+
+    * **Эпос** · ~VIII в. до н.э. — homer + morpheus + odyssey_morpheus
+    * **Классический аттический** · V–IV вв. до н.э. — pratt + ltrg + lsj
+    * **Эллинистическое койне** · IV–I вв. до н.э. — lxx
+    * **Римское койне** · I–III вв. н.э. — morphgnt
+    * **Византийский** · IV–XV вв. н.э. — lxx + morphgnt + pratt + ltrg + lsj, с byzantine как слоем отличий поверх
+    * **Новогреческий** · XVI в. — настоящее время — [modern-greek-backend-eee](https://codeberg.org/EEE-project/modern-greek-backend-eee), отдельный правило-ориентированный движок (не лексикон, полное покрытие парадигм для любой леммы)
+
+    Дополнительно подключён [unimorph-backend-eee](https://codeberg.org/EEE-project/unimorph-backend-eee) — база данных
+    UniMorph (2224 существительных + 207 прилагательных; глаголов нет; охват смещён к текстам Нового Завета).
+
+    В таблице словоформ можно переключаться между лексиконами разных исторических периодов,
+    если соответствующие данные для данного слова в системе есть.
+    """
+
+    mo.vstack(
+        [
+            mo.hstack(
+                [SHOW_ICTUS, mo.md(
+                    "Икты (ударные слоги) каждой стопы выделены <b style=\'color:#980000\'>красным</b>."
+                )],
+                justify="start", align="center", gap=1.5,
+            ),
+            mo.hstack(
+                [SHOW_HOMER, mo.md(
+                    "Слова из гомеровского лексикона, для которых движок EEE строит "
+                    "таблицы словоформ по разным периодам греческого языка."
+                )],
+                justify="start", align="center", gap=1.5,
+            ),
+            mo.accordion({"О морфологическом движке EEE": EEE_NOTE}),
+        ],
+        align="stretch", gap=0.5,
     )
-    return (SHOW_ICTUS,)
+
+    return EEE_NOTE, SHOW_HOMER, SHOW_ICTUS
 
 
 @app.cell(hide_code=True)
 def _(
     CLICKABLE_FORMS,
+    HOMER_WORDS,
+    RHYTHM_HTML,
+    SHOW_HOMER,
     SHOW_ICTUS,
     STANZAS,
     eee,
@@ -111,56 +165,12 @@ def _(
     _st_map = {s["ref"]: s for s in STANZAS}
     _stanza = _st_map[stanza_selector.value]
 
-    _RHYTHM_HTML = {
-        'Ἄνδρα μοι ἔννεπε, μοῦσα, πολύτροπον, ὃς μάλα πολλὰ':
-            "<b style='color:#980000'>Ἄ</b>νδρα μοι <b style='color:#980000'>ἔ</b>ννεπε, μ<b style='color:#980000'>οῦ</b>σα, πολ<b style='color:#980000'>ύ</b>τροπον, <b style='color:#980000'>ὃ</b>ς μάλα π<b style='color:#980000'>ο</b>λλὰ",
-        'πλάγχθη, ἐπεὶ Τροίης ἱερὸν πτολίεθρον ἔπερσεν·':
-            "πλ<b style='color:#980000'>ά</b>γχθη, ἐπ<b style='color:#980000'>εὶ</b> Τροί<b style='color:#980000'>η</b>ς ἱερ<b style='color:#980000'>ὸ</b>ν πτολί<b style='color:#980000'>ε</b>θρον ἔπ<b style='color:#980000'>ε</b>ρσεν·",
-        "πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα καὶ νόον ἔγνω,":
-            "π<b style='color:#980000'>ο</b>λλῶν δ' <b style='color:#980000'>ἀ</b>νθρώπων ἴδεν <b style='color:#980000'>ἄ</b>στεα κ<b style='color:#980000'>αὶ</b> νόον <b style='color:#980000'>ἔ</b>γνω,",
-        "πολλὰ δ' ὅ γ' ἐν πόντῳ πάθεν ἄλγεα ὃν κατὰ θυμόν,":
-            "π<b style='color:#980000'>ο</b>λλὰ δ' ὅ γ' <b style='color:#980000'>ἐ</b>ν πόντ<b style='color:#980000'>ῳ</b> πάθεν <b style='color:#980000'>ἄ</b>λγεα <b style='color:#980000'>ὃ</b>ν κατὰ θ<b style='color:#980000'>υ</b>μόν,",
-        'ἀρνύμενος ἥν τε ψυχὴν καὶ νόστον ἑταίρων.':
-            "<b style='color:#980000'>ἀ</b>ρνύμεν<b style='color:#980000'>ο</b>ς ἥν τ<b style='color:#980000'>ε</b> ψυχ<b style='color:#980000'>ὴ</b>ν καὶ ν<b style='color:#980000'>ό</b>στον ἑτ<b style='color:#980000'>αί</b>ρων.",
-        "ἀλλ' οὐδ' ὣς ἑτάρους ἐρρύσατο, ἱέμενός περ·":
-            "<b style='color:#980000'>ἀ</b>λλ' οὐδ' <b style='color:#980000'>ὣ</b>ς ἑτάρ<b style='color:#980000'>ου</b>ς ἐρρ<b style='color:#980000'>ύ</b>σατο, <b style='color:#980000'>ἱ</b>έμεν<b style='color:#980000'>ό</b>ς περ·",
-        'αὐτῶν γὰρ σφετέρῃσιν ἀτασθαλίῃσιν ὄλοντο,':
-            "<b style='color:#980000'>αὐ</b>τῶν γ<b style='color:#980000'>ὰ</b>ρ σφετέρ<b style='color:#980000'>ῃ</b>σιν ἀτ<b style='color:#980000'>α</b>σθαλίῃσιν ὄλ<b style='color:#980000'>ο</b>ντο,",
-        'νήπιοι, οἳ κατὰ βοῦς Ὑπερίονος Ἠελίοιο':
-            "ν<b style='color:#980000'>ή</b>πιοι, <b style='color:#980000'>οἳ</b> κατὰ β<b style='color:#980000'>οῦ</b>ς Ὑπερ<b style='color:#980000'>ί</b>ονος <b style='color:#980000'>Ἠ</b>ελί<b style='color:#980000'>οι</b>ο",
-        'ἤσθιον· αὐτὰρ ὁ τοῖσιν ἀφείλετο νόστιμον ἦμαρ.':
-            "<b style='color:#980000'>ἤ</b>σθιον· <b style='color:#980000'>αὐ</b>τὰρ ὁ τ<b style='color:#980000'>οῖ</b>σιν ἀφ<b style='color:#980000'>εί</b>λετο ν<b style='color:#980000'>ό</b>στιμον <b style='color:#980000'>ἦ</b>μαρ.",
-        'τῶν ἁμόθεν γε, θεά, θύγατερ Διός, εἰπὲ καὶ ἡμῖν.':
-            "τ<b style='color:#980000'>ῶ</b>ν ἁμόθ<b style='color:#980000'>ε</b>ν γε, θε<b style='color:#980000'>ά</b>, θύγατ<b style='color:#980000'>ε</b>ρ Διός, <b style='color:#980000'>εἰ</b>πὲ καὶ <b style='color:#980000'>ἡ</b>μῖν.",
-        "Ἔνθ' ἄλλοι μὲν πάντες, ὅσοι φύγον αἰπὺν ὄλεθρον,":
-            "<b style='color:#980000'>Ἔ</b>νθ' ἄλλ<b style='color:#980000'>οι</b> μὲν π<b style='color:#980000'>ά</b>ντες, ὅσ<b style='color:#980000'>οι</b> φύγον <b style='color:#980000'>αἰ</b>πὺν ὄλ<b style='color:#980000'>ε</b>θρον,",
-        'οἴκοι ἔσαν, πόλεμόν τε πεφευγότες ἠδὲ θάλασσαν·':
-            "<b style='color:#980000'>οἴ</b>κοι ἔσ<b style='color:#980000'>α</b>ν, πόλεμ<b style='color:#980000'>ό</b>ν τε πεφ<b style='color:#980000'>ευ</b>γότες <b style='color:#980000'>ἠ</b>δὲ θάλ<b style='color:#980000'>α</b>σσαν·",
-        "τὸν δ' οἶον νόστου κεχρημένον ἠδὲ γυναικὸς":
-            "τ<b style='color:#980000'>ὸ</b>ν δ' οἶ<b style='color:#980000'>ο</b>ν νόστ<b style='color:#980000'>ου</b> κεχρ<b style='color:#980000'>η</b>μένον <b style='color:#980000'>ἠ</b>δὲ γυν<b style='color:#980000'>αι</b>κὸς",
-        "νύμφη πότνι' ἔρυκε Καλυψὼ δῖα θεάων":
-            "ν<b style='color:#980000'>ύ</b>μφη π<b style='color:#980000'>ό</b>τνι' ἔρ<b style='color:#980000'>υ</b>κε Καλ<b style='color:#980000'>υ</b>ψὼ δ<b style='color:#980000'>ῖ</b>α θε<b style='color:#980000'>ά</b>ων",
-        'ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι.':
-            "<b style='color:#980000'>ἐ</b>ν σπέσσ<b style='color:#980000'>ι</b> γλαφυρ<b style='color:#980000'>οῖ</b>σι, λιλ<b style='color:#980000'>αι</b>ομέν<b style='color:#980000'>η</b> πόσιν <b style='color:#980000'>εἶ</b>ναι.",
-        "ἀλλ' ὅτε δὴ ἔτος ἦλθε περιπλομένων ἐνιαυτῶν,":
-            "<b style='color:#980000'>ἀ</b>λλ' ὅτε δ<b style='color:#980000'>ὴ</b> ἔτος <b style='color:#980000'>ἦ</b>λθε περ<b style='color:#980000'>ι</b>πλομέν<b style='color:#980000'>ω</b>ν ἐνι<b style='color:#980000'>αυ</b>τῶν,",
-        'τῷ οἱ ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι':
-            "τ<b style='color:#980000'>ῷ</b> οἱ ἐπ<b style='color:#980000'>ε</b>κλώσ<b style='color:#980000'>α</b>ντο θε<b style='color:#980000'>οὶ</b> οἶκ<b style='color:#980000'>ό</b>νδε νέ<b style='color:#980000'>ε</b>σθαι",
-        "εἰς Ἰθάκην, οὐδ' ἔνθα πεφυγμένος ἦεν ἀέθλων":
-            "<b style='color:#980000'>εἰ</b>ς Ἰθάκ<b style='color:#980000'>η</b>ν, οὐδ' <b style='color:#980000'>ἔ</b>νθα πεφ<b style='color:#980000'>υ</b>γμένος <b style='color:#980000'>ἦ</b>εν ἀ<b style='color:#980000'>έ</b>θλων",
-        "καὶ μετὰ οἷσι φίλοισι. θεοὶ δ' ἐλέαιρον ἅπαντες":
-            "κ<b style='color:#980000'>αὶ</b> μετὰ <b style='color:#980000'>οἷ</b>σι φίλ<b style='color:#980000'>οι</b>σι. θε<b style='color:#980000'>οὶ</b> δ' ἐλέ<b style='color:#980000'>αι</b>ρον ἅπ<b style='color:#980000'>α</b>ντες",
-        "νόσφι Ποσειδάωνος· ὁ δ' ἀσπερχὲς μενέαινεν":
-            "ν<b style='color:#980000'>ό</b>σφι Ποσ<b style='color:#980000'>ει</b>δά<b style='color:#980000'>ω</b>νος· ὁ δ' <b style='color:#980000'>ἀ</b>σπερχ<b style='color:#980000'>ὲ</b>ς μενέ<b style='color:#980000'>αι</b>νεν",
-        'ἀντιθέῳ Ὀδυσῆι πάρος ἥν γαῖαν ἱκέσθαι.':
-            "<b style='color:#980000'>ἀ</b>ντιθέ<b style='color:#980000'>ῳ</b> Ὀδυσ<b style='color:#980000'>ῆ</b>ι πάρ<b style='color:#980000'>ο</b>ς ἣν γ<b style='color:#980000'>αῖ</b>αν ἱκ<b style='color:#980000'>έ</b>σθαι.",
-    }
-
     text_widget = eee.interactive_text(
         mo,
         lines=_stanza["lines"],
         clickable=CLICKABLE_FORMS,
-        ictus_html=_RHYTHM_HTML,
+        homer_words=HOMER_WORDS if SHOW_HOMER.value else set(),
+        ictus_html=RHYTHM_HTML,
         show_ictus=SHOW_ICTUS.value,
     )
 
@@ -200,8 +210,8 @@ def _(QUIZ_WORDS_RAW, build_lexicon_tabs, eee, mo, text_widget):
         _tables = build_lexicon_tabs(_w2) or ""
         if _tables:
             _caption = mo.md(
-                "*Формы слова по эпохам — только морфологическое соответствие, "
-                "смысл может меняться*"
+                "*Формы слова по эпохам — только простейшее морфологическое "
+                "соответствие по леммам, смысл может меняться*"
             )
             _panel = mo.vstack([mo.md(_gloss), _caption, mo.Html(_tables)])
         else:
@@ -212,25 +222,8 @@ def _(QUIZ_WORDS_RAW, build_lexicon_tabs, eee, mo, text_widget):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    _EEE_NOTE = """
-    Используется [EEE](https://codeberg.org/EEE-project) — систему для построения интерактивных учебных материалов.
-    В данном случае задействованы [модули морфологического анализа](https://codeberg.org/EEE-project/eee-project/src/branch/main/docs/backends.md):
-
-    * [**unimorph-backend-eee**](https://codeberg.org/EEE-project/unimorph-backend-eee) — база данных UniMorph:
-      для древнегреческого парадигмы существительных и прилагательных (глаголы отсутствуют);
-      покрытие лучше для греческого НЗ, чем для гомеровского текста
-    * [**ancient-greek-backend-eee**](https://codeberg.org/EEE-project/ancient-greek-backend-eee) — анализ на основе морфологических словарей; лексиконы по эпохам:
-      * **Homer** — гомеровский эпос (Илиада, Одиссея); эпический/ионийский, ~VIII в. до н.э.
-      * **Словарь классического аттического** — (pratt + ltrg + lsj); аттика V–IV вв. до н.э.
-      * **LXX** — Септуагинта; эллинистический койне, IV–I вв. до н.э.
-      * **MorphGNT** — греческий Новый Завет; римский койне, I–III вв. н.э.
-    * [**modern-greek-backend-eee**](https://codeberg.org/EEE-project/modern-greek-backend-eee) — новогреческий (демотика); показывает, как древнее слово склоняется/спрягается сегодня — последняя «ступень» в таблице словоформ (если у слова есть живой новогреческий рефлекс)
-
-    В таблице словоформ можно переключаться между лексиконами разных исторических периодов,
-    если соответствующие данные для данного слова в системе есть.
-    """
-    mo.accordion({"О проверке форм (EEE)": _EEE_NOTE})
+def _(EEE_NOTE, mo):
+    mo.accordion({"О проверке форм (EEE)": EEE_NOTE})
     return
 
 
@@ -501,7 +494,15 @@ def _(QUIZ_WORDS_RAW, build_paradigm_table, eee, grc_lexicons):
         QUIZ_WORDS_RAW, "none",
         build_paradigm_table=build_paradigm_table, lexicons=grc_lexicons,
     )
-    return (CLICKABLE_FORMS,)
+    # words whose exact attested surface form is confirmed by the Homeric
+    # corpus lexicon specifically -- highlighted (background) in the clickable
+    # text so a reader can tell "Homer himself confirms this form" apart from
+    # "some later-period lexicon in the combined engine reaches it".
+    HOMER_WORDS = eee.grc_coverage_words(
+        QUIZ_WORDS_RAW, "homer",
+        build_paradigm_table=build_paradigm_table, lexicons=grc_lexicons,
+    )
+    return CLICKABLE_FORMS, HOMER_WORDS
 
 
 @app.cell(hide_code=True)
@@ -613,11 +614,18 @@ def _():
         }
         for ref, lines in _greek.items()
     ]
-    return STANZAS, TRANS_DESC
+
+    # ictus (rhythm) markup: one marked-up line per plain line, in the same
+    # reading order as greek.md -- zipped by position, not re-keyed, so a plain
+    # line's own accents/punctuation never need to match the markup exactly.
+    _ictus_lines = (_root / "ictus.html").read_text(encoding="utf-8").splitlines()
+    _all_plain_lines = [line for lines in _greek.values() for line in lines]
+    RHYTHM_HTML = dict(zip(_all_plain_lines, _ictus_lines))
+    return RHYTHM_HTML, STANZAS, TRANS_DESC
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
+def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
     import csv
     from pathlib import Path
 
@@ -629,7 +637,7 @@ def _(ag_backend, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
 
     _POS_MAP = {"adj": "adjective"}
     _QUIZZABLE = {"noun", "verb", "adj"}
-    _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt)]
+    _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt), ("byzantine", ag_byzantine)]
 
     def _lexicon_tag(w):
         if w.get("pos") not in _QUIZZABLE:
@@ -644,13 +652,6 @@ def _(ag_backend, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
                     sources.append(name)
             except Exception:
                 pass
-        if not sources:
-            for name, backend in _LEXICONS:
-                try:
-                    if any(backend.paradigm(w["lemma"], pos).values()):
-                        sources.append(name)
-                except Exception:
-                    pass
         if not sources:
             return ""
         lexicons = ", ".join(f'"{s}"' for s in sources)
@@ -712,12 +713,18 @@ def _():
     from modern_greek_backend_eee import ModernGreekBackend
 
     # union recognizer for coverage + quiz — all diachronic rungs, incl. Classical Attic (pratt + ltrg + lsj)
-    ag_backend = AncientGreekBackend(lexicons=["homer", "morpheus", "lxx", "morphgnt", "pratt", "ltrg", "lsj"])
-    ag_homer = AncientGreekBackend(lexicons=["homer", "morpheus"])
+    ag_backend = AncientGreekBackend(lexicons=["homer", "morpheus", "odyssey_morpheus", "lxx", "morphgnt", "pratt", "ltrg", "lsj"])
+    # odyssey_morpheus is Epic-register, Odyssey-course-vocabulary-specific --
+    # merged alongside homer/morpheus (same register), not lsj/byzantine (Attic/Koine).
+    ag_homer = AncientGreekBackend(lexicons=["homer", "morpheus", "odyssey_morpheus"])
     ag_lsj = AncientGreekBackend(lexicons=["pratt", "ltrg", "lsj"])
     ag_lxx = AncientGreekBackend(lexicons=["lxx"])
     ag_morphgnt = AncientGreekBackend(lexicons=["morphgnt"])
-    grc_lexicons = {"homer": ag_homer, "lsj": ag_lsj, "lxx": ag_lxx, "morphgnt": ag_morphgnt}
+    # byzantine is a sparse exceptions layer, not a standalone engine -- merge
+    # onto the same Koine/Attic base the other rungs use so it inherits their
+    # lemma coverage and only overrides the specific cells it documents.
+    ag_byzantine = AncientGreekBackend(lexicons=["lxx", "morphgnt", "pratt", "ltrg", "lsj", "byzantine"])
+    grc_lexicons = {"homer": ag_homer, "lsj": ag_lsj, "lxx": ag_lxx, "morphgnt": ag_morphgnt, "byzantine": ag_byzantine}
     um_backend = UniMorphBackend(language="grc")
     mg = ModernGreekBackend()   # Modern-Greek rung of the diachronic dropdown
     eee.register_backend("grc", ag_backend, backend="ancient-greek")
@@ -727,6 +734,7 @@ def _():
     gu = eee.GreekUtils(mo_module=mo)
     return (
         ag_backend,
+        ag_byzantine,
         ag_homer,
         ag_lsj,
         ag_lxx,
