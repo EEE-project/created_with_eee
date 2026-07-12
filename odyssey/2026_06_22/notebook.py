@@ -537,7 +537,16 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
+def _(
+    ag_backend,
+    ag_byzantine,
+    ag_homer,
+    ag_lsj,
+    ag_lxx,
+    ag_morphgnt,
+    eee,
+    gu,
+):
     import csv
     from pathlib import Path
 
@@ -547,14 +556,12 @@ def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
             list(csv.DictReader(_f, delimiter="\t")), ag_backend, "ru"
         )
 
-    _POS_MAP = {"adj": "adjective"}
-    _QUIZZABLE = {"noun", "verb", "adj", "pronoun"}
     _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt), ("byzantine", ag_byzantine)]
 
     def _lexicon_tag(w):
-        if w.get("pos") not in _QUIZZABLE:
+        if w.get("pos") not in eee.LEXICON_TAG_POS:
             return ""
-        pos = _POS_MAP.get(w["pos"], w["pos"])
+        pos = eee.LEXICON_TAG_POS_ALIASES.get(w["pos"], w["pos"])
         form = w.get("form", "")
         sources = []
         for name, backend in _LEXICONS:

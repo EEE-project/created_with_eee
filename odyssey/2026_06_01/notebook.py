@@ -452,6 +452,7 @@ def _(
     QUIZ_WORDS_RAW,
     SESSION_SIZE,
     STANZAS,
+    eee,
     gu,
     tp_renew_btn,
     tp_set_cv,
@@ -464,8 +465,7 @@ def _(
     from pathlib import Path as _P
 
     LITERARY_TRANSLATORS = ["Жуковский", "Вересаев"]
-    _TP_CONTENT_POS = {"noun", "verb", "adj", "adv", "name"}
-    _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in _TP_CONTENT_POS]
+    _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in eee.TRANSLATION_PRESENCE_CONTENT_POS]
     _tp_path = _P(__file__).parent / "translation_presence.tsv"
     gu.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
     TP_ITEMS = gu.balance_presence_items(gu.build_translation_presence_items(
@@ -694,7 +694,16 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
+def _(
+    ag_backend,
+    ag_byzantine,
+    ag_homer,
+    ag_lsj,
+    ag_lxx,
+    ag_morphgnt,
+    eee,
+    gu,
+):
     import csv
     from pathlib import Path
 
@@ -704,14 +713,12 @@ def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
             list(csv.DictReader(_f, delimiter="\t")), ag_backend, "ru"
         )
 
-    _POS_MAP = {"adj": "adjective"}
-    _QUIZZABLE = {"noun", "verb", "adj", "pronoun"}
     _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt), ("byzantine", ag_byzantine)]
 
     def _lexicon_tag(w):
-        if w.get("pos") not in _QUIZZABLE:
+        if w.get("pos") not in eee.LEXICON_TAG_POS:
             return ""
-        pos = _POS_MAP.get(w["pos"], w["pos"])
+        pos = eee.LEXICON_TAG_POS_ALIASES.get(w["pos"], w["pos"])
         form = w.get("form", "")
         sources = []
         for name, backend in _LEXICONS:
