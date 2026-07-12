@@ -145,7 +145,6 @@ def _(mo):
         ],
         align="stretch", gap=0.5,
     )
-
     return EEE_NOTE, SHOW_HOMER, SHOW_ICTUS
 
 
@@ -238,8 +237,17 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _():
-    pass
-    return
+    # Shared per-lesson default: how many items each exercise below draws per
+    # session. Change this one value to affect every exercise at once, or
+    # override a single exercise by editing its own n=SESSION_SIZE argument.
+    SESSION_SIZE = 10
+    return (SESSION_SIZE,)
+
+
+@app.cell(hide_code=True)
+def _(gu):
+    quiz_renew_btn = gu._mo.ui.button(label="↺ Новый набор", on_click=lambda v: (v or 0) + 1)
+    return (quiz_renew_btn,)
 
 
 @app.cell(hide_code=True)
@@ -265,6 +273,7 @@ def _(
     history,
     next_btn,
     prev_btn,
+    quiz_renew_btn,
     remaining,
     restore_entry,
     score,
@@ -284,6 +293,7 @@ def _(
         title='### Упражнение: найди слово',
         meaning_key='_label',
         form_key='form',
+        renew_btn=quiz_renew_btn,
     )
     return
 
@@ -345,7 +355,37 @@ def _(sm_direction, sm_set_cv, sm_set_remaining):
 
 @app.cell(hide_code=True)
 def _(
+    SESSION_SIZE,
     STANZAS,
+    gu,
+    sm_renew_btn,
+    sm_set_cv,
+    sm_set_future,
+    sm_set_history,
+    sm_set_remaining,
+    sm_set_restore_entry,
+    sm_set_score,
+):
+    _ = sm_renew_btn.value
+    SM_STANZAS = gu.sample_session_items(STANZAS, n=SESSION_SIZE)
+    sm_set_cv(None)
+    sm_set_remaining(None)
+    sm_set_score({"correct": 0, "total": 0})
+    sm_set_history([])
+    sm_set_future([])
+    sm_set_restore_entry(None)
+    return (SM_STANZAS,)
+
+
+@app.cell(hide_code=True)
+def _(gu):
+    sm_renew_btn = gu._mo.ui.button(label="↺ Новый набор", on_click=lambda v: (v or 0) + 1)
+    return (sm_renew_btn,)
+
+
+@app.cell(hide_code=True)
+def _(
+    SM_STANZAS,
     gu,
     sm_cv,
     sm_direction,
@@ -356,7 +396,7 @@ def _(
     _ = sm_cv()
     sm_choice_radio, sm_next_btn, sm_prev_btn = gu.stanza_match_widgets(
         cv=sm_cv(),
-        stanzas=STANZAS,
+        stanzas=SM_STANZAS,
         direction=sm_direction.value,
         restore_entry=sm_restore_entry(),
         done=sm_cv() is None and sm_remaining() is not None and len(sm_remaining()) == 0,
@@ -367,7 +407,7 @@ def _(
 
 @app.cell(hide_code=True)
 def _(
-    STANZAS,
+    SM_STANZAS,
     gu,
     sm_choice_radio,
     sm_cv,
@@ -377,6 +417,7 @@ def _(
     sm_next_btn,
     sm_prev_btn,
     sm_remaining,
+    sm_renew_btn,
     sm_restore_entry,
     sm_score,
     sm_set_cv,
@@ -391,8 +432,9 @@ def _(
         sm_score, sm_set_score, sm_restore_entry, sm_set_restore_entry,
         sm_history, sm_set_history, sm_future, sm_set_future,
         sm_choice_radio, sm_next_btn, sm_prev_btn,
-        stanzas=STANZAS,
+        stanzas=SM_STANZAS,
         direction=sm_direction.value,
+        renew_btn=sm_renew_btn,
     )
     return
 
@@ -406,7 +448,19 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, STANZAS, gu):
+def _(
+    QUIZ_WORDS_RAW,
+    SESSION_SIZE,
+    STANZAS,
+    gu,
+    tp_renew_btn,
+    tp_set_cv,
+    tp_set_future,
+    tp_set_history,
+    tp_set_remaining,
+    tp_set_restore_entry,
+    tp_set_score,
+):
     from pathlib import Path as _P
 
     LITERARY_TRANSLATORS = ["Жуковский", "Вересаев"]
@@ -416,7 +470,14 @@ def _(QUIZ_WORDS_RAW, STANZAS, gu):
     gu.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
     TP_ITEMS = gu.balance_presence_items(gu.build_translation_presence_items(
         gu.read_translation_presence_tsv(_tp_path), QUIZ_WORDS_RAW, STANZAS
-    ))
+    ), n=SESSION_SIZE)
+    _ = tp_renew_btn.value
+    tp_set_cv(None)
+    tp_set_remaining(None)
+    tp_set_score({"correct": 0, "total": 0})
+    tp_set_history([])
+    tp_set_future([])
+    tp_set_restore_entry(None)
     return (TP_ITEMS,)
 
 
@@ -445,6 +506,12 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
+def _(gu):
+    tp_renew_btn = gu._mo.ui.button(label="↺ Новый набор", on_click=lambda v: (v or 0) + 1)
+    return (tp_renew_btn,)
+
+
+@app.cell(hide_code=True)
 def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
     _ = tp_cv()
     tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch = gu.translation_presence_widgets(
@@ -468,6 +535,7 @@ def _(
     tp_next_btn,
     tp_prev_btn,
     tp_remaining,
+    tp_renew_btn,
     tp_restore_entry,
     tp_score,
     tp_set_cv,
@@ -484,6 +552,7 @@ def _(
         tp_history, tp_set_history, tp_future, tp_set_future,
         tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch,
         items=TP_ITEMS,
+        renew_btn=tp_renew_btn,
     )
     return
 
@@ -667,21 +736,33 @@ def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
 @app.cell(hide_code=True)
 def _(
     QUIZ_WORDS_RAW,
+    SESSION_SIZE,
     build_paradigm_table,
     eee,
     grc_lexicons,
+    gu,
+    quiz_renew_btn,
     set_cv,
+    set_future,
+    set_history,
     set_remaining,
+    set_restore_entry,
+    set_score,
 ):
-    QUIZ_WORDS = eee.filter_grc_quiz_words(
+    QUIZ_WORDS = gu.sample_session_items(eee.filter_grc_quiz_words(
         QUIZ_WORDS_RAW, "none",
         build_paradigm_table=build_paradigm_table, lexicons=grc_lexicons,
-    )
+    ), n=SESSION_SIZE)
 
     eee.add_labels(QUIZ_WORDS)
 
+    _ = quiz_renew_btn.value
     set_cv(None)
     set_remaining(None)
+    set_score({"correct": 0, "total": 0})
+    set_history([])
+    set_future([])
+    set_restore_entry(None)
     return (QUIZ_WORDS,)
 
 

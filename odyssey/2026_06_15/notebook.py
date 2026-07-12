@@ -302,8 +302,17 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _():
-    pass
-    return
+    # Shared per-lesson default: how many items each exercise below draws per
+    # session. Change this one value to affect every exercise at once, or
+    # override a single exercise by editing its own n=SESSION_SIZE argument.
+    SESSION_SIZE = 10
+    return (SESSION_SIZE,)
+
+
+@app.cell(hide_code=True)
+def _(gu):
+    quiz_renew_btn = gu._mo.ui.button(label="↺ Новый набор", on_click=lambda v: (v or 0) + 1)
+    return (quiz_renew_btn,)
 
 
 @app.cell(hide_code=True)
@@ -330,6 +339,7 @@ def _(
     history,
     next_btn,
     prev_btn,
+    quiz_renew_btn,
     remaining,
     restore_entry,
     score,
@@ -350,6 +360,7 @@ def _(
         meaning_key='_label',
         form_key='form',
         build_paradigm_table=build_lexicon_tabs,
+        renew_btn=quiz_renew_btn,
     )
     return
 
@@ -558,22 +569,34 @@ def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
 @app.cell(hide_code=True)
 def _(
     QUIZ_WORDS_RAW,
+    SESSION_SIZE,
     build_paradigm_table,
     eee,
     filter_mode,
     grc_lexicons,
+    gu,
+    quiz_renew_btn,
     set_cv,
+    set_future,
+    set_history,
     set_remaining,
+    set_restore_entry,
+    set_score,
 ):
-    QUIZ_WORDS = eee.filter_grc_quiz_words(
+    QUIZ_WORDS = gu.sample_session_items(eee.filter_grc_quiz_words(
         QUIZ_WORDS_RAW, filter_mode.value,
         build_paradigm_table=build_paradigm_table, lexicons=grc_lexicons,
-    )
+    ), n=SESSION_SIZE)
 
     eee.add_labels(QUIZ_WORDS)
 
+    _ = quiz_renew_btn.value
     set_cv(None)
     set_remaining(None)
+    set_score({"correct": 0, "total": 0})
+    set_history([])
+    set_future([])
+    set_restore_entry(None)
     return (QUIZ_WORDS,)
 
 
