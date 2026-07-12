@@ -559,7 +559,7 @@ def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
         )
 
     _POS_MAP = {"adj": "adjective"}
-    _QUIZZABLE = {"noun", "verb", "adj"}
+    _QUIZZABLE = {"noun", "verb", "adj", "pronoun"}
     _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt), ("byzantine", ag_byzantine)]
 
     def _lexicon_tag(w):

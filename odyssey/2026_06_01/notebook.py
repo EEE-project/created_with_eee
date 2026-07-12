@@ -410,7 +410,7 @@ def _(QUIZ_WORDS_RAW, STANZAS, gu):
     from pathlib import Path as _P
 
     LITERARY_TRANSLATORS = ["Жуковский", "Вересаев"]
-    _TP_CONTENT_POS = {"noun", "verb", "adj", "adv", "name"}
+    _TP_CONTENT_POS = {"noun", "verb", "adj", "adv", "name", "pronoun"}
     _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in _TP_CONTENT_POS]
     _tp_path = _P(__file__).parent / "translation_presence.tsv"
     gu.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
@@ -636,7 +636,7 @@ def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
         )
 
     _POS_MAP = {"adj": "adjective"}
-    _QUIZZABLE = {"noun", "verb", "adj"}
+    _QUIZZABLE = {"noun", "verb", "adj", "pronoun"}
     _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt), ("byzantine", ag_byzantine)]
 
     def _lexicon_tag(w):
