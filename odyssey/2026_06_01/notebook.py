@@ -414,9 +414,9 @@ def _(QUIZ_WORDS_RAW, STANZAS, gu):
     _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in _TP_CONTENT_POS]
     _tp_path = _P(__file__).parent / "translation_presence.tsv"
     gu.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
-    TP_ITEMS = gu.build_translation_presence_items(
+    TP_ITEMS = gu.balance_presence_items(gu.build_translation_presence_items(
         gu.read_translation_presence_tsv(_tp_path), QUIZ_WORDS_RAW, STANZAS
-    )
+    ))
     return (TP_ITEMS,)
 
 
