@@ -410,7 +410,7 @@ def _(QUIZ_WORDS_RAW, STANZAS, gu):
     from pathlib import Path as _P
 
     LITERARY_TRANSLATORS = ["Жуковский", "Вересаев"]
-    _TP_CONTENT_POS = {"noun", "verb", "adj", "adv", "name", "pronoun"}
+    _TP_CONTENT_POS = {"noun", "verb", "adj", "adv", "name"}
     _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in _TP_CONTENT_POS]
     _tp_path = _P(__file__).parent / "translation_presence.tsv"
     gu.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)

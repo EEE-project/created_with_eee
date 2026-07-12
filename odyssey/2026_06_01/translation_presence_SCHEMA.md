@@ -49,7 +49,11 @@ it's an upsert, not an overwrite:
 
 ## Current state
 
-176 rows, all unreviewed (`reflected` blank) as of 2026-07-09. Content words only (nouns, verbs,
+176 rows, all reviewed (166 `yes` / 10 `no`) as of 2026-07-11. Content words only (nouns, verbs,
 adjectives, adverbs, proper names) — function words (particles, conjunctions, prepositions,
 pronouns) are excluded by design, since "is this function word reflected" isn't a meaningful
-question for a literary translation.
+question for a literary translation. **Confirmed exclusion 2026-07-12:** when `"pronoun"` was
+briefly added to `_TP_CONTENT_POS` as part of unrelated pronoun-POS work elsewhere in the
+project, `sync_translation_presence_tsv` correctly appended 54 new pronoun rows — reverted on
+review, since the design principle above already covers pronouns. Those 54 rows are now
+comment-prefixed (`#`) in the TSV, not deleted, per the upsert behavior documented below.
