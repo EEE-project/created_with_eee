@@ -544,13 +544,6 @@ def _(ag_backend, ag_byzantine, ag_homer, ag_lsj, ag_lxx, ag_morphgnt, gu):
             except Exception:
                 pass
         if not sources:
-            for name, backend in _LEXICONS:
-                try:
-                    if any(backend.paradigm(w["lemma"], pos).values()):
-                        sources.append(name)
-                except Exception:
-                    pass
-        if not sources:
             return ""
         lexicons = ", ".join(f'"{s}"' for s in sources)
         return f"ancient-greek[{lexicons}]"
