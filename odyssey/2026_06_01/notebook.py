@@ -366,14 +366,9 @@ def _(
     sm_set_restore_entry,
     sm_set_score,
 ):
-    _ = sm_renew_btn.value
     SM_STANZAS = gu.sample_session_items(STANZAS, n=SESSION_SIZE)
-    sm_set_cv(None)
-    sm_set_remaining(None)
-    sm_set_score({"correct": 0, "total": 0})
-    sm_set_history([])
-    sm_set_future([])
-    sm_set_restore_entry(None)
+    gu.reset_quiz_state(sm_renew_btn, sm_set_cv, sm_set_remaining, sm_set_score,
+                         sm_set_history, sm_set_future, sm_set_restore_entry)
     return (SM_STANZAS,)
 
 
@@ -471,13 +466,8 @@ def _(
     TP_ITEMS = gu.balance_presence_items(gu.build_translation_presence_items(
         gu.read_translation_presence_tsv(_tp_path), QUIZ_WORDS_RAW, STANZAS
     ), n=SESSION_SIZE)
-    _ = tp_renew_btn.value
-    tp_set_cv(None)
-    tp_set_remaining(None)
-    tp_set_score({"correct": 0, "total": 0})
-    tp_set_history([])
-    tp_set_future([])
-    tp_set_restore_entry(None)
+    gu.reset_quiz_state(tp_renew_btn, tp_set_cv, tp_set_remaining, tp_set_score,
+                         tp_set_history, tp_set_future, tp_set_restore_entry)
     return (TP_ITEMS,)
 
 
@@ -763,13 +753,8 @@ def _(
 
     eee.add_labels(QUIZ_WORDS)
 
-    _ = quiz_renew_btn.value
-    set_cv(None)
-    set_remaining(None)
-    set_score({"correct": 0, "total": 0})
-    set_history([])
-    set_future([])
-    set_restore_entry(None)
+    gu.reset_quiz_state(quiz_renew_btn, set_cv, set_remaining, set_score,
+                         set_history, set_future, set_restore_entry)
     return (QUIZ_WORDS,)
 
 

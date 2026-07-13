@@ -588,13 +588,8 @@ def _(
 
     eee.add_labels(QUIZ_WORDS)
 
-    _ = quiz_renew_btn.value
-    set_cv(None)
-    set_remaining(None)
-    set_score({"correct": 0, "total": 0})
-    set_history([])
-    set_future([])
-    set_restore_entry(None)
+    gu.reset_quiz_state(quiz_renew_btn, set_cv, set_remaining, set_score,
+                         set_history, set_future, set_restore_entry)
     return (QUIZ_WORDS,)
 
 
