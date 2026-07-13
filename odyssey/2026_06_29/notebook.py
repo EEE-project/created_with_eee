@@ -337,7 +337,7 @@ def _():
 
 @app.cell(hide_code=True)
 def _(gu):
-    quiz_renew_btn = gu._mo.ui.button(label="↺ Новый набор", on_click=lambda v: (v or 0) + 1)
+    quiz_renew_btn = gu.make_renew_button()
     return (quiz_renew_btn,)
 
 
