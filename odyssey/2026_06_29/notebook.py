@@ -141,7 +141,7 @@ def _(TRANS_DESC, mo, trans_selector):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(gu, mo):
     from pathlib import Path as _P
     SHOW_ICTUS = mo.ui.switch(value=True)
     SHOW_HOMER = mo.ui.switch(value=True)
@@ -151,25 +151,8 @@ def _(mo):
     # would otherwise overclaim coverage this lesson's ag_backend doesn't have.
     EEE_NOTE = (_P(__file__).parent.parent / "eee_note.md").read_text(encoding="utf-8")
 
-    mo.vstack(
-        [
-            mo.hstack(
-                [SHOW_ICTUS, mo.md(
-                    "Икты (ударные слоги) каждой стопы выделены <b style=\'color:#980000\'>красным</b>."
-                )],
-                justify="start", align="center", gap=1.5,
-            ),
-            mo.hstack(
-                [SHOW_HOMER, mo.md(
-                    "Слова из гомеровского лексикона, для которых движок EEE строит "
-                    "таблицы словоформ по разным периодам греческого языка."
-                )],
-                justify="start", align="center", gap=1.5,
-            ),
-            mo.accordion({"О морфологическом движке EEE": EEE_NOTE}),
-        ],
-        align="stretch", gap=0.5,
-    )
+    gu.ictus_toggle_panel(SHOW_ICTUS, SHOW_HOMER, EEE_NOTE,
+                           ictus_color="#980000", ictus_color_name="красным")
     return EEE_NOTE, SHOW_HOMER, SHOW_ICTUS
 
 
@@ -218,30 +201,8 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, build_lexicon_tabs, eee, mo, text_widget):
-    _sel = text_widget.widget.selected_word
-    _w = eee.resolve_clicked_word(QUIZ_WORDS_RAW, _sel)
-
-    if _w is None:
-        _panel = mo.md("*Выберите слово в тексте, чтобы увидеть перевод и формы слов из гомеровскго лексикона…*")
-    else:
-        _w2 = dict(_w)
-        eee.add_labels([_w2])
-        _gloss = f"**{_w2.get('form', _sel)}** — {_w2['_label']}"
-        _grammar = _w2.get("grammar_label", "")
-        if _grammar:
-            _gloss += f"  \n_{_grammar}_"
-        _tables = build_lexicon_tabs(_w2) or ""
-        if _tables:
-            _caption = mo.md(
-                "*Формы слова по эпохам — только простейшее морфологическое "
-                "соответствие по леммам, смысл может меняться*"
-            )
-            _panel = mo.vstack([mo.md(_gloss), _caption, mo.Html(_tables)])
-        else:
-            _panel = mo.md(_gloss)
-
-    _panel
+def _(QUIZ_WORDS_RAW, build_lexicon_tabs, gu, text_widget):
+    gu.render_gloss_panel(QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_lexicon_tabs)
     return
 
 

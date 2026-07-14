@@ -83,64 +83,15 @@ def _(TRANS_DESC, mo, trans_selector):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(gu, mo):
+    from pathlib import Path as _P
     SHOW_ICTUS = mo.ui.switch(value=True)
     SHOW_HOMER = mo.ui.switch(value=True)
 
-    EEE_NOTE = """
-    Используется [EEE](https://t.me/eee_greek) — система для построения интерактивных учебных материалов.
-    Модули морфологического анализа строят таблицы словоформ из набора лексиконов (словарей основ и
-    засвидетельствованных форм); подробности — в документации
-    [ancient-greek-backend-eee](https://codeberg.org/EEE-project/ancient-greek-backend-eee) и
-    [eee-project](https://codeberg.org/EEE-project/eee-project):
+    EEE_NOTE = (_P(__file__).parent.parent / "eee_note.md").read_text(encoding="utf-8")
 
-    * **homer** — гомеровский корпус (Илиада, Одиссея): 2322 глаг. + 15 им. основ
-    * **morpheus** — формы, независимо подтверждённые анализатором Perseids Morpheus, для лемм, которые
-      словарные лексиконы не могут покрыть (атематические, стяжённые, отложительные глаголы и т.п.):
-      46 глаг. + 62 им. леммы
-    * **odyssey_morpheus** — формы из словаря занятий по Одиссее, не покрытые остальными лексиконами,
-      тоже подтверждённые Perseids Morpheus: 56 глаг. + 59 им. + 57 прил. лемм
-    * **pratt / ltrg** — учебные лексиконы (Pratt, LTRG): 22 + 34 глаг., 26 им. основ
-    * **lsj** — по LSJ и Wiktionary: 9 глаг. + 18 им. основ
-    * **lxx** — Септуагинта: 1905 глаг. основ
-    * **morphgnt** — греческий Новый Завет: 1848 глаг. основ
-    * **byzantine** — словарь Sophocles (1887), византийские отличия от койне/аттического: 61 лемма
-
-    Периоды на шкале истории греческого языка — это комбинации лексиконов выше:
-
-    * **Эпос** · ~VIII в. до н.э. — homer + morpheus + odyssey_morpheus
-    * **Классический аттический** · V–IV вв. до н.э. — pratt + ltrg + lsj
-    * **Эллинистическое койне** · IV–I вв. до н.э. — lxx
-    * **Римское койне** · I–III вв. н.э. — morphgnt
-    * **Византийский** · IV–XV вв. н.э. — lxx + morphgnt + pratt + ltrg + lsj, с byzantine как слоем отличий поверх
-    * **Новогреческий** · XVI в. — настоящее время — [modern-greek-backend-eee](https://codeberg.org/EEE-project/modern-greek-backend-eee), отдельный правило-ориентированный движок (не лексикон, полное покрытие парадигм для любой леммы)
-
-    Дополнительно подключён [unimorph-backend-eee](https://codeberg.org/EEE-project/unimorph-backend-eee) — база данных
-    UniMorph (2224 существительных + 207 прилагательных; глаголов нет; охват смещён к текстам Нового Завета).
-
-    В таблице словоформ можно переключаться между лексиконами разных исторических периодов,
-    если соответствующие данные для данного слова в системе есть.
-    """
-
-    mo.vstack(
-        [
-            mo.hstack(
-                [SHOW_ICTUS, mo.md(
-                    "Икты (ударные слоги) каждой стопы выделены <b style=\'color:#980000\'>красным</b>."
-                )],
-                justify="start", align="center", gap=1.5,
-            ),
-            mo.hstack(
-                [SHOW_HOMER, mo.md(
-                    "Слова из гомеровского лексикона, для которых движок EEE строит "
-                    "таблицы словоформ по разным периодам греческого языка."
-                )],
-                justify="start", align="center", gap=1.5,
-            ),
-            mo.accordion({"О морфологическом движке EEE": EEE_NOTE}),
-        ],
-        align="stretch", gap=0.5,
-    )
+    gu.ictus_toggle_panel(SHOW_ICTUS, SHOW_HOMER, EEE_NOTE,
+                           ictus_color="#980000", ictus_color_name="красным")
     return EEE_NOTE, SHOW_HOMER, SHOW_ICTUS
 
 
@@ -189,30 +140,8 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, build_lexicon_tabs, eee, mo, text_widget):
-    _sel = text_widget.widget.selected_word
-    _w = eee.resolve_clicked_word(QUIZ_WORDS_RAW, _sel)
-
-    if _w is None:
-        _panel = mo.md("*Выберите слово в тексте, чтобы увидеть перевод и формы слов из гомеровскго лексикона…*")
-    else:
-        _w2 = dict(_w)
-        eee.add_labels([_w2])
-        _gloss = f"**{_w2.get('form', _sel)}** — {_w2['_label']}"
-        _grammar = _w2.get("grammar_label", "")
-        if _grammar:
-            _gloss += f"  \n_{_grammar}_"
-        _tables = build_lexicon_tabs(_w2) or ""
-        if _tables:
-            _caption = mo.md(
-                "*Формы слова по эпохам — только простейшее морфологическое "
-                "соответствие по леммам, смысл может меняться*"
-            )
-            _panel = mo.vstack([mo.md(_gloss), _caption, mo.Html(_tables)])
-        else:
-            _panel = mo.md(_gloss)
-
-    _panel
+def _(QUIZ_WORDS_RAW, build_lexicon_tabs, gu, text_widget):
+    gu.render_gloss_panel(QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_lexicon_tabs)
     return
 
 
