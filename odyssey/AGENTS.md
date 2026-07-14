@@ -5,10 +5,13 @@
 ```
 odyssey/
   lessons.tsv          # lesson index (title, url, date)
-  notebook.py          # index/parent notebook
-  2026_06_22/          # Lesson: Od. IX.39–61
-  2026_06_15/          # Lesson: Od. IX.19–38
-  2026_06_01/          # Lesson: Od. I.1–21
+  notebook.py           # index/parent notebook
+  eee_note.md            # shared "О морфологическом движке EEE" text (see below)
+  2026_07_06/            # Lesson: Od. IX.82–104
+  2026_06_29/            # Lesson: Od. IX.62–81
+  2026_06_22/            # Lesson: Od. IX.39–61
+  2026_06_15/            # Lesson: Od. IX.19–38
+  2026_06_01/            # Lesson: Od. I.1–21 (pilot)
 ```
 
 Each lesson directory:
@@ -17,14 +20,22 @@ Each lesson directory:
 notebook.py
 greek.md                   ← Greek source text (do NOT hardcode in notebook)
 translations_ru.md         ← literary translations, incl. подстрочник gloss (do NOT hardcode)
+ictus.html                 ← rhythm (икты) markup, one marked-up line per greek.md line
 vocab_{ref}.tsv            ← vocabulary for the quiz
 vocab_content_problems.md  ← known coverage gaps (read before adding TSV entries)
+translation_presence.tsv   ← manually-reviewed word×translator judgments (see below)
 ```
 
-`2026_06_01` only: the interlinear gloss lives as a `## подстрочник` section inside
-`translations_ru.md` (merged 2026-07-10). The other 4 lessons haven't been migrated
-yet and still carry a separate `interlenear_ru.md` alongside `translations_ru.md` —
-same rules as documented below for whichever structure a given lesson currently has.
+All 5 lessons share the same interactive layout (migrated 2026-07-13): clickable
+poem text with a click-to-gloss panel, an ictus toggle, a homer-lexicon
+highlight toggle, three exercises (найди слово / сопоставь строфу и перевод /
+слово в переводе), and a merged `## подстрочник` section inside
+`translations_ru.md` (no more standalone `interlenear_ru.md` — its content was
+merged in and the file deleted). The pilot (`2026_06_01`) keeps its own inline
+`EEE_NOTE` text (it wires in the `morpheus` lexicon on top of the others, so its
+coverage description is genuinely different); the other 4 lessons read the
+shared `odyssey/eee_note.md` file at runtime instead of duplicating the ~30-line
+explanation in every `notebook.py`.
 
 ---
 
@@ -72,29 +83,34 @@ Identify cells by content, not by ID — IDs change after each save.
 | `## Слова, слова…` | per-lesson vocabulary notes (optional section) |
 | `## Текст поэмы с параллельными переводами` | section separator |
 | `_MURRAY = (...)` | Murray 1919 source citation (HTML) |
-| `Икты (ударные слоги)…` | explanation of stress marks in poem display |
-| `_st_map = {s["ref"]: s for s in STANZAS}` | interactive poem display |
-| `SHOW_COVERAGE = mo.ui.radio(...)` | coverage highlight toggle |
-| `## Упражнение: словарная форма` | section separator |
-| `filter_mode = mo.ui.radio(...)` | lexicon filter for quiz words |
-| `mo.hstack([..., next_btn])` | progress counter + next button |
-| `answer_radio = mo.ui.radio(...)` | quiz question |
-| `mo.stop(cv() is None)` + feedback | quiz feedback |
-| `### О проверке форм (EEE)` | EEE system explanation |
+| `_PODSTROCHNIK_DESC = ...` / `_desc_map` | translation-picker description text |
+| `SHOW_ICTUS = mo.ui.switch(...)` | ictus + homer-highlight toggles, `EEE_NOTE` accordion |
+| `text_widget = eee.interactive_text(...)` | clickable poem display + translation panel |
+| `_sel = text_widget.widget.selected_word` | click-to-gloss panel (meaning + lexicon-tab table) |
+| `mo.accordion({"О проверке форм (EEE)": EEE_NOTE})` | EEE system explanation (reads `EEE_NOTE`) |
+| `## Упражнения` | section separator |
+| `gu.word_quiz_form(...)` (title `### Упражнение: найди слово`) | word-form quiz |
+| `### Упражнение: сопоставь строфу и перевод` | section separator |
+| `sm_direction = mo.ui.radio(...)` | stanza-match direction toggle |
+| `gu.stanza_match_form(...)` | stanza-match quiz |
+| `### Упражнение: слово в переводе` | section separator |
+| `gu.translation_presence_form(...)` | translation-presence quiz |
 
 ### Hidden cells (below visible area, order not significant for UI)
 
 | key line | role |
 |---|---|
-| `cv, set_cv = mo.state(None)` | quiz state: current word, score, remaining list |
+| `cv, set_cv = mo.state(None)` | word-quiz state: current word, score, remaining list |
+| `sm_cv, sm_set_cv = mo.state(None)` | stanza-match state (own `sm_*` state block) |
+| `tp_cv, tp_set_cv = mo.state(None)` | translation-presence state (own `tp_*` state block) |
 | `stanza_selector = mo.ui.dropdown(...)` | stanza picker |
 | `trans_selector = mo.ui.dropdown(...)` | translation picker |
-| `next_btn = mo.ui.button(...)` | advance/restart button |
-| `def _record_answer()` | click handler, quiz advance logic |
-| `def _parse_greek(md)` | text parsers + `STANZAS` list builder |
+| `def _parse_greek(md)` / `def _parse_trans(md)` | text parsers + `STANZAS`/`RHYTHM_HTML`/`TRANS_DESC` builders |
 | `import csv` / `QUIZ_WORDS_RAW = gu.resolve_word_grammar(...)` | vocab TSV loader |
-| `def _has_displayable_form(w)` | filter helpers (`QUIZ_WORDS`) |
-| `import unicodedata` / `WORDS_COMBINED` | coverage normalization |
+| `QUIZ_WORDS = gu.sample_session_items(...)` | word-quiz session sample (filter hardcoded `"none"`) |
+| `CLICKABLE_FORMS = eee.grc_coverage_words(...)` / `HOMER_WORDS = ...` | click targets + homer-highlight set for `interactive_text` |
+| `SM_STANZAS = gu.sample_session_items(STANZAS, ...)` | stanza-match session sample |
+| `TP_ITEMS = gu.balance_presence_items(...)` | translation-presence session sample; also (re)writes `translation_presence.tsv` via `gu.sync_translation_presence_tsv` |
 | `build_paradigm_table = eee.build_grc_paradigm_table(...)` | paradigm + lexicon tab builders |
 | `import marimo as mo` / backend init | all imports, `ag_backend`, `um_backend`, `gu` |
 | `NB_DIR = ...` / `gu.ensure_file(...)` | paths + remote file sync |
@@ -195,6 +211,8 @@ Copy the Russian gloss EXACTLY, including all parenthetical morphological notes.
 | `2026_06_01/` | `~/work/greek/lectures/Odyssey/2026.06.01/Одиссея_1-21_словарь.tsv` (2-col TSV: `word\ttranslation`) |
 | `2026_06_15/` | `~/work/greek/lectures/Odyssey/2026.06.15/слова день 1.md` (MD: `FORM [= DICT] [—] TRANSLATION`) |
 | `2026_06_22/` | `~/work/greek/lectures/Odyssey/2026.06.22/Od_IX_39-61_vocabula.md` (MD: `FORM [= DICT] – TRANSLATION`) |
+| `2026_06_29/` | `~/work/greek/lectures/Odyssey/2026.06.29/Od_IX_62-81_vocabula.docx` |
+| `2026_07_06/` | `~/work/greek/lectures/Odyssey/2026.07.06/Od_IX_82-104_vocabula.docx` |
 
 Known formatting issues in `слова день 1.md` (do not propagate to TSV): lines 30/61/125
 have two entries merged without newline — parse the Greek and Cyrillic segments separately;
@@ -216,9 +234,10 @@ for _pth in _pl.Path(_sys.prefix).glob("lib/python*/site-packages/_editable_impl
         _sys.path.insert(0, _src)
 ```
 
-Without this, the "словоформы" and "только Гомер" quiz filters show "Тесты: 0 / 0"
-(the `build_paradigm_table` call silently fails with `ModuleNotFoundError`).
-Do not narrow the glob — it must cover all `_editable_impl_*.pth` files.
+Without this, `build_paradigm_table`/`build_lexicon_tabs` silently fail with
+`ModuleNotFoundError` — the click-to-gloss panel's lexicon-tab table and the
+word-quiz's paradigm table both come up empty. Do not narrow the glob — it
+must cover all `_editable_impl_*.pth` files.
 
 ---
 
@@ -232,43 +251,51 @@ Format: `form\tlemma\tpos\tcontext\tmeaning`
   represent periphrastic constructions; do not split them
 - Before adding entries, check `vocab_content_problems.md` — the gap may be documented
 
-## Coverage highlighting (`WORDS_COMBINED`)
+## Clickable poem text (`CLICKABLE_FORMS` / `HOMER_WORDS`)
 
-Built from vocab TSV `form` column. Normalization (both vocab and poem sides):
-1. NFD decompose → strip all combining marks (Unicode `Mn`) → NFC recompose
-2. Vocab side only: also strip elision chars `'᾽᾿ʼ` from string ends (`_norm_f`)
+The poem is rendered by `eee.interactive_text(mo, lines=..., clickable=...,
+homer_words=..., ictus_html=..., show_ictus=...)` — an anywidget-backed
+component in `eee_project`, not hand-rolled per-lesson HTML. Both sets come
+from the same helper, `eee.grc_coverage_words(QUIZ_WORDS_RAW, mode,
+build_paradigm_table=..., lexicons=...)`, called twice with different
+`mode`:
 
-Stem vowel differences block matching (e.g. `ἑταῖρ-` vs `ἑτάρ-`) — add the
-attested form as a separate TSV entry if it should highlight.
+- `CLICKABLE_FORMS` — `mode="none"`: every vocab-TSV word the engine can
+  resolve at all becomes clickable (drives the gloss panel below the poem).
+- `HOMER_WORDS` — `mode="homer"`: the subset whose exact attested surface
+  form is confirmed by the Homeric corpus lexicon specifically. Rendered
+  with a highlighted background when the `SHOW_HOMER` switch is on, so a
+  reader can tell "Homer himself attests this form" apart from "some
+  later-period lexicon in the combined engine also reaches it."
 
-## Quiz word filtering and poem-text highlighting share one check
+Normalization for matching a clicked token back to a vocab row is handled by
+`eee.resolve_clicked_word` / `norm_grc_surface` inside `eee_project` — not
+per-lesson code. There is no more `filter_mode`/`SHOW_COVERAGE` radio pair:
+`QUIZ_WORDS` (the word-quiz question pool) always uses `filter_mode="none"`
+(hardcoded, not a UI control) so every vocab word can appear in the quiz;
+only the poem-text highlighting distinguishes homer-attested from
+everything-else, via the `SHOW_HOMER` switch.
 
-Two independent `mo.ui.radio` controls exist in every lesson notebook, both
-defaulting to the same mode:
+## `ictus.html`
 
-- `filter_mode` (options: `словоформы`/`current`, `только Гомер`/`homer`,
-  `все слова`/`none`) — which TSV rows enter the quiz question pool
-  (`QUIZ_WORDS`)
-- `SHOW_COVERAGE` (adds a fourth `выкл.`/`None` "off" option) — which words
-  get underlined in the poem text (`WORDS_COMBINED`)
+One line per `greek.md` plain line, in the same order, each with its stressed
+syllables wrapped in `<b style='color:#980000'>…</b>`. The STANZAS-parser cell
+zips it positionally against `greek.md`'s flattened line list into
+`RHYTHM_HTML` — a plain line's own accents/punctuation never need to match
+the markup exactly, since matching is by position, not by dict key. Passed to
+`eee.interactive_text(..., ictus_html=RHYTHM_HTML, show_ictus=SHOW_ICTUS.value)`.
 
-Their default (`current`) branch runs the identical check in both cells:
-build the word's full ag paradigm via `build_paradigm_table(w)` and require
-the tested form to appear without the orange `#f97316` "irregular form"
-marker — i.e. `result and "#f97316" not in result`. (Each cell defines its
-own private closure for this — `_has_displayable_form` in the quiz-filter
-cell — since marimo cell-local `_`-prefixed names aren't shared across
-cells.)
+## `translation_presence.tsv`
 
-**Why words get excluded:** vocab TSVs mix content words (noun/verb/adj/
-proper name) with function words (pronouns, particles, prepositions,
-conjunctions). Function words have no noun/verb/adj paradigm to check, so
-they're excluded from the default filter by design — that's normal, not a
-coverage bug. The interesting gaps are content words still missing backend
-paradigm coverage; this set changes as vocab TSVs grow and as
-`ancient-greek-backend-eee` gains coverage, so don't hardcode a snapshot of
-it in docs. To see the current list, open the notebook (`marimo edit
-notebook.py --sandbox`) and check `QUIZ_WORDS_RAW` against
-`build_paradigm_table` directly — or drive it headless via the
-WebSocket+HTTP smoke-test pattern in the marimo-pair skill reference when no
-browser is available.
+Columns: `lemma\tform\tstanza_ref\ttranslator\treflected` (`reflected` is
+`yes`/`no`, manually judged). One row per (content-POS vocab word × literary
+translator) pair actually present in the lesson's sampled stanzas. The
+`TP_ITEMS` builder cell calls `gu.sync_translation_presence_tsv(...)`
+every run, which appends any newly-needed rows (blank `reflected`) without
+touching existing judged rows — **never regenerate this file from scratch**,
+always let the sync call add to what's there, then manually fill in only the
+new blank rows by comparing the Greek word's meaning against each
+translator's actual stanza text (see any already-filled lesson's TSV for the
+judging convention: count a "yes" if the translator's line(s) contain a
+recognizable reflection of the word's meaning, even via a different specific
+lexeme, not only an exact cognate).
