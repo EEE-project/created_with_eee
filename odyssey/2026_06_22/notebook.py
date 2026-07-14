@@ -119,15 +119,21 @@ def _(TRANS_DESC, mo, trans_selector):
 
 
 @app.cell(hide_code=True)
-def _(gu, mo):
+def _(cfg, gu, mo):
     from pathlib import Path as _P
     SHOW_ICTUS = mo.ui.switch(value=True)
     SHOW_HOMER = mo.ui.switch(value=True)
 
-    # Shared across lessons that don't have the morpheus lexicon wired in --
-    # the pilot (2026_06_01) does and keeps its own text, since that bullet
-    # would otherwise overclaim coverage this lesson's ag_backend doesn't have.
-    EEE_NOTE = (_P(__file__).parent.parent / "eee_note.md").read_text(encoding="utf-8")
+    # Shared across all 6 lessons. Fetched via ensure_file, not a bare local
+    # read: molab only bundles files that live in the notebook's own directory,
+    # so a parent-directory file like this one is missing there unless we
+    # download it ourselves (matches the pattern already used for materials PDFs).
+    _eee_note_path = gu.ensure_file(
+        "eee_note.md", nb_dir=_P(__file__).parent.parent, remote_base=cfg.raw_base,
+    )
+    EEE_NOTE = _eee_note_path.read_text(encoding="utf-8") if _eee_note_path else (
+        "*(не удалось загрузить описание движка EEE)*"
+    )
 
     gu.ictus_toggle_panel(SHOW_ICTUS, SHOW_HOMER, EEE_NOTE,
                            ictus_color="#980000", ictus_color_name="красным")
