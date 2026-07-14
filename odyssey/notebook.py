@@ -40,11 +40,10 @@ def _(cfg, mo):
                 <div class="eee-card-icon">{lesson['icon']}</div>
                 <div>
                   <div class="eee-card-label">{lesson['label']}</div>
-                  <div class="eee-card-title">{lesson['title']}</div>
-                  <div class="eee-card-greek">{lesson['greek']}</div>
+                  <div class="eee-card-title">{lesson['desc']}</div>
                 </div>
               </div>
-              <div class="eee-card-desc">{lesson['desc']}</div>
+              <div class="eee-card-desc">{lesson['title']}</div>
               <div class="eee-card-arrow">◀</div>
             </a>"""
         return f"""<div class="eee-card eee-card-disabled">
@@ -52,11 +51,10 @@ def _(cfg, mo):
             <div class="eee-card-icon">{lesson['icon']}</div>
             <div>
               <div class="eee-card-label">{lesson['label']}</div>
-              <div class="eee-card-title">{lesson['title']}</div>
-              <div class="eee-card-greek">{lesson['greek']}</div>
+              <div class="eee-card-title">{lesson['desc']}</div>
             </div>
           </div>
-          <div class="eee-card-desc">{lesson['desc']}</div>
+          <div class="eee-card-desc">{lesson['title']}</div>
           <div class="eee-card-arrow">скоро</div>
         </div>"""
 
@@ -85,7 +83,6 @@ def _(cfg, mo):
       letter-spacing: .12em; text-transform: uppercase; margin-bottom: 2px;
     }
     .eee-card-title { font-size: 16px; font-weight: 700; }
-    .eee-card-greek { font-family: "DM Mono", monospace; font-size: 12px; color: #5f27cd; margin-top: 1px; }
     .eee-card-desc { font-size: 13px; color: #666; line-height: 1.5; }
     .eee-card-arrow {
       text-align: right; margin-top: 10px;
