@@ -41,7 +41,7 @@ def _(eee, mo):
         mo.md(_badge),
         mo.md("## День 1 · Odyss. IX.19–38"),
     ])
-    _img = eee.magnify_image(mo, _Ph(__file__).parent / "map_ithaca.jpg", width=280)
+    _img = eee.magnify_image(mo, _Ph(__file__).parent / "map_ithaca.jpg", raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_15", width=280)
     mo.hstack([_left, _img], align="start")
     return
 
@@ -78,7 +78,7 @@ def _(mo):
 def _(eee, mo):
     from pathlib import Path as _Pg
     _gen = _Pg(__file__).parent / "genealogy.jpg"
-    _gimg = eee.magnify_image(mo, _gen, width=560)
+    _gimg = eee.magnify_image(mo, _gen, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_15", width=560)
     mo.vstack([
         mo.md(r"""
     ---
@@ -100,7 +100,7 @@ def _(eee, mo):
 def _(eee, mo):
     from pathlib import Path as _Pn
     _ner = _Pn(__file__).parent / "neriton_epithet.jpg"
-    _nimg = eee.magnify_image(mo, _ner, width=560)
+    _nimg = eee.magnify_image(mo, _ner, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_15", width=560)
     mo.vstack([
         mo.md(r"""
     ---
@@ -126,7 +126,7 @@ def _(eee, mo):
 def _(eee, mo):
     from pathlib import Path as _Pi
     _ith = _Pi(__file__).parent / "ithaca_kefalonia.jpg"
-    _iimg = eee.magnify_image(mo, _ith, width=460)
+    _iimg = eee.magnify_image(mo, _ith, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_15", width=460)
     mo.vstack([
         mo.md(r"""
     ---

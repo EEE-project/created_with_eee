@@ -42,7 +42,7 @@ def _(eee, mo):
         mo.md(_badge),
         mo.md("## День 2 · Odyss. IX.39–61"),
     ])
-    _right = eee.magnify_image(mo, _thumb_path, width=280)
+    _right = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_22", width=280)
     mo.hstack([_left, _right], align="start")
     return
 

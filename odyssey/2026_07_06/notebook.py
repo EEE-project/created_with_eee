@@ -42,7 +42,7 @@ def _(eee, mo):
         mo.md(_badge),
         mo.md("## День 4 · Odyss. IX.82–104"),
     ])
-    _img = eee.magnify_image(mo, _thumb_path, width=280)
+    _img = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_07_06", width=280)
     _cap = mo.md(
             "<div style='font-size:.8em;color:#9ca3af;text-align:center'>"
             "<i>Ziziphus jujuba</i> — Adolphus Ypey, <i>Afbeeldingen der artseny-gewassen</i>, 1813</div>"

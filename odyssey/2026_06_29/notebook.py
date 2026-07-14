@@ -42,7 +42,7 @@ def _(eee, mo):
         mo.md(_badge),
         mo.md("## День 3 · Odyss. IX.62–81"),
     ])
-    _right = eee.magnify_image(mo, _thumb_path, width=280)
+    _right = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_29", width=280)
     mo.hstack([_left, _right], align="start")
     return
 
@@ -58,7 +58,7 @@ def _(NB_REMOTE, mo):
 def _(eee, mo):
     from pathlib import Path as _Pp
     _prep = _Pp(__file__).parent / "prepositions.jpg"
-    _pimg = eee.magnify_image(mo, _prep, width=440)
+    _pimg = eee.magnify_image(mo, _prep, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_29", width=440)
     mo.vstack([
         mo.md(r"""
     ---
@@ -86,8 +86,8 @@ def _(eee, mo):
     _d = _Pm(__file__).parent
     _c, _m = _d / "malea_cliff.jpg", _d / "malea_map.jpg"
     _imgs = mo.hstack([
-        eee.magnify_image(mo, _c, width=300),
-        eee.magnify_image(mo, _m, width=300),
+        eee.magnify_image(mo, _c, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_29", width=300),
+        eee.magnify_image(mo, _m, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_29", width=300),
     ], justify="start", align="center")
     mo.vstack([
         mo.md(r"""

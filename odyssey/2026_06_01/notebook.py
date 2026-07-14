@@ -41,7 +41,11 @@ def _(eee, mo):
         mo.md(_badge),
         mo.md("## Пилотное занятие · Odyss. I.1–21"),
     ])
-    _img = eee.magnify_image(mo, _Ph(__file__).parent / "Odysseus_Sirens_BM_E440_n2.jpg", width=340)
+    _img = eee.magnify_image(
+        mo, _Ph(__file__).parent / "Odysseus_Sirens_BM_E440_n2.jpg",
+        raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_01",
+        width=340,
+    )
     mo.hstack([_left, _img], align="start")
     return
 
