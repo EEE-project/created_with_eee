@@ -33,7 +33,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(eee, mo):
     from pathlib import Path as _Path
     _thumb_path = _Path(__file__).parent / "map_ortelius.jpg"
     _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_PWHcMdBAUW2bygSvQbeTjE)"
@@ -42,7 +42,7 @@ def _(mo):
         mo.md(_badge),
         mo.md("## День 2 · Odyss. IX.39–61"),
     ])
-    _right = mo.image(src=_thumb_path.read_bytes(), width=280) if _thumb_path.exists() else mo.Html("")
+    _right = eee.magnify_image(mo, _thumb_path, width=280)
     mo.hstack([_left, _right], align="start")
     return
 
@@ -111,203 +111,131 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo, trans_selector):
-    _TRANS_DESC = {
-        "подстрочник": "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала",
-        "Жуковский":   "**Жуковский, 1849** · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский",
-        "Вересаев":    "**Вересаев, 1953** · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод",
-    }
-    mo.md(_TRANS_DESC.get(trans_selector.value, ""))
+def _(TRANS_DESC, mo, trans_selector):
+    _PODSTROCHNIK_DESC = "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала"
+    _desc_map = {"подстрочник": _PODSTROCHNIK_DESC, **TRANS_DESC}
+    mo.md(_desc_map.get(trans_selector.value, ""))
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md("""
-    Икты (ударные слоги) каждой стопы выделены <b style='color:#980000'>красным</b>.
-    """)
-    return
+    from pathlib import Path as _P
+    SHOW_ICTUS = mo.ui.switch(value=True)
+    SHOW_HOMER = mo.ui.switch(value=True)
+
+    # Shared across lessons that don't have the morpheus lexicon wired in --
+    # the pilot (2026_06_01) does and keeps its own text, since that bullet
+    # would otherwise overclaim coverage this lesson's ag_backend doesn't have.
+    EEE_NOTE = (_P(__file__).parent.parent / "eee_note.md").read_text(encoding="utf-8")
+
+    mo.vstack(
+        [
+            mo.hstack(
+                [SHOW_ICTUS, mo.md(
+                    "Икты (ударные слоги) каждой стопы выделены <b style=\'color:#980000\'>красным</b>."
+                )],
+                justify="start", align="center", gap=1.5,
+            ),
+            mo.hstack(
+                [SHOW_HOMER, mo.md(
+                    "Слова из гомеровского лексикона, для которых движок EEE строит "
+                    "таблицы словоформ по разным периодам греческого языка."
+                )],
+                justify="start", align="center", gap=1.5,
+            ),
+            mo.accordion({"О морфологическом движке EEE": EEE_NOTE}),
+        ],
+        align="stretch", gap=0.5,
+    )
+    return EEE_NOTE, SHOW_HOMER, SHOW_ICTUS
 
 
 @app.cell(hide_code=True)
 def _(
-    SHOW_COVERAGE,
+    CLICKABLE_FORMS,
+    HOMER_WORDS,
+    RHYTHM_HTML,
+    SHOW_HOMER,
+    SHOW_ICTUS,
     STANZAS,
-    WORDS_COMBINED,
+    eee,
     mo,
     stanza_selector,
     trans_selector,
 ):
     _st_map = {s["ref"]: s for s in STANZAS}
     _stanza = _st_map[stanza_selector.value]
-    _GRK = (
-        "font-family:'Gentium Plus','GFS Didot',serif;"
-        "font-size:1.15em;line-height:2"
+
+    text_widget = eee.interactive_text(
+        mo,
+        lines=_stanza["lines"],
+        clickable=CLICKABLE_FORMS,
+        homer_words=HOMER_WORDS if SHOW_HOMER.value else set(),
+        ictus_html=RHYTHM_HTML,
+        show_ictus=SHOW_ICTUS.value,
     )
 
-    _RHYTHM_HTML = {
-        'Ἰλιόθεν με φέρων ἄνεμος Κικόνεσσι πέλασσεν,':
-            "<b style='color:#980000'>Ἰ</b>λιόθεν με φέρ<b style='color:#980000'>ω</b>ν ἄνεμ<b style='color:#980000'>ο</b>ς Κικόν<b style='color:#980000'>ε</b>σσι πέλ<b style='color:#980000'>α</b>σσεν,",
-        "Ἰσμάρῳ· ἔνθα δ' ἐγὼ πόλιν ἔπραθον, ὤλεσα δ' αὐτούς.":
-            "<b style='color:#980000'>Ἰ</b>σμάρῳ· <b style='color:#980000'>ἔ</b>νθα δ' ἐγ<b style='color:#980000'>ὼ</b> πόλιν <b style='color:#980000'>ἔ</b>πραθον, <b style='color:#980000'>ὤ</b>λεσα δ' <b style='color:#980000'>αὐ</b>τούς.",
-        "ἐκ πόλιος δ' ἀλόχους καὶ κτήματα πολλὰ λαβόντες":
-            "<b style='color:#980000'>ἐ</b>κ πόλι<b style='color:#980000'>ο</b>ς δ' ἀλόχ<b style='color:#980000'>ου</b>ς καὶ κτ<b style='color:#980000'>ή</b>ματα π<b style='color:#980000'>ο</b>λλὰ λαβ<b style='color:#980000'>ό</b>ντες",
-        "δασσάμεθ', ὡς μή τίς μοι ἀτεμβόμενος κίοι ἴσης.":
-            "δ<b style='color:#980000'>α</b>σσάμεθ', <b style='color:#980000'>ὡ</b>ς μή τ<b style='color:#980000'>ί</b>ς μοι ἀτ<b style='color:#980000'>ε</b>μβόμεν<b style='color:#980000'>ο</b>ς κίοι <b style='color:#980000'>ἴ</b>σης.",
-        "ἔνθ' ἦ τοι μὲν ἐγὼ διερῷ ποδὶ φευγέμεν ἡμέας":
-            "<b style='color:#980000'>ἔ</b>νθ' ἦ τ<b style='color:#980000'>οι</b> μὲν ἐγ<b style='color:#980000'>ὼ</b> διερ<b style='color:#980000'>ῷ</b> ποδὶ φ<b style='color:#980000'>ευ</b>γέμεν <b style='color:#980000'>ἡ</b>μέας",
-        'ἠνώγεα, τοὶ δὲ μέγα νήπιοι οὐκ ἐπίθοντο.':
-            "<b style='color:#980000'>ἠ</b>νώγ<b style='color:#980000'>εα</b>, τοὶ δ<b style='color:#980000'>ὲ</b> μέγα ν<b style='color:#980000'>ή</b>πιοι <b style='color:#980000'>οὐ</b>κ ἐπίθ<b style='color:#980000'>ο</b>ντο.",
-        'ἔνθα δὲ πολλὸν μὲν μέθυ πίνετο, πολλὰ δὲ μῆλα':
-            "<b style='color:#980000'>ἔ</b>νθα δὲ π<b style='color:#980000'>ο</b>λλὸν μ<b style='color:#980000'>ὲ</b>ν μέθυ π<b style='color:#980000'>ί</b>νετο, π<b style='color:#980000'>ο</b>λλὰ δὲ μ<b style='color:#980000'>ῆ</b>λα",
-        'ἔσφαζον παρὰ θῖνα καὶ εἰλίποδας ἕλικας βοῦς.':
-            "<b style='color:#980000'>ἔ</b>σφαζ<b style='color:#980000'>ο</b>ν παρὰ θ<b style='color:#980000'>ῖ</b>να καὶ <b style='color:#980000'>εἰ</b>λίποδας ἕλικ<b style='color:#980000'>α</b>ς βοῦς.",
-        "τόφρα δ' ἄρ' οἰχόμενοι Κίκονες Κικόνεσσι γεγώνευν,":
-            "τ<b style='color:#980000'>ό</b>φρα δ' ἄρ' <b style='color:#980000'>οἰ</b>χόμεν<b style='color:#980000'>οι</b> Κίκον<b style='color:#980000'>ε</b>ς Κικόν<b style='color:#980000'>ε</b>σσι γεγ<b style='color:#980000'>ώ</b>νευν,",
-        'οἵ σφιν γείτονες ἦσαν, ἅμα πλέονες καὶ ἀρείους,':
-            "<b style='color:#980000'>οἵ</b> σφιν γ<b style='color:#980000'>εί</b>τονες <b style='color:#980000'>ἦ</b>σαν, ἅμ<b style='color:#980000'>α</b> πλέον<b style='color:#980000'>ε</b>ς καὶ ἀρ<b style='color:#980000'>εί</b>ους,",
-        "ἤπειρον ναίοντες, ἐπιστάμενοι μὲν ἀφ' ἵππων":
-            "<b style='color:#980000'>ἤ</b>πειρον ναί<b style='color:#980000'>ο</b>ντες, ἐπ<b style='color:#980000'>ι</b>στάμεν<b style='color:#980000'>οι</b> μὲν ἀφ' <b style='color:#980000'>ἵ</b>ππων",
-        'ἀνδράσι μάρνασθαι καὶ ὅθι χρὴ πεζὸν ἐόντα.':
-            "<b style='color:#980000'>ἀ</b>νδράσι μ<b style='color:#980000'>ά</b>ρνασθ<b style='color:#980000'>αι</b> καὶ ὅθ<b style='color:#980000'>ι</b> χρὴ π<b style='color:#980000'>ε</b>ζὸν ἐ<b style='color:#980000'>ό</b>ντα.",
-        "ἦλθον ἔπειθ', ὅσα φύλλα καὶ ἄνθεα γίνεται ὥρῃ,":
-            "<b style='color:#980000'>ἦ</b>λθον ἔπ<b style='color:#980000'>ει</b>θ', ὅσα φ<b style='color:#980000'>ύ</b>λλα καὶ <b style='color:#980000'>ἄ</b>νθεα γ<b style='color:#980000'>ί</b>νεται <b style='color:#980000'>ὥ</b>ρῃ,",
-        'ἠέριοι· τότε δή ῥα κακὴ Διὸς αἶσα παρέστη':
-            "<b style='color:#980000'>ἠ</b>έρι<b style='color:#980000'>οι</b>· τότε δ<b style='color:#980000'>ή</b> ῥα κακ<b style='color:#980000'>ὴ</b> Διὸς <b style='color:#980000'>αἶ</b>σα παρ<b style='color:#980000'>έ</b>στη",
-        "ἡμῖν αἰνομόροισιν, ἵν' ἄλγεα πολλὰ πάθοιμεν.":
-            "<b style='color:#980000'>ἡ</b>μῖν <b style='color:#980000'>αἰ</b>νομόρ<b style='color:#980000'>οι</b>σιν, ἵν' <b style='color:#980000'>ἄ</b>λγεα π<b style='color:#980000'>ο</b>λλὰ πάθ<b style='color:#980000'>οι</b>μεν.",
-        "στησάμενοι δ' ἐμάχοντο μάχην παρὰ νηυσὶ θοῇσι,":
-            "στ<b style='color:#980000'>η</b>σάμεν<b style='color:#980000'>οι</b> δ' ἐμάχ<b style='color:#980000'>ο</b>ντο μάχ<b style='color:#980000'>η</b>ν παρὰ ν<b style='color:#980000'>ηυ</b>σὶ θο<b style='color:#980000'>ῇ</b>σι,",
-        "βάλλον δ' ἀλλήλους χαλκήρεσιν ἐγχείῃσιν.":
-            "β<b style='color:#980000'>ά</b>λλον δ' <b style='color:#980000'>ἀ</b>λλήλ<b style='color:#980000'>ου</b>ς χαλκ<b style='color:#980000'>ή</b>ρεσιν <b style='color:#980000'>ἐ</b>γχεί<b style='color:#980000'>ῃ</b>σιν.",
-        'ὄφρα μὲν ἠὼς ἦν καὶ ἀέξετο ἱερὸν ἦμαρ,':
-            "<b style='color:#980000'>ὄ</b>φρα μὲν <b style='color:#980000'>ἠ</b>ὼς <b style='color:#980000'>ἦ</b>ν καὶ ἀ<b style='color:#980000'>έ</b>ξετο <b style='color:#980000'>ἱ</b>ερὸν <b style='color:#980000'>ἦ</b>μαρ,",
-        "τόφρα δ' ἀλεξόμενοι μένομεν πλέονάς περ ἐόντας·":
-            "τ<b style='color:#980000'>ό</b>φρα δ' ἀλ<b style='color:#980000'>ε</b>ξόμεν<b style='color:#980000'>οι</b> μένομ<b style='color:#980000'>ε</b>ν πλέον<b style='color:#980000'>ά</b>ς περ ἐ<b style='color:#980000'>ό</b>ντας·",
-        "ἦμος δ' ἠέλιος μετενίσετο βουλυτόνδε,":
-            "<b style='color:#980000'>ἦ</b>μος δ' <b style='color:#980000'>ἠ</b>έλι<b style='color:#980000'>ο</b>ς μετεν<b style='color:#980000'>ί</b>σετο β<b style='color:#980000'>ου</b>λυτ<b style='color:#980000'>ό</b>νδε,",
-        'καὶ τότε δὴ Κίκονες κλῖναν δαμάσαντες Ἀχαιούς.':
-            "κ<b style='color:#980000'>αὶ</b> τότε δ<b style='color:#980000'>ὴ</b> Κίκον<b style='color:#980000'>ε</b>ς κλῖν<b style='color:#980000'>α</b>ν δαμάσ<b style='color:#980000'>α</b>ντες Ἀχ<b style='color:#980000'>αι</b>ούς.",
-        "ἓξ δ' ἀφ' ἑκάστης νηὸς ἐϋκνήμιδες ἑταῖροι":
-            "<b style='color:#980000'>ἓ</b>ξ δ' ἀφ' ἑκ<b style='color:#980000'>ά</b>στης ν<b style='color:#980000'>η</b>ὸς ἐ<b style='color:#980000'>ϋ</b>κνήμ<b style='color:#980000'>ι</b>δες ἑτ<b style='color:#980000'>αῖ</b>ροι",
-        "ὤλονθ'· οἱ δ' ἄλλοι φύγομεν θάνατόν τε μόρον τε.":
-            "<b style='color:#980000'>ὤ</b>λονθ'· <b style='color:#980000'>οἱ</b> δ' ἄλλ<b style='color:#980000'>οι</b> φύγομ<b style='color:#980000'>ε</b>ν θάνατ<b style='color:#980000'>ό</b>ν τε μόρ<b style='color:#980000'>ο</b>ν τε.",
-    }
+    _txt_lines = _stanza["translations"].get(trans_selector.value, "—").split("\n")
 
-    def _bare(html):
-        text, in_tag = '', False
-        for ch in html:
-            if ch == '<': in_tag = True
-            elif ch == '>': in_tag = False
-            elif not in_tag: text += ch
-        return text.strip("·,;.'·,!?·")
-
-
-    def _norm(s):
-        import unicodedata as _u
-        nfd = _u.normalize("NFD", s)
-        no_mn = "".join(c for c in nfd if _u.category(c) != "Mn")
-        return _u.normalize("NFC", no_mn)
-
-    def _split_html(s):
-        tokens, buf, depth = [], [], 0
-        for ch in s:
-            if ch == '<': depth += 1; buf.append(ch)
-            elif ch == '>': depth -= 1; buf.append(ch)
-            elif ch == ' ' and depth == 0:
-                tokens.append(''.join(buf)); buf = []
-            else: buf.append(ch)
-        if buf: tokens.append(''.join(buf))
-        return tokens
-
-    def _hl(line):
-        colored = _RHYTHM_HTML.get(line, line)
-        parts = []
-        for w in _split_html(colored):
-            if SHOW_COVERAGE.value is not None and _norm(_bare(w)) in WORDS_COMBINED:
-                parts.append(
-                    f"<span style='border-bottom:2px solid #b5451b;padding-bottom:0'>{w}</span>"
-                )
-            else:
-                parts.append(w)
-        return ' '.join(parts)
-
-    if trans_selector.value == "подстрочник":
-        _pairs = _stanza["interlinear"]
-        _rows = "".join(
-            f'<tr>'
-            f'<td style="{_GRK};padding-right:1.5em;vertical-align:top">{_hl(gl) if gl else ""}</td>'
-            f'<td style="font-size:1.0em;line-height:2.3;color:#333;vertical-align:top">{tl}</td>'
-            f'</tr>'
-            for gl, tl in _pairs
-        )
-        _content = mo.Html(
-            '<table style="width:100%;border-collapse:collapse">' + _rows + "</table>"
-        )
-    else:
-        _greek_html = "<br>".join(_hl(ln) for ln in _stanza["lines"])
-        _left = mo.Html(
-            f'<div style="{_GRK};padding-right:1.5em">' + _greek_html + "</div>"
-        )
-        _txt = _stanza["translations"].get(trans_selector.value, "—")
-        _line_divs = "".join(
-            f'<div>{l.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")}</div>'
-            for l in _txt.split("\n")
-        )
-        _right = mo.Html(
-            '<div style="font-size:1.0em;display:flex;flex-direction:column;'
-            'justify-content:space-between;border-left:3px solid #ccc;padding-left:0.8em">'
-            + _line_divs + "</div>"
-        )
-        _content = mo.hstack([_left, _right], justify="start", align="stretch")
+    _line_divs = "".join(
+        f'<div>{l.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")}</div>'
+        for l in _txt_lines
+    )
+    _right = mo.Html(
+        '<div style="font-size:1.0em;display:flex;flex-direction:column;'
+        'justify-content:space-between;border-left:3px solid #ccc;padding-left:0.8em">'
+        + _line_divs + "</div>"
+    )
 
     mo.vstack([
         mo.hstack([stanza_selector, trans_selector], justify="space-between"),
-        _content,
+        mo.hstack([text_widget, _right], justify="start", align="stretch", gap=1.5),
     ])
+    return (text_widget,)
+
+
+@app.cell(hide_code=True)
+def _(QUIZ_WORDS_RAW, build_lexicon_tabs, eee, mo, text_widget):
+    _sel = text_widget.widget.selected_word
+    _w = eee.resolve_clicked_word(QUIZ_WORDS_RAW, _sel)
+
+    if _w is None:
+        _panel = mo.md("*Выберите слово в тексте, чтобы увидеть перевод и формы слов из гомеровскго лексикона…*")
+    else:
+        _w2 = dict(_w)
+        eee.add_labels([_w2])
+        _gloss = f"**{_w2.get('form', _sel)}** — {_w2['_label']}"
+        _grammar = _w2.get("grammar_label", "")
+        if _grammar:
+            _gloss += f"  \n_{_grammar}_"
+        _tables = build_lexicon_tabs(_w2) or ""
+        if _tables:
+            _caption = mo.md(
+                "*Формы слова по эпохам — только простейшее морфологическое "
+                "соответствие по леммам, смысл может меняться*"
+            )
+            _panel = mo.vstack([mo.md(_gloss), _caption, mo.Html(_tables)])
+        else:
+            _panel = mo.md(_gloss)
+
+    _panel
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    SHOW_COVERAGE = mo.ui.radio(
-        options={
-            "Гомер": "homer",
-            "выкл.": None,
-            # "словоформы": "current",
-            # "все слова": "none",
-        },
-        value="Гомер",
-        label="**Подсветка слов в тексте:**",
-        inline=True,
-    )
-    SHOW_COVERAGE
-    return (SHOW_COVERAGE,)
+def _(EEE_NOTE, mo):
+    mo.accordion({"О проверке форм (EEE)": EEE_NOTE})
+    return
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
     ---
-    ## Упражнение: словарная форма
+    ## Упражнения
     """)
     return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    filter_mode = mo.ui.radio(
-        options={
-            # "словоформы": "current",
-            "Гомер": "homer",
-            "все слова": "none",
-        },
-        value="Гомер",
-        label="**Лексикон:**",
-        inline=True,
-    )
-    filter_mode
-    return (filter_mode,)
 
 
 @app.cell(hide_code=True)
@@ -342,7 +270,6 @@ def _(QUIZ_WORDS, cv, gu, history, remaining, restore_entry):
 def _(
     QUIZ_WORDS,
     answer_radio,
-    build_lexicon_tabs,
     cv,
     future,
     gu,
@@ -366,10 +293,9 @@ def _(
         history, set_history, future, set_future,
         answer_radio, next_btn, prev_btn,
         vocab=QUIZ_WORDS,
-        title='## Упражнение: словарная форма',
+        title='### Упражнение: найди слово',
         meaning_key='_label',
         form_key='form',
-        build_paradigm_table=build_lexicon_tabs,
         renew_btn=quiz_renew_btn,
     )
     return
@@ -378,33 +304,249 @@ def _(
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ---
-
-    ### О проверке форм (EEE)
-
-    Упражнение использует [EEE](https://codeberg.org/EEE-project) — систему для построения интерактивных учебных материалов.
-    В данном случае задействованы [модули морфологического анализа](https://codeberg.org/EEE-project/eee-project/src/branch/main/docs/backends.md):
-
-    * [**unimorph-backend-eee**](https://codeberg.org/EEE-project/unimorph-backend-eee) — база данных UniMorph:
-      для древнегреческого парадигмы существительных и прилагательных (глаголы отсутствуют);
-      покрытие лучше для греческого НЗ, чем для гомеровского текста
-    * [**ancient-greek-backend-eee**](https://codeberg.org/EEE-project/ancient-greek-backend-eee) — анализ на основе морфологических словарей; лексиконы по эпохам:
-      * **Homer** — гомеровский эпос (Илиада, Одиссея); эпический/ионийский, ~VIII в. до н.э.
-      * **Словарь классического аттического** — (pratt + ltrg + lsj); аттика V–IV вв. до н.э.
-      * **LXX** — Септуагинта; эллинистический койне, IV–I вв. до н.э.
-      * **MorphGNT** — греческий Новый Завет; римский койне, I–III вв. н.э.
-    * [**modern-greek-backend-eee**](https://codeberg.org/EEE-project/modern-greek-backend-eee) — новогреческий (демотика); показывает, как древнее слово склоняется/спрягается сегодня — последняя «ступень» в таблице словоформ (если у слова есть живой новогреческий рефлекс)
-
-    **Лексикон** (фильтр):
-
-    <!-- - *словоформы* — слова, для которых движку удаётся построить парадигму,
-      используя unimorph-backend-eee и ancient-greek-backend-eee с лексиконами Homer, LXX, MorphGNT -->
-    - *Гомер* — слова из гомеровского лексикона ancient-greek-backend-eee
-    - *все слова* — весь словарь занятия без фильтрации
-
-    В таблице словоформ можно переключаться между лексиконами разных исторических периодов,
-    если соответствующие данные для данного слова в системе есть.
+    ### Упражнение: сопоставь строфу и перевод
     """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    sm_direction = mo.ui.radio(
+        options={
+            "Строфа → перевод": "grc_to_tr",
+            "Перевод → строфа": "tr_to_grc",
+        },
+        value="Строфа → перевод",
+        label="**Направление:**",
+        inline=True,
+    )
+    sm_direction
+    return (sm_direction,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    sm_cv, sm_set_cv = mo.state(None)
+    sm_score, sm_set_score = mo.state({"correct": 0, "total": 0})
+    sm_remaining, sm_set_remaining = mo.state(None)
+    sm_history, sm_set_history = mo.state([])
+    sm_future, sm_set_future = mo.state([])
+    sm_restore_entry, sm_set_restore_entry = mo.state(None)
+    return (
+        sm_cv,
+        sm_future,
+        sm_history,
+        sm_remaining,
+        sm_restore_entry,
+        sm_score,
+        sm_set_cv,
+        sm_set_future,
+        sm_set_history,
+        sm_set_remaining,
+        sm_set_restore_entry,
+        sm_set_score,
+    )
+
+
+@app.cell(hide_code=True)
+def _(sm_direction, sm_set_cv, sm_set_remaining):
+    _ = sm_direction.value
+    sm_set_cv(None)
+    sm_set_remaining(None)
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    SESSION_SIZE,
+    STANZAS,
+    gu,
+    sm_renew_btn,
+    sm_set_cv,
+    sm_set_future,
+    sm_set_history,
+    sm_set_remaining,
+    sm_set_restore_entry,
+    sm_set_score,
+):
+    SM_STANZAS = gu.sample_session_items(STANZAS, n=SESSION_SIZE)
+    gu.reset_quiz_state(sm_renew_btn, sm_set_cv, sm_set_remaining, sm_set_score,
+                         sm_set_history, sm_set_future, sm_set_restore_entry)
+    return (SM_STANZAS,)
+
+
+@app.cell(hide_code=True)
+def _(gu):
+    sm_renew_btn = gu.make_renew_button()
+    return (sm_renew_btn,)
+
+
+@app.cell(hide_code=True)
+def _(
+    SM_STANZAS,
+    gu,
+    sm_cv,
+    sm_direction,
+    sm_history,
+    sm_remaining,
+    sm_restore_entry,
+):
+    _ = sm_cv()
+    sm_choice_radio, sm_next_btn, sm_prev_btn = gu.stanza_match_widgets(
+        cv=sm_cv(),
+        stanzas=SM_STANZAS,
+        direction=sm_direction.value,
+        restore_entry=sm_restore_entry(),
+        done=sm_cv() is None and sm_remaining() is not None and len(sm_remaining()) == 0,
+        history_len=len(sm_history()),
+    )
+    return sm_choice_radio, sm_next_btn, sm_prev_btn
+
+
+@app.cell(hide_code=True)
+def _(
+    SM_STANZAS,
+    gu,
+    sm_choice_radio,
+    sm_cv,
+    sm_direction,
+    sm_future,
+    sm_history,
+    sm_next_btn,
+    sm_prev_btn,
+    sm_remaining,
+    sm_renew_btn,
+    sm_restore_entry,
+    sm_score,
+    sm_set_cv,
+    sm_set_future,
+    sm_set_history,
+    sm_set_remaining,
+    sm_set_restore_entry,
+    sm_set_score,
+):
+    gu.stanza_match_form(
+        sm_cv, sm_set_cv, sm_remaining, sm_set_remaining,
+        sm_score, sm_set_score, sm_restore_entry, sm_set_restore_entry,
+        sm_history, sm_set_history, sm_future, sm_set_future,
+        sm_choice_radio, sm_next_btn, sm_prev_btn,
+        stanzas=SM_STANZAS,
+        direction=sm_direction.value,
+        renew_btn=sm_renew_btn,
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ### Упражнение: слово в переводе
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(
+    QUIZ_WORDS_RAW,
+    SESSION_SIZE,
+    STANZAS,
+    eee,
+    gu,
+    tp_renew_btn,
+    tp_set_cv,
+    tp_set_future,
+    tp_set_history,
+    tp_set_remaining,
+    tp_set_restore_entry,
+    tp_set_score,
+):
+    from pathlib import Path as _P
+
+    LITERARY_TRANSLATORS = ["Жуковский", "Вересаев"]
+    _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in eee.TRANSLATION_PRESENCE_CONTENT_POS]
+    _tp_path = _P(__file__).parent / "translation_presence.tsv"
+    gu.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
+    TP_ITEMS = gu.balance_presence_items(gu.build_translation_presence_items(
+        gu.read_translation_presence_tsv(_tp_path), QUIZ_WORDS_RAW, STANZAS
+    ), n=SESSION_SIZE)
+    gu.reset_quiz_state(tp_renew_btn, tp_set_cv, tp_set_remaining, tp_set_score,
+                         tp_set_history, tp_set_future, tp_set_restore_entry)
+    return (TP_ITEMS,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    tp_cv, tp_set_cv = mo.state(None)
+    tp_score, tp_set_score = mo.state({"correct": 0, "total": 0})
+    tp_remaining, tp_set_remaining = mo.state(None)
+    tp_history, tp_set_history = mo.state([])
+    tp_future, tp_set_future = mo.state([])
+    tp_restore_entry, tp_set_restore_entry = mo.state(None)
+    return (
+        tp_cv,
+        tp_future,
+        tp_history,
+        tp_remaining,
+        tp_restore_entry,
+        tp_score,
+        tp_set_cv,
+        tp_set_future,
+        tp_set_history,
+        tp_set_remaining,
+        tp_set_restore_entry,
+        tp_set_score,
+    )
+
+
+@app.cell(hide_code=True)
+def _(gu):
+    tp_renew_btn = gu.make_renew_button()
+    return (tp_renew_btn,)
+
+
+@app.cell(hide_code=True)
+def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
+    _ = tp_cv()
+    tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch = gu.translation_presence_widgets(
+        cv=tp_cv(),
+        items=TP_ITEMS,
+        restore_entry=tp_restore_entry(),
+        done=tp_cv() is None and tp_remaining() is not None and len(tp_remaining()) == 0,
+        history_len=len(tp_history()),
+    )
+    return tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch
+
+
+@app.cell(hide_code=True)
+def _(
+    TP_ITEMS,
+    gu,
+    tp_choice_radio,
+    tp_cv,
+    tp_future,
+    tp_history,
+    tp_next_btn,
+    tp_prev_btn,
+    tp_remaining,
+    tp_renew_btn,
+    tp_restore_entry,
+    tp_score,
+    tp_set_cv,
+    tp_set_future,
+    tp_set_history,
+    tp_set_remaining,
+    tp_set_restore_entry,
+    tp_set_score,
+    tp_source_switch,
+):
+    gu.translation_presence_form(
+        tp_cv, tp_set_cv, tp_remaining, tp_set_remaining,
+        tp_score, tp_set_score, tp_restore_entry, tp_set_restore_entry,
+        tp_history, tp_set_history, tp_future, tp_set_future,
+        tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch,
+        items=TP_ITEMS,
+        renew_btn=tp_renew_btn,
+    )
     return
 
 
@@ -489,20 +631,6 @@ def _():
         if ref: out[ref] = buf
         return out
 
-    def _parse_iln(md):
-        out, ref, grc, buf = {}, None, None, []
-        for L in md.splitlines():
-            if L.startswith("### Odyss. "):
-                if ref: out[ref] = buf
-                ref, grc, buf = L[11:].strip(), None, []
-            elif L.startswith("**") and L.endswith("**"):
-                grc = L[2:-2].strip()
-            elif ref and L.strip() and grc is not None:
-                buf.append((grc, L.strip()))
-                grc = None
-        if ref: out[ref] = buf
-        return out
-
     def _parse_trans(md):
         out, desc, tr, ref, buf = {}, {}, None, None, []
         for L in md.splitlines():
@@ -521,19 +649,24 @@ def _():
 
     _root = _P(__file__).parent
     _greek = _parse_greek((_root / "greek.md").read_text(encoding="utf-8"))
-    _iln_ru = _parse_iln((_root / "interlenear_ru.md").read_text(encoding="utf-8"))
     _trans_ru, _desc_ru = _parse_trans((_root / "translations_ru.md").read_text(encoding="utf-8"))
     TRANS_DESC = _desc_ru
     STANZAS = [
         {
             "ref": ref,
             "lines": lines,
-            "interlinear": _iln_ru.get(ref, []),
             "translations": {tr: d.get(ref, "—") for tr, d in _trans_ru.items()},
         }
         for ref, lines in _greek.items()
     ]
-    return (STANZAS,)
+
+    # ictus (rhythm) markup: one marked-up line per plain line, in the same
+    # reading order as greek.md -- zipped by position, not re-keyed, so a plain
+    # line's own accents/punctuation never need to match the markup exactly.
+    _ictus_lines = (_root / "ictus.html").read_text(encoding="utf-8").splitlines()
+    _all_plain_lines = [line for lines in _greek.values() for line in lines]
+    RHYTHM_HTML = dict(zip(_all_plain_lines, _ictus_lines))
+    return RHYTHM_HTML, STANZAS, TRANS_DESC
 
 
 @app.cell(hide_code=True)
@@ -589,7 +722,6 @@ def _(
     SESSION_SIZE,
     build_paradigm_table,
     eee,
-    filter_mode,
     grc_lexicons,
     gu,
     quiz_renew_btn,
@@ -601,7 +733,7 @@ def _(
     set_score,
 ):
     QUIZ_WORDS = gu.sample_session_items(eee.filter_grc_quiz_words(
-        QUIZ_WORDS_RAW, filter_mode.value,
+        QUIZ_WORDS_RAW, "none",
         build_paradigm_table=build_paradigm_table, lexicons=grc_lexicons,
     ), n=SESSION_SIZE)
 
@@ -613,12 +745,20 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, SHOW_COVERAGE, build_paradigm_table, eee, grc_lexicons):
-    WORDS_COMBINED = eee.grc_coverage_words(
-        QUIZ_WORDS_RAW, SHOW_COVERAGE.value,
+def _(QUIZ_WORDS_RAW, build_paradigm_table, eee, grc_lexicons):
+    CLICKABLE_FORMS = eee.grc_coverage_words(
+        QUIZ_WORDS_RAW, "none",
         build_paradigm_table=build_paradigm_table, lexicons=grc_lexicons,
     )
-    return (WORDS_COMBINED,)
+    # words whose exact attested surface form is confirmed by the Homeric
+    # corpus lexicon specifically -- highlighted (background) in the clickable
+    # text so a reader can tell "Homer himself confirms this form" apart from
+    # "some later-period lexicon in the combined engine reaches it".
+    HOMER_WORDS = eee.grc_coverage_words(
+        QUIZ_WORDS_RAW, "homer",
+        build_paradigm_table=build_paradigm_table, lexicons=grc_lexicons,
+    )
+    return CLICKABLE_FORMS, HOMER_WORDS
 
 
 @app.cell(hide_code=True)
@@ -628,6 +768,7 @@ def _(ag_backend, eee, grc_lexicons, mg, um_backend):
         ag_backend, um_backend,
         lexicons=grc_lexicons,
         el_backend=mg,
+        require_lexicon="homer",
     )
     return build_lexicon_tabs, build_paradigm_table
 
