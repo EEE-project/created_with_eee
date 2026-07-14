@@ -33,19 +33,15 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(eee, mo):
+    from pathlib import Path as _Ph
     _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_32dyZq8gA6x14GL2Zwa6ZU)"
     _left = mo.vstack([
         mo.md("# Одиссея для отважных"),
         mo.md(_badge),
         mo.md("## Пилотное занятие · Odyss. I.1–21"),
     ])
-    _img_url = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/odyssey/2026_06_01/Odysseus_Sirens_BM_E440_n2.jpg"
-    _img = mo.Html(
-        f'<a href="{_img_url}" target="_blank" rel="noopener">'
-        f'<img src="{_img_url}" style="max-width:340px;width:100%;border-radius:4px;object-fit:cover;cursor:pointer"/>'
-        f'</a>'
-    )
+    _img = eee.magnify_image(mo, _Ph(__file__).parent / "Odysseus_Sirens_BM_E440_n2.jpg", width=340)
     mo.hstack([_left, _img], align="start")
     return
 
