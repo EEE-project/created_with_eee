@@ -36,7 +36,7 @@ def _(mo):
 def _(eee, mo):
     from pathlib import Path as _Path
     _thumb_path = _Path(__file__).parent / "cyclope_and_elephants_skull.jpg"
-    _badge = ""  # молаб-бейдж добавить после загрузки в molab
+    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_YSHtLQHjXwWXUCdpmcRUKu)"
     _left = mo.vstack([
         mo.md("# Одиссея для отважных"),
         mo.md(_badge),
@@ -48,7 +48,7 @@ def _(eee, mo):
             "Одна из гипотез геомифологии: крупная носовая полость в центре черепа "
             "карликового слона (<i>Palaeoloxodon falconeri</i>, плейстоцен) могла "
             "восприниматься древними как единственная гигантская глазница. Его "
-            "ископаемые находили в пещерах Сицилии и Мальты — там же, где античные "
+            "ископаемые останки находили в пещерах Сицилии и Мальты — там же, где античные "
             "авторы селили циклопов.</div>"
         )
 

@@ -36,7 +36,7 @@ def _(mo):
 def _(eee, mo):
     from pathlib import Path as _Path
     _thumb_path = _Path(__file__).parent / "odysseus_bust.jpg"
-    _badge = ""  # молаб-бейдж добавить после загрузки в molab
+    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_d77Y36J87ufwqrDNgVzvZQ)"
     _left = mo.vstack([
         mo.md("# Одиссея для отважных"),
         mo.md(_badge),
