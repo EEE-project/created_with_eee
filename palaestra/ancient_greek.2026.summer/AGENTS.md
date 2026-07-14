@@ -12,7 +12,16 @@ ancient_greek.2026.summer/
   2026_06_19/          # Занятие 4 · Средний залог и II склонение
   2026_06_23/          # Занятие 5 · Спряжение и падежи
   2026_06_26/          # Занятие 6 · II склонение и падежи
+  2026_07_01/          # Δίδαγμα ζ' · Κεφάλαιον II (verbs)
+  2026_07_03/          # Δίδαγμα η' · Κεφάλαιον II (nouns)
 ```
+
+**Naming shift (from `2026_07_01` on):** the first 6 sessions are numbered
+"Занятие N · <topic>" (sequential, Russian). Starting with `2026_07_01`, new
+sessions instead follow the Athenaze textbook's own scheme — Greek ordinal
+letters tied to its chapter number, e.g. "Δίδαγμα ζ' · Κεφάλαιον II" — and
+draw on textbook-specific materials (`Athenaze_2_vocabula.*`,
+`CONSPECTVS GRAMMATICVS II_graecus.*`) alongside the usual lecture notes.
 
 Each lesson directory:
 
@@ -60,7 +69,7 @@ Requires `AncientGreekBackend` + `gu.load_slot_drill` to build `VERBS`, then
 expands to a flat `VERB_ENTRIES` list (one entry per field) so `word_drill_form`
 can handle it — gaining Prev/history navigation without a custom advance function.
 
-### Pattern B — word_quiz + word_drill  (2026_06_16, 2026_06_19)
+### Pattern B — word_quiz + word_drill  (2026_06_16, 2026_06_19, 2026_07_01, 2026_07_03)
 
 Used when the exercise **presents the form from the TSV as-is** — either as a
 multiple-choice quiz or a write-the-word drill from `VOCAB_WORDS`.

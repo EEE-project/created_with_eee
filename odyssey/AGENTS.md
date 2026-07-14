@@ -7,6 +7,7 @@ odyssey/
   lessons.tsv          # lesson index (title, url, date)
   notebook.py           # index/parent notebook
   eee_note.md            # shared "О морфологическом движке EEE" text (see below)
+  2026_07_13/            # Lesson: Od. IX.105–129
   2026_07_06/            # Lesson: Od. IX.82–104
   2026_06_29/            # Lesson: Od. IX.62–81
   2026_06_22/            # Lesson: Od. IX.39–61
@@ -26,16 +27,17 @@ vocab_content_problems.md  ← known coverage gaps (read before adding TSV entri
 translation_presence.tsv   ← manually-reviewed word×translator judgments (see below)
 ```
 
-All 5 lessons share the same interactive layout (migrated 2026-07-13): clickable
-poem text with a click-to-gloss panel, an ictus toggle, a homer-lexicon
-highlight toggle, three exercises (найди слово / сопоставь строфу и перевод /
-слово в переводе), and a merged `## подстрочник` section inside
-`translations_ru.md` (no more standalone `interlenear_ru.md` — its content was
-merged in and the file deleted). The pilot (`2026_06_01`) keeps its own inline
-`EEE_NOTE` text (it wires in the `morpheus` lexicon on top of the others, so its
-coverage description is genuinely different); the other 4 lessons read the
-shared `odyssey/eee_note.md` file at runtime instead of duplicating the ~30-line
-explanation in every `notebook.py`.
+All 6 lessons share the same interactive layout (migrated July 13, 2026):
+clickable poem text with a click-to-gloss panel, an ictus toggle, a
+homer-lexicon highlight toggle, three exercises (найди слово / сопоставь
+строфу и перевод / слово в переводе), and a merged `## подстрочник` section
+inside `translations_ru.md` (no more standalone `interlenear_ru.md` — its
+content was merged in and the file deleted). All 6 lessons, including the
+pilot (`2026_06_01`), now read the shared `odyssey/eee_note.md` file at
+runtime instead of duplicating the ~30-line explanation in every
+`notebook.py` — the pilot's originally-fuller text (covering the `morpheus`
+lexicon, now wired into all 6 lessons) became the shared file's content.
+There is no more pilot exception.
 
 ---
 
@@ -213,6 +215,7 @@ Copy the Russian gloss EXACTLY, including all parenthetical morphological notes.
 | `2026_06_22/` | `~/work/greek/lectures/Odyssey/2026.06.22/Od_IX_39-61_vocabula.md` (MD: `FORM [= DICT] – TRANSLATION`) |
 | `2026_06_29/` | `~/work/greek/lectures/Odyssey/2026.06.29/Od_IX_62-81_vocabula.docx` |
 | `2026_07_06/` | `~/work/greek/lectures/Odyssey/2026.07.06/Od_IX_82-104_vocabula.docx` |
+| `2026_07_13/` | `~/work/greek/lectures/Odyssey/2026.07.13/Od_IX_105-129_vocabula.pdf` |
 
 Known formatting issues in `слова день 1.md` (do not propagate to TSV): lines 30/61/125
 have two entries merged without newline — parse the Greek and Cyrillic segments separately;
