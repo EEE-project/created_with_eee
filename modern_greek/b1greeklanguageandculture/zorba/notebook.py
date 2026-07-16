@@ -25,7 +25,7 @@ def _(mo):
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/zorba/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    back_url = parent_back_url(__file__, f"{_ROOT}/modern_greek/b1greeklanguageandculture/lessons.tsv")
+    back_url = parent_back_url(f"{_ROOT}/modern_greek/b1greeklanguageandculture/lessons.tsv")
     return back_url, cfg
 
 
