@@ -11,7 +11,7 @@
 
 import marimo
 
-__generated_with = "0.23.10"
+__generated_with = "0.23.13"
 app = marimo.App(width="medium")
 
 
@@ -21,11 +21,11 @@ def _(lang_sel, mo):
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
-        f"{_ROOT}/lessons.tsv",
+        f"{_ROOT}/ancient_greek/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
     eee_topbar(mo, back_url=None, lang=lang_sel.value, titles={
-        "ru": "EEE", "el": "EEE", "en": "EEE",
+        "ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek",
     }, style="index", ga_config=cfg.ga_config())
     return (cfg,)
 
@@ -34,17 +34,17 @@ def _(lang_sel, mo):
 def _(lang_sel, mo):
     from eee_project.notebook_utils import eee_hero
     eee_hero(mo, lang_sel.value, {
-        "ru": ("Курсы греческого языка", "Интерактивные тетради"),
-        "el": ("Μαθήματα ελληνικής γλώσσας", "Διαδραστικά Τετράδια"),
-        "en": ("Greek Language Courses", "Interactive Notebooks"),
-    }, lang_fallback="en")
+        "ru": ("Αρχαία Ελληνικά", "Курсы древнегреческого языка"),
+        "el": ("Αρχαία Ελληνικά", "Μαθήματα αρχαίας ελληνικής γλώσσας"),
+        "en": ("Ancient Greek", "Ancient Greek language courses"),
+    })
     return
 
 
 @app.cell(hide_code=True)
 def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_card_list
-    eee_card_list(mo, cfg, lang_sel.value, lang_fallback="en")
+    eee_card_list(mo, cfg, lang_sel.value)
     return
 
 
@@ -59,7 +59,7 @@ def _(lang_sel, mo):
 def _(mo):
     lang_sel = mo.ui.dropdown(
         options={"Ελληνικά": "el", "Русский": "ru", "English": "en"},
-        value="English",
+        value="Ελληνικά",
         label="🌐",
     )
     mo.Html(f"""

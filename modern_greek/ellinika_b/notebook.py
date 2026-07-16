@@ -21,11 +21,11 @@ def _(lang_sel, mo):
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
-        f"{_ROOT}/lessons.tsv",
+        f"{_ROOT}/modern_greek/ellinika_b/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
     eee_topbar(mo, back_url=None, lang=lang_sel.value, titles={
-        "ru": "EEE", "el": "EEE", "en": "EEE",
+        "ru": "Ελληνικά Β", "el": "Ελληνικά Β", "en": "Ελληνικά Β",
     }, style="index", ga_config=cfg.ga_config())
     return (cfg,)
 
@@ -34,9 +34,9 @@ def _(lang_sel, mo):
 def _(lang_sel, mo):
     from eee_project.notebook_utils import eee_hero
     eee_hero(mo, lang_sel.value, {
-        "ru": ("Курсы греческого языка", "Интерактивные тетради"),
-        "el": ("Μαθήματα ελληνικής γλώσσας", "Διαδραστικά Τετράδια"),
-        "en": ("Greek Language Courses", "Interactive Notebooks"),
+        "ru": ("Ελληνικά Β — Интерактивные тетради", "Уроки современного греческого языка"),
+        "el": ("Ελληνικά Β — Διαδραστικά Τετράδια", "Μαθήματα σύγχρονων ελληνικών"),
+        "en": ("Ελληνικά Β — Interactive Notebooks", "Modern Greek language lessons"),
     }, lang_fallback="en")
     return
 
