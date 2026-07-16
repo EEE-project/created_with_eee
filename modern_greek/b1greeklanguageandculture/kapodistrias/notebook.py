@@ -16,18 +16,26 @@ app = marimo.App(width="medium")
 
 
 @app.cell(hide_code=True)
-def _(lang_sel, mo):
-    from eee_project import ConfigStore, eee_topbar
+def _(mo):
+    from eee_project import ConfigStore
+    from eee_project.notebook_utils import parent_back_url
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/kapodistrias/lessons.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    eee_topbar(mo, back_url=None, lang=lang_sel.value, titles={
+    back_url = parent_back_url(__file__, f"{_ROOT}/modern_greek/b1greeklanguageandculture/lessons.tsv")
+    return back_url, cfg
+
+
+@app.cell(hide_code=True)
+def _(back_url, cfg, lang_sel, mo):
+    from eee_project import eee_topbar
+    eee_topbar(mo, back_url=back_url, lang=lang_sel.value, titles={
         "ru": "Каподистриас", "el": "Καποδίστριας", "en": "Kapodistrias",
     }, style="index", ga_config=cfg.ga_config())
-    return (cfg,)
+    return
 
 
 @app.cell(hide_code=True)
