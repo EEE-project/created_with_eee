@@ -41,7 +41,7 @@ def _(language_selector, mo):
 @app.cell(hide_code=True)
 def _(language_selector, mo, notebook_dir, os):
     _lang = language_selector.value
-    _badge = ""  # молаб-бейдж добавить после загрузки в molab
+    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_CHTRKm9qTf6hSeF455c8iV)"
     def _img(n):
         _p = os.path.join(notebook_dir, f'slide-{n}.jpg')
         return mo.image(src=open(_p, 'rb').read(), width=700) if os.path.exists(_p) else mo.md("")
