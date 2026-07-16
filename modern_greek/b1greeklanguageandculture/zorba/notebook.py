@@ -34,6 +34,8 @@ def _(back_url, cfg, lang_sel, mo):
     from eee_project import eee_topbar
     eee_topbar(mo, back_url=back_url, lang=lang_sel.value, titles={
         "ru": "Алексис Зорбас", "el": "Αλέξης Ζορμπάς", "en": "Alexis Zorbas",
+    }, parent_titles={
+        "ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture",
     }, style="index", ga_config=cfg.ga_config())
     return
 
@@ -42,9 +44,9 @@ def _(back_url, cfg, lang_sel, mo):
 def _(lang_sel, mo):
     from eee_project.notebook_utils import eee_hero
     eee_hero(mo, lang_sel.value, {
-        "ru": ("B1: Греческий язык и культура", "Серия уроков — Алексис Зорбас"),
-        "el": ("B1: Ελληνική Γλώσσα και Πολιτισμός", "Σειρά μαθημάτων — Αλέξης Ζορμπάς"),
-        "en": ("B1: Greek Language and Culture", "Lesson series — Alexis Zorbas"),
+        "ru": ("Алексис Зорбас", "B1: Греческий язык и культура"),
+        "el": ("Αλέξης Ζορμπάς", "B1: Ελληνική Γλώσσα και Πολιτισμός"),
+        "en": ("Alexis Zorbas", "B1: Greek Language and Culture"),
     })
     return
 

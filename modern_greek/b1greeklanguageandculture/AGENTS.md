@@ -72,3 +72,9 @@ Leave the drill machinery, `UI_STRINGS`, language selector, and footer untouched
 ## Index notebook + lessons.tsv
 
 Each course's `notebook.py` reads its own `lessons.tsv` (trilingual schema — see Directory layout above) and renders one card per row via `ConfigStore.from_url(...)` + `eee_card_list(mo, cfg, lang_sel.value)` (shared across all index notebooks — don't hand-roll the card CSS/loop again). A row with an empty `url` renders as a disabled "coming soon"/"σύντομα"/"скоро" card — this is the correct state for a lesson that's built but not yet uploaded to molab. Once uploaded, add the real `url` (the full `https://molab.marimo.io/notebooks/nb_XXX/app` link) to both the lesson's own `_badge` line and its `lessons.tsv` row — these are two independent places, keep them in sync.
+
+### Course-index hero + topbar: own name vs. grouping context
+
+On a course's own index page (Kapodistrias, Zorba), `eee_hero`'s large title is **this course's own name** with no "Lesson series —"/"Σειρά μαθημάτων —" prefix (e.g. "Αλέξης Ζορμπάς", not "Σειρά μαθημάτων — Αλέξης Ζορμπάς") — the small subtitle carries the grouping context instead (e.g. "B1: Ελληνική Γλώσσα και Πολιτισμός"). This is the opposite of what you'd get by copying B1's own hero cell (where the large title *is* "B1: ...", correctly, since that page is describing itself).
+
+`eee_topbar`'s `style="index"` call needs `parent_titles=` set to that same B1 name dict whenever `back_url` comes from `parent_back_url()` — without it, the up-link falls back to `titles` (this course's own name) and mislabels itself, e.g. showing "● Αλέξης Ζορμπάς" (or, post-fix, "◀ Αλέξης Ζορμπάς") as the clickable link to B1 instead of "◀ B1: Ελληνική Γλώσσα και Πολιτισμός". See both current index notebooks' topbar cell for the pattern.
