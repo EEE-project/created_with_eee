@@ -290,6 +290,11 @@ the markup exactly, since matching is by position, not by dict key. Passed to
 
 ## `translation_presence.tsv`
 
+Field-by-field reference for manually filling in `reflected` (written for
+opening the TSV directly in a spreadsheet app, not for agents): see
+[`translation_presence_SCHEMA.md`](translation_presence_SCHEMA.md), one
+level up — it applies identically to every lesson's TSV, not just one.
+
 Columns: `lemma\tform\tstanza_ref\ttranslator\treflected` (`reflected` is
 `yes`/`no`, manually judged). One row per (content-POS vocab word × literary
 translator) pair actually present in the lesson's sampled stanzas. The
