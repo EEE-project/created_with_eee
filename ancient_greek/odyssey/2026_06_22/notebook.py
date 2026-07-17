@@ -800,7 +800,6 @@ def _(cfg, gu):
         'Od_IX_39-61.pdf',
         'Od_IX_39-61_vocabula.pdf',
         'map_ortelius.jpg',
-        'map_ortelius_full.jpg',
     ):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)
 

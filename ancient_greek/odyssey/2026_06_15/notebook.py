@@ -906,7 +906,6 @@ def _(cfg, gu):
         'Одиссея 1.pdf',
         'слова день 1.pdf',
         'map_ithaca.jpg',
-        'map_ithaca_full.jpg',
         'genealogy.jpg',
         'neriton_epithet.jpg',
         'ithaca_kefalonia.jpg',

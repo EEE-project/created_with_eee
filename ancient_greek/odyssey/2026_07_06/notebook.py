@@ -821,8 +821,6 @@ def _(cfg, gu):
     for _f in (
         'Od_IX_82-104.pdf',
         'Od_IX_82-104_vocabula.pdf',
-        'map_ortelius.jpg',
-        'map_ortelius_full.jpg',
         'lotus_plant.jpg',
     ):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)

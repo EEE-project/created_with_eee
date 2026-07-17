@@ -819,8 +819,6 @@ def _(cfg, gu):
     NB_DIR = _P(__file__).parent
     NB_REMOTE = f"{cfg.raw_base}/2026_06_29"
     for _f in (
-        'map_ortelius.jpg',
-        'map_ortelius_full.jpg',
         'odysseus_bust.jpg',
         'prepositions.jpg',
         'malea_cliff.jpg',
