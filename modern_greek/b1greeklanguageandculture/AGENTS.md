@@ -13,7 +13,7 @@ b1greeklanguageandculture/
   zorba/
     lessons.tsv          # same trilingual schema
     notebook.py           # index/parent notebook
-    26_06_26/ 26_07_10/   # one dir per lesson (YY_MM_DD)
+    26_06_26/ 26_07_10/ 26_07_17/   # one dir per lesson (YY_MM_DD)
 ```
 
 Each lesson directory:
