@@ -4,7 +4,7 @@
 
 ```
 ancient_greek.2026.summer/
-  lessons.tsv          # lesson index (url, icon, greek, label, title, desc, index_url)
+  lessons.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
   notebook.py          # index/parent notebook
   2026_06_09/          # Занятие 1 · Алфавит и повелительное наклонение
   2026_06_12/          # Занятие 2 · Ударения и просодия
@@ -14,6 +14,8 @@ ancient_greek.2026.summer/
   2026_06_26/          # Занятие 6 · II склонение и падежи
   2026_07_01/          # Δίδαγμα ζ' · Κεφάλαιον II (verbs)
   2026_07_03/          # Δίδαγμα η' · Κεφάλαιον II (nouns)
+  2026_07_07/          # Δίδαγμα θ' · Κεφάλαιον II (imperative, cases)
+  2026_07_10/          # Δίδαγμα ι' · Κεφάλαιον II (syntax)
 ```
 
 **Naming shift (from `2026_07_01` on):** the first 6 sessions are numbered

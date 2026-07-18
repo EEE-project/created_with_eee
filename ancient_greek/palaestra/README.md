@@ -12,7 +12,9 @@ Interactive notebooks for an Ancient Greek beginners course, built with [EEE](ht
 
 ### From molab (no install)
 
-Each lesson has a molab link in `lessons.tsv` → click the `url` column's link.
+Open the course index — `ancient_greek.2026.summer/notebook.py`, itself on molab — for a
+clickable card per lesson (icon, title, description, direct link). It reads
+`lessons.tsv`; there's no need to open that file directly.
 
 ### Locally
 
@@ -42,6 +44,10 @@ ancient_greek.2026.summer/
   2026_06_19/          ← Занятие 4: Средний залог и II склонение
   2026_06_23/          ← Занятие 5: Спряжение и падежи
   2026_06_26/          ← Занятие 6: II склонение и падежи
+  2026_07_01/          ← Δίδαγμα ζ' · Κεφάλαιον II (verbs)
+  2026_07_03/          ← Δίδαγμα η' · Κεφάλαιον II (nouns)
+  2026_07_07/          ← Δίδαγμα θ' · Κεφάλαιον II (imperative, cases)
+  2026_07_10/          ← Δίδαγμα ι' · Κεφάλαιον II (syntax)
 ```
 
 Each lesson directory contains:
