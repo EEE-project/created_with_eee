@@ -17,7 +17,7 @@
 
 import marimo
 
-__generated_with = "0.23.13"
+__generated_with = "0.23.14"
 app = marimo.App(width="medium")
 
 
@@ -267,8 +267,8 @@ def _(
     _txt_lines = _stanza["translations"].get(trans_selector.value, "—").split("\n")
 
     _line_divs = "".join(
-        f'<div>{l.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")}</div>'
-        for l in _txt_lines
+        f'<div>{line.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")}</div>'
+        for line in _txt_lines
     )
     _right = mo.Html(
         '<div style="font-size:1.0em;display:flex;flex-direction:column;'
@@ -641,12 +641,6 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _():
-    pass
-    return
-
-
-@app.cell(hide_code=True)
 def _(STANZAS, mo):
     stanza_selector = mo.ui.dropdown(
         options=[s["ref"] for s in STANZAS],
@@ -672,45 +666,38 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _():
-    pass
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    pass
-    return
-
-
-@app.cell(hide_code=True)
-def _():
     from pathlib import Path as _P
 
     def _parse_greek(md):
         out, ref, buf = {}, None, []
         for L in md.splitlines():
             if L.startswith("### Odyss. "):
-                if ref: out[ref] = buf
+                if ref:
+                    out[ref] = buf
                 ref, buf = L[11:].strip(), []
             elif ref and L.strip() and not L.startswith("<!--"):
                 buf.append(L.strip())
-        if ref: out[ref] = buf
+        if ref:
+            out[ref] = buf
         return out
 
     def _parse_trans(md):
         out, desc, tr, ref, buf = {}, {}, None, None, []
         for L in md.splitlines():
             if L.startswith("## "):
-                if tr and ref and buf: out.setdefault(tr, {})[ref] = "\n".join(buf)
+                if tr and ref and buf:
+                    out.setdefault(tr, {})[ref] = "\n".join(buf)
                 tr, ref, buf = L[3:].strip(), None, []
             elif tr and ref is None and L.startswith("<!-- **") and L.endswith("-->"):
                 desc[tr] = L[4:-3].strip()
             elif L.startswith("### Odyss. "):
-                if tr and ref and buf: out.setdefault(tr, {})[ref] = "\n".join(buf)
+                if tr and ref and buf:
+                    out.setdefault(tr, {})[ref] = "\n".join(buf)
                 ref, buf = L[11:].strip(), []
             elif ref and L.strip() and L.strip() != "---":
                 buf.append(L)
-        if tr and ref and buf: out.setdefault(tr, {})[ref] = "\n".join(buf)
+        if tr and ref and buf:
+            out.setdefault(tr, {})[ref] = "\n".join(buf)
         return out, desc
 
     _root = _P(__file__).parent
@@ -841,7 +828,8 @@ def _(ag_backend, eee, grc_lexicons, mg, um_backend):
 
 @app.cell(hide_code=True)
 def _():
-    import sys as _sys, pathlib as _pl
+    import sys as _sys
+    import pathlib as _pl
     for _pth in _pl.Path(_sys.prefix).glob("lib/python*/site-packages/_editable_impl_*.pth"):
         _src = _pth.read_text().strip()
         if _src not in _sys.path:
