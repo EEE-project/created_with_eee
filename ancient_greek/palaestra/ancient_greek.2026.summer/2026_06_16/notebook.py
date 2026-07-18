@@ -397,7 +397,6 @@ def _(cfg, mo):
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
-    import random
 
     return (mo,)
 

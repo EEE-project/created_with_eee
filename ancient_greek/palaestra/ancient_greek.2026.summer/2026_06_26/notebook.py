@@ -361,13 +361,6 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _():
-    from eee_project import make_paradigm_form
-
-    return
-
-
-@app.cell(hide_code=True)
 def _(NB_DIR, NB_REMOTE, gu):
     WORDS_NOUN_N3 = [
         {"Word": w["form"], "Translation": w["meaning"]}
@@ -685,7 +678,6 @@ def _(VOCAB_ALL):
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
-    import random
 
     return (mo,)
 

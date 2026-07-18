@@ -717,7 +717,6 @@ def _():
             _sys.path.insert(0, _src)
 
     import marimo as mo
-    import random
     import eee_project as eee
     from ancient_greek_backend_eee import AncientGreekBackend
     from unimorph_backend_eee import UniMorphBackend

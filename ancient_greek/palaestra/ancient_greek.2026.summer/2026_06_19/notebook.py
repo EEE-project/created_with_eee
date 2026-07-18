@@ -502,7 +502,6 @@ def _(NB_REMOTE, mo):
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
-    import random
 
     return (mo,)
 
