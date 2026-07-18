@@ -1,6 +1,6 @@
 # Ελληνικά Β — Agent Reference
 
-Chaptered to match the "Ελληνικά Β" (B1) textbook. 10 chapters currently built: `chapter_01`–`chapter_04`, `chapter_06`–`chapter_09`, `chapter_11`, `chapter_12` (05 and 10 don't exist — skipped, not missing).
+Chaptered to match the "Ελληνικά Β" (B1) textbook. 10 chapters currently built: `chapter_01`–`chapter_04`, `chapter_06`–`chapter_09`, `chapter_11`, `chapter_12`. Chapters 05 and 10 are deliberately skipped — they're pure repetition of prior material with no new content to teach or quiz, per the course's own structure (confirmed by the user, 2026-07-18).
 
 ## Directory layout
 
