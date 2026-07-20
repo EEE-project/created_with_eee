@@ -46,6 +46,12 @@ def _(lang_sel, mo):
 
 
 @app.cell(hide_code=True)
+def _(mo):
+    mo.md("[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_3yc9Z8ampRa7L2RqwNgQ5u)")
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_card_list
     eee_card_list(mo, cfg, lang_sel.value)
