@@ -16,7 +16,7 @@
 
 import marimo
 
-__generated_with = "0.23.5"
+__generated_with = "0.23.14"
 app = marimo.App(width="medium")
 
 
@@ -99,18 +99,20 @@ def _(language_selector, mo):
         _heading = "### Λεξιλόγιο & Εκφράσεις (σ. 106)"
         _phrases_heading = "#### Πώς το λένε;"
         _phrases = """
-    - **Εδώ, τα λέγαμε…**
-    - **Μα τι κατάσταση είναι αυτή;**
-    - **Αμάν πια!**
-    - **Εμ, βέβαια!**
-    - **Ακόμα και…**
-    - **Άκουσα ότι…**
-    - **Αλλά με όλα τα προβλήματά του…**
-    - **Όχι όπως τώρα που…**
-    - **Δεν είναι η μέρα σου σήμερα.**
-    - **Όλα μαύρα τα βλέπεις.**
-    - **Μήπως σου φτιάξει το κέφι.**
-    - **Τι να σας κεράσουμε;**
+    | Ελληνικά | Αγγλικά |
+    |----------|---------|
+    | **Εδώ, τα λέγαμε…** | Well, we were saying… |
+    | **Μα τι κατάσταση είναι αυτή;** | What kind of situation is this? |
+    | **Αμάν πια!** | Enough already! |
+    | **Εμ, βέβαια!** | Well, of course! |
+    | **Ακόμα και…** | Even… |
+    | **Άκουσα ότι…** | I heard that… |
+    | **Αλλά με όλα τα προβλήματά του…** | But with all its problems… |
+    | **Όχι όπως τώρα που…** | Not like now when… |
+    | **Δεν είναι η μέρα σου σήμερα.** | Today is not your day. |
+    | **Όλα μαύρα τα βλέπεις.** | You see everything in black. |
+    | **Μήπως σου φτιάξει το κέφι.** | Maybe it will lift your spirits. |
+    | **Τι να σας κεράσουμε;** | What can we treat you to? |
     """
         _vocab_heading = "#### Λέξεις, λέξεις"
         _vocab = """
@@ -312,7 +314,7 @@ def _(language_selector, mo):
     | Греческий | Русский |
     |-----------|---------|
     | Όταν εσύ **πήγαινες**, εγώ **γύριζα**. | Когда ты шёл, я возвращался. |
-    | Ενώ **διάβαζα**, **άκουγα** μουσική. | Пока я учился, я слушал музыку. |
+    | Ενώ η Αρλέτα **έψαχνε** να παρκάρει, η Μελέκ **μιλούσε** με τον κύριο Αντρέα. | Пока Арлета искала место для парковки, Мелек разговаривала с господином Андреасом. |
 
     ### Παρατατικός + Αόριστος — длительное действие прерывается кратким событием
 
@@ -321,7 +323,7 @@ def _(language_selector, mo):
     | Греческий | Русский |
     |-----------|---------|
     | Την ώρα που **πήγαινα** στη στάση, **πέρασε** το λεωφορείο. | Пока я шёл на остановку, проехал автобус. |
-    | Καθώς **έπαιζα**, **χτύπησε** το τηλέφωνο. | Пока я играл, зазвонил телефон. |
+    | Καθώς **περπατούσα** στον δρόμο, **συνάντησα** μια παλιά φίλη. | Пока я шёл по улице, я встретил старую подругу. |
 
     ### Элизия (Απαλοιφή φωνήεντος)
 
@@ -342,7 +344,7 @@ def _(language_selector, mo):
     | Ελληνικά | Μετάφραση |
     |----------|-----------|
     | Όταν εσύ **πήγαινες**, εγώ **γύριζα**. | When you were going, I was returning. |
-    | Ενώ **διάβαζα**, **άκουγα** μουσική. | While I was studying, I was listening to music. |
+    | Ενώ η Αρλέτα **έψαχνε** να παρκάρει, η Μελέκ **μιλούσε** με τον κύριο Αντρέα. | While Arleta was looking for parking, Melek was talking with Mr. Andreas. |
 
     ### Παρατατικός + Αόριστος — διαρκής πράξη που διακόπτεται
 
@@ -351,7 +353,7 @@ def _(language_selector, mo):
     | Ελληνικά | Μετάφραση |
     |----------|-----------|
     | Την ώρα που **πήγαινα** στη στάση, **πέρασε** το λεωφορείο. | While I was walking to the stop, the bus passed. |
-    | Καθώς **έπαιζα**, **χτύπησε** το τηλέφωνο. | While I was playing, the phone rang. |
+    | Καθώς **περπατούσα** στον δρόμο, **συνάντησα** μια παλιά φίλη. | As I was walking down the street, I ran into an old friend. |
 
     ### Απαλοιφή φωνήεντος (Elision)
 
@@ -372,7 +374,7 @@ def _(language_selector, mo):
     | Greek | English |
     |-------|---------|
     | Όταν εσύ **πήγαινες**, εγώ **γύριζα**. | When you were going, I was returning. |
-    | Ενώ **διάβαζα**, **άκουγα** μουσική. | While I was studying, I was listening to music. |
+    | Ενώ η Αρλέτα **έψαχνε** να παρκάρει, η Μελέκ **μιλούσε** με τον κύριο Αντρέα. | While Arleta was looking for parking, Melek was talking with Mr. Andreas. |
 
     ### Παρατατικός + Aorist — ongoing action interrupted by a brief event
 
@@ -381,7 +383,7 @@ def _(language_selector, mo):
     | Greek | English |
     |-------|---------|
     | Την ώρα που **πήγαινα** στη στάση, **πέρασε** το λεωφορείο. | While I was walking to the stop, the bus passed. |
-    | Καθώς **έπαιζα**, **χτύπησε** το τηλέφωνο. | While I was playing, the phone rang. |
+    | Καθώς **περπατούσα** στον δρόμο, **συνάντησα** μια παλιά φίλη. | As I was walking down the street, I ran into an old friend. |
 
     ### Elision (Απαλοιφή φωνήεντος)
 
@@ -419,7 +421,7 @@ def _(language_selector, mo):
     | Полная форма | Краткая форма |
     |-------------|--------------|
     | μου + έ... | **μου '—** — *μου έλεγε → μου 'λεγε* |
-    | σου + έ... | **σου '—** — *σου έστελνε → σου 'στέλνε* |
+    | σου + έ... | **σου '—** — *σου έστελνε → σου 'στελνε* |
     | του + έ... | **του '—** — *του έφερνε → του 'φερνε* |
     | το + ή... | **το '—** — *το ήξερε → το 'ξερε* |
     | τα + έ... | **τα '—** — *τα έδινε → τα 'δινε* |
@@ -444,7 +446,7 @@ def _(language_selector, mo):
     | Πλήρης τύπος | Σύντομος τύπος |
     |-------------|----------------|
     | μου + έ... | **μου '—** — *μου έλεγε → μου 'λεγε* |
-    | σου + έ... | **σου '—** — *σου έστελνε → σου 'στέλνε* |
+    | σου + έ... | **σου '—** — *σου έστελνε → σου 'στελνε* |
     | του + έ... | **του '—** — *του έφερνε → του 'φερνε* |
     | το + ή... | **το '—** — *το ήξερε → το 'ξερε* |
     | τα + έ... | **τα '—** — *τα έδινε → τα 'δινε* |
@@ -469,7 +471,7 @@ def _(language_selector, mo):
     | Full form | Elided form |
     |-----------|-------------|
     | μου + έ... | **μου '—** — *μου έλεγε → μου 'λεγε* |
-    | σου + έ... | **σου '—** — *σου έστελνε → σου 'στέλνε* |
+    | σου + έ... | **σου '—** — *σου έστελνε → σου 'στελνε* |
     | του + έ... | **του '—** — *του έφερνε → του 'φερνε* |
     | το + ή... | **το '—** — *το ήξερε → το 'ξερε* |
     | τα + έ... | **τα '—** — *τα έδινε → τα 'δινε* |
@@ -487,14 +489,6 @@ def _(language_selector, mo, t_ui):
 
 @app.cell(hide_code=True)
 def _(mo):
-    # Noun state
-    tbl_sel_n, set_tbl_sel_n = mo.state(None)
-    session_total_n, set_session_total_n = mo.state(0)
-    return session_total_n, set_session_total_n, set_tbl_sel_n, tbl_sel_n
-
-
-@app.cell(hide_code=True)
-def _(mo):
     # Noun file upload
     file_upload_noun = mo.ui.file(label="Load nouns TSV")
     file_upload_noun
@@ -502,312 +496,228 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_noun, gu, notebook_dir, os, pd):
+def _(file_upload_noun, gu, language_selector, notebook_dir, os, pd):
     # Load noun data
     if file_upload_noun.value:
         df_noun = gu.load_data(file_upload_noun, [])
     else:
+        _ru = os.path.join(notebook_dir, 'nouns_ru.tsv')
+        _default = os.path.join(notebook_dir, 'nouns.tsv')
+        _path = _ru if language_selector.value == 'ru' and os.path.exists(_ru) else _default
         try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
+            df_noun = pd.read_csv(_path, sep='\t')
         except FileNotFoundError:
             df_noun = None
     return (df_noun,)
 
 
 @app.cell(hide_code=True)
-def _(df_noun, language_selector, mo, t_ui, tbl_sel_n):
+def _(df_noun, language_selector, mo, t_ui):
     # Noun table
     _lang = language_selector.value
-    table_noun = mo.ui.table(df_noun, selection="multi", initial_selection=tbl_sel_n()) if df_noun is not None else None
-    _display = table_noun if table_noun is not None else mo.md(
-        "_nouns.tsv не найден — загрузите файл._" if _lang == "ru" else
-        "_Το αρχείο nouns.tsv δεν βρέθηκε — φόρτωσε αρχείο._" if _lang == "el" else
-        "_nouns.tsv not found — upload a file to begin._"
-    )
+    table_noun = mo.ui.table(df_noun, selection="multi", initial_selection=None) if df_noun is not None else None
+    _display = table_noun if table_noun is not None else mo.md(t_ui("nouns_not_found", _lang))
     mo.vstack([mo.md(t_ui("select_nouns", _lang)), _display])
     return (table_noun,)
 
 
 @app.cell(hide_code=True)
-def _(gu, mo, random, session_total_n, set_session_total_n, table_noun):
-    # Noun words
+def _(language_selector, mo, t_ui):
+    # Noun mode selector
+    _lang = language_selector.value
+    if _lang == 'ru':
+        _opts_n = {"без артикля": "simple", "с артиклем": "article"}
+        _default_mode_n = "без артикля"
+    elif _lang == 'el':
+        _opts_n = {"χωρίς άρθρο": "simple", "με άρθρο": "article"}
+        _default_mode_n = "χωρίς άρθρο"
+    else:
+        _opts_n = {"no article": "simple", "with article": "article"}
+        _default_mode_n = "no article"
+    mode_selector_n = mo.ui.radio(options=_opts_n, value=_default_mode_n, label=t_ui("mode_label", _lang))
+    mo.md(f"{mode_selector_n}")
+
+    return (mode_selector_n,)
+
+
+@app.cell(hide_code=True)
+def _(language_selector, mo, t_ui):
+    # Noun indefinite-article toggle (creation only -- no dependency on
+    # mode_selector_n, so switching modes doesn't reset it back to False)
+    indefinite_toggle_n = mo.ui.switch(label=t_ui("indefinite_label", language_selector.value), value=False)
+
+    return (indefinite_toggle_n,)
+
+
+@app.cell(hide_code=True)
+def _(indefinite_toggle_n, mo, mode_selector_n):
+    # Noun indefinite-article toggle (conditional display: only meaningful
+    # once the article itself is being tested)
+    indefinite_toggle_n if mode_selector_n.value == "article" else mo.md("")
+
+    return
+
+
+@app.cell(hide_code=True)
+def _(gu, gu2, random, table_noun):
+    # Noun words + state
     words_noun = gu.get_words(table_noun)
-    words4test_noun, set_words4test_noun = mo.state(words_noun.copy() if words_noun else [])
-    if words_noun and len(words_noun) > session_total_n():
-        set_session_total_n(len(words_noun))
-    elif not words_noun:
-        set_session_total_n(0)
-    noun_msg, set_noun_msg = mo.state("")
-    current_noun, set_current_noun = mo.state(None)
-    captured_simple, set_captured_simple = mo.state(None)
-    captured_article, set_captured_article = mo.state(None)
-    _clk = lambda v: (v or 0) + 1
-    skip_button_n = mo.ui.button(label="Skip", on_click=_clk)
-    clear_button_n = mo.ui.button(label="Clear", on_click=_clk)
-    skip_count_n, set_skip_count_n = mo.state(0)
-    clear_count_n, set_clear_count_n = mo.state(0)
-    submit_count_n, set_submit_count_n = mo.state(0)
-    if words_noun and current_noun() is None:
-        set_current_noun(random.choice(words_noun))
+    (words4test_noun, set_words4test_noun, hist_noun, set_hist_noun, noun_msg, set_noun_msg,
+     captured_noun, set_captured_noun, entered_noun, set_entered_noun,
+     submit_count_n, set_submit_count_n, prev_count_n, set_prev_count_n,
+     next_count_n, set_next_count_n, enter_count_n, set_enter_count_n,
+     restart_count_n, set_restart_count_n) = gu2.make_paradigm_drill_state(
+        random.sample(words_noun, len(words_noun)) if words_noun else []
+    )
+
     return (
-        captured_article,
-        captured_simple,
-        clear_button_n,
-        clear_count_n,
-        current_noun,
+        captured_noun,
+        enter_count_n,
+        entered_noun,
+        hist_noun,
+        next_count_n,
         noun_msg,
-        set_captured_article,
-        set_captured_simple,
-        set_clear_count_n,
-        set_current_noun,
+        prev_count_n,
+        restart_count_n,
+        set_captured_noun,
+        set_enter_count_n,
+        set_entered_noun,
+        set_hist_noun,
+        set_next_count_n,
         set_noun_msg,
-        set_skip_count_n,
+        set_prev_count_n,
+        set_restart_count_n,
         set_submit_count_n,
         set_words4test_noun,
-        skip_button_n,
-        skip_count_n,
         submit_count_n,
         words4test_noun,
+        words_noun,
     )
 
 
 @app.cell(hide_code=True)
-def _(clear_count_n, current_noun, gu):
-    # Noun simple form
-    clear_count_n()
-    _nc = current_noun()
-    noun_word, noun_trans, noun_form = gu.create_noun_test_ui([_nc] if _nc else [], mode='simple')
-    return noun_form, noun_trans, noun_word
+def _(
+    entered_noun,
+    gu2,
+    hist_noun,
+    indefinite_toggle_n,
+    language_selector,
+    mode_selector_n,
+    set_enter_count_n,
+    set_next_count_n,
+    set_prev_count_n,
+    t_ui,
+    words4test_noun,
+):
+    # Noun form
+    cv_noun = words4test_noun()[0] if words4test_noun() else None
+    noun_meta = gu2.noun_drill_meta(cv_noun["Word"]) if cv_noun else None
+    _ac_noun = getattr(noun_meta, "active_cases", [])
+    _entered_noun_form = entered_noun().get(cv_noun["Word"]) if cv_noun else None
+    _lang_n = language_selector.value
+    _article_n = mode_selector_n.value == "article"
+    _indef_n = indefinite_toggle_n.value and _article_n
+    _labels_noun = gu2.noun_slot_labels(_ac_noun, lang=_lang_n)
+    if _article_n:
+        _def_prefix = t_ui("def_prefix", _lang_n)
+        _labels_noun = [f"{_def_prefix} {_l}" for _l in _labels_noun]
+    if _indef_n:
+        _indef_prefix = t_ui("indef_prefix", _lang_n)
+        _labels_noun = _labels_noun + [f"{_indef_prefix} {_l}" for _l in gu2.noun_slot_labels(gu2.noun_indef_cells(_ac_noun), lang=_lang_n)]
+    noun_form, prev_btn_n, next_btn_n, restart_btn_n = gu2.paradigm_drill_widgets(
+        labels=_labels_noun,
+        values=_entered_noun_form,
+        history_len=len(hist_noun()),
+        remaining_len=len(words4test_noun()),
+        lang=_lang_n,
+    )
+    set_prev_count_n(0)
+    set_next_count_n(0)
+    set_enter_count_n(0)
 
-
-@app.cell(hide_code=True)
-def _(clear_count_n, current_noun, gu):
-    # Noun article form
-    clear_count_n()
-    _acn = current_noun()
-    art_noun_word, art_noun_trans, art_noun_form = gu.create_noun_test_ui([_acn] if _acn else [], mode='article')
-    return art_noun_form, art_noun_trans, art_noun_word
+    return cv_noun, next_btn_n, noun_form, noun_meta, prev_btn_n, restart_btn_n
 
 
 @app.cell(hide_code=True)
 def _(
-    art_noun_form,
-    captured_article,
-    captured_simple,
-    mo,
+    captured_noun,
+    cv_noun,
+    gu2,
+    language_selector,
     noun_form,
     set_submit_count_n,
+    t_ui,
 ):
-    # Submit button N
-    _vals_s = noun_form.value if noun_form is not None else []
-    _vals_a = art_noun_form.value if art_noun_form is not None else []
-    _snap_s = captured_simple()
-    _snap_a = captured_article()
-    _has_s = bool(_vals_s and any(v.strip() for v in _vals_s))
-    _has_a = bool(_vals_a and any(v.strip() for v in _vals_a))
-    _match_s = _snap_s is not None and [v.strip() for v in _vals_s] == [v.strip() for v in (_snap_s.value or [])]
-    _match_a = _snap_a is not None and [v.strip() for v in _vals_a] == [v.strip() for v in (_snap_a.value or [])]
-    _dirty = (_has_s and not _match_s) or (_has_a and not _match_a)
-    _clk = lambda v: (v or 0) + 1
-    submit_button_n = mo.ui.button(label="Submit", on_click=_clk, kind="warn" if _dirty else "neutral")
+    # Noun check button
+    check_btn_n = gu2.dirty_check_button(
+        noun_form, captured_noun, cv_noun, "test_word", word_key="Word",
+        label=t_ui("check_label", language_selector.value),
+    )
     set_submit_count_n(0)
-    return (submit_button_n,)
+
+    return (check_btn_n,)
 
 
 @app.cell(hide_code=True)
 def _(
-    captured_simple,
-    clear_button_n,
-    gu,
+    captured_noun,
+    check_btn_n,
+    cv_noun,
+    enter_count_n,
+    entered_noun,
+    gu2,
+    hist_noun,
+    indefinite_toggle_n,
     language_selector,
     mo,
+    mode_selector_n,
+    next_btn_n,
+    next_count_n,
     noun_form,
-    noun_trans,
-    noun_word,
-    session_total_n,
-    skip_button_n,
-    submit_button_n,
-    t_ui,
-    words4test_noun,
-):
-    # Noun simple display
-    _lang = language_selector.value
-    _feedback = mo.md("")
-    if words4test_noun() and noun_word:
-        _cs = captured_simple()
-        if _cs and getattr(_cs, 'test_word', None) == noun_word:
-            with mo.capture_stdout() as _buf:
-                gu.check_noun_test(noun_word, _cs, mode='simple')
-            if _buf.getvalue():
-                _feedback = mo.md(_buf.getvalue())
-        _view = mo.vstack([
-            mo.md(f"{t_ui('simple_noun_heading', _lang)} ({len(words4test_noun())}/{session_total_n()})"),
-            mo.md(f"{t_ui('translation_label', _lang)} **{noun_trans}**"),
-            noun_form,
-            _feedback,
-            mo.hstack([skip_button_n, clear_button_n, submit_button_n], justify="end"),
-        ])
-    else:
-        _view = mo.md(t_ui("noun_empty", _lang))
-    _view
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    art_noun_form,
-    art_noun_trans,
-    art_noun_word,
-    captured_article,
-    clear_button_n,
-    gu,
-    language_selector,
-    mo,
-    session_total_n,
-    skip_button_n,
-    submit_button_n,
-    t_ui,
-    words4test_noun,
-):
-    # Noun article display
-    _lang = language_selector.value
-    _feedback_a = mo.md("")
-    if words4test_noun() and art_noun_word:
-        _ca = captured_article()
-        if _ca and getattr(_ca, 'test_word', None) == art_noun_word:
-            with mo.capture_stdout() as _buf_a:
-                gu.check_noun_test(art_noun_word, _ca, mode='article')
-            if _buf_a.getvalue():
-                _feedback_a = mo.md(_buf_a.getvalue())
-        _view_art = mo.vstack([
-            mo.md(f"{t_ui('article_noun_heading', _lang)} ({len(words4test_noun())}/{session_total_n()})"),
-            mo.md(f"{t_ui('translation_label', _lang)} **{art_noun_trans}**"),
-            art_noun_form,
-            _feedback_a,
-            mo.hstack([skip_button_n, clear_button_n, submit_button_n], justify="end"),
-        ])
-    else:
-        _view_art = mo.md(t_ui("noun_empty", _lang))
-    _view_art
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo, noun_msg):
-    # Noun message
-    mo.md(noun_msg())
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    captured_article,
-    captured_simple,
-    current_noun,
-    df_noun,
-    gu,
-    language_selector,
-    random,
-    session_total_n,
-    set_captured_article,
-    set_captured_simple,
-    set_current_noun,
+    noun_meta,
+    noun_msg,
+    prev_btn_n,
+    prev_count_n,
+    restart_btn_n,
+    restart_count_n,
+    set_captured_noun,
+    set_enter_count_n,
+    set_entered_noun,
+    set_hist_noun,
+    set_next_count_n,
     set_noun_msg,
-    set_tbl_sel_n,
+    set_prev_count_n,
+    set_restart_count_n,
+    set_submit_count_n,
     set_words4test_noun,
+    submit_count_n,
     t_ui,
     words4test_noun,
+    words_noun,
 ):
-    # Noun pass handler
+    # Noun drill
     _lang = language_selector.value
-    _cn = current_noun()
-    _cs = captured_simple()
-    _ca = captured_article()
-    if words4test_noun() and _cn and (_cs or _ca):
-        _passed = False
-        if _cs and getattr(_cs, 'test_word', None) == _cn['Word']:
-            _passed = gu.check_noun_test(_cn['Word'], _cs, mode='simple')
-        if not _passed and _ca and getattr(_ca, 'test_word', None) == _cn['Word']:
-            _passed = gu.check_noun_test(_cn['Word'], _ca, mode='article')
-        if _passed:
-            _new = [w for w in words4test_noun() if w['Word'] != _cn['Word']]
-            set_words4test_noun(_new)
-            if df_noun is not None:
-                _rem = {w['Word'] for w in _new}
-                set_tbl_sel_n([i for i, w in enumerate(df_noun['Word']) if w in _rem])
-            set_noun_msg(t_ui("noun_passed", _lang).format(word=_cn["Word"], remaining=len(_new), total=session_total_n()))
-            set_captured_simple(None)
-            set_captured_article(None)
-            set_current_noun(random.choice(_new) if _new else None)
-    return
+    _article = mode_selector_n.value == "article"
+    _indef_n = indefinite_toggle_n.value and _article
+    _title = t_ui("article_noun_heading", _lang) if _article else t_ui("simple_noun_heading", _lang)
+    gu2.noun_paradigm_drill_form(
+        words4test_noun, set_words4test_noun, hist_noun, set_hist_noun, noun_msg, set_noun_msg,
+        captured_noun, set_captured_noun, entered_noun, set_entered_noun,
+        submit_count_n, set_submit_count_n, prev_count_n, set_prev_count_n,
+        next_count_n, set_next_count_n, enter_count_n, set_enter_count_n,
+        restart_count_n, set_restart_count_n,
+        cv_noun, noun_form, check_btn_n, prev_btn_n, next_btn_n, restart_btn_n,
+        vocab=words_noun,
+        noun_meta=noun_meta,
+        article=_article,
+        indefinite=_indef_n,
+        word_key="Word",
+        meaning_key="Translation",
+        meaning_label=t_ui("translation_label", _lang).rstrip(":"),
+        title=_title,
+        done_message=t_ui("test1_done", _lang),
+    ) if words_noun else mo.md(t_ui("noun_empty", _lang))
 
-
-@app.cell(hide_code=True)
-def _(
-    art_noun_form,
-    art_noun_word,
-    gu,
-    noun_form,
-    noun_word,
-    set_captured_article,
-    set_captured_simple,
-    set_submit_count_n,
-    submit_button_n,
-    submit_count_n,
-):
-    # Noun submit handler
-    if (submit_button_n.value or 0) > submit_count_n():
-        set_submit_count_n(submit_button_n.value)
-        if noun_word and noun_form:
-            set_captured_simple(gu.make_snapshot(noun_form))
-        if art_noun_word and art_noun_form:
-            set_captured_article(gu.make_snapshot(art_noun_form))
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    current_noun,
-    df_noun,
-    random,
-    set_captured_article,
-    set_captured_simple,
-    set_current_noun,
-    set_skip_count_n,
-    set_tbl_sel_n,
-    set_words4test_noun,
-    skip_button_n,
-    skip_count_n,
-    words4test_noun,
-):
-    # Noun skip handler
-    if (skip_button_n.value or 0) > skip_count_n():
-        set_skip_count_n(skip_button_n.value)
-        set_captured_simple(None)
-        set_captured_article(None)
-        _cn = current_noun()
-        _new = [w for w in words4test_noun() if not _cn or w['Word'] != _cn['Word']]
-        set_words4test_noun(_new)
-        if df_noun is not None:
-            _rem = {w['Word'] for w in _new}
-            set_tbl_sel_n([i for i, w in enumerate(df_noun['Word']) if w in _rem])
-        set_current_noun(random.choice(_new) if _new else None)
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    clear_button_n,
-    clear_count_n,
-    set_captured_article,
-    set_captured_simple,
-    set_clear_count_n,
-):
-    # Noun clear handler
-    if (clear_button_n.value or 0) > clear_count_n():
-        set_clear_count_n(clear_button_n.value)
-        set_captured_simple(None)
-        set_captured_article(None)
     return
 
 
@@ -820,14 +730,6 @@ def _(language_selector, mo, t_ui):
 
 @app.cell(hide_code=True)
 def _(mo):
-    # Verb state
-    tbl_sel_v, set_tbl_sel_v = mo.state(None)
-    session_total_v, set_session_total_v = mo.state(0)
-    return session_total_v, set_session_total_v, set_tbl_sel_v, tbl_sel_v
-
-
-@app.cell(hide_code=True)
-def _(mo):
     # Verb file upload
     file_upload_verb = mo.ui.file(label="Load verbs TSV")
     file_upload_verb
@@ -835,92 +737,78 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_verb, gu, notebook_dir, os, pd):
+def _(file_upload_verb, gu, language_selector, notebook_dir, os, pd):
     # Load verb data
     if file_upload_verb.value:
         df_verb = gu.load_data(file_upload_verb, [])
     else:
+        _ru = os.path.join(notebook_dir, 'verbs_ru.tsv')
+        _default = os.path.join(notebook_dir, 'verbs.tsv')
+        _path = _ru if language_selector.value == 'ru' and os.path.exists(_ru) else _default
         try:
-            df_verb = pd.read_csv(os.path.join(notebook_dir, 'verbs.tsv'), sep='\t')
+            df_verb = pd.read_csv(_path, sep='\t')
         except FileNotFoundError:
             df_verb = None
     return (df_verb,)
 
 
 @app.cell(hide_code=True)
-def _(df_verb, language_selector, mo, t_ui, tbl_sel_v):
+def _(df_verb, language_selector, mo, t_ui):
     # Verb table
     _lang = language_selector.value
-    table_verb = mo.ui.table(df_verb, selection="multi", initial_selection=tbl_sel_v()) if df_verb is not None else None
-    _display = table_verb if table_verb is not None else mo.md(
-        "_verbs.tsv не найден — загрузите файл._" if _lang == "ru" else
-        "_Το αρχείο verbs.tsv δεν βρέθηκε — φόρτωσε αρχείο._" if _lang == "el" else
-        "_verbs.tsv not found — upload a file to begin._"
-    )
+    table_verb = mo.ui.table(df_verb, selection="multi", initial_selection=None) if df_verb is not None else None
+    _display = table_verb if table_verb is not None else mo.md(t_ui("verbs_not_found", _lang))
     mo.vstack([mo.md(t_ui("select_verbs", _lang)), _display])
     return (table_verb,)
 
 
 @app.cell(hide_code=True)
-def _(gu, language_selector, mo, t_ui):
+def _(gu2, language_selector, mo, t_ui):
     # Tense selector
     _lang = language_selector.value
-    if _lang == "ru":
-        _tense_options = {
-            f"{gu.TENSE_LABELS['imperfect']['greek']} (Прошедшее продолженное)": "imperfect",
-            f"{gu.TENSE_LABELS['present']['greek']} (Настоящее время)": "present",
-        }
-        _default = f"{gu.TENSE_LABELS['imperfect']['greek']} (Прошедшее продолженное)"
-    elif _lang == "el":
-        _tense_options = {
-            gu.TENSE_LABELS['imperfect']['greek']: "imperfect",
-            gu.TENSE_LABELS['present']['greek']: "present",
-        }
-        _default = gu.TENSE_LABELS['imperfect']['greek']
-    else:
-        _tense_options = {
-            f"{gu.TENSE_LABELS['imperfect']['greek']} (Past Imperfect)": "imperfect",
-            f"{gu.TENSE_LABELS['present']['greek']} (Present)": "present",
-        }
-        _default = f"{gu.TENSE_LABELS['imperfect']['greek']} (Past Imperfect)"
+    _tense_options = gu2.tense_dropdown_options(lang=_lang)
+    _default_tense = "imperfect"
+    _default_key = next((k for k, v in _tense_options.items() if v == _default_tense), next(iter(_tense_options)))
     tense_selector = mo.ui.dropdown(
         options=_tense_options,
-        value=_default,
+        value=_default_key,
         label=t_ui("tense_label", _lang),
     )
     tense_selector
+
     return (tense_selector,)
 
 
 @app.cell(hide_code=True)
-def _(gu, mo, session_total_v, set_session_total_v, table_verb):
-    # Verb words
+def _(gu, gu2, random, table_verb):
+    # Verb words + state
     words_verb = gu.get_words(table_verb)
-    words4test_verb, set_words4test_verb = mo.state(words_verb.copy() if words_verb else [])
-    if words_verb and len(words_verb) > session_total_v():
-        set_session_total_v(len(words_verb))
-    elif not words_verb:
-        set_session_total_v(0)
-    verb_msg, set_verb_msg = mo.state("")
-    captured_verb, set_captured_verb = mo.state(None)
-    _clk = lambda v: (v or 0) + 1
-    skip_button_v = mo.ui.button(label="Skip", on_click=_clk)
-    clear_button_v = mo.ui.button(label="Clear", on_click=_clk)
-    skip_count_v, set_skip_count_v = mo.state(0)
-    clear_count_v, set_clear_count_v = mo.state(0)
-    submit_count_v, set_submit_count_v = mo.state(0)
+    (words4test_verb, set_words4test_verb, hist_verb, set_hist_verb, verb_msg, set_verb_msg,
+     captured_verb, set_captured_verb, entered_verb, set_entered_verb,
+     submit_count_v, set_submit_count_v, prev_count_v, set_prev_count_v,
+     next_count_v, set_next_count_v, enter_count_v, set_enter_count_v,
+     restart_count_v, set_restart_count_v) = gu2.make_paradigm_drill_state(
+        random.sample(words_verb, len(words_verb)) if words_verb else []
+    )
+
     return (
         captured_verb,
-        clear_button_v,
-        clear_count_v,
+        enter_count_v,
+        entered_verb,
+        hist_verb,
+        next_count_v,
+        prev_count_v,
+        restart_count_v,
         set_captured_verb,
-        set_clear_count_v,
-        set_skip_count_v,
+        set_enter_count_v,
+        set_entered_verb,
+        set_hist_verb,
+        set_next_count_v,
+        set_prev_count_v,
+        set_restart_count_v,
         set_submit_count_v,
         set_verb_msg,
         set_words4test_verb,
-        skip_button_v,
-        skip_count_v,
         submit_count_v,
         verb_msg,
         words4test_verb,
@@ -929,163 +817,117 @@ def _(gu, mo, session_total_v, set_session_total_v, table_verb):
 
 
 @app.cell(hide_code=True)
-def _(clear_count_v, gu, random, tense_selector, words4test_verb, words_verb):
+def _(
+    entered_verb,
+    gu2,
+    hist_verb,
+    language_selector,
+    set_enter_count_v,
+    set_next_count_v,
+    set_prev_count_v,
+    tense_selector,
+    words4test_verb,
+):
     # Verb form
-    clear_count_v()
-    cv_verb = random.choice(words4test_verb()) if words4test_verb() else None
-    _tense_key = tense_selector.value
-    _ui_label = gu.TENSE_LABELS[_tense_key]['greek'] if _tense_key else "—"
-    verb_fields, _ = gu.create_verb_test_ui(_ui_label, words_verb, words4test_verb(), cv_verb)
-    return cv_verb, verb_fields
-
-
-@app.cell(hide_code=True)
-def _(captured_verb, mo, set_submit_count_v, tense_selector, verb_fields):
-    # Submit button V
-    _values = verb_fields.value if verb_fields is not None else []
-    _snap = captured_verb()
-    _has_input = bool(_values and any(v.strip() for v in _values))
-    _matches_snap = (
-        _snap is not None
-        and getattr(_snap, 'tense', None) == tense_selector.value
-        and [v.strip() for v in _values] == [v.strip() for v in (_snap.value or [])]
+    cv_verb = words4test_verb()[0] if words4test_verb() else None
+    _ = tense_selector.value  # rebuild the form (clear stale input) when the tense changes
+    _entered_verb_form = entered_verb().get(cv_verb["Word"]) if cv_verb else None
+    verb_form, prev_btn_v, next_btn_v, restart_btn_v = gu2.paradigm_drill_widgets(
+        labels=gu2.verb_slot_labels(),
+        values=_entered_verb_form,
+        history_len=len(hist_verb()),
+        remaining_len=len(words4test_verb()),
+        lang=language_selector.value,
     )
-    _dirty = _has_input and not _matches_snap
-    _clk = lambda v: (v or 0) + 1
-    submit_button_v = mo.ui.button(label="Submit", on_click=_clk, kind="warn" if _dirty else "neutral")
-    set_submit_count_v(0)
-    return (submit_button_v,)
+    set_prev_count_v(0)
+    set_next_count_v(0)
+    set_enter_count_v(0)
+
+    return cv_verb, next_btn_v, prev_btn_v, restart_btn_v, verb_form
 
 
 @app.cell(hide_code=True)
 def _(
     captured_verb,
-    clear_button_v,
     cv_verb,
+    gu2,
+    language_selector,
+    set_submit_count_v,
+    t_ui,
+    verb_form,
+):
+    # Verb check button
+    check_btn_v = gu2.dirty_check_button(
+        verb_form, captured_verb, cv_verb, "verb_word", word_key="Word",
+        label=t_ui("check_label", language_selector.value),
+    )
+    set_submit_count_v(0)
+
+    return (check_btn_v,)
+
+
+@app.cell(hide_code=True)
+def _(
+    captured_verb,
+    check_btn_v,
+    cv_verb,
+    enter_count_v,
+    entered_verb,
     gu,
+    gu2,
+    hist_verb,
     language_selector,
     mo,
-    session_total_v,
-    skip_button_v,
-    submit_button_v,
-    t_ui,
-    tense_selector,
-    verb_fields,
-    verb_msg,
-    words4test_verb,
-):
-    # Verb display
-    _lang = language_selector.value
-    _TENSE_LABELS = {k: gu.TENSE_LABELS[k]['greek'] for k in gu.TENSE_LABELS}
-    if not words4test_verb():
-        _view_verb = mo.md(t_ui("verb_empty", _lang))
-    elif not tense_selector.value:
-        _view_verb = mo.md(t_ui("verb_no_tense", _lang))
-    else:
-        _feedback_v = mo.md("")
-        _c = captured_verb()
-        if cv_verb and _c and getattr(_c, 'verb_word', None) == cv_verb['Word'] and getattr(_c, 'tense', None) == tense_selector.value:
-            _, _msg = gu.check_verb_test(cv_verb['Word'], _c, tense_selector.value)
-            _feedback_v = mo.md(_msg)
-        _label = _TENSE_LABELS.get(tense_selector.value, tense_selector.value)
-        _rem = len(words4test_verb())
-        _items = [mo.md(f"{t_ui('verb_heading', _lang)} — {_label} ({_rem}/{session_total_v()})")]
-        if verb_msg():
-            _items.append(mo.md(verb_msg()))
-        _items += [
-            mo.md(f"{t_ui('translation_label', _lang)} **{cv_verb['Translation']}**") if cv_verb else mo.md(""),
-            verb_fields,
-            mo.hstack([skip_button_v, clear_button_v, submit_button_v], justify="end"),
-            _feedback_v,
-        ]
-        _view_verb = mo.vstack(_items)
-    _view_verb
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    captured_verb,
-    cv_verb,
-    df_verb,
-    gu,
-    language_selector,
-    session_total_v,
+    next_btn_v,
+    next_count_v,
+    prev_btn_v,
+    prev_count_v,
+    restart_btn_v,
+    restart_count_v,
     set_captured_verb,
-    set_tbl_sel_v,
+    set_enter_count_v,
+    set_entered_verb,
+    set_hist_verb,
+    set_next_count_v,
+    set_prev_count_v,
+    set_restart_count_v,
+    set_submit_count_v,
     set_verb_msg,
     set_words4test_verb,
+    submit_count_v,
     t_ui,
     tense_selector,
+    verb_form,
+    verb_msg,
     words4test_verb,
+    words_verb,
 ):
-    # Verb pass handler
+    # Verb drill
     _lang = language_selector.value
     _tense_key = tense_selector.value
-    _c = captured_verb()
-    if cv_verb and _tense_key and _c and getattr(_c, 'verb_word', None) == cv_verb['Word'] and getattr(_c, 'tense', None) == _tense_key:
-        _ok, _ = gu.check_verb_test(cv_verb['Word'], _c, _tense_key)
-        if _ok:
-            _new = [w for w in words4test_verb() if w['Word'] != cv_verb['Word']]
-            set_words4test_verb(_new)
-            if df_verb is not None:
-                _rem = {w['Word'] for w in _new}
-                set_tbl_sel_v([i for i, w in enumerate(df_verb['Word']) if w in _rem])
-            set_verb_msg(t_ui("verb_passed", _lang).format(word=cv_verb["Word"], trans=cv_verb["Translation"], remaining=len(_new), total=session_total_v()))
-            set_captured_verb(None)
-    return
+    if words_verb and _tense_key:
+        _tlabel = gu.TENSE_LABELS[_tense_key]["greek"]
+        _output = gu2.verb_paradigm_drill_form(
+            words4test_verb, set_words4test_verb, hist_verb, set_hist_verb, verb_msg, set_verb_msg,
+            captured_verb, set_captured_verb, entered_verb, set_entered_verb,
+            submit_count_v, set_submit_count_v, prev_count_v, set_prev_count_v,
+            next_count_v, set_next_count_v, enter_count_v, set_enter_count_v,
+            restart_count_v, set_restart_count_v,
+            cv_verb, verb_form, check_btn_v, prev_btn_v, next_btn_v, restart_btn_v,
+            vocab=words_verb,
+            tense=_tense_key,
+            word_key="Word",
+            meaning_key="Translation",
+            meaning_label=t_ui("translation_label", _lang).rstrip(":"),
+            title=f"{t_ui('verb_heading', _lang)} — {_tlabel}",
+            done_message=t_ui("test2_done", _lang),
+        )
+    elif not words_verb:
+        _output = mo.md(t_ui("verb_empty", _lang))
+    else:
+        _output = mo.md(t_ui("verb_no_tense", _lang))
+    _output
 
-
-@app.cell(hide_code=True)
-def _(
-    cv_verb,
-    gu,
-    set_captured_verb,
-    set_submit_count_v,
-    submit_button_v,
-    submit_count_v,
-    tense_selector,
-    verb_fields,
-):
-    # Verb submit handler
-    if (submit_button_v.value or 0) > submit_count_v():
-        set_submit_count_v(submit_button_v.value)
-        if cv_verb and verb_fields:
-            set_captured_verb(gu.make_snapshot(verb_fields, verb_word=cv_verb['Word'], tense=tense_selector.value))
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    cv_verb,
-    df_verb,
-    set_captured_verb,
-    set_skip_count_v,
-    set_tbl_sel_v,
-    set_words4test_verb,
-    skip_button_v,
-    skip_count_v,
-    words4test_verb,
-):
-    # Verb skip handler
-    if (skip_button_v.value or 0) > skip_count_v():
-        set_skip_count_v(skip_button_v.value)
-        set_captured_verb(None)
-        if words4test_verb():
-            _new = [w for w in words4test_verb() if not cv_verb or w['Word'] != cv_verb['Word']]
-            set_words4test_verb(_new)
-            if df_verb is not None:
-                _rem = {w['Word'] for w in _new}
-                set_tbl_sel_v([i for i, w in enumerate(df_verb['Word']) if w in _rem])
-    return
-
-
-@app.cell(hide_code=True)
-def _(clear_button_v, clear_count_v, set_captured_verb, set_clear_count_v):
-    # Verb clear handler
-    if (clear_button_v.value or 0) > clear_count_v():
-        set_clear_count_v(clear_button_v.value)
-        set_captured_verb(None)
     return
 
 
@@ -1098,14 +940,6 @@ def _(language_selector, mo, t_ui):
 
 @app.cell(hide_code=True)
 def _(mo):
-    # Adj state
-    tbl_sel_a, set_tbl_sel_a = mo.state(None)
-    session_total_a, set_session_total_a = mo.state(0)
-    return session_total_a, set_session_total_a, set_tbl_sel_a, tbl_sel_a
-
-
-@app.cell(hide_code=True)
-def _(mo):
     # Adj file upload
     file_upload_adj = mo.ui.file(label="Load adjectives TSV")
     file_upload_adj
@@ -1113,28 +947,27 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_adj, gu, notebook_dir, os, pd):
+def _(file_upload_adj, gu, language_selector, notebook_dir, os, pd):
     # Load adj data
     if file_upload_adj.value:
         df_adj = gu.load_data(file_upload_adj, [])
     else:
+        _ru = os.path.join(notebook_dir, 'adjectives_ru.tsv')
+        _default = os.path.join(notebook_dir, 'adjectives.tsv')
+        _path = _ru if language_selector.value == 'ru' and os.path.exists(_ru) else _default
         try:
-            df_adj = pd.read_csv(os.path.join(notebook_dir, 'adjectives.tsv'), sep='\t')
+            df_adj = pd.read_csv(_path, sep='\t')
         except FileNotFoundError:
             df_adj = None
     return (df_adj,)
 
 
 @app.cell(hide_code=True)
-def _(df_adj, language_selector, mo, t_ui, tbl_sel_a):
+def _(df_adj, language_selector, mo, t_ui):
     # Adj table
     _lang = language_selector.value
-    table_adj = mo.ui.table(df_adj, selection="multi", initial_selection=tbl_sel_a()) if df_adj is not None else None
-    _display = table_adj if table_adj is not None else mo.md(
-        "_adjectives.tsv не найден — загрузите файл._" if _lang == "ru" else
-        "_Το αρχείο adjectives.tsv δεν βρέθηκε — φόρτωσε αρχείο._" if _lang == "el" else
-        "_adjectives.tsv not found — upload a file to begin._"
-    )
+    table_adj = mo.ui.table(df_adj, selection="multi", initial_selection=None) if df_adj is not None else None
+    _display = table_adj if table_adj is not None else mo.md(t_ui("adjs_not_found", _lang))
     mo.vstack([mo.md(t_ui("select_adjs", _lang)), _display])
     return (table_adj,)
 
@@ -1158,204 +991,146 @@ def _(language_selector, mo, t_ui):
 
 
 @app.cell(hide_code=True)
-def _(gu, mo, random, session_total_a, set_session_total_a, table_adj):
-    # Adj words
+def _(gu, gu2, random, table_adj):
+    # Adjective words + state
     words_adj = gu.get_words(table_adj)
-    words4test_adj, set_words4test_adj = mo.state(words_adj.copy() if words_adj else [])
-    if words_adj and len(words_adj) > session_total_a():
-        set_session_total_a(len(words_adj))
-    elif not words_adj:
-        set_session_total_a(0)
-    adj_last_passed_mesg, set_adj_last_passed_mesg = mo.state("")
-    adj_cv, set_adj_cv = mo.state(None)
-    captured_adj, set_captured_adj = mo.state(None)
-    _clk = lambda v: (v or 0) + 1
-    skip_button_a = mo.ui.button(label="Skip", on_click=_clk)
-    clear_button_a = mo.ui.button(label="Clear", on_click=_clk)
-    skip_count_a, set_skip_count_a = mo.state(0)
-    clear_count_a, set_clear_count_a = mo.state(0)
-    submit_count_a, set_submit_count_a = mo.state(0)
-    if words_adj and adj_cv() is None:
-        set_adj_cv(random.choice(words_adj))
+    (words4test_adj, set_words4test_adj, hist_adj, set_hist_adj, adj_msg, set_adj_msg,
+     captured_adj, set_captured_adj, entered_adj, set_entered_adj,
+     submit_count_a, set_submit_count_a, prev_count_a, set_prev_count_a,
+     next_count_a, set_next_count_a, enter_count_a, set_enter_count_a,
+     restart_count_a, set_restart_count_a) = gu2.make_paradigm_drill_state(
+        random.sample(words_adj, len(words_adj)) if words_adj else []
+    )
+
     return (
-        adj_cv,
-        adj_last_passed_mesg,
+        adj_msg,
         captured_adj,
-        clear_button_a,
-        clear_count_a,
-        set_adj_cv,
-        set_adj_last_passed_mesg,
+        enter_count_a,
+        entered_adj,
+        hist_adj,
+        next_count_a,
+        prev_count_a,
+        restart_count_a,
+        set_adj_msg,
         set_captured_adj,
-        set_clear_count_a,
-        set_skip_count_a,
+        set_enter_count_a,
+        set_entered_adj,
+        set_hist_adj,
+        set_next_count_a,
+        set_prev_count_a,
+        set_restart_count_a,
         set_submit_count_a,
         set_words4test_adj,
-        skip_button_a,
-        skip_count_a,
         submit_count_a,
         words4test_adj,
+        words_adj,
     )
 
 
 @app.cell(hide_code=True)
-def _(adj_cv, clear_count_a, gu, mode_selector):
-    # Adj form
-    clear_count_a()
-    _acv = adj_cv()
+def _(
+    entered_adj,
+    gu2,
+    hist_adj,
+    language_selector,
+    mode_selector,
+    set_enter_count_a,
+    set_next_count_a,
+    set_prev_count_a,
+    words4test_adj,
+):
+    # Adjective form
+    cv_adj = words4test_adj()[0] if words4test_adj() else None
     _mode = mode_selector.value
-    adj_form, _ = gu.create_adjective_test_ui([] if not _acv else [_acv], [], _acv, mode=_mode)
-    return (adj_form,)
+    _entered_adj_form = entered_adj().get(cv_adj["Word"]) if cv_adj else None
+    adj_form, prev_btn_a, next_btn_a, restart_btn_a = gu2.paradigm_drill_widgets(
+        labels=gu2.adjective_slot_labels(_mode, lang=language_selector.value),
+        values=_entered_adj_form,
+        history_len=len(hist_adj()),
+        remaining_len=len(words4test_adj()),
+        lang=language_selector.value,
+    )
+    set_prev_count_a(0)
+    set_next_count_a(0)
+    set_enter_count_a(0)
 
-
-@app.cell(hide_code=True)
-def _(adj_form, captured_adj, mo, set_submit_count_a):
-    # Submit button A
-    _values = adj_form.value if adj_form else []
-    _snap = captured_adj()
-    _has_input = bool(_values and any(v.strip() for v in _values))
-    _matches_snap = _snap is not None and [v.strip() for v in _values] == [v.strip() for v in (_snap.value or [])]
-    _dirty = _has_input and not _matches_snap
-    _clk = lambda v: (v or 0) + 1
-    submit_button_a = mo.ui.button(label="Submit", on_click=_clk, kind="warn" if _dirty else "neutral")
-    set_submit_count_a(0)
-    return (submit_button_a,)
+    return adj_form, cv_adj, next_btn_a, prev_btn_a, restart_btn_a
 
 
 @app.cell(hide_code=True)
 def _(
-    adj_cv,
     adj_form,
     captured_adj,
-    clear_button_a,
-    gu,
+    cv_adj,
+    gu2,
+    language_selector,
+    set_submit_count_a,
+    t_ui,
+):
+    # Adjective check button
+    check_btn_a = gu2.dirty_check_button(
+        adj_form, captured_adj, cv_adj, "adj_word", word_key="Word",
+        label=t_ui("check_label", language_selector.value),
+    )
+    set_submit_count_a(0)
+
+    return (check_btn_a,)
+
+
+@app.cell(hide_code=True)
+def _(
+    adj_form,
+    adj_msg,
+    captured_adj,
+    check_btn_a,
+    cv_adj,
+    enter_count_a,
+    entered_adj,
+    gu2,
+    hist_adj,
     language_selector,
     mo,
     mode_selector,
-    session_total_a,
-    skip_button_a,
-    submit_button_a,
-    t_ui,
-    words4test_adj,
-):
-    # Adj display
-    _lang = language_selector.value
-    _adj = adj_cv()
-    _mode = mode_selector.value
-    if words4test_adj() and _adj:
-        _feedback_a = mo.md("")
-        _c = captured_adj()
-        if _c and getattr(_c, 'adj_word', None) == _adj['Word']:
-            _, _msg = gu.check_adjective_test(_adj['Word'], _c, mode=_mode)
-            if _msg:
-                _feedback_a = mo.md(_msg)
-        _view_adj = mo.vstack([
-            mo.md(f"{t_ui('adj_heading', _lang)} ({len(words4test_adj())}/{session_total_a()})"),
-            mo.md(f"{t_ui('translation_label', _lang)} **{_adj['Translation']}**"),
-            adj_form,
-            _feedback_a,
-            mo.hstack([skip_button_a, clear_button_a, submit_button_a], justify="end"),
-        ])
-    else:
-        _view_adj = mo.md(t_ui("adj_empty", _lang))
-    _view_adj
-    return
-
-
-@app.cell(hide_code=True)
-def _(adj_last_passed_mesg, mo):
-    # Adj message
-    mo.md(adj_last_passed_mesg())
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    adj_cv,
-    captured_adj,
-    df_adj,
-    gu,
-    language_selector,
-    random,
-    session_total_a,
-    set_adj_cv,
-    set_adj_last_passed_mesg,
+    next_btn_a,
+    next_count_a,
+    prev_btn_a,
+    prev_count_a,
+    restart_btn_a,
+    restart_count_a,
+    set_adj_msg,
     set_captured_adj,
-    set_tbl_sel_a,
-    set_words4test_adj,
-    t_ui,
-    words4test_adj,
-):
-    # Adj pass handler
-    _lang = language_selector.value
-    _adj = adj_cv()
-    _c = captured_adj()
-    if words4test_adj() and _adj and _c and getattr(_c, 'adj_word', None) == _adj['Word']:
-        adj_ok, _ = gu.check_adjective_test(_adj['Word'], _c)
-        if adj_ok:
-            _new = [w for w in words4test_adj() if w['Word'] != _adj['Word']]
-            set_words4test_adj(_new)
-            if df_adj is not None:
-                _rem = {w['Word'] for w in _new}
-                set_tbl_sel_a([i for i, w in enumerate(df_adj['Word']) if w in _rem])
-            set_adj_last_passed_mesg(t_ui("adj_passed", _lang).format(word=_adj["Word"], trans=_adj["Translation"], remaining=len(_new), total=session_total_a()))
-            set_adj_cv(random.choice(_new) if _new else None)
-            set_captured_adj(None)
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    adj_cv,
-    adj_form,
-    gu,
-    set_captured_adj,
+    set_enter_count_a,
+    set_entered_adj,
+    set_hist_adj,
+    set_next_count_a,
+    set_prev_count_a,
+    set_restart_count_a,
     set_submit_count_a,
-    submit_button_a,
-    submit_count_a,
-):
-    # Adj submit handler
-    if (submit_button_a.value or 0) > submit_count_a():
-        set_submit_count_a(submit_button_a.value)
-        _acv = adj_cv()
-        if _acv and adj_form:
-            set_captured_adj(gu.make_snapshot(adj_form))
-    return
-
-
-@app.cell(hide_code=True)
-def _(
-    adj_cv,
-    df_adj,
-    random,
-    set_adj_cv,
-    set_captured_adj,
-    set_skip_count_a,
-    set_tbl_sel_a,
     set_words4test_adj,
-    skip_button_a,
-    skip_count_a,
+    submit_count_a,
+    t_ui,
     words4test_adj,
+    words_adj,
 ):
-    # Adj skip handler
-    if (skip_button_a.value or 0) > skip_count_a():
-        set_skip_count_a(skip_button_a.value)
-        set_captured_adj(None)
-        _acv = adj_cv()
-        _new = [w for w in words4test_adj() if not _acv or w['Word'] != _acv['Word']]
-        set_words4test_adj(_new)
-        if df_adj is not None:
-            _rem = {w['Word'] for w in _new}
-            set_tbl_sel_a([i for i, w in enumerate(df_adj['Word']) if w in _rem])
-        set_adj_cv(random.choice(_new) if _new else None)
-    return
+    # Adjective drill
+    _lang = language_selector.value
+    _mode = mode_selector.value
+    gu2.adjective_paradigm_drill_form(
+        words4test_adj, set_words4test_adj, hist_adj, set_hist_adj, adj_msg, set_adj_msg,
+        captured_adj, set_captured_adj, entered_adj, set_entered_adj,
+        submit_count_a, set_submit_count_a, prev_count_a, set_prev_count_a,
+        next_count_a, set_next_count_a, enter_count_a, set_enter_count_a,
+        restart_count_a, set_restart_count_a,
+        cv_adj, adj_form, check_btn_a, prev_btn_a, next_btn_a, restart_btn_a,
+        vocab=words_adj,
+        mode=_mode,
+        word_key="Word",
+        meaning_key="Translation",
+        meaning_label=t_ui("translation_label", _lang).rstrip(":"),
+        title=t_ui("adj_heading", _lang),
+        done_message=t_ui("test3_done", _lang),
+    ) if words_adj else mo.md(t_ui("adj_empty", _lang))
 
-
-@app.cell(hide_code=True)
-def _(clear_button_a, clear_count_a, set_captured_adj, set_clear_count_a):
-    # Adj clear handler
-    if (clear_button_a.value or 0) > clear_count_a():
-        set_clear_count_a(clear_button_a.value)
-        set_captured_adj(None)
     return
 
 
@@ -1376,81 +1151,8 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _():
-    # UI strings
-    _UI_STRINGS = {
-        "en": {
-            "test1_heading": "## Test 1: Nouns",
-            "test2_heading": "## Test 2: Verbs",
-            "test3_heading": "## Test 3: Adjectives",
-            "select_nouns": "### Select nouns to practice",
-            "select_verbs": "### Select verbs to practice",
-            "select_adjs": "### Select adjectives to practice",
-            "translation_label": "Translation:",
-            "simple_noun_heading": "**Simple noun test**",
-            "article_noun_heading": "**Noun test with articles**",
-            "verb_heading": "**Verb test**",
-            "adj_heading": "**Adjective test**",
-            "noun_empty": "_Select nouns from the table above to begin._",
-            "verb_empty": "_Select verbs from the table above to begin._",
-            "verb_no_tense": "_Select a tense above._",
-            "adj_empty": "_Select adjectives from the table above to begin._",
-            "tense_label": "Select tense:",
-            "mode_label": "Test mode:",
-            "noun_passed": '<span style="color:green;">Test for <b>"{word}"</b> passed.\n\n{remaining} words remaining out of {total}.</span>',
-            "verb_passed": '<span style="color:green;">Test for <b>"{word} — {trans}"</b> passed.\n\n{remaining} words remaining out of {total}.</span>',
-            "adj_passed": '<span style="color:green;">Test for <b>"{word} — {trans}"</b> passed.\n\n{remaining} words remaining out of {total}.</span>',
-        },
-        "ru": {
-            "test1_heading": "## Тест 1: Существительные",
-            "test2_heading": "## Тест 2: Глаголы",
-            "test3_heading": "## Тест 3: Прилагательные",
-            "select_nouns": "### Выберите существительные для практики",
-            "select_verbs": "### Выберите глаголы для практики",
-            "select_adjs": "### Выберите прилагательные для практики",
-            "translation_label": "Перевод:",
-            "simple_noun_heading": "**Простой тест по существительным**",
-            "article_noun_heading": "**Тест по существительным с артиклями**",
-            "verb_heading": "**Тест по глаголам**",
-            "adj_heading": "**Тест по прилагательным**",
-            "noun_empty": "_Выберите существительные из таблицы выше, чтобы начать._",
-            "verb_empty": "_Выберите глаголы из таблицы выше, чтобы начать._",
-            "verb_no_tense": "_Выберите время выше._",
-            "adj_empty": "_Выберите прилагательные из таблицы выше, чтобы начать._",
-            "tense_label": "Выбрать время:",
-            "mode_label": "Режим теста:",
-            "noun_passed": '<span style="color:green;">Тест для <b>"{word}"</b> пройден.\n\n{remaining} слов осталось из {total}.</span>',
-            "verb_passed": '<span style="color:green;">Тест для <b>"{word} — {trans}"</b> пройден.\n\n{remaining} слов осталось из {total}.</span>',
-            "adj_passed": '<span style="color:green;">Тест для <b>"{word} — {trans}"</b> пройден.\n\n{remaining} слов осталось из {total}.</span>',
-        },
-        "el": {
-            "test1_heading": "## Τεστ 1: Ουσιαστικά",
-            "test2_heading": "## Τεστ 2: Ρήματα",
-            "test3_heading": "## Τεστ 3: Επίθετα",
-            "select_nouns": "### Επιλογή ουσιαστικών για εξάσκηση",
-            "select_verbs": "### Επιλογή ρημάτων για εξάσκηση",
-            "select_adjs": "### Επιλογή επιθέτων για εξάσκηση",
-            "translation_label": "Μετάφραση:",
-            "simple_noun_heading": "**Απλό τεστ ουσιαστικών**",
-            "article_noun_heading": "**Τεστ ουσιαστικών με άρθρα**",
-            "verb_heading": "**Τεστ ρημάτων**",
-            "adj_heading": "**Τεστ επιθέτων**",
-            "noun_empty": "_Επιλέξτε ουσιαστικά από τον παραπάνω πίνακα για να ξεκινήσετε._",
-            "verb_empty": "_Επιλέξτε ρήματα από τον παραπάνω πίνακα για να ξεκινήσετε._",
-            "verb_no_tense": "_Επιλέξτε χρόνο παραπάνω._",
-            "adj_empty": "_Επιλέξτε επίθετα από τον παραπάνω πίνακα για να ξεκινήσετε._",
-            "tense_label": "Επιλογή χρόνου:",
-            "mode_label": "Επιλογή τρόπου:",
-            "noun_passed": '<span style="color:green;">Τεστ για <b>"{word}"</b> ολοκληρώθηκε.\n\n{remaining} λέξεις απομένουν από {total}.</span>',
-            "verb_passed": '<span style="color:green;">Τεστ για <b>"{word} — {trans}"</b> ολοκληρώθηκε.\n\n{remaining} λέξεις απομένουν από {total}.</span>',
-            "adj_passed": '<span style="color:green;">Τεστ για <b>"{word} — {trans}"</b> ολοκληρώθηκε.\n\n{remaining} λέξεις απομένουν από {total}.</span>',
-        },
-    }
-
-    def t_ui(key, lang=None):
-        _lang = lang if lang else "en"
-        return _UI_STRINGS.get(_lang, _UI_STRINGS["en"]).get(key, _UI_STRINGS["en"].get(key, key))
-
+def _(gu2):
+    t_ui = gu2.ui_label
     return (t_ui,)
 
 
@@ -1464,6 +1166,30 @@ def _():
     from modern_greek_eee import greek_utils as gu
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
     return gu, mo, notebook_dir, os, pd, random
+
+
+@app.cell(hide_code=True)
+def _():
+    # Modern Greek eee_project: imports
+    import eee_project as eee
+    from eee_project import GreekUtils, MODERN_GREEK
+    from modern_greek_backend_eee import ModernGreekBackend
+    from unimorph_backend_eee import UniMorphBackend
+
+
+    return GreekUtils, MODERN_GREEK, ModernGreekBackend, UniMorphBackend, eee
+
+
+@app.cell(hide_code=True)
+def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, UniMorphBackend, eee, mo):
+    # Modern Greek eee_project: backend setup
+    _mg_backend = ModernGreekBackend()
+    eee.register_backend("el", _mg_backend, backend="modern-greek")
+    eee.register_backend("el", UniMorphBackend("el"), backend="unimorph")
+    eee.set_chain("el", ["modern-greek", "unimorph"])
+    gu2 = GreekUtils(_mg_backend, mo, eee_module=eee, config=MODERN_GREEK)
+
+    return (gu2,)
 
 
 if __name__ == "__main__":

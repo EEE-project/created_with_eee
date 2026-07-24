@@ -23,6 +23,11 @@ Word	Translation	Type
 η φασολάδα	bean soup	noun
 το κρασί	wine	noun
 η μπίρα	beer	noun
+η καθυστέρηση	delay	noun
+το ορεκτικό	appetizer	noun
+το ουζερί	ouzo bar	noun
+η κράτηση	reservation	noun
+η πιατέλα	platter	noun
 τρώω	to eat	verb
 πίνω	to drink	verb
 μαγειρεύω	to cook	verb
@@ -33,8 +38,12 @@ Word	Translation	Type
 ψήνω	to grill / roast	verb
 τηγανίζω	to fry	verb
 δοκιμάζω	to try / taste	verb
-νόστιμος	tasty / delicious	adjective
-υγιεινός	healthy	adjective
-φρέσκος	fresh	adjective
-παχύς	fat / thick	adjective
-νηστικός	hungry / fasting	adjective
+σερβίρω	to serve	verb
+παχαίνω	to gain weight / be fattening	verb
+νόστιμος, -η, -ο	tasty / delicious	adjective
+υγιεινός, -ή, -ό	healthy	adjective
+φρέσκος, -ια, -ο	fresh	adjective
+άψητος, -η, -ο	raw / undercooked	adjective
+ψητός, -ή, -ό	roasted / grilled	adjective
+βιολογικός, -ή, -ό	organic	adjective
+κατεψυγμένος, -η, -ο	frozen	adjective
