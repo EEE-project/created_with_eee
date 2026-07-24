@@ -7,6 +7,7 @@ odyssey/
   lessons.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
   notebook.py           # index/parent notebook
   eee_note.md            # shared "О морфологическом движке EEE" text (see below)
+  2026_07_20/            # Lesson: Od. IX.130–151
   2026_07_13/            # Lesson: Od. IX.105–129
   2026_07_06/            # Lesson: Od. IX.82–104
   2026_06_29/            # Lesson: Od. IX.62–81
@@ -216,6 +217,7 @@ Copy the Russian gloss EXACTLY, including all parenthetical morphological notes.
 | `2026_06_29/` | `~/work/greek/lectures/Odyssey/2026.06.29/Od_IX_62-81_vocabula.docx` |
 | `2026_07_06/` | `~/work/greek/lectures/Odyssey/2026.07.06/Od_IX_82-104_vocabula.docx` |
 | `2026_07_13/` | `~/work/greek/lectures/Odyssey/2026.07.13/Od_IX_105-129_vocabula.pdf` |
+| `2026_07_20/` | `~/work/greek/lectures/Odyssey/2026.07.20/Od IX 130-151 vocabula.docx` |
 
 Known formatting issues in `слова день 1.md` (do not propagate to TSV): lines 30/61/125
 have two entries merged without newline — parse the Greek and Cyrillic segments separately;
