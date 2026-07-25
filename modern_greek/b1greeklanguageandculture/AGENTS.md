@@ -1,6 +1,8 @@
 # B1 Greek Language and Culture — Agent Reference
 
-Covers both sub-courses under this umbrella: `kapodistrias/` and `zorba/`.
+Covers all sub-courses under this umbrella: `kapodistrias/`, `zorba/`, and `kavafis_ithaki/`.
+**`kavafis_ithaki/` uses a different notebook architecture than the other two** — see
+"Kavafis Ithaki: a second notebook architecture" below before touching it.
 
 ## Directory layout
 
@@ -14,6 +16,10 @@ b1greeklanguageandculture/
     lessons.tsv          # same trilingual schema
     notebook.py           # index/parent notebook
     26_06_26/ 26_07_10/ 26_07_17/   # one dir per lesson (YY_MM_DD)
+  kavafis_ithaki/
+    lessons.tsv          # same trilingual schema
+    notebook.py           # index/parent notebook
+    1/                     # one dir per lesson, numbered (not dated) -- matches the source material's own numbering
 ```
 
 Each lesson directory:
@@ -78,3 +84,101 @@ Each course's `notebook.py` reads its own `lessons.tsv` (trilingual schema — s
 On a course's own index page (Kapodistrias, Zorba), `eee_hero`'s large title is **this course's own name** with no "Lesson series —"/"Σειρά μαθημάτων —" prefix (e.g. "Αλέξης Ζορμπάς", not "Σειρά μαθημάτων — Αλέξης Ζορμπάς") — the small subtitle carries the grouping context instead (e.g. "B1: Ελληνική Γλώσσα και Πολιτισμός"). This is the opposite of what you'd get by copying B1's own hero cell (where the large title *is* "B1: ...", correctly, since that page is describing itself).
 
 `eee_topbar`'s `style="index"` call needs `parent_titles=` set to that same B1 name dict whenever `back_url` comes from `parent_back_url()` — without it, the up-link falls back to `titles` (this course's own name) and mislabels itself, e.g. showing "● Αλέξης Ζορμπάς" (or, post-fix, "◀ Αλέξης Ζορμπάς") as the clickable link to B1 instead of "◀ B1: Ελληνική Γλώσσα και Πολιτισμός". See both current index notebooks' topbar cell for the pattern.
+
+---
+
+## Kavafis Ithaki: a second notebook architecture
+
+`kavafis_ithaki/` deliberately does **not** follow "Never hand-write this machinery" /
+`gu.create_noun_test_ui` above — that convention is kapodistrias/zorba-specific, not a
+whole-umbrella rule. `kavafis_ithaki/1/notebook.1.py` was built to match `ellinika_b`
+chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
+
+- **One `gu2 = GreekUtils(mg_backend, mo, pd, eee_module=eee, config=MODERN_GREEK)`
+  instance for everything** — noun/verb/adjective drills use the newer
+  `gu2.make_paradigm_drill_state` / `gu2.paradigm_drill_widgets` /
+  `gu2.noun_paradigm_drill_form` / `gu2.verb_paradigm_drill_form` /
+  `gu2.adjective_paradigm_drill_form` family (copied verbatim from
+  `ellinika_b/chapter_01/chapter_01_notebook.py`), not kapodistrias's older
+  `gu.create_noun_test_ui`/`check_noun_test`. `gu2.get_words`/`gu2.load_data` cover table
+  loading too — **no `modern_greek_eee`/`modern_greek_inflexion_eee` dependency at all**
+  (ellinika_b still imports those for an old `gu` it uses only for `get_words`/`load_data`;
+  those are already methods on `eee_project.GreekUtils` itself, so this notebook's header
+  only needs `eee-project` + `modern-greek-backend-eee` + `marimo` + `pandas`).
+- **All UI chrome text goes through `t_ui = gu2.ui_label`** (TSV-backed,
+  `eee_project/data/labels/ui-{lang}.tsv`) — never a hand-rolled `UI_STRINGS` dict like
+  kapodistrias/zorba use. Added new keys for this lesson (`poem_section_heading`,
+  `vocabulary_heading`, plus the `test_label`/`*_test_topic` set described below) to
+  the 3 `ui-{lang}.tsv` files in `eee-project` itself; if a future lesson needs another
+  chrome string, add it the same way rather than starting a local dict.
+- **The poem stanza is plain text, deliberately** — an earlier draft used
+  `eee.interactive_text(...)` (clickable words + a click-to-gloss paradigm-table panel,
+  ported from Odyssey) but the user asked for it to be removed (2026-07-25): "in stanza
+  we don't need any links or highlighting on words -- it's just a common text." The poem
+  cell just renders `_stanza["lines"]` as plain `<div>` rows next to the selected
+  translation's lines — no `anywidget`, no `CLICKABLE_FORMS`, no
+  `build_modern_paradigm_table`/gloss-panel machinery at all. Don't re-add clickable
+  poem text here without checking with the user first — it was tried and explicitly
+  rejected. `POEM_WORDS_RAW` (from `poem_vocab.tsv`) still exists, but purely as the
+  translation-presence exercise's word pool, not for any click target.
+- **Parallel translations**: a `trans_selector` dropdown (подстрочник + literary
+  translations) reading `greek.md` + `translations.md` via the same shared
+  `eee.parse_stanza_text`/`eee.parse_stanza_translations` functions Odyssey uses
+  (see `ancient_greek/odyssey/AGENTS.md`) — this lesson just passes the default
+  `ref_prefix="### "` instead of Odyssey's `"### Odyss. "`, since the stanza-ref
+  heading text differs per course. These used to be per-notebook local
+  `_parse_greek`/`_parse_trans` functions (an 8th near-identical copy across Odyssey's
+  7 lessons + this one); extracted into `eee_project/notebook_utils.py` and all 8
+  call sites migrated, 2026-07-25. **Both the
+  dropdown's option order and `translations.md`'s section order must match the order
+  the translations are listed in the lecture's own `notes.md`** (Шмаков/Бродский →
+  Ильинская → Левитов, подстрочник always first since it's this notebook's own
+  addition, not from `notes.md`; Keeley/Sherrard last since English wasn't in that
+  list at all) — don't alphabetize or reorder for any other reason.
+- **New exercise type — translation-presence ("слово в переводе")** — added to the
+  common-words tests as **Test 1** (not the last test — user-requested reordering,
+  2026-07-25: it's poem-specific, so it comes right after the poem section, before the
+  general nouns/verbs/adjectives drills, which shift to Tests 2/3/4), using the *same*
+  `gu2.sync_translation_presence_tsv` / `gu2.build_translation_presence_items` /
+  `gu2.balance_presence_items` / `gu2.translation_presence_widgets` /
+  `gu2.translation_presence_form` machinery Odyssey uses, fed by `poem_vocab.tsv`
+  (Odyssey's `form\tlemma\tpos\tcontext\tmeaning` schema — a *different* vocab file
+  from `nouns.tsv`/`verbs.tsv`/`adjectives.tsv`, holding only the ~9 words that actually
+  occur inflected in the 3 poem lines) and a hand-judged `translation_presence.tsv`
+  (4 literary translators × the words each stanza actually contains; подстрочник
+  excluded, matching Odyssey's own convention that подстрочник is definitionally 100%
+  faithful). `translation_presence_widgets`/`_form` already take a `lang=` kwarg backed
+  by `_YES_NO`/`_PRESENCE_EMPTY` (ru/en/el all present) — no extra chrome work needed
+  there. Fixed one real (not just cosmetic) bug found while wiring this: the exercise's
+  source/translation toggle switch caption hardcoded "(Ancient Greek)"/"(др.-греч.)"/
+  "(αρχ. ελλ.)" — wrong for a Modern Greek poem; genericized to just "the original" in
+  `eee_project`'s `_PRESENCE_SWITCH_LBL`, a pure wording fix with no signature change,
+  safe for Odyssey's existing 7 lessons too (the passage's own attribution, shown via the
+  already-generic `_PRESENCE_SOURCE_LBL`, was correct already).
+- **Numbered test headings don't reuse ellinika_b's `test1_heading`/`test2_heading`/
+  `test3_heading` keys** — those bake a fixed topic into a fixed number ("## Тест 1:
+  Существительные") and ellinika_b's own lessons already depend on that exact
+  noun=1/verb=2/adj=3 mapping. Since this lesson's own order is
+  presence=1/noun=2/verb=3/adj=4, the heading cells compose two smaller, reusable
+  `ui_label` keys instead: `test_label` (bare "Тест"/"Test"/"Τεστ") + a topic key
+  (`presence_test_topic`/`noun_test_topic`/`verb_test_topic`/`adj_test_topic`), e.g.
+  `f"## {t_ui('test_label', lang)} 1: {t_ui('presence_test_topic', lang)}"` — the
+  number itself is a plain digit, not translated. Reuse this composable pair for any
+  future lesson that needs its own test ordering, rather than adding another
+  `testN_heading`-style monolithic key.
+- **Two vocab TSVs coexist, don't confuse them**: `nouns.tsv`/`verbs.tsv`/`adjectives.tsv`
+  (lemma-based, `Word\tTranslation`, the full 26/15/10-word curated class vocabulary from
+  the dated master-notes section — feeds the common-words paradigm-drill tests) vs.
+  `poem_vocab.tsv` (form-based, only the poem's own inflected words — feeds the
+  translation-presence pool only, see above). `vocabulary.tsv` (3-col,
+  `Word\tTranslation\tType`) is a third, non-drilled reference table for multi-word
+  phrases/literary terms that don't fit a single-lemma drill — same pattern
+  kapodistrias's own `vocabulary.tsv` already uses.
+- Tested end-to-end via marimo-pair after the initial build, the plain-text/reorder
+  revision, an `/simplify` cleanup pass, and the `_parse_greek`/`_parse_trans` extraction
+  (0 errors across 52 cells throughout; verified real rendered content, not just
+  "no error": noun drill with a real word, translation-presence items, all 4 heading
+  numbers, the dropdown's translation order, and the plain-text poem markup). The
+  parser extraction was also verified against `ancient_greek/odyssey/2026_07_20`
+  (temporarily pointed at the local `eee-project` checkout) — identical `STANZAS`/
+  `RHYTHM_HTML`/`QUIZ_WORDS_RAW`/`CLICKABLE_FORMS` shape before and after.

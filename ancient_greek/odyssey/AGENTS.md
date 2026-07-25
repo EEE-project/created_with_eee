@@ -108,7 +108,7 @@ Identify cells by content, not by ID — IDs change after each save.
 | `tp_cv, tp_set_cv = mo.state(None)` | translation-presence state (own `tp_*` state block) |
 | `stanza_selector = mo.ui.dropdown(...)` | stanza picker |
 | `trans_selector = mo.ui.dropdown(...)` | translation picker |
-| `def _parse_greek(md)` / `def _parse_trans(md)` | text parsers + `STANZAS`/`RHYTHM_HTML`/`TRANS_DESC` builders |
+| `eee.parse_stanza_text(...)` / `eee.parse_stanza_translations(...)` | text parsers (shared `eee_project` functions, `ref_prefix="### Odyss. "`) + `STANZAS`/`RHYTHM_HTML`/`TRANS_DESC` builders |
 | `import csv` / `QUIZ_WORDS_RAW = gu.resolve_word_grammar(...)` | vocab TSV loader |
 | `QUIZ_WORDS = gu.sample_session_items(...)` | word-quiz session sample (filter hardcoded `"none"`) |
 | `CLICKABLE_FORMS = eee.grc_coverage_words(...)` / `HOMER_WORDS = ...` | click targets + homer-highlight set for `interactive_text` |
@@ -124,8 +124,11 @@ Identify cells by content, not by ID — IDs change after each save.
 ## CRITICAL: Text from `.md` files, never hardcoded
 
 Greek text and translations (incl. the interlinear gloss, see below) live in two
-Markdown files read at runtime by the `_parse_*` functions. Never copy poem
-lines or translations into Python cells.
+Markdown files read at runtime by `eee.parse_stanza_text`/`eee.parse_stanza_translations`
+(shared `eee_project` functions — every lesson notebook calls these with
+`ref_prefix="### Odyss. "` instead of defining its own local parser; see their
+docstrings in `eee_project/notebook_utils.py` for the exact file-format contract
+they implement). Never copy poem lines or translations into Python cells.
 
 ### `greek.md` — Greek source text (Murray 1919)
 
@@ -139,8 +142,9 @@ lines or translations into Python cells.
 ...
 ```
 
-Rules: `### Odyss. X.XX–XX` → stanza ref key (stripped of the 11-char prefix).
-Lines under heading → `stanza["lines"]`. Lines starting `<!--` are skipped.
+Rules (implemented by `eee.parse_stanza_text`): `### Odyss. X.XX–XX` → stanza ref
+key (stripped of the `ref_prefix`). Lines under heading → `stanza["lines"]`.
+Lines starting `<!--` are skipped.
 
 ### `translations_ru.md` — literary translations + interlinear gloss
 
@@ -170,7 +174,7 @@ Lines under heading → `stanza["lines"]`. Lines starting `<!--` are skipped.
 <!-- **Вересаев, 1953** · рус., проза · ... -->
 ```
 
-Rules: `## Name` → translator key; `<!-- **...** -->` on next line → display
+Rules (implemented by `eee.parse_stanza_translations`): `## Name` → translator key; `<!-- **...** -->` on next line → display
 description (goes into `TRANS_DESC` dict). `### Odyss.` → stanza ref. `---`
 separates translators. Every non-empty line under a `### Odyss.` heading (up to
 the next heading or `---`) is one poem line's translation — **one line in, one

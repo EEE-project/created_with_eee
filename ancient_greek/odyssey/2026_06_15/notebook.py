@@ -687,44 +687,12 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _():
+def _(eee):
     from pathlib import Path as _P
 
-    def _parse_greek(md):
-        out, ref, buf = {}, None, []
-        for L in md.splitlines():
-            if L.startswith("### Odyss. "):
-                if ref:
-                    out[ref] = buf
-                ref, buf = L[11:].strip(), []
-            elif ref and L.strip() and not L.startswith("<!--"):
-                buf.append(L.strip())
-        if ref:
-            out[ref] = buf
-        return out
-
-    def _parse_trans(md):
-        out, desc, tr, ref, buf = {}, {}, None, None, []
-        for L in md.splitlines():
-            if L.startswith("## "):
-                if tr and ref and buf:
-                    out.setdefault(tr, {})[ref] = "\n".join(buf)
-                tr, ref, buf = L[3:].strip(), None, []
-            elif tr and ref is None and L.startswith("<!-- **") and L.endswith("-->"):
-                desc[tr] = L[4:-3].strip()
-            elif L.startswith("### Odyss. "):
-                if tr and ref and buf:
-                    out.setdefault(tr, {})[ref] = "\n".join(buf)
-                ref, buf = L[11:].strip(), []
-            elif ref and L.strip() and L.strip() != "---":
-                buf.append(L)
-        if tr and ref and buf:
-            out.setdefault(tr, {})[ref] = "\n".join(buf)
-        return out, desc
-
     _root = _P(__file__).parent
-    _greek = _parse_greek((_root / "greek.md").read_text(encoding="utf-8"))
-    _trans_ru, _desc_ru = _parse_trans((_root / "translations_ru.md").read_text(encoding="utf-8"))
+    _greek = eee.parse_stanza_text((_root / "greek.md").read_text(encoding="utf-8"), ref_prefix="### Odyss. ")
+    _trans_ru, _desc_ru = eee.parse_stanza_translations((_root / "translations_ru.md").read_text(encoding="utf-8"), ref_prefix="### Odyss. ")
     TRANS_DESC = _desc_ru
     STANZAS = [
         {
