@@ -128,7 +128,7 @@ def _(df_noun, mo, tbl_sel_n):
 
 
 @app.cell(hide_code=True)
-def _(gu, mo, random, session_total_n, set_session_total_n, table_noun):
+def _(eee, gu, mo, random, session_total_n, set_session_total_n, table_noun):
     words_noun = gu.get_words(table_noun)
     words4test_noun, set_words4test_noun = mo.state(words_noun.copy() if words_noun else [])
     if words_noun and len(words_noun) > session_total_n():
@@ -139,7 +139,7 @@ def _(gu, mo, random, session_total_n, set_session_total_n, table_noun):
     current_noun, set_current_noun = mo.state(None)
     captured_simple, set_captured_simple = mo.state(None)
     captured_article, set_captured_article = mo.state(None)
-    _clk = lambda v: (v or 0) + 1
+    _clk = eee.increment_counter
     skip_button_n = mo.ui.button(label="Пропустить", on_click=_clk)
     clear_button_n = mo.ui.button(label="Очистить", on_click=_clk)
     skip_count_n, set_skip_count_n = mo.state(0)
@@ -190,6 +190,7 @@ def _(
     art_noun_form,
     captured_article,
     captured_simple,
+    eee,
     mo,
     noun_form,
     set_submit_count_n,
@@ -203,7 +204,7 @@ def _(
     _match_s = _snap_s is not None and [v.strip() for v in _vals_s] == [v.strip() for v in (_snap_s.value or [])]
     _match_a = _snap_a is not None and [v.strip() for v in _vals_a] == [v.strip() for v in (_snap_a.value or [])]
     _dirty = (_has_s and not _match_s) or (_has_a and not _match_a)
-    _clk = lambda v: (v or 0) + 1
+    _clk = eee.increment_counter
     submit_button_n = mo.ui.button(label="Проверить", on_click=_clk, kind="warn" if _dirty else "neutral")
     set_submit_count_n(0)
     return (submit_button_n,)
@@ -445,7 +446,7 @@ def _(gu, mo):
 
 
 @app.cell(hide_code=True)
-def _(gu, mo, random, session_total_v, set_session_total_v, table_verb):
+def _(eee, gu, mo, random, session_total_v, set_session_total_v, table_verb):
     words_verb = gu.get_words(table_verb)
     words4test_verb, set_words4test_verb = mo.state(words_verb.copy() if words_verb else [])
     if words_verb and len(words_verb) > session_total_v():
@@ -455,7 +456,7 @@ def _(gu, mo, random, session_total_v, set_session_total_v, table_verb):
     verb_msg, set_verb_msg = mo.state("")
     captured_verb, set_captured_verb = mo.state(None)
     cv_verb, set_cv_verb = mo.state(None)
-    _clk = lambda v: (v or 0) + 1
+    _clk = eee.increment_counter
     skip_button_v = mo.ui.button(label="Пропустить", on_click=_clk)
     clear_button_v = mo.ui.button(label="Очистить", on_click=_clk)
     skip_count_v, set_skip_count_v = mo.state(0)
@@ -495,7 +496,7 @@ def _(clear_count_v, cv_verb, gu, tense_selector, words4test_verb, words_verb):
 
 
 @app.cell(hide_code=True)
-def _(captured_verb, mo, set_submit_count_v, tense_selector, verb_fields):
+def _(captured_verb, eee, mo, set_submit_count_v, tense_selector, verb_fields):
     _values = verb_fields.value if verb_fields is not None else []
     _snap = captured_verb()
     _has_input = bool(_values and any(v.strip() for v in _values))
@@ -505,7 +506,7 @@ def _(captured_verb, mo, set_submit_count_v, tense_selector, verb_fields):
         and [v.strip() for v in _values] == [v.strip() for v in (_snap.value or [])]
     )
     _dirty = _has_input and not _matches_snap
-    _clk = lambda v: (v or 0) + 1
+    _clk = eee.increment_counter
     submit_button_v = mo.ui.button(label="Проверить", on_click=_clk, kind="warn" if _dirty else "neutral")
     set_submit_count_v(0)
     return (submit_button_v,)
@@ -695,7 +696,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(gu, mo, random, session_total_a, set_session_total_a, table_adj):
+def _(eee, gu, mo, random, session_total_a, set_session_total_a, table_adj):
     adj_words = gu.get_words(table_adj)
     words4test_adj, set_words4test_adj = mo.state(adj_words.copy() if adj_words else [])
     if adj_words and len(adj_words) > session_total_a():
@@ -705,7 +706,7 @@ def _(gu, mo, random, session_total_a, set_session_total_a, table_adj):
     adj_last_passed_mesg, set_adj_last_passed_mesg = mo.state("")
     adj_cv, set_adj_cv = mo.state(None)
     captured_adj, set_captured_adj = mo.state(None)
-    _clk = lambda v: (v or 0) + 1
+    _clk = eee.increment_counter
     skip_button_a = mo.ui.button(label="Пропустить", on_click=_clk)
     clear_button_a = mo.ui.button(label="Очистить", on_click=_clk)
     skip_count_a, set_skip_count_a = mo.state(0)
@@ -742,13 +743,13 @@ def _(adj_cv, clear_count_a, gu, mode_selector):
 
 
 @app.cell(hide_code=True)
-def _(adj_form, captured_adj, mo, set_submit_count_a):
+def _(adj_form, captured_adj, eee, mo, set_submit_count_a):
     _values = adj_form.value if adj_form is not None else []
     _snap = captured_adj()
     _has_input = bool(_values and any(v.strip() for v in _values))
     _matches_snap = _snap is not None and [v.strip() for v in _values] == [v.strip() for v in (_snap.value or [])]
     _dirty = _has_input and not _matches_snap
-    _clk = lambda v: (v or 0) + 1
+    _clk = eee.increment_counter
     submit_button_a = mo.ui.button(label="Проверить", on_click=_clk, kind="warn" if _dirty else "neutral")
     set_submit_count_a(0)
     return (submit_button_a,)
