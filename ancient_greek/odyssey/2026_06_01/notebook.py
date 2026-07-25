@@ -679,17 +679,17 @@ def _():
     from modern_greek_backend_eee import ModernGreekBackend
 
     # union recognizer for coverage + quiz — all diachronic rungs, incl. Classical Attic (pratt + ltrg + lsj)
-    ag_backend = AncientGreekBackend(lexicons=["homer", "morpheus", "odyssey_morpheus", "lxx", "morphgnt", "pratt", "ltrg", "lsj"])
+    ag_backend = AncientGreekBackend.for_period("epic", "attic", "hellenistic_koine", "roman_koine", extra_lexicons=["odyssey_morpheus"])
     # odyssey_morpheus is Epic-register, Odyssey-course-vocabulary-specific --
-    # merged alongside homer/morpheus (same register), not lsj/byzantine (Attic/Koine).
-    ag_homer = AncientGreekBackend(lexicons=["homer", "morpheus", "odyssey_morpheus"])
-    ag_lsj = AncientGreekBackend(lexicons=["pratt", "ltrg", "lsj"])
-    ag_lxx = AncientGreekBackend(lexicons=["lxx"])
-    ag_morphgnt = AncientGreekBackend(lexicons=["morphgnt"])
+    # merged alongside homer (same register), not lsj/byzantine (Attic/Koine).
+    ag_homer = AncientGreekBackend.for_period("epic", extra_lexicons=["odyssey_morpheus"])
+    ag_lsj = AncientGreekBackend.for_period("attic")
+    ag_lxx = AncientGreekBackend.for_period("hellenistic_koine")
+    ag_morphgnt = AncientGreekBackend.for_period("roman_koine")
     # byzantine is a sparse exceptions layer, not a standalone engine -- merge
     # onto the same Koine/Attic base the other rungs use so it inherits their
     # lemma coverage and only overrides the specific cells it documents.
-    ag_byzantine = AncientGreekBackend(lexicons=["lxx", "morphgnt", "pratt", "ltrg", "lsj", "byzantine"])
+    ag_byzantine = AncientGreekBackend.for_period("byzantine")
     grc_lexicons = {"homer": ag_homer, "lsj": ag_lsj, "lxx": ag_lxx, "morphgnt": ag_morphgnt, "byzantine": ag_byzantine}
     um_backend = UniMorphBackend(language="grc")
     mg = ModernGreekBackend()   # Modern-Greek rung of the diachronic dropdown
