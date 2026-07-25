@@ -723,14 +723,12 @@ def _(
     eee,
     gu,
 ):
-    import csv
     from pathlib import Path
 
-    _vocab_path = Path(__file__).parent / "vocab_IX_19-38.tsv"
-    with open(_vocab_path, encoding="utf-8") as _f:
-        QUIZ_WORDS_RAW = gu.resolve_word_grammar(
-            list(csv.DictReader(_f, delimiter="\t")), ag_backend, "ru"
-        )
+    QUIZ_WORDS_RAW = gu.resolve_word_grammar(
+        gu.load_inflected_vocab_tsv("vocab_IX_19-38.tsv", nb_dir=Path(__file__).parent),
+        ag_backend, "ru"
+    )
 
     _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt), ("byzantine", ag_byzantine)]
 
