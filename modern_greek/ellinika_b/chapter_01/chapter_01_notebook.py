@@ -3,6 +3,7 @@
 # dependencies = [
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
 #     "marimo>=0.23.14",
+#     "modern-greek-backend-eee @ git+https://codeberg.org/EEE-project/modern-greek-backend-eee.git",
 #     "modern-greek-eee @ git+https://github.com/EEE-project/modern-greek-eee.git",
 #     "modern-greek-inflexion-eee @ git+https://github.com/EEE-project/modern-greek-inflexion-eee.git",
 #     "pandas",
@@ -10,6 +11,7 @@
 #
 # [tool.uv.sources]
 # eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
+# modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
 # modern-greek-eee = { git = "https://github.com/EEE-project/modern-greek-eee" }
 # modern-greek-inflexion-eee = { git = "https://github.com/EEE-project/modern-greek-inflexion-eee" }
 # ///
@@ -1383,24 +1385,22 @@ def _():
     return gu, mo, notebook_dir, os, pd, random
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _():
     # Modern Greek eee_project: imports
     import eee_project as eee
     from eee_project import GreekUtils, MODERN_GREEK
     from modern_greek_backend_eee import ModernGreekBackend
-    from unimorph_backend_eee import UniMorphBackend
 
-    return GreekUtils, MODERN_GREEK, ModernGreekBackend, UniMorphBackend, eee
+    return GreekUtils, MODERN_GREEK, ModernGreekBackend, eee
 
 
-@app.cell
-def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, UniMorphBackend, eee, mo):
+@app.cell(hide_code=True)
+def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, eee, mo):
     # Modern Greek eee_project: backend setup
     _mg_backend = ModernGreekBackend()
     eee.register_backend("el", _mg_backend, backend="modern-greek")
-    eee.register_backend("el", UniMorphBackend("el"), backend="unimorph")
-    eee.set_chain("el", ["modern-greek", "unimorph"])
+    eee.set_chain("el", ["modern-greek"])
     gu2 = GreekUtils(_mg_backend, mo, eee_module=eee, config=MODERN_GREEK)
     return (gu2,)
 

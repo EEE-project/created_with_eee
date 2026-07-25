@@ -77,6 +77,31 @@ The **index/topbar infrastructure is unified** — Ellinika Β's own `chapter_NN
 
 TSV format: `Word\tTranslation`, English headers, hardcoded by the library — never translate the headers themselves, only the notebook's own UI strings.
 
+## Notebook cell structure (canonical order) — verified 2026-07-25 across all 10 chapters
+
+Cell **file order = visual page order** in marimo (same rule as the Odyssey course). Every chapter should follow chapter 1's layout exactly:
+
+```
+eee_topbar cell                              (topbar, always cell 1)
+# Title                                       (cell 2 — course/chapter heading + molab badge)
+[Grammar cell(s), in the chapter's own topic order]
+# Useful phrases cell
+# Pronunciation cell
+# Test 1 heading  →  [Noun section cells]
+# Test 2 heading  →  [Verb section cells]     (includes # Tense selector)
+# Test 3 heading  →  [Adjective section cells]
+── settings cluster, always at the very end, in this order ──
+t_ui = gu2.ui_label
+# Language selector
+# Imports
+# Modern Greek eee_project: imports
+# Modern Greek eee_project: backend setup
+```
+
+**Chapter 2 violated this twice, both found by the user directly in the rendered page and fixed 2026-07-24/25 (bug-1385, bug-1391):** first the Tense-selector cell sat in a gap where "Test 2 heading" was missing entirely; separately, 4 settings-type cells (`Imports`, `t_ui`, `Language selector`, plus one Grammar cell) sat between the topbar and Title, pushing Title to position 6. Both fixed via `code_mode` `move_cell`/`create_cell`. **All 10 chapters now confirmed to put Title at position 2 and keep the full settings cluster at the end** — re-check with the disk-only script pattern in `check_top_order_all.py`-style regex extraction (no live session needed) before assuming a chapter is fine.
+
+**Known cosmetic label-wording variants — not bugs, don't "fix" them into false uniformity:** chapters 6/7 have `# Language selector` positioned *before* `t_ui = gu2.ui_label` instead of after (both still correctly in the end cluster, just swapped with each other — harmless, no dependency between them); chapters 8/9/11/12 label it `# Language selector — fixed-position overlay` instead of the plain `# Language selector` used in 1-4/6/7 (confirmed same position, just longer text); several chapters use `# Adj file upload`/`# Adj table` instead of `# Adjective file upload`/`# Adjective table`; 4 chapters use `# Mode selector — language-dependent` instead of plain `# Mode selector`. A structural check should normalize these wording differences before comparing chapters, the same way the Odyssey course's own landmark-sequence check does.
+
 ## Editing an existing chapter
 
 Use the `marimo-pair` skill against `chapter_NN/chapter_NN_notebook.py` — never hand-edit the `.py` file directly while a session might have it open. From inside the chapter directory: `marimo edit chapter_NN_notebook.py --no-token --no-skew-protection --headless -p <port>`, then drive it via `code_mode` (`ctx.cells`, `ctx.edit_cell`, `ctx.run_cell`).

@@ -3,6 +3,7 @@
 # dependencies = [
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
 #     "marimo>=0.23.14",
+#     "modern-greek-backend-eee @ git+https://codeberg.org/EEE-project/modern-greek-backend-eee.git",
 #     "modern-greek-eee @ git+https://github.com/EEE-project/modern-greek-eee.git",
 #     "modern-greek-inflexion-eee @ git+https://github.com/EEE-project/modern-greek-inflexion-eee.git",
 #     "pandas",
@@ -10,6 +11,7 @@
 #
 # [tool.uv.sources]
 # eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
+# modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
 # modern-greek-eee = { git = "https://github.com/EEE-project/modern-greek-eee" }
 # modern-greek-inflexion-eee = { git = "https://github.com/EEE-project/modern-greek-inflexion-eee" }
 # ///
@@ -36,37 +38,31 @@ def _(language_selector, mo):
 
 
 @app.cell(hide_code=True)
-def _():
-    # Imports
-    import os
-    import random
-    import pandas as pd
-    import marimo as mo
-    from modern_greek_eee import greek_utils as gu
-    notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, notebook_dir, os, pd, random
+def _(language_selector, mo):
+    # Title
+    _lang = language_selector.value
+    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_LgoXtFZWGveFacZETuUiZx)"
+    if _lang == "ru":
+        _sub = "Глава 2 — Жильё · B1"
+        _gl, _tl = "Грамматика", "Тесты"
+        _tc = "Существительные · Глаголы · Прилагательные"
+    elif _lang == "el":
+        _sub = "Ενότητα 2 — Κατοικία · B1"
+        _gl, _tl = "Γραμματική", "Τεστ"
+        _tc = "Ουσιαστικά · Ρήματα · Επίθετα"
+    else:
+        _sub = "Unit 2 — Housing · B1"
+        _gl, _tl = "Grammar", "Tests"
+        _tc = "Nouns · Verbs · Adjectives"
+    _gc = "Άρθρα · Έμμεσα Αντικείμενα · Γενική · Κτητικές Αντωνυμίες (δικός μου)"
+    _out = mo.md(f"""# «Σπίτι μου σπιτάκι μου» 🏠
+    ## {_sub} {_badge}
 
-
-@app.cell(hide_code=True)
-def _():
-    # Modern Greek eee_project: imports
-    import eee_project as eee
-    from eee_project import GreekUtils, MODERN_GREEK
-    from modern_greek_backend_eee import ModernGreekBackend
-    from unimorph_backend_eee import UniMorphBackend
-
-    return GreekUtils, MODERN_GREEK, ModernGreekBackend, UniMorphBackend, eee
-
-
-@app.cell(hide_code=True)
-def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, UniMorphBackend, eee, mo):
-    # Modern Greek eee_project: backend setup
-    _mg_backend = ModernGreekBackend()
-    eee.register_backend("el", _mg_backend, backend="modern-greek")
-    eee.register_backend("el", UniMorphBackend("el"), backend="unimorph")
-    eee.set_chain("el", ["modern-greek", "unimorph"])
-    gu2 = GreekUtils(_mg_backend, mo, eee_module=eee, config=MODERN_GREEK)
-    return (gu2,)
+    **{_gl}:** {_gc}
+    **{_tl}:** {_tc}
+    """)
+    _out
+    return
 
 
 @app.cell(hide_code=True)
@@ -119,56 +115,6 @@ def _(language_selector, mo):
     The question word **ποιανού / τίνος** = "whose"
     """)
     _md
-    return
-
-
-@app.cell(hide_code=True)
-def _(gu2):
-    t_ui = gu2.ui_label
-    return (t_ui,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    # Language selector
-    language_selector = mo.ui.dropdown(
-        options={"English": "en", "Русский": "ru", "Ελληνικά": "el"},
-        value="English",
-        label="🌐",
-    )
-    mo.Html(f"""
-    <div style="position: fixed; top: 60px; right: 10px; z-index: 1000; background: white; padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-        {language_selector}
-    </div>
-    """)
-    return (language_selector,)
-
-
-@app.cell(hide_code=True)
-def _(language_selector, mo):
-    # Title
-    _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_LgoXtFZWGveFacZETuUiZx)"
-    if _lang == "ru":
-        _sub = "Глава 2 — Жильё · B1"
-        _gl, _tl = "Грамматика", "Тесты"
-        _tc = "Существительные · Глаголы · Прилагательные"
-    elif _lang == "el":
-        _sub = "Ενότητα 2 — Κατοικία · B1"
-        _gl, _tl = "Γραμματική", "Τεστ"
-        _tc = "Ουσιαστικά · Ρήματα · Επίθετα"
-    else:
-        _sub = "Unit 2 — Housing · B1"
-        _gl, _tl = "Grammar", "Tests"
-        _tc = "Nouns · Verbs · Adjectives"
-    _gc = "Άρθρα · Έμμεσα Αντικείμενα · Γενική · Κτητικές Αντωνυμίες (δικός μου)"
-    _out = mo.md(f"""# «Σπίτι μου σπιτάκι μου» 🏠
-    ## {_sub} {_badge}
-
-    **{_gl}:** {_gc}
-    **{_tl}:** {_tc}
-    """)
-    _out
     return
 
 
@@ -1445,6 +1391,60 @@ def _(
         done_message=t_ui("test3_done", _lang),
     ) if words_adj else mo.md(t_ui("adj_empty", _lang))
     return
+
+
+@app.cell(hide_code=True)
+def _(gu2):
+    t_ui = gu2.ui_label
+    return (t_ui,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    # Language selector
+    language_selector = mo.ui.dropdown(
+        options={"English": "en", "Русский": "ru", "Ελληνικά": "el"},
+        value="English",
+        label="🌐",
+    )
+    mo.Html(f"""
+    <div style="position: fixed; top: 60px; right: 10px; z-index: 1000; background: white; padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+        {language_selector}
+    </div>
+    """)
+    return (language_selector,)
+
+
+@app.cell(hide_code=True)
+def _():
+    # Imports
+    import os
+    import random
+    import pandas as pd
+    import marimo as mo
+    from modern_greek_eee import greek_utils as gu
+    notebook_dir = os.path.dirname(os.path.abspath(__file__))
+    return gu, mo, notebook_dir, os, pd, random
+
+
+@app.cell(hide_code=True)
+def _():
+    # Modern Greek eee_project: imports
+    import eee_project as eee
+    from eee_project import GreekUtils, MODERN_GREEK
+    from modern_greek_backend_eee import ModernGreekBackend
+
+    return GreekUtils, MODERN_GREEK, ModernGreekBackend, eee
+
+
+@app.cell(hide_code=True)
+def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, eee, mo):
+    # Modern Greek eee_project: backend setup
+    _mg_backend = ModernGreekBackend()
+    eee.register_backend("el", _mg_backend, backend="modern-greek")
+    eee.set_chain("el", ["modern-greek"])
+    gu2 = GreekUtils(_mg_backend, mo, eee_module=eee, config=MODERN_GREEK)
+    return (gu2,)
 
 
 if __name__ == "__main__":
