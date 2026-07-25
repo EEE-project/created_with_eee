@@ -8,7 +8,7 @@
 # ]
 #
 # [tool.uv.sources]
-# eee-project = { path = "/data/work/sadov/greek/git/codeberg.org/eee-project" }
+# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
 # modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
 # ///
 
