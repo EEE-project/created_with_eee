@@ -172,7 +172,7 @@ def _(NB_DIR, NB_REMOTE, gu):
         'CONSPECTVS GRAMMATICVS II_graecus.pdf',
     ):
         gu.ensure_file(_pdf, nb_dir=NB_DIR, remote_base=NB_REMOTE)
-    for _f in ('cap2_nouns.tsv', 'nouns.tsv', 'adjectives.tsv'):
+    for _f in ('cap2_nouns.tsv', 'cap2_adjectives.tsv', 'nouns.tsv', 'adjectives.tsv'):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)
     return (load_tsv,)
 
@@ -476,6 +476,141 @@ def _(
 
 
 @app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Склонение прилагательных
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(NB_DIR, NB_REMOTE, gu):
+    WORDS_ADJ_ADJ6 = [
+        {"Word": w["form"], "Translation": w["meaning"]}
+        for w in gu.load_vocab_tsv('cap2_adjectives.tsv', nb_dir=NB_DIR, remote_base=NB_REMOTE)
+    ]
+    return (WORDS_ADJ_ADJ6,)
+
+
+@app.cell(hide_code=True)
+def _(WORDS_ADJ_ADJ6, mo):
+    w4t_adj6, set_w4t_adj6 = mo.state(list(WORDS_ADJ_ADJ6))
+    hist_adj6, set_hist_adj6 = mo.state([])
+    msg_adj6, set_msg_adj6 = mo.state("")
+    cap_adj6, set_cap_adj6 = mo.state(None)
+    entered_adj6, set_entered_adj6 = mo.state({})
+    sub_cnt_adj6, set_sub_cnt_adj6 = mo.state(0)
+    prev_cnt_adj6, set_prev_cnt_adj6 = mo.state(0)
+    nxt_cnt_adj6, set_nxt_cnt_adj6 = mo.state(0)
+    restart_cnt_adj6, set_restart_cnt_adj6 = mo.state(0)
+    entercnt_adj6, set_entercnt_adj6 = mo.state(0)
+    return (
+        cap_adj6,
+        entercnt_adj6,
+        entered_adj6,
+        hist_adj6,
+        msg_adj6,
+        nxt_cnt_adj6,
+        prev_cnt_adj6,
+        restart_cnt_adj6,
+        set_cap_adj6,
+        set_entercnt_adj6,
+        set_entered_adj6,
+        set_hist_adj6,
+        set_msg_adj6,
+        set_nxt_cnt_adj6,
+        set_prev_cnt_adj6,
+        set_restart_cnt_adj6,
+        set_sub_cnt_adj6,
+        set_w4t_adj6,
+        sub_cnt_adj6,
+        w4t_adj6,
+    )
+
+
+@app.cell(hide_code=True)
+def _(
+    entered_adj6,
+    gu,
+    hist_adj6,
+    set_entercnt_adj6,
+    set_nxt_cnt_adj6,
+    set_prev_cnt_adj6,
+    w4t_adj6,
+):
+    cv_adj6 = w4t_adj6()[0] if w4t_adj6() else None
+    _adj_labels_adj6 = gu.adjective_slot_labels("simple", lang="ru")
+    _entered_form_adj6 = entered_adj6().get(cv_adj6["Word"]) if cv_adj6 else None
+    adj_form_adj6, prev_btn_adj6, nxt_btn_adj6, restart_btn_adj6 = gu.paradigm_drill_widgets(
+        labels=_adj_labels_adj6,
+        values=_entered_form_adj6,
+        history_len=len(hist_adj6()),
+        remaining_len=len(w4t_adj6()),
+        next_label="Следующее",
+        prev_label="Предыдущее",
+    )
+    set_prev_cnt_adj6(0)
+    set_nxt_cnt_adj6(0)
+    set_entercnt_adj6(0)
+    return (
+        adj_form_adj6,
+        cv_adj6,
+        nxt_btn_adj6,
+        prev_btn_adj6,
+        restart_btn_adj6,
+    )
+
+
+@app.cell(hide_code=True)
+def _(
+    WORDS_ADJ_ADJ6,
+    adj_form_adj6,
+    cap_adj6,
+    check_btn_adj6,
+    cv_adj6,
+    entercnt_adj6,
+    entered_adj6,
+    gu,
+    hist_adj6,
+    msg_adj6,
+    nxt_btn_adj6,
+    nxt_cnt_adj6,
+    prev_btn_adj6,
+    prev_cnt_adj6,
+    restart_btn_adj6,
+    restart_cnt_adj6,
+    set_cap_adj6,
+    set_entercnt_adj6,
+    set_entered_adj6,
+    set_hist_adj6,
+    set_msg_adj6,
+    set_nxt_cnt_adj6,
+    set_prev_cnt_adj6,
+    set_restart_cnt_adj6,
+    set_sub_cnt_adj6,
+    set_w4t_adj6,
+    sub_cnt_adj6,
+    w4t_adj6,
+):
+    gu.adjective_paradigm_drill_form(
+        w4t_adj6, set_w4t_adj6, hist_adj6, set_hist_adj6, msg_adj6, set_msg_adj6,
+        cap_adj6, set_cap_adj6, entered_adj6, set_entered_adj6,
+        sub_cnt_adj6, set_sub_cnt_adj6, prev_cnt_adj6, set_prev_cnt_adj6,
+        nxt_cnt_adj6, set_nxt_cnt_adj6, entercnt_adj6, set_entercnt_adj6,
+        restart_cnt_adj6, set_restart_cnt_adj6,
+        cv_adj6, adj_form_adj6, check_btn_adj6, prev_btn_adj6, nxt_btn_adj6, restart_btn_adj6,
+        vocab=WORDS_ADJ_ADJ6,
+        mode="simple",
+        word_key="Word",
+        meaning_key="Translation",
+        meaning_label="Перевод",
+        title="## Упражнение 4 · Склонение прилагательных",
+        done_message="✅ Все прилагательные пройдены!",
+    )
+    return
+
+
+@app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
     mo.md(f"""
     ## τὸ προστεταγμένον · Домашнее задание
@@ -571,7 +706,7 @@ def _(
         history_a, set_history_a, future_a, set_future_a,
         answer_radio_a, next_btn_a, prev_btn_a,
         vocab=VOCAB_ALL,
-        title='## Упражнение 4 · Выбрать слово',
+        title='## Упражнение 5 · Выбрать слово',
     )
     return
 
@@ -639,7 +774,7 @@ def _(
         history_aw, set_history_aw, future_aw, set_future_aw,
         write_input_aw, dia_aw, check_btn_aw, prev_btn_aw, next_btn_aw,
         vocab=VOCAB_ALL,
-        title='## Упражнение 5 · Написать греческое слово',
+        title='## Упражнение 6 · Написать греческое слово',
         comment='Для ввода используйте **polytonic Greek keyboard** или кнопки диакритики ниже.<br>**Как пользоваться:** нажмите кнопку знака диакритики → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается.',
     )
     return
@@ -701,6 +836,15 @@ def _(cap_n3, cv_n3, gu, noun_form_n3, set_sub_cnt_n3):
     )
     set_sub_cnt_n3(0)
     return (check_btn_n3,)
+
+
+@app.cell(hide_code=True)
+def _(adj_form_adj6, cap_adj6, cv_adj6, gu, set_sub_cnt_adj6):
+    check_btn_adj6 = gu.dirty_check_button(
+        adj_form_adj6, cap_adj6, cv_adj6, "adj_word", word_key="Word", label="Проверить"
+    )
+    set_sub_cnt_adj6(0)
+    return (check_btn_adj6,)
 
 
 if __name__ == "__main__":

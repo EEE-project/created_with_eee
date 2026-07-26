@@ -61,3 +61,84 @@
         ASM: ἵλεων
         ASF: ἵλεων
         ASN: ἵλεων
+
+# 2-1-2 declension (-ος, -η, -ον), penult-accented (φί-λος, never shifts) --
+# NOT the stems:/accents: mechanism above: a bare "φιλ" stem produced a
+# real, confirmed accent bug in the feminine cells (persistent() shifted the
+# accent to the ultima -- "φιλή" -- for a stem this short, when the real
+# word keeps the accent on the first syllable throughout every cell,
+# cross-verified against Wiktionary's full declension table). Full forms:
+# override instead, same reasoning as ἵλεως above but for a different root
+# cause (a stemming-engine limitation, not genuine grammatical irregularity).
+φίλος:
+    forms:
+        NSM: φίλος
+        GSM: φίλου
+        DSM: φίλῳ
+        ASM: φίλον
+        VSM: φίλε
+        NSF: φίλη
+        GSF: φίλης
+        DSF: φίλῃ
+        ASF: φίλην
+        VSF: φίλη
+        NSN: φίλον
+        GSN: φίλου
+        DSN: φίλῳ
+        ASN: φίλον
+        VSN: φίλον
+        NPM: φίλοι
+        GPM: φίλων
+        DPM: φίλοις
+        APM: φίλους
+        VPM: φίλοι
+        NPF: φίλαι
+        GPF: φίλων
+        DPF: φίλαις
+        APF: φίλας
+        VPF: φίλαι
+        NPN: φίλα
+        GPN: φίλων
+        DPN: φίλοις
+        APN: φίλα
+        VPN: φίλα
+
+# 2-1-2 declension (-ός, -ά, -όν), oxytone, but the feminine keeps "α" (not
+# "η") throughout the singular because the stem ends in -ρ- (the "α-purum"
+# rule: long alpha stays alpha after ε/ι/ρ, doesn't shift to eta) -- another
+# real, confirmed stems:/accents: bug: the mechanical stem produced
+# "ἐχθρῆς" (eta) for the genitive singular feminine, cross-checked and
+# wrong against Wiktionary's declension table (ἐχθρᾶς, alpha). Full forms:
+# override, same reasoning as φίλος above.
+ἐχθρός:
+    forms:
+        NSM: ἐχθρός
+        GSM: ἐχθροῦ
+        DSM: ἐχθρῷ
+        ASM: ἐχθρόν
+        VSM: ἐχθρέ
+        NSF: ἐχθρά
+        GSF: ἐχθρᾶς
+        DSF: ἐχθρᾷ
+        ASF: ἐχθράν
+        VSF: ἐχθρά
+        NSN: ἐχθρόν
+        GSN: ἐχθροῦ
+        DSN: ἐχθρῷ
+        ASN: ἐχθρόν
+        VSN: ἐχθρόν
+        NPM: ἐχθροί
+        GPM: ἐχθρῶν
+        DPM: ἐχθροῖς
+        APM: ἐχθρούς
+        VPM: ἐχθροί
+        NPF: ἐχθραί
+        GPF: ἐχθρῶν
+        DPF: ἐχθραῖς
+        APF: ἐχθράς
+        VPF: ἐχθραί
+        NPN: ἐχθρά
+        GPN: ἐχθρῶν
+        DPN: ἐχθροῖς
+        APN: ἐχθρά
+        VPN: ἐχθρά
