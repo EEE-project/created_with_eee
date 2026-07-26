@@ -1,7 +1,6 @@
 # Athenaze Chapter II — noun stems (working "easy" set only).
 # APM override preserves the accent of non-oxytone nouns in acc pl (see cap1 note).
 # Deferred (don't resolve cleanly with a bare `noun:` stem — see plans/TODO.md):
-#   ζυγόν  — oxytone neuter, backend defaults to recessive accent (ζύγον, wrong)
 #   σκιά   — 1st-decl fem (long-α), yields 3rd-decl-like garbage (σκίαος)
 #   δεσπότης — 1st-decl masc, yields broken δεσπότς
 #   σπέρμα — 3rd-decl (-ματ-);  βοῦς — irregular 3rd-decl
@@ -14,6 +13,26 @@
 κέντρον:
     stems:
         noun: κεντρο
+
+# 2nd declension neuter (o-stem) — oxytone throughout, unlike the recessive
+# pair above; a bare `noun:` stem defaults every cell to recessive accent
+# (ζύγον, ζύγου, ...) since the engine only applies persistent/lemma accent
+# to non-neuter nominals (see greek-inflexion-eee accent.py). Full forms:
+# override instead, sourced from the Morpheus-confirmed data already used
+# by the "morpheus"/"palaestra_morpheus" lexicons (accent normalized to
+# citation-form acute on NSN; Morpheus's own corpus attestation has grave,
+# correct for that word's original mid-sentence position but not for an
+# isolated paradigm-table citation).
+ζυγόν:
+    forms:
+        NSN: ζυγόν
+        GSN: ζυγοῦ
+        DSN: ζυγῷ
+        ASN: ζυγόν
+        NPN: ζυγά
+        GPN: ζυγῶν
+        DPN: ζυγοῖς
+        APN: ζυγά
 
 # 2nd declension feminine (o-stem) — paroxytone, APM override for acc pl accent
 ῥάβδος:
