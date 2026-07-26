@@ -1,0 +1,63 @@
+# Athenaze Chapter II — adjective stems, same mechanism as
+# athenaze_cap1_nouns.yaml/athenaze_cap2_nouns.yaml (a plain lexicon file
+# path in AncientGreekBackend's lexicons=[...] list; load_adj_lexicons()
+# picks it up the same way load_noun_lexicons() picks up the noun YAMLs).
+# Stems are deliberately left UNACCENTED (matching pratt_adjs_lexicon.yaml's
+# own convention) -- calculate_accent()'s very first check is "if accent(w):
+# return as explicit", so a pre-accented stem would short-circuit past the
+# persistent-accent/recession-limit computation entirely and freeze the
+# lemma's own accent syllable onto every cell, even ones where standard
+# Greek accent rules require it to shift (e.g. a long genitive/dative
+# ultima pulling the accent forward). Confirmed against the already-shipped
+# ἄδικος entry in pratt_adjs_lexicon.yaml (same 2-termination, antepenult-
+# accented class as κατάρατος): an accented "κατάρατο" stem produced the
+# wrong ΚΑΤΆΡΑΤΟΥ-with-frozen-accent genitive; the unaccented "καταρατο"
+# stem below reproduces ἄδικος's own verified shift pattern exactly
+# (ἀδίκου/ἀδίκῳ/ἀδικούς etc.) cell-for-cell.
+
+# 2-1-2 declension (-ός, -ή, -όν), oxytone -- same class as pratt's ἀγαθός
+ἀργός:
+    stems:
+        M: ἀργο
+        F: ἀργη
+        N: ἀργο
+    accents:
+        - ["..N", "ἀργός"]
+
+# 2-termination (-ος, -ον; fem shares masc forms), antepenult-accented --
+# same class as pratt's ἄδικος
+κατάρατος:
+    stems:
+        M: καταρατο
+        F: καταρατο
+        N: καταρατο
+    accents:
+        - ["..N", "κατάρατος"]
+
+# Attic declension (contracted, irregular -- not the stems:/accents:
+# mechanism above, which is for regular thematic adjectives only). Singular
+# only, deliberately: cross-checked against 2 independent sources (Wiktionary's
+# own ἵλεως entry; an LSJ-derived search snippet confirming the accusative is
+# ἵλεων) which agree on every singular cell, but the plural/dual forms found
+# during research were inferred by analogy from the related noun νεώς
+# (Smyth's Attic-declension paradigm), not sourced for this adjective
+# directly -- not confident enough to ship as fact. Singular is also all a
+# beginner (Athenaze cap. 2) course realistically needs for a word almost
+# always used as a predicate adjective ("ἵλεως εἶναι"). Smyth: "the accent
+# of the nominative is kept in all cases" for this declension -- no
+# recession-limit shift, matching every cell below sharing the same accent
+# on the initial ἵ.
+ἵλεως:
+    forms:
+        NSM: ἵλεως
+        NSF: ἵλεως
+        NSN: ἵλεων
+        GSM: ἵλεω
+        GSF: ἵλεω
+        GSN: ἵλεω
+        DSM: ἵλεῳ
+        DSF: ἵλεῳ
+        DSN: ἵλεῳ
+        ASM: ἵλεων
+        ASF: ἵλεων
+        ASN: ἵλεων

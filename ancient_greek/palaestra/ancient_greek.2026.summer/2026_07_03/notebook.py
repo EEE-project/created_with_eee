@@ -709,6 +709,7 @@ def _(cfg, mo):
     NB_DIR = _Path(__file__).parent
     NB_REMOTE = f"{cfg.raw_base}/2026_07_03"
     _yamls = [NB_DIR.parent / f"athenaze_{_c}_nouns.yaml" for _c in ("cap1", "cap2")]
+    _yamls.append(NB_DIR.parent / "athenaze_cap2_adjs.yaml")
     for _y in _yamls:
         if not _y.exists():
             import urllib.request as _ur
