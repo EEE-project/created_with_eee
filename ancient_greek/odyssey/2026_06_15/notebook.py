@@ -715,12 +715,8 @@ def _(eee):
 @app.cell(hide_code=True)
 def _(
     ag_backend,
-    ag_byzantine,
-    ag_homer,
-    ag_lsj,
-    ag_lxx,
-    ag_morphgnt,
     eee,
+    grc_lexicons,
     gu,
 ):
     from pathlib import Path
@@ -730,21 +726,8 @@ def _(
         ag_backend, "ru"
     )
 
-    _LEXICONS = [("homer", ag_homer), ("lsj", ag_lsj), ("lxx", ag_lxx), ("morphgnt", ag_morphgnt), ("byzantine", ag_byzantine)]
-
     def _lexicon_tag(w):
-        if w.get("pos") not in eee.LEXICON_TAG_POS:
-            return ""
-        pos = eee.LEXICON_TAG_POS_ALIASES.get(w["pos"], w["pos"])
-        form = w.get("form", "")
-        sources = []
-        for name, backend in _LEXICONS:
-            try:
-                para = backend.paradigm(w["lemma"], pos)
-                if any(form in forms for forms in para.values()):
-                    sources.append(name)
-            except Exception:
-                pass
+        sources = eee.grc_lexicon_sources(w, lexicons=grc_lexicons)
         if not sources:
             return ""
         lexicons = ", ".join(f'"{s}"' for s in sources)
