@@ -22,10 +22,10 @@ def _(mo):
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
-        f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/lessons.tsv",
+        f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    back_url = parent_back_url(f"{_ROOT}/modern_greek/b1greeklanguageandculture/lessons.tsv")
+    back_url = parent_back_url(f"{_ROOT}/modern_greek/b1greeklanguageandculture/index.tsv")
     return back_url, cfg
 
 

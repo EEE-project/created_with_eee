@@ -28,11 +28,11 @@ Chapter 12 (2026-07-23, the last chapter — see below) had the most striking fi
 
 ```
 ellinika_b/
-  lessons.tsv              # trilingual chapter index (url, icon, greek, label_{ru,el,en}, title_{ru,el,en}, desc_{ru,el,en}, index_url)
-  notebook.py               # course index — reads lessons.tsv, one card per chapter
+  index.tsv              # trilingual chapter index (url, icon, greek, label_{ru,el,en}, title_{ru,el,en}, desc_{ru,el,en}, index_url)
+  notebook.py               # course index — reads index.tsv, one card per chapter
   chapter_NN/
-    chapter_NN_notebook.py         # the real, deployed notebook — multi-language (ru/el/en) in one file via language_selector, same pattern as every other course here. This is what molab actually serves (confirmed: lessons.tsv has exactly one molab id per chapter).
-    chapter_NN_notebook_el.py      # ⚠ legacy single-language variant — NOT deployed (lessons.tsv has no id for these). Left over from an earlier per-language-file generation approach (see Architecture below). Don't edit these expecting them to reach students.
+    chapter_NN_notebook.py         # the real, deployed notebook — multi-language (ru/el/en) in one file via language_selector, same pattern as every other course here. This is what molab actually serves (confirmed: index.tsv has exactly one molab id per chapter).
+    chapter_NN_notebook_el.py      # ⚠ legacy single-language variant — NOT deployed (index.tsv has no id for these). Left over from an earlier per-language-file generation approach (see Architecture below). Don't edit these expecting them to reach students.
     chapter_NN_notebook_en.py      # same caveat
     chapter_NN_notebook_ru.py      # same caveat
     nouns.tsv / verbs.tsv / adjectives.tsv / vocabulary.tsv   # Word\tTranslation, shared across all language variants
@@ -232,6 +232,6 @@ Hit `StaleCellError` on a freshly-opened `code_mode` context while editing these
 
 **A source edit to `eee_project` (or any editable-installed dependency) never reaches an already-running kernel** — every live session imported the package once at startup; Python's `sys.modules` cache means new methods/functions you add afterward are invisible even though the venv's editable install *does* point at your edited files (`pip show eee-project` confirms `Editable project location`). `importlib.reload()` alone isn't enough either: it re-executes the module and rebinds the module's own `GreekUtils` name to a new class object, but an *already-constructed* `gu2 = GreekUtils(...)` instance's `type(gu2)` still points at the pre-reload class — reload doesn't retroactively re-parent existing instances. Fix, in one `code_mode` call, per live session that needs the new code: delete every `eee_project`/`eee_project.*` key from `sys.modules`, `import eee_project.notebook_utils as new_nu`, then `type(ctx.globals["gu2"]).ui_label = new_nu.GreekUtils.ui_label` (patch the specific new attribute onto the *live* class object, not just re-import) — confirmed this makes the new method immediately callable on the existing `gu2` with no kernel restart. Matches this project's own "reload+patch, don't restart" convention.
 
-## Index notebook + lessons.tsv
+## Index notebook + index.tsv
 
-Same shared pattern as every other course: `notebook.py` reads `lessons.tsv` and renders one card per chapter via `ConfigStore.from_url(...)` + `eee_card_list(mo, cfg, lang_sel.value)`. One molab id per chapter (not per language variant) — `lessons.tsv`'s `url` column points at `chapter_NN_notebook.py`'s upload, never at an `_el`/`_en`/`_ru` variant.
+Same shared pattern as every other course: `notebook.py` reads `index.tsv` and renders one card per chapter via `ConfigStore.from_url(...)` + `eee_card_list(mo, cfg, lang_sel.value)`. One molab id per chapter (not per language variant) — `index.tsv`'s `url` column points at `chapter_NN_notebook.py`'s upload, never at an `_el`/`_en`/`_ru` variant.

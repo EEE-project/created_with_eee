@@ -22,10 +22,10 @@ def _(lang_sel, mo):
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
-        f"{_ROOT}/modern_greek/b1greeklanguageandculture/lessons.tsv",
+        f"{_ROOT}/modern_greek/b1greeklanguageandculture/index.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    back_url = parent_back_url(f"{_ROOT}/modern_greek/lessons.tsv")
+    back_url = parent_back_url(f"{_ROOT}/modern_greek/index.tsv")
     eee_topbar(mo, back_url=back_url, lang=lang_sel.value, titles={
         "ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture",
     }, parent_titles={

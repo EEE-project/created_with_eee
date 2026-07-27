@@ -22,10 +22,10 @@ def _(mo):
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
-        f"{_ROOT}/ancient_greek/palaestra/ancient_greek.2026.summer/lessons.tsv",
+        f"{_ROOT}/ancient_greek/palaestra/ancient_greek.2026.summer/index.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    back_url = parent_back_url(f"{_ROOT}/ancient_greek/lessons.tsv")
+    back_url = parent_back_url(f"{_ROOT}/ancient_greek/index.tsv")
     eee_topbar(mo, back_url=back_url, lang="ru", titles="Palaestra", parent_titles={
         "ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek",
     }, style="index", ga_config=cfg.ga_config())

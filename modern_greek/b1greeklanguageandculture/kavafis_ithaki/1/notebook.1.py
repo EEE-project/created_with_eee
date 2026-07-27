@@ -24,7 +24,7 @@ def _(language_selector, mo):
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
-        f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/lessons.tsv",
+        f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv",
         ga=f"{_ROOT}/ga.json",
     )
     eee_topbar(mo, back_url=cfg.index_url(), lang=language_selector.value, titles={

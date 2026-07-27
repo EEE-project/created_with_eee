@@ -4,7 +4,7 @@
 
 ```
 ancient_greek.2026.summer/
-  lessons.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
+  index.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
   notebook.py          # index/parent notebook
   2026_06_09/          # Занятие 1 · Алфавит и повелительное наклонение
   2026_06_12/          # Занятие 2 · Ударения и просодия
@@ -585,7 +585,7 @@ Word\tTranslation
 from eee_project import ConfigStore, eee_topbar
 _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
 cfg = ConfigStore.from_url(
-    f"{_ROOT}/palaestra/ancient_greek.2026.summer/lessons.tsv",
+    f"{_ROOT}/palaestra/ancient_greek.2026.summer/index.tsv",
     ga=f"{_ROOT}/ga.json",
 )
 eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles=cfg.titles())
@@ -596,7 +596,7 @@ eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles=cfg.titles())
 NB_REMOTE = f"{cfg.raw_base}/2026_06_16"   # match lesson dir name
 ```
 
-`lessons.tsv` columns: `url`, `icon`, `greek`, `label`, `title`, `desc`, `index_url`.
+`index.tsv` columns: `url`, `icon`, `greek`, `label`, `title`, `desc`, `index_url`.
 Add a row here when creating a new lesson notebook; `url` and `index_url` are both
 full, ready-to-link URLs (e.g. `https://molab.marimo.io/notebooks/nb_XXX/app`) —
 the TSV owns hosting details, not the notebook code.
@@ -616,5 +616,5 @@ the TSV owns hosting details, not the notebook code.
    - **Pattern C** if the exercise requires filling in a full paradigm (all conjugation or
      declension slots at once). Use C-verb for verbs, C-noun for nouns (which needs article
      validation via `ARTS_N3`).
-6. Upload to molab, copy the `/app` URL, add a row to `lessons.tsv`.
+6. Upload to molab, copy the `/app` URL, add a row to `index.tsv`.
 7. Update the molab badge URL in the title cell.

@@ -4,7 +4,7 @@
 
 ```
 odyssey/
-  lessons.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
+  index.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
   notebook.py           # index/parent notebook
   eee_note.md            # shared "О морфологическом движке EEE" text (see below)
   2026_07_20/            # Lesson: Od. IX.130–151

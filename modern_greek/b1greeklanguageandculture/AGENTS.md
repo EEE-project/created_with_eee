@@ -9,15 +9,15 @@ Covers all sub-courses under this umbrella: `kapodistrias/`, `zorba/`, and `kava
 ```
 b1greeklanguageandculture/
   kapodistrias/
-    lessons.tsv          # trilingual lesson index (url, icon, greek, label_{ru,el,en}, title_{ru,el,en}, desc_{ru,el,en}, index_url)
+    index.tsv          # trilingual lesson index (url, icon, greek, label_{ru,el,en}, title_{ru,el,en}, desc_{ru,el,en}, index_url)
     notebook.py           # index/parent notebook
     26_05_01/ 26_05_08/ 26_05_15/ 26_05_22/   # one dir per lesson (YY_MM_DD)
   zorba/
-    lessons.tsv          # same trilingual schema
+    index.tsv          # same trilingual schema
     notebook.py           # index/parent notebook
     26_06_26/ 26_07_10/ 26_07_17/   # one dir per lesson (YY_MM_DD)
   kavafis_ithaki/
-    lessons.tsv          # same trilingual schema
+    index.tsv          # same trilingual schema
     notebook.py           # index/parent notebook
     1/                     # one dir per lesson, numbered (not dated) -- matches the source material's own numbering
 ```
@@ -75,9 +75,9 @@ Every lesson notebook is one large trilingual (ru/el/en) file combining:
 
 Leave the drill machinery, `UI_STRINGS`, language selector, and footer untouched.
 
-## Index notebook + lessons.tsv
+## Index notebook + index.tsv
 
-Each course's `notebook.py` reads its own `lessons.tsv` (trilingual schema — see Directory layout above) and renders one card per row via `ConfigStore.from_url(...)` + `eee_card_list(mo, cfg, lang_sel.value)` (shared across all index notebooks — don't hand-roll the card CSS/loop again). A row with an empty `url` renders as a disabled "coming soon"/"σύντομα"/"скоро" card — this is the correct state for a lesson that's built but not yet uploaded to molab. Once uploaded, add the real `url` (the full `https://molab.marimo.io/notebooks/nb_XXX/app` link) to both the lesson's own `_badge` line and its `lessons.tsv` row — these are two independent places, keep them in sync.
+Each course's `notebook.py` reads its own `index.tsv` (trilingual schema — see Directory layout above) and renders one card per row via `ConfigStore.from_url(...)` + `eee_card_list(mo, cfg, lang_sel.value)` (shared across all index notebooks — don't hand-roll the card CSS/loop again). A row with an empty `url` renders as a disabled "coming soon"/"σύντομα"/"скоро" card — this is the correct state for a lesson that's built but not yet uploaded to molab. Once uploaded, add the real `url` (the full `https://molab.marimo.io/notebooks/nb_XXX/app` link) to both the lesson's own `_badge` line and its `index.tsv` row — these are two independent places, keep them in sync.
 
 ### Course-index hero + topbar: own name vs. grouping context
 
