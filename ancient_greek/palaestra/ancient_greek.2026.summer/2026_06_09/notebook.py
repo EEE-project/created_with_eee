@@ -245,8 +245,9 @@ def _(mo):
 def _(cv_v, gu, history_v, remaining_v, restore_entry_v):
     _ = cv_v()
     write_input_v, dia_v, check_btn_v, prev_btn_v, next_btn_v = gu.word_drill_widgets(
+        cv=cv_v(),
+        remaining=remaining_v(),
         restore_entry=restore_entry_v(),
-        done=cv_v() is None and remaining_v() is not None and len(remaining_v()) == 0,
         history_len=len(history_v()),
     )
 
@@ -367,8 +368,9 @@ def _(ADJS, mo):
 def _(cv_a, gu, history_a, remaining_a, restore_entry_a):
     _ = cv_a()
     write_input_a, dia_a, check_btn_a, prev_btn_a, next_btn_a = gu.word_drill_widgets(
+        cv=cv_a(),
+        remaining=remaining_a(),
         restore_entry=restore_entry_a(),
-        done=cv_a() is None and remaining_a() is not None and len(remaining_a()) == 0,
         history_len=len(history_a()),
         placeholder='наречие…',
     )

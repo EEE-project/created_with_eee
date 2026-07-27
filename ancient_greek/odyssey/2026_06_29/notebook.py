@@ -247,9 +247,9 @@ def _(QUIZ_WORDS, cv, gu, history, remaining, restore_entry):
     _ = cv()
     answer_radio, next_btn, prev_btn = gu.word_quiz_widgets(
         cv=cv(),
+        remaining=remaining(),
         vocab=QUIZ_WORDS,
         restore_entry=restore_entry(),
-        done=cv() is None and remaining() is not None and len(remaining()) == 0,
         history_len=len(history()),
     )
     return answer_radio, next_btn, prev_btn
@@ -383,10 +383,10 @@ def _(
     _ = sm_cv()
     sm_choice_radio, sm_next_btn, sm_prev_btn = gu.stanza_match_widgets(
         cv=sm_cv(),
+        remaining=sm_remaining(),
         stanzas=SM_STANZAS,
         direction=sm_direction.value,
         restore_entry=sm_restore_entry(),
-        done=sm_cv() is None and sm_remaining() is not None and len(sm_remaining()) == 0,
         history_len=len(sm_history()),
     )
     return sm_choice_radio, sm_next_btn, sm_prev_btn
@@ -498,9 +498,9 @@ def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
     _ = tp_cv()
     tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch = gu.translation_presence_widgets(
         cv=tp_cv(),
+        remaining=tp_remaining(),
         items=TP_ITEMS,
         restore_entry=tp_restore_entry(),
-        done=tp_cv() is None and tp_remaining() is not None and len(tp_remaining()) == 0,
         history_len=len(tp_history()),
     )
     return tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch

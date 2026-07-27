@@ -209,9 +209,9 @@ def _(VOCAB_WORDS, cv_c, gu, history_c, remaining_c, restore_entry_c):
     _ = cv_c()
     answer_radio, next_btn_c, prev_btn_c = gu.word_quiz_widgets(
         cv=cv_c(),
+        remaining=remaining_c(),
         vocab=VOCAB_WORDS,
         restore_entry=restore_entry_c(),
-        done=cv_c() is None and remaining_c() is not None and len(remaining_c()) == 0,
         history_len=len(history_c()),
     )
     return answer_radio, next_btn_c, prev_btn_c
@@ -276,8 +276,9 @@ def _(mo):
 def _(cv_w, gu, history_w, remaining_w, restore_entry_w):
     _ = cv_w()
     write_input_w, dia_w, check_btn_w, prev_btn_w, next_btn_w = gu.word_drill_widgets(
+        cv=cv_w(),
+        remaining=remaining_w(),
         restore_entry=restore_entry_w(),
-        done=cv_w() is None and remaining_w() is not None and len(remaining_w()) == 0,
         history_len=len(history_w()),
     )
     return check_btn_w, dia_w, next_btn_w, prev_btn_w, write_input_w

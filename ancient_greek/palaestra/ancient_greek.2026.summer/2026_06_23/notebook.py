@@ -259,9 +259,9 @@ def _(VOCAB_WORDS, cv_c, gu, history_c, remaining_c, restore_entry_c):
     _ = cv_c()
     answer_radio, next_btn_c, prev_btn_c = gu.word_quiz_widgets(
         cv=cv_c(),
+        remaining=remaining_c(),
         vocab=VOCAB_WORDS,
         restore_entry=restore_entry_c(),
-        done=cv_c() is None and remaining_c() is not None and len(remaining_c()) == 0,
         history_len=len(history_c()),
     )
     return answer_radio, next_btn_c, prev_btn_c
@@ -326,8 +326,9 @@ def _(mo):
 def _(cv_w, gu, history_w, remaining_w, restore_entry_w):
     _ = cv_w()
     write_input_w, dia_w, check_btn_w, prev_btn_w, next_btn_w = gu.word_drill_widgets(
+        cv=cv_w(),
+        remaining=remaining_w(),
         restore_entry=restore_entry_w(),
-        done=cv_w() is None and remaining_w() is not None and len(remaining_w()) == 0,
         history_len=len(history_w()),
     )
     return check_btn_w, dia_w, next_btn_w, prev_btn_w, write_input_w
@@ -572,9 +573,9 @@ def _(VOCAB_ALL, cv_a, gu, history_a, remaining_a, restore_entry_a):
     _ = cv_a()
     answer_radio_a, next_btn_a, prev_btn_a = gu.word_quiz_widgets(
         cv=cv_a(),
+        remaining=remaining_a(),
         vocab=VOCAB_ALL,
         restore_entry=restore_entry_a(),
-        done=cv_a() is None and remaining_a() is not None and len(remaining_a()) == 0,
         history_len=len(history_a()),
     )
     return answer_radio_a, next_btn_a, prev_btn_a
@@ -639,8 +640,9 @@ def _(mo):
 def _(cv_aw, gu, history_aw, remaining_aw, restore_entry_aw):
     _ = cv_aw()
     write_input_aw, dia_aw, check_btn_aw, prev_btn_aw, next_btn_aw = gu.word_drill_widgets(
+        cv=cv_aw(),
+        remaining=remaining_aw(),
         restore_entry=restore_entry_aw(),
-        done=cv_aw() is None and remaining_aw() is not None and len(remaining_aw()) == 0,
         history_len=len(history_aw()),
     )
     return check_btn_aw, dia_aw, next_btn_aw, prev_btn_aw, write_input_aw
