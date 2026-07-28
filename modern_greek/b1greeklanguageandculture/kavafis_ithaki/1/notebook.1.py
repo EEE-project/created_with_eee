@@ -241,9 +241,9 @@ def _(
     _ = tp_cv()
     tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch = gu2.translation_presence_widgets(
         cv=tp_cv(),
+        remaining=tp_remaining(),
         items=TP_ITEMS,
         restore_entry=tp_restore_entry(),
-        done=tp_cv() is None and tp_remaining() is not None and len(tp_remaining()) == 0,
         history_len=len(tp_history()),
         lang=language_selector.value,
     )
