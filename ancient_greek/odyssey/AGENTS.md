@@ -7,6 +7,7 @@ odyssey/
   index.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
   notebook.py           # index/parent notebook
   eee_note.md            # shared "О морфологическом движке EEE" text (see below)
+  2026_07_27/            # Lesson: Od. IX.152–180
   2026_07_20/            # Lesson: Od. IX.130–151
   2026_07_13/            # Lesson: Od. IX.105–129
   2026_07_06/            # Lesson: Od. IX.82–104
@@ -33,8 +34,9 @@ clickable poem text with a click-to-gloss panel, an ictus toggle, a
 homer-lexicon highlight toggle, three exercises (найди слово / сопоставь
 строфу и перевод / слово в переводе), and a merged `## подстрочник` section
 inside `translations_ru.md` (no more standalone `interlenear_ru.md` — its
-content was merged in and the file deleted). All 6 lessons, including the
-pilot (`2026_06_01`), now read the shared `odyssey/eee_note.md` file at
+content was merged in and the file deleted). All 7 lessons (including
+`2026_07_27`, built directly on this pattern rather than migrated to it),
+and the pilot (`2026_06_01`), now read the shared `odyssey/eee_note.md` file at
 runtime instead of duplicating the ~30-line explanation in every
 `notebook.py` — the pilot's originally-fuller text (covering the `morpheus`
 lexicon, now wired into all 6 lessons) became the shared file's content.
@@ -222,6 +224,7 @@ Copy the Russian gloss EXACTLY, including all parenthetical morphological notes.
 | `2026_07_06/` | `~/work/greek/lectures/Odyssey/2026.07.06/Od_IX_82-104_vocabula.docx` |
 | `2026_07_13/` | `~/work/greek/lectures/Odyssey/2026.07.13/Od_IX_105-129_vocabula.pdf` |
 | `2026_07_20/` | `~/work/greek/lectures/Odyssey/2026.07.20/Od IX 130-151 vocabula.docx` |
+| `2026_07_27/` | `~/work/greek/lectures/Odyssey/2026.07.27/Od IX 152-180  vocabula.pdf` |
 
 Known formatting issues in `слова день 1.md` (do not propagate to TSV): lines 30/61/125
 have two entries merged without newline — parse the Greek and Cyrillic segments separately;
