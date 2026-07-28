@@ -4,16 +4,12 @@
 #     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
 #     "marimo>=0.23.14",
 #     "modern-greek-backend-eee @ git+https://codeberg.org/EEE-project/modern-greek-backend-eee.git",
-#     "modern-greek-eee @ git+https://github.com/EEE-project/modern-greek-eee.git",
-#     "modern-greek-inflexion-eee @ git+https://github.com/EEE-project/modern-greek-inflexion-eee.git",
 #     "pandas",
 # ]
 #
 # [tool.uv.sources]
 # eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
 # modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
-# modern-greek-eee = { git = "https://github.com/EEE-project/modern-greek-eee" }
-# modern-greek-inflexion-eee = { git = "https://github.com/EEE-project/modern-greek-inflexion-eee" }
 # ///
 
 import marimo
@@ -672,10 +668,10 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_noun, gu, language_selector, notebook_dir, os, pd):
+def _(file_upload_noun, gu2, language_selector, notebook_dir, os, pd):
     # Load noun data
     if file_upload_noun.value:
-        df_noun = gu.load_data(file_upload_noun, [])
+        df_noun = gu2.load_data(file_upload_noun)
     else:
         _ru = os.path.join(notebook_dir, 'nouns_ru.tsv')
         _default = os.path.join(notebook_dir, 'nouns.tsv')
@@ -732,9 +728,9 @@ def _(indefinite_toggle_n, mo, mode_selector_n):
 
 
 @app.cell(hide_code=True)
-def _(gu, gu2, random, table_noun):
+def _(gu2, random, table_noun):
     # Noun words + state
-    words_noun = gu.get_words(table_noun)
+    words_noun = gu2.get_words(table_noun)
     (words4test_noun, set_words4test_noun, hist_noun, set_hist_noun, noun_msg, set_noun_msg,
      captured_noun, set_captured_noun, entered_noun, set_entered_noun,
      submit_count_n, set_submit_count_n, prev_count_n, set_prev_count_n,
@@ -906,10 +902,10 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_verb, gu, language_selector, notebook_dir, os, pd):
+def _(file_upload_verb, gu2, language_selector, notebook_dir, os, pd):
     # Load verb data
     if file_upload_verb.value:
-        df_verb = gu.load_data(file_upload_verb, [])
+        df_verb = gu2.load_data(file_upload_verb)
     else:
         _ru = os.path.join(notebook_dir, 'verbs_ru.tsv')
         _default = os.path.join(notebook_dir, 'verbs.tsv')
@@ -948,9 +944,9 @@ def _(gu2, language_selector, mo, t_ui):
 
 
 @app.cell(hide_code=True)
-def _(gu, gu2, random, table_verb):
+def _(gu2, random, table_verb):
     # Verb words + state
-    words_verb = gu.get_words(table_verb)
+    words_verb = gu2.get_words(table_verb)
     (words4test_verb, set_words4test_verb, hist_verb, set_hist_verb, verb_msg, set_verb_msg,
      captured_verb, set_captured_verb, entered_verb, set_entered_verb,
      submit_count_v, set_submit_count_v, prev_count_v, set_prev_count_v,
@@ -1038,7 +1034,6 @@ def _(
     cv_verb,
     enter_count_v,
     entered_verb,
-    gu,
     gu2,
     hist_verb,
     language_selector,
@@ -1071,7 +1066,7 @@ def _(
     _lang = language_selector.value
     _tense_key = tense_selector.value
     if words_verb and _tense_key:
-        _tlabel = gu.TENSE_LABELS[_tense_key]["greek"]
+        _tlabel = gu2.TENSE_LABELS[_tense_key]["greek"]
         _output = gu2.verb_paradigm_drill_form(
             words4test_verb, set_words4test_verb, hist_verb, set_hist_verb, verb_msg, set_verb_msg,
             captured_verb, set_captured_verb, entered_verb, set_entered_verb,
@@ -1111,10 +1106,10 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_adj, gu, language_selector, notebook_dir, os, pd):
+def _(file_upload_adj, gu2, language_selector, notebook_dir, os, pd):
     # Load adj data
     if file_upload_adj.value:
-        df_adj = gu.load_data(file_upload_adj, [])
+        df_adj = gu2.load_data(file_upload_adj)
     else:
         _ru = os.path.join(notebook_dir, 'adjectives_ru.tsv')
         _default = os.path.join(notebook_dir, 'adjectives.tsv')
@@ -1164,9 +1159,9 @@ def _(language_selector, mo, t_ui):
 
 
 @app.cell(hide_code=True)
-def _(gu, gu2, random, table_adj):
+def _(gu2, random, table_adj):
     # Adjective words + state
-    words_adj = gu.get_words(table_adj)
+    words_adj = gu2.get_words(table_adj)
     (words4test_adj, set_words4test_adj, hist_adj, set_hist_adj, adj_msg, set_adj_msg,
      captured_adj, set_captured_adj, entered_adj, set_entered_adj,
      submit_count_a, set_submit_count_a, prev_count_a, set_prev_count_a,
@@ -1332,9 +1327,8 @@ def _():
     import random
     import pandas as pd
     import marimo as mo
-    from modern_greek_eee import greek_utils as gu
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, notebook_dir, os, pd, random
+    return mo, notebook_dir, os, pd, random
 
 
 @app.cell(hide_code=True)
@@ -1349,12 +1343,12 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, eee, mo):
+def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, eee, mo, pd):
     # Modern Greek eee_project: backend setup
     _mg_backend = ModernGreekBackend()
     eee.register_backend("el", _mg_backend, backend="modern-greek")
     eee.set_chain("el", ["modern-greek"])
-    gu2 = GreekUtils(_mg_backend, mo, eee_module=eee, config=MODERN_GREEK)
+    gu2 = GreekUtils(_mg_backend, mo, pd, eee_module=eee, config=MODERN_GREEK)
     return (gu2,)
 
 
