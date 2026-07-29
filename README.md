@@ -1,8 +1,9 @@
 # created_with_eee
 
-Interactive Greek-language courses and notebooks built on the
-[EEE](https://github.com/EEE-project/eee-project) morphology framework. No
-installation required, open directly in your Telegram messenger:
+Examples of interactive Greek-language course materials in notebook form,
+built on the [EEE](https://github.com/EEE-project/eee-project) morphology
+framework. No installation required, open directly in your Telegram
+messenger:
 
 https://telegram.me/eee_project_greek_bot/created_with_eee
 
@@ -27,12 +28,16 @@ editor by hand, or with AI assistance.
 
 ## Courses
 
+Very different course styles, spanning different periods of the Greek
+language:
+
 **Αρχαία Ελληνικά — Ancient Greek**
 - **Odyssey** (`ancient_greek/odyssey/`) — reading course through Homer's
   *Odyssey* Book IX, one lesson per lecture: Greek text with clickable
   word-by-word glosses, rhythm (ictus) markup, multiple literary translations
   side by side, and paradigm/vocabulary drills.
-- **Palaestra** (`ancient_greek/palaestra/`) — Ancient Greek for beginners.
+- **Palaestra** (`ancient_greek/palaestra/`) — some first lessons from the
+  Ancient Greek for beginners course.
 
 **Σύγχρονα Ελληνικά — Modern Greek**
 - **Ελληνικά Β** (`modern_greek/ellinika_b/`) — chaptered course following the
