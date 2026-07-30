@@ -6,6 +6,8 @@
 ancient_greek.2026.summer/
   index.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
   notebook.py          # index/parent notebook
+  athenaze_capN_{adjs,nouns,verbs}.yaml  # course-local lexicon data, see "Course-local
+                        # lexicon YAMLs" below — NOT per-lesson, sibling to the lesson dirs
   2026_06_09/          # Занятие 1 · Алфавит и повелительное наклонение
   2026_06_12/          # Занятие 2 · Ударения и просодия
   2026_06_16/          # Занятие 3 · Глаголы и синтаксис
@@ -154,18 +156,70 @@ Two variants exist:
 import eee_project as eee
 from ancient_greek_backend_eee import AncientGreekBackend
 from eee_project import GreekUtils, ANCIENT_GREEK, setup_ancient_greek
+from pathlib import Path as _Path
 
-ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt"])
+_yamls = [_Path(__file__).parent.parent / f"athenaze_cap{_n}_adjs.yaml" for _n in (1, 2)]
+for _y in _yamls:
+    if not _y.exists():
+        import urllib.request as _ur
+        _ur.urlretrieve(f"{cfg.raw_base}/{_y.name}", str(_y))
+ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt", *[str(_y) for _y in _yamls]])
 setup_ancient_greek(ag)
 
 gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
 ```
+
+Only include the `athenaze_capN_*.yaml` paths a lesson actually needs — see
+"Course-local lexicon YAMLs" below for which POS/chapter combinations already
+exist and when a new one is needed.
 
 Pattern B (no backend):
 ```python
 from eee_project import GreekUtils, ANCIENT_GREEK
 gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
 ```
+
+---
+
+## Course-local lexicon YAMLs
+
+`ancient_greek_backend_eee`'s adjective support is hard-limited to the
+bundled Pratt teaching lexicon (~14 words) — no additional named adjective
+lexicon exists in `greek-inflexion-eee` the way `"lsj"`/`"homer"` etc. do for
+verbs/nouns. When a lesson's vocabulary uses an adjective (or noun/verb) not
+covered by `"pratt"`, the fix is a **course-local lexicon YAML at this
+directory's top level** (`athenaze_cap{1,2,...}_{adjs,nouns,verbs}.yaml`),
+passed as a plain file path in `AncientGreekBackend(lexicons=[...])` — not an
+edit to the shared `greek-inflexion-eee` package. This is the simplest,
+most reliable fix for a course vocabulary gap; only touch the shared package
+for a genuinely cross-course gap.
+
+- One file per (chapter, POS) that actually needs custom entries — a chapter
+  with no gap for a given POS has no file (e.g. no `athenaze_cap1_adjs.yaml`
+  existed until `2026_06_09`'s adverb-drill exercise needed it).
+- Format matches `pratt_adjs_lexicon.yaml`'s own convention: unaccented
+  `stems:`/`accents: [["..N", "<lemma>"]]` for regular words (generative —
+  cheap to add, covers the whole paradigm from 3 stems); a full `forms:`
+  block (every cell spelled out) for any word where the generative mechanism
+  gets even one cell wrong — same "pure-alpha" (ε/ι/ρ-final stem keeps long
+  alpha, not eta, in the feminine oblique singular) and recessive-accent
+  gaps documented in `pratt_adjs_lexicon.yaml`'s own header keep recurring
+  here; verify every new/changed cell against `greek-inflexion-eee`'s own
+  `tools/morpheus/query_morpheus.py` (or Wiktionary's full table, per the
+  existing `athenaze_cap2_adjs.yaml` entries) before shipping — don't
+  assume the generative mechanism got it right.
+- A word already correct in an earlier chapter's file is **reused, not
+  duplicated** — a later lesson's `lexicons=[...]` list accumulates every
+  chapter's files seen so far (e.g. `2026_07_03` lists both
+  `athenaze_cap1_nouns.yaml` and `athenaze_cap2_nouns.yaml`), and an earlier
+  lesson can equally reference a later chapter's file for a word it
+  previews early (`2026_06_09` uses `athenaze_cap2_adjs.yaml` for ἀργός,
+  which chapter 2 also needs).
+- When reproducing a lesson's backend construction to test a fix
+  standalone, copy that lesson's own exact `lexicons=[...]` list (grep
+  `athenaze_cap\|lexicons=\[` across the notebooks) — a different lesson's
+  list is not a safe stand-in, since these YAMLs are wired in per-lesson,
+  not uniformly.
 
 ---
 
