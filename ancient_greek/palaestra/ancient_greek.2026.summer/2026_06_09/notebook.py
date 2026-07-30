@@ -13,7 +13,7 @@
 
 import marimo
 
-__generated_with = "0.23.11"
+__generated_with = "0.23.15"
 app = marimo.App(width="medium")
 
 
@@ -51,7 +51,9 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
-    mo.md(f"**Материалы занятия:** [Δίδαγμα α'.pdf]({NB_REMOTE}/Δίδαγμα%20α'.pdf) · [ΣΤΟΙΧΕΙΑ.pdf]({NB_REMOTE}/ΣΤΟΙΧΕΙΑ.pdf) · [ΤΟ ΠΡΟΛΕΓΟΜΕΝΟΝ ΔΙΔΑΓΜΑ (2).pdf]({NB_REMOTE}/ΤΟ%20ΠΡΟΛΕΓΟΜΕΝΟΝ%20ΔΙΔΑΓΜΑ%20(2).pdf) · [πρῶτον προστεταγμένον.pdf]({NB_REMOTE}/πρῶτον%20προστεταγμένον.pdf)")
+    mo.md(f"""
+    **Материалы занятия:** [Δίδαγμα α'.pdf]({NB_REMOTE}/Δίδαγμα%20α'.pdf) · [ΣΤΟΙΧΕΙΑ.pdf]({NB_REMOTE}/ΣΤΟΙΧΕΙΑ.pdf) · [ΤΟ ΠΡΟΛΕΓΟΜΕΝΟΝ ΔΙΔΑΓΜΑ (2).pdf]({NB_REMOTE}/ΤΟ%20ΠΡΟΛΕΓΟΜΕΝΟΝ%20ΔΙΔΑΓΜΑ%20(2).pdf) · [πρῶτον προστεταγμένον.pdf]({NB_REMOTE}/πρῶτον%20προστεταγμένον.pdf)
+    """)
     return
 
 
@@ -186,7 +188,12 @@ def _(cfg, mo):
     from eee_project import GreekUtils, ANCIENT_GREEK, setup_ancient_greek
     from pathlib import Path as _Path
 
-    ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt"])
+    _yamls = [_Path(__file__).parent.parent / f"athenaze_cap{_n}_adjs.yaml" for _n in (1, 2)]
+    for _y in _yamls:
+        if not _y.exists():
+            import urllib.request as _ur
+            _ur.urlretrieve(f"{cfg.raw_base}/{_y.name}", str(_y))
+    ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt", *[str(_y) for _y in _yamls]])
     setup_ancient_greek(ag)
 
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
@@ -212,7 +219,6 @@ def _(cfg, mo):
         for v in VERBS
         for key, lbl in _FIELDS_V
     ]
-
     return NB_REMOTE, VERB_ENTRIES, eee, gu
 
 
@@ -224,7 +230,6 @@ def _(mo):
     history_v, set_history_v = mo.state([])
     future_v, set_future_v = mo.state([])
     restore_entry_v, set_restore_entry_v = mo.state(None)
-
     return (
         cv_v,
         future_v,
@@ -250,7 +255,6 @@ def _(cv_v, gu, history_v, remaining_v, restore_entry_v):
         restore_entry=restore_entry_v(),
         history_len=len(history_v()),
     )
-
     return check_btn_v, dia_v, next_btn_v, prev_btn_v, write_input_v
 
 
@@ -286,7 +290,6 @@ def _(
         comment='Для ввода используйте **polytonic Greek keyboard** или кнопки диакритики ниже.<br>**Как пользоваться:** нажмите кнопку знака диакритики → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается. Можно **совмещать несколько знаков диакритики** (например, придыхание + ударение перед вводом буквы → ἆ).',
         form_key='form',
     )
-
     return
 
 
