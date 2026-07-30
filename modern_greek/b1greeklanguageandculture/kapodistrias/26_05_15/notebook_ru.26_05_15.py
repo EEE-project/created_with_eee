@@ -227,10 +227,9 @@ def _(
     if words4test_noun() and noun_word:
         _cs = captured_simple()
         if _cs and getattr(_cs, 'test_word', None) == noun_word:
-            with mo.capture_stdout() as _buf:
-                gu.check_noun_test(noun_word, _cs, mode='simple')
-            if _buf.getvalue():
-                _feedback = mo.md(_buf.getvalue())
+            _, _msg = gu.check_noun_test(noun_word, _cs, mode='simple')
+            if _msg:
+                _feedback = mo.md(_msg)
         _view = mo.vstack([
             mo.md(f"**Простой тест: Существительные** ({len(words4test_noun())}/{session_total_n()})"),
             mo.md(f"Перевод: **{noun_trans}**"),
@@ -262,10 +261,9 @@ def _(
     if words4test_noun() and art_noun_word:
         _ca = captured_article()
         if _ca and getattr(_ca, 'test_word', None) == art_noun_word:
-            with mo.capture_stdout() as _buf_a:
-                gu.check_noun_test(art_noun_word, _ca, mode='article')
-            if _buf_a.getvalue():
-                _feedback_a = mo.md(_buf_a.getvalue())
+            _, _msg_a = gu.check_noun_test(art_noun_word, _ca, mode='article')
+            if _msg_a:
+                _feedback_a = mo.md(_msg_a)
         _view_art = mo.vstack([
             mo.md(f"**Тест с артиклями: Существительные** ({len(words4test_noun())}/{session_total_n()})"),
             mo.md(f"Перевод: **{art_noun_trans}**"),
@@ -308,9 +306,9 @@ def _(
     if words4test_noun() and _cn and (_cs or _ca):
         _passed = False
         if _cs and getattr(_cs, 'test_word', None) == _cn['Word']:
-            _passed = gu.check_noun_test(_cn['Word'], _cs, mode='simple')
+            _passed, _ = gu.check_noun_test(_cn['Word'], _cs, mode='simple')
         if not _passed and _ca and getattr(_ca, 'test_word', None) == _cn['Word']:
-            _passed = gu.check_noun_test(_cn['Word'], _ca, mode='article')
+            _passed, _ = gu.check_noun_test(_cn['Word'], _ca, mode='article')
         if _passed:
             _new = [w for w in words4test_noun() if w['Word'] != _cn['Word']]
             set_words4test_noun(_new)
@@ -438,11 +436,11 @@ def _(gu, mo):
         "aorist": "Аорист", "future": "Простое будущее",
         "future_continuous": "Длительное будущее",
     }
-    _b1_tenses = ['present', 'imperfect', 'aorist', 'future', 'future_continuous']
-    _tense_options = {gu.TENSE_LABELS[k]['dropdown']: k for k in _b1_tenses if k in gu.TENSE_LABELS}
+    _b1_tenses = ['present', 'past_continuous', 'aorist', 'future', 'future_continuous']
+    _tense_options = {label: key for label, key in gu.tense_dropdown_options('ru').items() if key in _b1_tenses}
     tense_selector = mo.ui.dropdown(
         options=_tense_options,
-        value=gu.TENSE_LABELS['present']['dropdown'],
+        value=next(label for label, key in gu.tense_dropdown_options('ru').items() if key == 'present'),
         label="Выберите время:",
     )
     tense_selector
@@ -531,11 +529,6 @@ def _(
     verb_msg,
     words4test_verb,
 ):
-    _RU_LABELS = {
-        "present": "Настоящее", "imperfect": "Имперфект",
-        "aorist": "Аорист", "future": "Простое будущее",
-        "future_continuous": "Длительное будущее",
-    }
     _cv = cv_verb()
     if not words4test_verb():
         _view_verb = mo.md("_Выберите глаголы из таблицы выше._")
@@ -547,7 +540,7 @@ def _(
         if _cv and _c and getattr(_c, 'verb_word', None) == _cv['Word'] and getattr(_c, 'tense', None) == tense_selector.value:
             _, _msg = gu.check_verb_test(_cv['Word'], _c, tense_selector.value)
             _feedback_v = mo.md(_msg)
-        _label = _RU_LABELS.get(tense_selector.value, tense_selector.value)
+        _label = gu.TENSE_LABELS.get(tense_selector.value, {}).get('label', {}).get('ru', tense_selector.value)
         _items = [mo.md(f"**Тест глагола — {_label}** ({len(words4test_verb())}/{session_total_v()})")]
         if verb_msg():
             _items.append(mo.md(verb_msg()))

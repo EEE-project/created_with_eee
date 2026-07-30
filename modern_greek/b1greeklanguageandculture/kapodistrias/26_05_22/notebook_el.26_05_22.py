@@ -270,10 +270,9 @@ def _(
     if words4test_noun() and noun_word:
         _cs = captured_simple()
         if _cs and getattr(_cs, 'test_word', None) == noun_word:
-            with mo.capture_stdout() as _buf:
-                gu.check_noun_test(noun_word, _cs, mode='simple')
-            if _buf.getvalue():
-                _feedback = mo.md(_buf.getvalue())
+            _, _msg = gu.check_noun_test(noun_word, _cs, mode='simple')
+            if _msg:
+                _feedback = mo.md(_msg)
         _view = mo.vstack([
             mo.md(t_ui("simple_noun_test", _lang).format(count=len(words4test_noun()), total=session_total_n())),
             mo.md(f"{t_ui('translation_label', _lang)} **{noun_trans}**"),
@@ -308,10 +307,9 @@ def _(
     if words4test_noun() and art_noun_word:
         _ca = captured_article()
         if _ca and getattr(_ca, 'test_word', None) == art_noun_word:
-            with mo.capture_stdout() as _buf_a:
-                gu.check_noun_test(art_noun_word, _ca, mode='article')
-            if _buf_a.getvalue():
-                _feedback_a = mo.md(_buf_a.getvalue())
+            _, _msg_a = gu.check_noun_test(art_noun_word, _ca, mode='article')
+            if _msg_a:
+                _feedback_a = mo.md(_msg_a)
         _view_art = mo.vstack([
             mo.md(t_ui("article_noun_test", _lang).format(count=len(words4test_noun()), total=session_total_n())),
             mo.md(f"{t_ui('translation_label', _lang)} **{art_noun_trans}**"),
@@ -357,9 +355,9 @@ def _(
     if words4test_noun() and _cn and (_cs or _ca):
         _passed = False
         if _cs and getattr(_cs, 'test_word', None) == _cn['Word']:
-            _passed = gu.check_noun_test(_cn['Word'], _cs, mode='simple')
+            _passed, _ = gu.check_noun_test(_cn['Word'], _cs, mode='simple')
         if not _passed and _ca and getattr(_ca, 'test_word', None) == _cn['Word']:
-            _passed = gu.check_noun_test(_cn['Word'], _ca, mode='article')
+            _passed, _ = gu.check_noun_test(_cn['Word'], _ca, mode='article')
         if _passed:
             _new = [w for w in words4test_noun() if w['Word'] != _cn['Word']]
             set_words4test_noun(_new)
@@ -481,9 +479,9 @@ def _(df_verb, language_selector, mo, t_ui, tbl_sel_v):
 @app.cell(hide_code=True)
 def _(gu, language_selector, mo, t_ui):
     _lang = language_selector.value
-    _b1_tenses = ['present', 'imperfect', 'aorist', 'future', 'future_continuous']
-    _opts = {gu.TENSE_LABELS[k]['dropdown']: k for k in _b1_tenses if k in gu.TENSE_LABELS}
-    _default = gu.TENSE_LABELS['present']['dropdown']
+    _b1_tenses = ['present', 'past_continuous', 'aorist', 'future', 'future_continuous']
+    _opts = {label: key for label, key in gu.tense_dropdown_options(_lang).items() if key in _b1_tenses}
+    _default = next(label for label, key in gu.tense_dropdown_options(_lang).items() if key == 'present')
     tense_selector = mo.ui.dropdown(options=_opts, value=_default, label=t_ui("tense_label", _lang))
     tense_selector
     return (tense_selector,)
@@ -586,13 +584,7 @@ def _(
             _, _msg = gu.check_verb_test(_cv['Word'], _c, tense_selector.value)
             _feedback_v = mo.md(_msg)
         _tense_key = tense_selector.value
-        _RU_LABELS = {"present": "Настоящее", "imperfect": "Имперфект", "aorist": "Аорист", "future": "Простое будущее", "future_continuous": "Длительное будущее"}
-        if _lang == "ru":
-            _label = _RU_LABELS.get(_tense_key, _tense_key)
-        elif _lang == "el":
-            _label = gu.TENSE_LABELS.get(_tense_key, {}).get('greek', _tense_key)
-        else:
-            _label = gu.TENSE_LABELS.get(_tense_key, {}).get('dropdown', _tense_key)
+        _label = gu.TENSE_LABELS.get(_tense_key, {}).get('label', {}).get(_lang, _tense_key)
         _items = [mo.md(t_ui("verb_test_heading", _lang).format(label=_label, count=len(words4test_verb()), total=session_total_v()))]
         if verb_msg():
             _items.append(mo.md(verb_msg()))
