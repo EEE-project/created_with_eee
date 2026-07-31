@@ -494,18 +494,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_noun, gu2, language_selector, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_noun, gu2, language_selector, notebook_dir, pd):
     # Load noun data
     if file_upload_noun.value:
         df_noun = gu2.load_data(file_upload_noun)
     else:
-        _ru = os.path.join(notebook_dir, 'nouns_ru.tsv')
-        _default = os.path.join(notebook_dir, 'nouns.tsv')
-        _path = _ru if language_selector.value == 'ru' and os.path.exists(_ru) else _default
-        try:
-            df_noun = pd.read_csv(_path, sep='\t')
-        except FileNotFoundError:
-            df_noun = None
+        _noun_fname = 'nouns_ru.tsv' if language_selector.value == 'ru' else 'nouns.tsv'
+        _noun_path = gu2.ensure_file(_noun_fname, nb_dir=notebook_dir, remote_base=RAW_BASE) or gu2.ensure_file("nouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_noun = pd.read_csv(_noun_path, sep='\t') if _noun_path else None
     return (df_noun,)
 
 
@@ -534,7 +530,6 @@ def _(language_selector, mo, t_ui):
         _default_mode_n = "no article"
     mode_selector_n = mo.ui.radio(options=_opts_n, value=_default_mode_n, label=t_ui("mode_label", _lang))
     mo.md(f"{mode_selector_n}")
-
     return (mode_selector_n,)
 
 
@@ -543,7 +538,6 @@ def _(language_selector, mo, t_ui):
     # Noun indefinite-article toggle (creation only -- no dependency on
     # mode_selector_n, so switching modes doesn't reset it back to False)
     indefinite_toggle_n = mo.ui.switch(label=t_ui("indefinite_label", language_selector.value), value=False)
-
     return (indefinite_toggle_n,)
 
 
@@ -552,7 +546,6 @@ def _(indefinite_toggle_n, mo, mode_selector_n):
     # Noun indefinite-article toggle (conditional display: only meaningful
     # once the article itself is being tested)
     indefinite_toggle_n if mode_selector_n.value == "article" else mo.md("")
-
     return
 
 
@@ -567,7 +560,6 @@ def _(gu2, random, table_noun):
      restart_count_n, set_restart_count_n) = gu2.make_paradigm_drill_state(
         random.sample(words_noun, len(words_noun)) if words_noun else []
     )
-
     return (
         captured_noun,
         enter_count_n,
@@ -632,7 +624,6 @@ def _(
     set_prev_count_n(0)
     set_next_count_n(0)
     set_enter_count_n(0)
-
     return cv_noun, next_btn_n, noun_form, noun_meta, prev_btn_n, restart_btn_n
 
 
@@ -652,7 +643,6 @@ def _(
         label=t_ui("check_label", language_selector.value),
     )
     set_submit_count_n(0)
-
     return (check_btn_n,)
 
 
@@ -715,7 +705,6 @@ def _(
         title=_title,
         done_message=t_ui("test1_done", _lang),
     ) if words_noun else mo.md(t_ui("noun_empty", _lang))
-
     return
 
 
@@ -735,18 +724,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_verb, gu2, language_selector, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_verb, gu2, language_selector, notebook_dir, pd):
     # Load verb data
     if file_upload_verb.value:
         df_verb = gu2.load_data(file_upload_verb)
     else:
-        _ru = os.path.join(notebook_dir, 'verbs_ru.tsv')
-        _default = os.path.join(notebook_dir, 'verbs.tsv')
-        _path = _ru if language_selector.value == 'ru' and os.path.exists(_ru) else _default
-        try:
-            df_verb = pd.read_csv(_path, sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+        _verb_fname = 'verbs_ru.tsv' if language_selector.value == 'ru' else 'verbs.tsv'
+        _verb_path = gu2.ensure_file(_verb_fname, nb_dir=notebook_dir, remote_base=RAW_BASE) or gu2.ensure_file("verbs.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_verb = pd.read_csv(_verb_path, sep='\t') if _verb_path else None
     return (df_verb,)
 
 
@@ -773,7 +758,6 @@ def _(gu2, language_selector, mo, t_ui):
         label=t_ui("tense_label", _lang),
     )
     tense_selector
-
     return (tense_selector,)
 
 
@@ -788,7 +772,6 @@ def _(gu2, random, table_verb):
      restart_count_v, set_restart_count_v) = gu2.make_paradigm_drill_state(
         random.sample(words_verb, len(words_verb)) if words_verb else []
     )
-
     return (
         captured_verb,
         enter_count_v,
@@ -840,7 +823,6 @@ def _(
     set_prev_count_v(0)
     set_next_count_v(0)
     set_enter_count_v(0)
-
     return cv_verb, next_btn_v, prev_btn_v, restart_btn_v, verb_form
 
 
@@ -860,7 +842,6 @@ def _(
         label=t_ui("check_label", language_selector.value),
     )
     set_submit_count_v(0)
-
     return (check_btn_v,)
 
 
@@ -924,7 +905,6 @@ def _(
     else:
         _output = mo.md(t_ui("verb_no_tense", _lang))
     _output
-
     return
 
 
@@ -944,18 +924,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_adj, gu2, language_selector, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_adj, gu2, language_selector, notebook_dir, pd):
     # Load adj data
     if file_upload_adj.value:
         df_adj = gu2.load_data(file_upload_adj)
     else:
-        _ru = os.path.join(notebook_dir, 'adjectives_ru.tsv')
-        _default = os.path.join(notebook_dir, 'adjectives.tsv')
-        _path = _ru if language_selector.value == 'ru' and os.path.exists(_ru) else _default
-        try:
-            df_adj = pd.read_csv(_path, sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+        _adj_fname = 'adjectives_ru.tsv' if language_selector.value == 'ru' else 'adjectives.tsv'
+        _adj_path = gu2.ensure_file(_adj_fname, nb_dir=notebook_dir, remote_base=RAW_BASE) or gu2.ensure_file("adjectives.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_adj = pd.read_csv(_adj_path, sep='\t') if _adj_path else None
     return (df_adj,)
 
 
@@ -998,7 +974,6 @@ def _(gu2, random, table_adj):
      restart_count_a, set_restart_count_a) = gu2.make_paradigm_drill_state(
         random.sample(words_adj, len(words_adj)) if words_adj else []
     )
-
     return (
         adj_msg,
         captured_adj,
@@ -1050,7 +1025,6 @@ def _(
     set_prev_count_a(0)
     set_next_count_a(0)
     set_enter_count_a(0)
-
     return adj_form, cv_adj, next_btn_a, prev_btn_a, restart_btn_a
 
 
@@ -1070,7 +1044,6 @@ def _(
         label=t_ui("check_label", language_selector.value),
     )
     set_submit_count_a(0)
-
     return (check_btn_a,)
 
 
@@ -1127,7 +1100,6 @@ def _(
         title=t_ui("adj_heading", _lang),
         done_message=t_ui("test3_done", _lang),
     ) if words_adj else mo.md(t_ui("adj_empty", _lang))
-
     return
 
 
@@ -1161,7 +1133,8 @@ def _():
     import pandas as pd
     import marimo as mo
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return mo, notebook_dir, os, pd, random
+    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/ellinika_b/chapter_07"
+    return RAW_BASE, mo, notebook_dir, pd, random
 
 
 @app.cell(hide_code=True)
@@ -1182,7 +1155,6 @@ def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, eee, mo, pd):
     eee.register_backend("el", _mg_backend, backend="modern-greek")
     eee.set_chain("el", ["modern-greek"])
     gu2 = GreekUtils(_mg_backend, mo, pd, eee_module=eee, config=MODERN_GREEK)
-
     return (gu2,)
 
 

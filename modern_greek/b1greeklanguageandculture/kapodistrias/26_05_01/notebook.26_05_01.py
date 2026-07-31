@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.9"
+__generated_with = "0.23.14"
 app = marimo.App(
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
@@ -39,13 +39,13 @@ def _(language_selector, mo):
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, notebook_dir, os):
+def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     # Content + slides
     _lang = language_selector.value
     _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_7wUv6eX2PPjoWc7ix63W7n)"
     def _img(n):
-        _p = os.path.join(notebook_dir, f'slide-{n}.jpg')
-        return mo.image(src=open(_p, 'rb').read(), width=700) if os.path.exists(_p) else mo.md("")
+        _p = gu.ensure_file(f'slide-{n}.jpg', nb_dir=notebook_dir, remote_base=RAW_BASE)
+        return mo.image(src=open(_p, 'rb').read(), width=700) if _p else mo.md("")
     _youtube = mo.Html('''<iframe
         width="560"
         height="315"
@@ -198,10 +198,11 @@ def _(language_selector, mo, notebook_dir, os):
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, notebook_dir, os, pd, t_ui):
+def _(RAW_BASE, gu, language_selector, mo, notebook_dir, pd, t_ui):
     # Vocabulary table
     _lang = language_selector.value
-    _df_vocab = pd.read_csv(os.path.join(notebook_dir, 'vocabulary.tsv'), sep='\t')
+    _vocab_path = gu.ensure_file("vocabulary.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+    _df_vocab = pd.read_csv(_vocab_path, sep='\t') if _vocab_path else None
     _tbl_vocab = mo.ui.table(_df_vocab, selection="multi") if _df_vocab is not None else None
     mo.vstack([
         mo.md(t_ui("vocabulary_heading", _lang)),
@@ -234,15 +235,13 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_noun, gu, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_noun, gu, notebook_dir, pd):
     # Noun data loading
     if file_upload_noun.value:
         df_noun = gu.load_data(file_upload_noun, [])
     else:
-        try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_noun = None
+        _noun_path = gu.ensure_file("nouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_noun = pd.read_csv(_noun_path, sep='\t') if _noun_path else None
     return (df_noun,)
 
 
@@ -558,15 +557,13 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_verb, gu, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_verb, gu, notebook_dir, pd):
     # Verb data loading
     if file_upload_verb.value:
         df_verb = gu.load_data(file_upload_verb, [])
     else:
-        try:
-            df_verb = pd.read_csv(os.path.join(notebook_dir, 'verbs.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+        _verb_path = gu.ensure_file("verbs.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_verb = pd.read_csv(_verb_path, sep='\t') if _verb_path else None
     return (df_verb,)
 
 
@@ -830,15 +827,13 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_adj, gu, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_adj, gu, notebook_dir, pd):
     # Adjective data loading
     if file_upload_adj.value:
         df_adj = gu.load_data(file_upload_adj, [])
     else:
-        try:
-            df_adj = pd.read_csv(os.path.join(notebook_dir, 'adjectives.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+        _adj_path = gu.ensure_file("adjectives.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_adj = pd.read_csv(_adj_path, sep='\t') if _adj_path else None
     return (df_adj,)
 
 
@@ -1178,7 +1173,8 @@ def _():
     eee.register_backend("el", mg)
     gu = GreekUtils(mg, mo, pd, eee_module=eee)
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, notebook_dir, os, pd, random
+    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/kapodistrias/26_05_01"
+    return RAW_BASE, eee, gu, mo, notebook_dir, pd, random
 
 
 if __name__ == "__main__":

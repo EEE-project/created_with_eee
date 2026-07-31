@@ -768,18 +768,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_noun, gu2, language_selector, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_noun, gu2, language_selector, notebook_dir, pd):
     # Load noun data
     if file_upload_noun.value:
         df_noun = gu2.load_data(file_upload_noun)
     else:
-        _ru = os.path.join(notebook_dir, 'nouns_ru.tsv')
-        _default = os.path.join(notebook_dir, 'nouns.tsv')
-        _path = _ru if language_selector.value == 'ru' and os.path.exists(_ru) else _default
-        try:
-            df_noun = pd.read_csv(_path, sep='\t')
-        except FileNotFoundError:
-            df_noun = None
+        _noun_fname = 'nouns_ru.tsv' if language_selector.value == 'ru' else 'nouns.tsv'
+        _noun_path = gu2.ensure_file(_noun_fname, nb_dir=notebook_dir, remote_base=RAW_BASE) or gu2.ensure_file("nouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_noun = pd.read_csv(_noun_path, sep='\t') if _noun_path else None
     return (df_noun,)
 
 
@@ -1002,18 +998,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_verb, gu2, language_selector, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_verb, gu2, language_selector, notebook_dir, pd):
     # Load verb data
     if file_upload_verb.value:
         df_verb = gu2.load_data(file_upload_verb)
     else:
-        _ru = os.path.join(notebook_dir, 'verbs_ru.tsv')
-        _default = os.path.join(notebook_dir, 'verbs.tsv')
-        _path = _ru if language_selector.value == 'ru' and os.path.exists(_ru) else _default
-        try:
-            df_verb = pd.read_csv(_path, sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+        _verb_fname = 'verbs_ru.tsv' if language_selector.value == 'ru' else 'verbs.tsv'
+        _verb_path = gu2.ensure_file(_verb_fname, nb_dir=notebook_dir, remote_base=RAW_BASE) or gu2.ensure_file("verbs.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_verb = pd.read_csv(_verb_path, sep='\t') if _verb_path else None
     return (df_verb,)
 
 
@@ -1205,18 +1197,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_adj, gu2, language_selector, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_adj, gu2, language_selector, notebook_dir, pd):
     # Load adjective data
     if file_upload_adj.value:
         df_adj = gu2.load_data(file_upload_adj)
     else:
-        _ru = os.path.join(notebook_dir, 'adjectives_ru.tsv')
-        _default = os.path.join(notebook_dir, 'adjectives.tsv')
-        _path = _ru if language_selector.value == 'ru' and os.path.exists(_ru) else _default
-        try:
-            df_adj = pd.read_csv(_path, sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+        _adj_fname = 'adjectives_ru.tsv' if language_selector.value == 'ru' else 'adjectives.tsv'
+        _adj_path = gu2.ensure_file(_adj_fname, nb_dir=notebook_dir, remote_base=RAW_BASE) or gu2.ensure_file("adjectives.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_adj = pd.read_csv(_adj_path, sep='\t') if _adj_path else None
     return (df_adj,)
 
 
@@ -1418,7 +1406,8 @@ def _():
     import pandas as pd
     import marimo as mo
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return mo, notebook_dir, os, pd, random
+    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/ellinika_b/chapter_02"
+    return RAW_BASE, mo, notebook_dir, pd, random
 
 
 @app.cell(hide_code=True)

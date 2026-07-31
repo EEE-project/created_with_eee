@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.13"
+__generated_with = "0.23.14"
 app = marimo.App(
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
@@ -39,12 +39,12 @@ def _(language_selector, mo):
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, notebook_dir, os):
+def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     _lang = language_selector.value
     _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_CHTRKm9qTf6hSeF455c8iV)"
     def _img(n):
-        _p = os.path.join(notebook_dir, f'slide-{n}.jpg')
-        return mo.image(src=open(_p, 'rb').read(), width=700) if os.path.exists(_p) else mo.md("")
+        _p = gu.ensure_file(f'slide-{n}.jpg', nb_dir=notebook_dir, remote_base=RAW_BASE)
+        return mo.image(src=open(_p, 'rb').read(), width=700) if _p else mo.md("")
     if _lang == "ru":
         _c = mo.vstack([
             mo.md(f"""
@@ -340,17 +340,12 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_noun, gu, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_noun, gu, notebook_dir, pd):
     if file_upload_noun.value:
         df_noun = gu.load_data(file_upload_noun, [])
     else:
-        try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns_ru.tsv'), sep='\t')
-        except FileNotFoundError:
-            try:
-                df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
-            except FileNotFoundError:
-                df_noun = None
+        _noun_path = gu.ensure_file("nouns_ru.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE) or gu.ensure_file("nouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_noun = pd.read_csv(_noun_path, sep='\t') if _noun_path else None
     return (df_noun,)
 
 
@@ -653,14 +648,12 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_verb, gu, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_verb, gu, notebook_dir, pd):
     if file_upload_verb.value:
         df_verb = gu.load_data(file_upload_verb, [])
     else:
-        try:
-            df_verb = pd.read_csv(os.path.join(notebook_dir, 'verbs.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+        _verb_path = gu.ensure_file("verbs.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_verb = pd.read_csv(_verb_path, sep='\t') if _verb_path else None
     return (df_verb,)
 
 
@@ -905,14 +898,12 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_adj, gu, notebook_dir, os, pd):
+def _(RAW_BASE, file_upload_adj, gu, notebook_dir, pd):
     if file_upload_adj.value:
         df_adj = gu.load_data(file_upload_adj, [])
     else:
-        try:
-            df_adj = pd.read_csv(os.path.join(notebook_dir, 'adjectives.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+        _adj_path = gu.ensure_file("adjectives.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_adj = pd.read_csv(_adj_path, sep='\t') if _adj_path else None
     return (df_adj,)
 
 
@@ -1251,7 +1242,8 @@ def _():
     eee.register_backend("el", mg)
     gu = GreekUtils(mg, mo, pd, eee_module=eee)
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, notebook_dir, os, pd, random
+    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/zorba/26_06_26"
+    return RAW_BASE, eee, gu, mo, notebook_dir, pd, random
 
 
 if __name__ == "__main__":
