@@ -37,78 +37,47 @@ def _(language_selector, mo):
 def _(img, language_selector, mo):
     # Title + badge + painting
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_vRfjDur5bFPjHNNW6pz1zH)"
+    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_HSFHB31SYFX7i6ibHwsh4a)"
     _heading = mo.md(f"# C. P. Cavafy — «Ithaki» {_badge}") if _lang == "en" else mo.md(f"# Κ. Π. Καβάφης — «Ιθάκη» {_badge}")
     if _lang == "ru":
-        _subtitle = mo.md("Первый урок из цикла о стихотворении Константиноса Кавафиса «Итака» (1911).")
-        _cap = "Андреас Параскевас, «Ο Καβάφης στην Αλεξάνδρεια»"
+        _subtitle = mo.md("Второй урок из цикла о стихотворении Константиноса Кавафиса «Итака» (1911): Лестригоны, Циклопы и Посейдон.")
     elif _lang == "el":
-        _subtitle = mo.md("Πρώτο μάθημα από τον κύκλο μαθημάτων για το ποίημα του Κ. Π. Καβάφη «Ιθάκη» (1911).")
-        _cap = "Ανδρέας Παρασκευάς, «Ο Καβάφης στην Αλεξάνδρεια»"
+        _subtitle = mo.md("Δεύτερο μάθημα από τον κύκλο μαθημάτων για το ποίημα του Κ. Π. Καβάφη «Ιθάκη» (1911): οι Λαιστρυγόνες, οι Κύκλωπες και ο Ποσειδώνας.")
     else:
-        _subtitle = mo.md("First lesson in the series on Constantine P. Cavafy's poem «Ithaka» (1911).")
-        _cap = "Andreas Paraskevas, «Kavafis in Alexandria»"
+        _subtitle = mo.md("Second lesson in the series on Constantine P. Cavafy's poem «Ithaka» (1911): the Laestrygonians, the Cyclopes, and Poseidon.")
     _title = mo.vstack([_heading, _subtitle])
-    _painting = mo.vstack([img("painting.jpg", width=360), mo.md(f"<div style='text-align:center;font-size:0.85em'>{_cap}</div>")], align="center")
+    _painting = img("painting.jpg", width=360)
     mo.hstack([_title, _painting], justify="space-between", align="start", gap=2)
     return
 
 
 @app.cell(hide_code=True)
 def _(img, language_selector, mo):
-    # Bio / context content
+    # Recap of lesson 1
     _lang = language_selector.value
-    _texts = {
-        "ru": (
-            r"""
-            ## Кто такой Кавафис
+    _text = {
+        "ru": r"""
+            ## Повторение
 
-            Константинос Кавафис родился в **Александрии в 1863 году** и умер там же в
-            **1933 году**. Он оставил около **154 стихотворений**, в которых часто
-            обращается к истории и мифологии, чтобы говорить о человеке современности.
-            «Итака» — пожалуй, самое известное его стихотворение во всём мире.
+            На прошлом уроке мы разобрали первые строки «Итаки»: кто такой Кавафис,
+            что символизирует Итака, кто такой Одиссей и почему поэт желает, чтобы
+            «путь был долгим».
             """,
-            r"""
-            «Итака» перекликается с «Одиссеей» Гомера: путь Одиссея домой становится
-            у Кавафиса образом жизненного пути человека вообще.
-            """,
-        ),
-        "el": (
-            r"""
-            ## Ποιος ήταν ο Καβάφης
+        "el": r"""
+            ## Επανάληψη
 
-            Ο Κωνσταντίνος Καβάφης γεννήθηκε στην **Αλεξάνδρεια το 1863** και πέθανε
-            εκεί το **1933**. Άφησε περίπου **154 ποιήματα**, στα οποία συχνά
-            καταφεύγει στην ιστορία και τη μυθολογία για να μιλήσει για τον σύγχρονο
-            άνθρωπο. Η «Ιθάκη» είναι ίσως το πιο γνωστό του ποίημα σε όλο τον κόσμο.
+            Στο προηγούμενο μάθημα αναλύσαμε τους πρώτους στίχους της «Ιθάκης»:
+            ποιος ήταν ο Καβάφης, τι συμβολίζει η Ιθάκη, ποιος ήταν ο Οδυσσέας και
+            γιατί ο ποιητής εύχεται «να είναι μακρύς ο δρόμος».
             """,
-            r"""
-            Η «Ιθάκη» συνομιλεί με την Οδύσσεια του Ομήρου: το ταξίδι του Οδυσσέα προς
-            το σπίτι γίνεται στον Καβάφη εικόνα του ταξιδιού της ζωής κάθε ανθρώπου.
-            """,
-        ),
-    }.get(_lang, (
-        r"""
-        ## Who was Cavafy
+    }.get(_lang, r"""
+        ## Review
 
-        Constantine P. Cavafy was born in **Alexandria in 1863** and died there in
-        **1933**. He left about **154 poems**, in which he often turns to history
-        and mythology to speak about modern man. «Ithaka» is perhaps his most
-        famous poem worldwide.
-        """,
-        r"""
-        «Ithaka» speaks to Homer's Odyssey: Odysseus's journey home becomes, in
-        Cavafy, an image of every person's journey through life.
-        """,
-    ))
-    _c = mo.vstack([
-        mo.md(_texts[0]),
-        img("slide-3.jpg"),
-        mo.md(_texts[1]),
-        img("slide-5.jpg"),
-        img("slide-6.jpg"),
-    ])
-    _c
+        In the previous lesson we looked at the opening lines of «Ithaka»: who
+        Cavafy was, what Ithaka symbolizes, who Odysseus was, and why the poet
+        wishes that «the road be long».
+        """)
+    mo.vstack([mo.md(_text), img("slide-1.jpg")])
     return
 
 
@@ -122,7 +91,7 @@ def _(language_selector, mo, t_ui):
 @app.cell(hide_code=True)
 def _(mo):
     _CITATION = (
-        '<b>Κ. Π. Καβάφης, «Ιθάκη»</b> (1911). Πρώτη στροφή, στίχοι 1–3. '
+        '<b>Κ. Π. Καβάφης, «Ιθάκη»</b> (1911). Δεύτερη στροφή, στίχοι 4–12. '
         '<a href="https://www.greek-language.gr/digitalResources/literature/tools/concordance/browse.html?cnd_id=9&text_id=658" target="_blank" rel="noopener">greek-language.gr — Πύλη για την ελληνική γλώσσα</a>'
     )
     mo.md(_CITATION)
@@ -158,6 +127,181 @@ def _(STANZAS, mo, trans_selector):
     mo.vstack([
         trans_selector,
         mo.hstack([_left, _right], justify="start", align="stretch", gap=1.5),
+    ])
+    return
+
+
+@app.cell(hide_code=True)
+def _(img, language_selector, mo):
+    # Who were they + metaphorical meaning + verse analysis + discussion + closing
+    _lang = language_selector.value
+    _texts = {
+        "ru": (
+            r"""
+            ## Кто они такие
+
+            **Лестригоны** — людоеды-великаны, разрушавшие корабли чужеземцев и
+            убивавшие их людей; символ больших опасностей и разрушений.
+
+            **Циклопы** — великаны с одним глазом на лбу, обладавшие огромной силой
+            и жившие в одиночестве; символ насилия, грубой силы и отсутствия
+            культуры.
+
+            **Посейдон** — бог моря, враг Одиссея (тот ослепил его сына Полифема);
+            символ сил, которые мы не можем контролировать — природы, судьбы,
+            обстоятельств.
+
+            У Кавафиса эти образы — не просто мифологические персонажи, они имеют
+            более глубокий, символический смысл.
+            """,
+            r"""
+            ## Переносный смысл
+
+            Эти образы могут символизировать: наши страхи, тревогу, неуверенность,
+            трудности, проблемы, людей, которые нас разочаровывают, препятствия,
+            которые мы создаём сами.
+            """,
+            r"""
+            ## Анализ стихов
+
+            Особое внимание — строкам «если не носишь их в своей душе, если твоя
+            душа не ставит их перед тобой». Что значит «носить с собой страх»?
+            Может ли человек сам создавать себе проблемы? Боялись ли вы когда-нибудь
+            того, что в итоге не случилось?
+
+            **Вопросы для обсуждения:**
+            - Находятся ли наши самые большие страхи внутри нас или вовне?
+            - Согласны ли вы, что мы часто сами создаём себе проблемы?
+            - Если бы Одиссей жил в 2026 году, с какими трудностями он бы
+              столкнулся?
+            """,
+            r"""
+            ## Заключение
+
+            Наши главные враги не всегда — внешние трудности. Часто это страхи,
+            сомнения и негативные мысли, которые мы носим внутри себя. Когда
+            меняется наше отношение к жизни, меняется и само путешествие.
+
+            *Подумайте до следующего урока: кто ваши собственные «Лестригоны»,
+            «Циклопы» и «Посейдон»? Это внешние препятствия, или, может быть,
+            некоторые из них находятся внутри нас?*
+            """,
+        ),
+        "el": (
+            r"""
+            ## Ποιοι ήταν
+
+            **Οι Λαιστρυγόνες** — ανθρωποφάγοι γίγαντες, κατέστρεφαν τα πλοία των
+            ξένων και έτρωγαν τους ανθρώπους τους· σύμβολο των μεγάλων κινδύνων και
+            των καταστροφών.
+
+            **Οι Κύκλωπες** — γίγαντες με ένα μόνο μάτι στο μέτωπο, με τεράστια
+            δύναμη και απομονωμένη ζωή· σύμβολο της βίας, της ωμής δύναμης και της
+            έλλειψης πολιτισμού.
+
+            **Ο Ποσειδώνας** — θεός της θάλασσας, εχθρός του Οδυσσέα (αφού ο
+            Οδυσσέας τύφλωσε τον γιο του, τον Πολύφημο)· σύμβολο των δυνάμεων που
+            δεν μπορούμε να ελέγξουμε — η φύση, η μοίρα, οι συγκυρίες.
+
+            Στον Καβάφη οι μορφές αυτές δεν είναι μόνο μυθολογικά πρόσωπα· έχουν
+            και βαθύτερο, συμβολικό νόημα.
+            """,
+            r"""
+            ## Μεταφορικό νόημα
+
+            Μπορεί να συμβολίζουν: τους φόβους μας, το άγχος, την ανασφάλεια, τις
+            δυσκολίες, τα προβλήματα, τους ανθρώπους που μας απογοητεύουν, τα
+            εμπόδια που δημιουργούμε μόνοι μας.
+            """,
+            r"""
+            ## Ανάλυση των στίχων
+
+            Ιδιαίτερη προσοχή στους στίχους «αν δεν τους κουβανείς μες στην ψυχή
+            σου, αν η ψυχή σου δεν τους στήνει εμπρός σου». Τι σημαίνει «κουβαλώ
+            έναν φόβο»; Μπορεί ο άνθρωπος να δημιουργεί μόνος του τα προβλήματά
+            του; Έχετε φοβηθεί ποτέ κάτι που τελικά δεν συνέβη;
+
+            **Ερωτήσεις για συζήτηση:**
+            - Πιστεύετε ότι οι μεγαλύτεροι φόβοι μας βρίσκονται μέσα μας ή έξω από
+              εμάς;
+            - Συμφωνείτε ότι πολλές φορές δημιουργούμε μόνοι μας τα προβλήματά
+              μας;
+            - Αν ο Οδυσσέας ζούσε το 2026, ποιες δυσκολίες θα αντιμετώπιζε;
+            """,
+            r"""
+            ## Κλείσιμο
+
+            Οι μεγαλύτεροι εχθροί μας δεν είναι πάντα οι εξωτερικές δυσκολίες.
+            Συχνά είναι οι φόβοι, οι αμφιβολίες και οι αρνητικές σκέψεις που
+            κουβαλάμε μέσα μας. Όταν αλλάζει η στάση μας απέναντι στη ζωή, αλλάζει
+            και το ίδιο το ταξίδι.
+
+            *Σκεφτείτε μέχρι το επόμενο μάθημα: ποιοι είναι οι δικοί σας
+            «Λαιστρυγόνες», οι «Κύκλωπες» και ο «Ποσειδώνας»; Είναι εξωτερικά
+            εμπόδια ή μήπως κάποιοι από αυτούς βρίσκονται μέσα μας;*
+            """,
+        ),
+    }.get(_lang, (
+        r"""
+        ## Who they were
+
+        **The Laestrygonians** — man-eating giants who destroyed the ships of
+        strangers and killed their crews; a symbol of great dangers and
+        destruction.
+
+        **The Cyclopes** — giants with a single eye on the forehead, possessing
+        enormous strength and living in isolation; a symbol of violence, brute
+        force, and the absence of civilization.
+
+        **Poseidon** — the god of the sea, Odysseus's enemy (since Odysseus
+        blinded his son Polyphemus); a symbol of the forces we cannot control —
+        nature, fate, circumstance.
+
+        For Cavafy, these figures are not just mythological characters — they
+        carry a deeper, symbolic meaning.
+        """,
+        r"""
+        ## Metaphorical meaning
+
+        These figures can symbolize: our fears, anxiety, insecurity,
+        difficulties, problems, people who disappoint us, obstacles we create
+        for ourselves.
+        """,
+        r"""
+        ## Analysis of the verses
+
+        Particular attention to the lines «if you don't carry them within your
+        soul, if your soul doesn't set them up before you». What does it mean to
+        «carry a fear»? Can a person create their own problems? Have you ever
+        feared something that, in the end, never happened?
+
+        **Discussion questions:**
+        - Are our greatest fears inside us or outside us?
+        - Do you agree that we often create our own problems?
+        - If Odysseus lived in 2026, what difficulties would he face?
+        """,
+        r"""
+        ## Closing
+
+        Our greatest enemies are not always external difficulties. Often they
+        are the fears, doubts, and negative thoughts we carry within ourselves.
+        When our attitude toward life changes, the journey itself changes too.
+
+        *Think about this before the next lesson: who are your own
+        "Laestrygonians," "Cyclopes," and "Poseidon"? Are they external
+        obstacles, or might some of them be within us?*
+        """,
+    ))
+    mo.vstack([
+        mo.md(_texts[0]),
+        img("slide-3.jpg"),
+        mo.md(_texts[1]),
+        img("slide-4.jpg"),
+        mo.md(_texts[2]),
+        img("slide-5.jpg"),
+        img("slide-6.jpg"),
+        mo.md(_texts[3]),
+        img("slide-7.jpg"),
     ])
     return
 
@@ -983,7 +1127,7 @@ def _(gu2):
 @app.cell(hide_code=True)
 def _(eee, mo, notebook_dir):
     from pathlib import Path as _Path
-    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/kavafis_ithaki/1"
+    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/kavafis_ithaki/2"
     def img(name, width=700):
         return eee.magnify_image(mo, _Path(notebook_dir) / name, raw_base=RAW_BASE, width=width, prefer_local=True)
 

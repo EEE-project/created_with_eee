@@ -133,8 +133,14 @@ chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
   dropdown's option order and `translations.md`'s section order must match the order
   the translations are listed in the lecture's own `notes.md`** (Шмаков/Бродский →
   Ильинская → Левитов, подстрочник always first since it's this notebook's own
-  addition, not from `notes.md`; Keeley/Sherrard last since English wasn't in that
-  list at all) — don't alphabetize or reorder for any other reason.
+  addition, not from `notes.md`) — don't alphabetize or reorder for any other reason.
+  **English (Keeley/Sherrard) was tried and removed (2026-07-31):** it's a
+  copyrighted, actively-in-print translation (1975/1992, Princeton UP) — a tool asked
+  to fetch the fuller passage verbatim for lesson 2 declined on fair-use grounds, and
+  the user asked to drop it from both lessons rather than risk over-quoting it. Only
+  подстрочник (this notebook's own literal gloss, not a third party's creative work)
+  plus the 3 Russian literary translators remain. Don't re-add an English literary
+  translation here without checking with the user first.
 - **New exercise type — translation-presence ("слово в переводе")** — added to the
   common-words tests as **Test 1** (not the last test — user-requested reordering,
   2026-07-25: it's poem-specific, so it comes right after the poem section, before the
@@ -182,3 +188,35 @@ chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
   parser extraction was also verified against `ancient_greek/odyssey/2026_07_20`
   (temporarily pointed at the local `eee-project` checkout) — identical `STANZAS`/
   `RHYTHM_HTML`/`QUIZ_WORDS_RAW`/`CLICKABLE_FORMS` shape before and after.
+
+## Known gap: bare local-file reads break on a raw pre-publish molab upload
+
+**Kavafis Ithaki lesson 2's `vocabulary.tsv` 404'd (`FileNotFoundError: /marimo/vocabulary.tsv`)
+when the user raw-uploaded the not-yet-published `notebook.2.py` to molab for preview** — see the
+root `CLAUDE.md`'s "Notebook Content Gotchas" (2026-07-31 correction) for the full mechanism: a
+manually-uploaded single `.py` file (the only preview option before a notebook is committed/
+pushed) does not bring same-directory siblings along, contrary to the older guidance that a
+same-directory bare read is always safe. Fixed in lesson 2 by routing all 7 of its own local
+reads (`vocabulary.tsv`/`nouns.tsv`/`verbs.tsv`/`adjectives.tsv`/`poem_vocab.tsv`/
+`translation_presence.tsv`/`greek.md`/`translations.md`) through `gu2.ensure_file(filename,
+nb_dir=notebook_dir, remote_base=RAW_BASE)` instead of a bare `pd.read_csv(os.path.join(...))`/
+`open(...)` — the same mechanism `img()` already used successfully for slide images.
+
+**Kavafis Ithaki lesson 1 fixed the same day (2026-07-31), same 8-cell pattern as lesson 2**
+(`vocabulary.tsv`/`nouns.tsv`/`verbs.tsv`/`adjectives.tsv`/`poem_vocab.tsv`/
+`translation_presence.tsv`/`greek.md`/`translations.md`, plus exporting `RAW_BASE` from the
+`img()` cell so the other cells can reach it) — verified live: real dataframe row counts, real
+`STANZAS`/`TP_ITEMS` content, 0 cell errors. Its `translation_presence.tsv` needed no data fix
+(unlike lesson 2's — see that course's own build history) — the sync found nothing to correct,
+confirming its lemma/form columns were already ordered correctly.
+
+**Still not fixed: the other two courses under this umbrella (Kapodistrias, all 16 files;
+Zorba, all 3 files) still read their own local TSVs bare, zero `ensure_file` usage.** A
+repo-wide grep (2026-07-31) confirms Odyssey and Palaestra already use `ensure_file`
+throughout, and Kavafis Ithaki now does too (both lessons); Kapodistrias/Zorba and `ellinika_b`
+(see its own `AGENTS.md`) don't. Since both are already published/merged, their real molab
+deployments were presumably created by importing from the published Codeberg URL (not a raw
+upload) — the working theory is that path *does* bundle same-directory siblings, so these may
+not be live-broken today. But it's a real latent pattern that would hit the identical crash on
+any future raw-upload re-preview. Tracked in `~/work/greek/EEE/plans/TODO.md`'s Backlog — not
+fixed here, scope (2 different, older notebook architectures, 19 files) needs its own pass.

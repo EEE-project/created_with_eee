@@ -236,6 +236,22 @@ Hit `StaleCellError` on a freshly-opened `code_mode` context while editing these
 
 **A source edit to `eee_project` (or any editable-installed dependency) never reaches an already-running kernel** — every live session imported the package once at startup; Python's `sys.modules` cache means new methods/functions you add afterward are invisible even though the venv's editable install *does* point at your edited files (`pip show eee-project` confirms `Editable project location`). `importlib.reload()` alone isn't enough either: it re-executes the module and rebinds the module's own `GreekUtils` name to a new class object, but an *already-constructed* `gu2 = GreekUtils(...)` instance's `type(gu2)` still points at the pre-reload class — reload doesn't retroactively re-parent existing instances. Fix, in one `code_mode` call, per live session that needs the new code: delete every `eee_project`/`eee_project.*` key from `sys.modules`, `import eee_project.notebook_utils as new_nu`, then `type(ctx.globals["gu2"]).ui_label = new_nu.GreekUtils.ui_label` (patch the specific new attribute onto the *live* class object, not just re-import) — confirmed this makes the new method immediately callable on the existing `gu2` with no kernel restart. Matches this project's own "reload+patch, don't restart" convention.
 
+## Known gap: bare local-file reads break on a raw pre-publish molab upload
+
+All 10 chapters read their own local `nouns.tsv`/`verbs.tsv`/`adjectives.tsv`/`vocabulary.tsv`
+(and the `_ru.tsv` variants) as bare `pd.read_csv(os.path.join(notebook_dir, ...))` calls, zero
+`gu2.ensure_file()` usage anywhere in this course (confirmed by a repo-wide grep, 2026-07-31).
+This breaks with a `FileNotFoundError` if a chapter is ever raw-uploaded to molab for preview
+before being committed/pushed — a manually-uploaded single `.py` file does not bring
+same-directory siblings along, contrary to the older "same-directory bare read is always safe"
+guidance in the root `CLAUDE.md` (now corrected there, "Notebook Content Gotchas"). Found and
+fixed the hard way in `modern_greek/b1greeklanguageandculture/kavafis_ithaki/2/`'s notebook —
+see that course's own `AGENTS.md` for the concrete before/after and the `ensure_file()` pattern
+to copy. Since all 10 chapters here are already published, their real molab deployments were
+presumably created by importing from the published Codeberg URL rather than a raw upload, so
+this may not be live-broken today — but it's a real latent pattern, not yet fixed. Tracked in
+`~/work/greek/EEE/plans/TODO.md`'s Backlog.
+
 ## Index notebook + index.tsv
 
 Same shared pattern as every other course: `notebook.py` reads `index.tsv` and renders one card per chapter via `ConfigStore.from_url(...)` + `eee_card_list(mo, cfg, lang_sel.value)`. One molab id per chapter (not per language variant) — `index.tsv`'s `url` column points at `chapter_NN_notebook.py`'s upload, never at an `_el`/`_en`/`_ru` variant.
