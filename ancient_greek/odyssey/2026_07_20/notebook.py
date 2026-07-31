@@ -33,6 +33,22 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
+def _(cfg):
+    import pathlib as _pl
+    # Course-local lexicon files (moved from greek-inflexion-eee 2026-07-31,
+    # see this course's own AGENTS.md) -- Epic-register, Odyssey-course-
+    # vocabulary-specific data merged into ag_backend/ag_homer below,
+    # alongside homer (same register), not lsj/byzantine (Attic/Koine).
+    _odyssey_yamls = [_pl.Path(__file__).parent.parent / f"odyssey_morpheus_{_p}_lexicon.yaml" for _p in ("adjs", "nouns", "verbs")]
+    for _y in _odyssey_yamls:
+        if not _y.exists():
+            import urllib.request as _ur
+            _ur.urlretrieve(f"{cfg.raw_base}/{_y.name}", str(_y))
+    ODYSSEY_EXTRA_LEXICONS = [str(_y) for _y in _odyssey_yamls]
+    return (ODYSSEY_EXTRA_LEXICONS,)
+
+
+@app.cell(hide_code=True)
 def _(eee, mo):
     from pathlib import Path as _Path
     _thumb_path = _Path(__file__).parent / "meeting_vase.jpg"
@@ -808,6 +824,12 @@ def _(ag_backend, eee, grc_lexicons, mg, um_backend):
 
 @app.cell(hide_code=True)
 def _():
+    import marimo as mo
+    return (mo,)
+
+
+@app.cell(hide_code=True)
+def _(ODYSSEY_EXTRA_LEXICONS, mo):
     import sys as _sys
     import pathlib as _pl
     for _pth in _pl.Path(_sys.prefix).glob("lib/python*/site-packages/_editable_impl_*.pth"):
@@ -815,17 +837,16 @@ def _():
         if _src not in _sys.path:
             _sys.path.insert(0, _src)
 
-    import marimo as mo
     import eee_project as eee
     from ancient_greek_backend_eee import AncientGreekBackend
     from unimorph_backend_eee import UniMorphBackend
     from modern_greek_backend_eee import ModernGreekBackend
 
     # union recognizer for coverage + quiz — all diachronic rungs, incl. Classical Attic (pratt + ltrg + lsj)
-    ag_backend = AncientGreekBackend.for_period("epic", "attic", "hellenistic_koine", "roman_koine", extra_lexicons=["odyssey_morpheus"])
+    ag_backend = AncientGreekBackend.for_period("epic", "attic", "hellenistic_koine", "roman_koine", extra_lexicons=ODYSSEY_EXTRA_LEXICONS)
     # odyssey_morpheus is Epic-register, Odyssey-course-vocabulary-specific --
     # merged alongside homer (same register), not lsj/byzantine (Attic/Koine).
-    ag_homer = AncientGreekBackend.for_period("epic", extra_lexicons=["odyssey_morpheus"])
+    ag_homer = AncientGreekBackend.for_period("epic", extra_lexicons=ODYSSEY_EXTRA_LEXICONS)
     ag_lsj = AncientGreekBackend.for_period("attic")
     ag_lxx = AncientGreekBackend.for_period("hellenistic_koine")
     ag_morphgnt = AncientGreekBackend.for_period("roman_koine")
@@ -841,7 +862,7 @@ def _():
     eee.register_backend("grc", um_backend, backend="unimorph")
     eee.set_chain("grc", ["ancient-greek", "unimorph"])
     gu = eee.GreekUtils(mo_module=mo)
-    return ag_backend, eee, grc_lexicons, gu, mg, mo, um_backend
+    return ag_backend, eee, grc_lexicons, gu, mg, um_backend
 
 
 @app.cell(hide_code=True)

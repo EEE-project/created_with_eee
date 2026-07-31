@@ -7,6 +7,8 @@ odyssey/
   index.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
   notebook.py           # index/parent notebook
   eee_note.md            # shared "О морфологическом движке EEE" text (see below)
+  odyssey_morpheus_{adjs,nouns,verbs}_lexicon.yaml  # course-local lexicon
+                          # data, see "Fixing a genuine coverage gap" below
   2026_07_27/            # Lesson: Od. IX.152–180
   2026_07_20/            # Lesson: Od. IX.130–151
   2026_07_13/            # Lesson: Od. IX.105–129
@@ -262,6 +264,63 @@ Format: `form\tlemma\tpos\tcontext\tmeaning`
 - Multi-word forms (e.g. `πεφυγμένος ἦεν`, `οὔ ποτε`) are **intentional** — they
   represent periphrastic constructions; do not split them
 - Before adding entries, check `vocab_content_problems.md` — the gap may be documented
+
+### Fixing a genuine coverage gap (not already documented)
+
+The three `odyssey_morpheus_{adjs,nouns,verbs}_lexicon.yaml` files at this
+directory's top level (sibling to the lesson dirs, not per-lesson) are
+**course-local** — same mechanism as Palaestra's `athenaze_capN_*.yaml`
+(see that course's own AGENTS.md), a raw file path in
+`AncientGreekBackend`'s `lexicons=[...]`/`extra_lexicons=[...]`, not a
+registered package name. (History: 2026-07-11 → 2026-07-31 these lived as
+a named `"odyssey_morpheus"` lexicon inside `greek-inflexion-eee` itself —
+moved back out because the course was still growing lesson by lesson, and
+each addition had forced a full package version bump + PyPI republish, 7
+in 16 days, just to gap-mine a few more words. Bundling this kind of data
+into the shared package is still the right move eventually, but only as a
+one-time consolidation once a course is actually finished — see
+`feedback_check_course_local_lexicons_first.md`-style reasoning in the
+package's own README if this comes up again for a different course.)
+
+Every lesson's own setup cell resolves and downloads these files, then
+passes them to both diachronic backends:
+
+```python
+ag_backend = AncientGreekBackend.for_period("epic", "attic", "hellenistic_koine", "roman_koine", extra_lexicons=ODYSSEY_EXTRA_LEXICONS)
+ag_homer = AncientGreekBackend.for_period("epic", extra_lexicons=ODYSSEY_EXTRA_LEXICONS)
+```
+
+`ODYSSEY_EXTRA_LEXICONS` (a list of 3 absolute paths) is built in its own
+cell, separate from the cell that constructs `ag_backend`/`ag_homer` —
+this split exists specifically to avoid a circular dependency: the
+download step needs `cfg` (for `cfg.raw_base`), but `cfg`'s own cell needs
+`mo`, and `mo` is imported in the backend-construction cell — so `import
+marimo as mo` also lives in its own minimal cell, ahead of both. Don't
+collapse these back into one cell without re-checking `marimo check` for a
+`cycle-dependencies` error.
+
+`for_period()` merges named *period* presets (`"epic"` → `"homer"`; `"attic"`
+→ `"pratt"`/`"ltrg"`/`"lsj"`; etc. — see `ancient_greek_backend_eee`'s own
+`_PERIOD_PRESETS`), plus `extra_lexicons` layered on top — raw file paths
+work here exactly like they do in a plain `lexicons=[...]` list. Every
+entry in the 3 lexicon files is a verbatim attested-form `forms:` block
+(never generative `stems:` — they exist specifically for forms the other
+period lexicons can't derive correctly). **A new entry for a genuine gap
+should follow the same `forms:`-only convention**, confirmed via
+`greek-inflexion-eee`'s own `tools/morpheus/query_morpheus.py` before
+adding — matching the methodology and skip-list already documented in
+each file's own header comments (the "gap-mining" passes; read one before
+adding a new lemma, it lists words deliberately excluded and why). Homer's
+own dialect is Epic/Ionic, not Doric — but a single spelling can be
+grammatically ambiguous across dialects, and Morpheus returns every
+reading it recognizes for that exact surface form, each tagged with which
+dialect(s) attest it. When a candidate reading's *only* attested dialect
+tag is Doric (no Epic/Ionic reading matches that same grammatical
+analysis), that specific reading is excluded as the wrong parse for this
+text — a reading valid in Epic too is kept even if Doric also happens to
+share it (see e.g. `ἀρόω`/`ναίω` in `odyssey_morpheus_verbs_lexicon.yaml`'s
+own header for a worked example). So a "gap" isn't always a bug — check
+the skip-list first.
 
 ## Clickable poem text (`CLICKABLE_FORMS` / `HOMER_WORDS`)
 
