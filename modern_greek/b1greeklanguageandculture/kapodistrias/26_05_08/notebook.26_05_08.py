@@ -30,7 +30,7 @@ def _(language_selector, mo):
     )
     eee_topbar(mo, back_url=_cfg.index_url(), lang=language_selector.value, titles={
         "ru": "Каподистриас", "el": "Καποδίστριας", "en": "Kapodistrias",
-    }, ga_config=_cfg.ga_config())
+    }, ga_config=_cfg.ga_config(), same_window=True)
     return
 
 

@@ -4,6 +4,7 @@
 #     "eee-project>=1.1.0",
 #     "marimo>=0.23.14",
 #     "modern-greek-backend-eee>=1.0.0",
+#     "unimorph-backend-eee>=1.0.3",
 #     "pandas",
 # ]
 # ///
@@ -25,7 +26,7 @@ def _(language_selector, mo):
     )
     eee_topbar(mo, back_url=_cfg.index_url(), lang=language_selector.value, titles={
         "ru": "Ελληνικά Β", "el": "Ελληνικά Β", "en": "Ελληνικά Β",
-    }, ga_config=_cfg.ga_config())
+    }, ga_config=_cfg.ga_config(), same_window=True)
     return
 
 

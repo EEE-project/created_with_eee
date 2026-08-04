@@ -33,7 +33,7 @@ def _(back_url, cfg, lang_sel, mo):
         "ru": "Алексис Зорбас", "el": "Αλέξης Ζορμπάς", "en": "Alexis Zorbas",
     }, parent_titles={
         "ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture",
-    }, style="index", ga_config=cfg.ga_config())
+    }, style="index", ga_config=cfg.ga_config(), same_window=True)
     return
 
 
@@ -51,7 +51,7 @@ def _(lang_sel, mo):
 @app.cell(hide_code=True)
 def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_card_list
-    eee_card_list(mo, cfg, lang_sel.value)
+    eee_card_list(mo, cfg, lang_sel.value, same_window=True)
     return
 
 

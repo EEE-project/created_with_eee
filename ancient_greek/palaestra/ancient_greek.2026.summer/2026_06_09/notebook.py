@@ -30,7 +30,7 @@ def _(mo):
         ga=f"{_ROOT}/ga.json",
     )
     eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles="Palaestra",
-               ga_config=cfg.ga_config())
+               ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
 

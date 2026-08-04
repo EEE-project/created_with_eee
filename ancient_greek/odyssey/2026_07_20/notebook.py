@@ -22,7 +22,7 @@ def _(mo):
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
     eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles={
         "ru": "Одиссея для отважных",
-    }, ga_config=cfg.ga_config())
+    }, ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
 

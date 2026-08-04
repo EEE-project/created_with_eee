@@ -23,7 +23,7 @@ def _(lang_sel, mo):
     )
     eee_topbar(mo, back_url=None, lang=lang_sel.value, titles={
         "ru": "EEE", "el": "EEE", "en": "EEE",
-    }, style="index", ga_config=cfg.ga_config())
+    }, style="index", ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
 
@@ -41,7 +41,7 @@ def _(lang_sel, mo):
 @app.cell(hide_code=True)
 def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_card_list
-    eee_card_list(mo, cfg, lang_sel.value, lang_fallback="en")
+    eee_card_list(mo, cfg, lang_sel.value, lang_fallback="en", same_window=True)
     return
 
 

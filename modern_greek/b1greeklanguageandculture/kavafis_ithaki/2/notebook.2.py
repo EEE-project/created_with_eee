@@ -25,7 +25,7 @@ def _(language_selector, mo):
     )
     eee_topbar(mo, back_url=cfg.index_url(), lang=language_selector.value, titles={
         "ru": "Καβάφης — Ιθάκη", "el": "Καβάφης — Ιθάκη", "en": "Kavafis — Ithaki",
-    }, ga_config=cfg.ga_config())
+    }, ga_config=cfg.ga_config(), same_window=True)
     return
 
 

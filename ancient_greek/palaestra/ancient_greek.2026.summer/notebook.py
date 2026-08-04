@@ -25,7 +25,7 @@ def _(mo):
     back_url = parent_back_url(f"{_ROOT}/ancient_greek/index.tsv")
     eee_topbar(mo, back_url=back_url, lang="ru", titles="Palaestra", parent_titles={
         "ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek",
-    }, style="index", ga_config=cfg.ga_config())
+    }, style="index", ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
 
@@ -58,7 +58,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo, cfg):
     from eee_project.notebook_utils import eee_card_list
-    eee_card_list(mo, cfg, "ru", lang_fallback="ru")
+    eee_card_list(mo, cfg, "ru", lang_fallback="ru", same_window=True)
     return
 
 

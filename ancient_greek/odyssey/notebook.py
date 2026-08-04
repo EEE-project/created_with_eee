@@ -27,14 +27,14 @@ def _(mo):
         "ru": "Одиссея для отважных",
     }, parent_titles={
         "ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek",
-    }, style="index", ga_config=cfg.ga_config())
+    }, style="index", ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
 
 @app.cell(hide_code=True)
 def _(cfg, mo):
     from eee_project.notebook_utils import eee_card_list
-    eee_card_list(mo, cfg, "ru", lang_fallback="ru")
+    eee_card_list(mo, cfg, "ru", lang_fallback="ru", same_window=True)
     return
 
 
