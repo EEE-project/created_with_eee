@@ -40,10 +40,9 @@ def _(cfg):
     # vocabulary-specific data merged into ag_backend/ag_homer below,
     # alongside homer (same register), not lsj/byzantine (Attic/Koine).
     _odyssey_yamls = [_pl.Path(__file__).parent.parent / f"odyssey_morpheus_{_p}_lexicon.yaml" for _p in ("adjs", "nouns", "verbs")]
+    from eee_project import GreekUtils as _GU
     for _y in _odyssey_yamls:
-        if not _y.exists():
-            import urllib.request as _ur
-            _ur.urlretrieve(f"{cfg.raw_base}/{_y.name}", str(_y))
+        _GU.ensure_file(_y.name, nb_dir=_y.parent, remote_base=cfg.raw_base)
     ODYSSEY_EXTRA_LEXICONS = [str(_y) for _y in _odyssey_yamls]
     return (ODYSSEY_EXTRA_LEXICONS,)
 

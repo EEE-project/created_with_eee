@@ -821,9 +821,7 @@ def _(cfg, mo):
     _yamls = [NB_DIR.parent / f"athenaze_{_c}_nouns.yaml" for _c in ("cap1", "cap2")]
     _yamls.append(NB_DIR.parent / "athenaze_cap2_adjs.yaml")
     for _y in _yamls:
-        if not _y.exists():
-            import urllib.request as _ur
-            _ur.urlretrieve(f"{cfg.raw_base}/{_y.name}", str(_y))
+        GreekUtils.ensure_file(_y.name, nb_dir=_y.parent, remote_base=cfg.raw_base)
     ag = AncientGreekBackend(lexicons=["pratt", "ltrg", *[str(_y) for _y in _yamls]])
     setup_ancient_greek(ag)
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)

@@ -2,13 +2,9 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.14",
-#     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
-#     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
+#     "eee-project>=1.1.0",
+#     "ancient-greek-backend-eee>=2.0.0",
 # ]
-#
-# [tool.uv.sources]
-# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
-# ancient-greek-backend-eee = { git = "https://codeberg.org/EEE-project/ancient-greek-backend-eee.git" }
 # ///
 
 import marimo
@@ -190,9 +186,7 @@ def _(cfg, mo):
 
     _yamls = [_Path(__file__).parent.parent / f"athenaze_cap{_n}_adjs.yaml" for _n in (1, 2)]
     for _y in _yamls:
-        if not _y.exists():
-            import urllib.request as _ur
-            _ur.urlretrieve(f"{cfg.raw_base}/{_y.name}", str(_y))
+        GreekUtils.ensure_file(_y.name, nb_dir=_y.parent, remote_base=cfg.raw_base)
     ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt", *[str(_y) for _y in _yamls]])
     setup_ancient_greek(ag)
 

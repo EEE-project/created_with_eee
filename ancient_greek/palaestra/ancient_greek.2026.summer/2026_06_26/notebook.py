@@ -697,9 +697,8 @@ def _(cfg, mo):
     NB_REMOTE = f"{cfg.raw_base}/2026_06_26"
     _noun_yaml = NB_DIR.parent / "athenaze_cap1_nouns.yaml"
     _verb_yaml = NB_DIR.parent / "athenaze_cap1_verbs.yaml"
-    if not _noun_yaml.exists():
-        import urllib.request as _ur
-        _ur.urlretrieve(f"{cfg.raw_base}/athenaze_cap1_nouns.yaml", str(_noun_yaml))
+    GreekUtils.ensure_file(_noun_yaml.name, nb_dir=_noun_yaml.parent, remote_base=cfg.raw_base)
+    GreekUtils.ensure_file(_verb_yaml.name, nb_dir=_verb_yaml.parent, remote_base=cfg.raw_base)
     ag = AncientGreekBackend(lexicons=["pratt", "ltrg", str(_verb_yaml), str(_noun_yaml)])
     setup_ancient_greek(ag)
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)

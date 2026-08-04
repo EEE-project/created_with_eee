@@ -2,17 +2,11 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.14",
-#     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
-#     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
-#     "unimorph-backend-eee @ git+https://codeberg.org/EEE-project/unimorph-backend-eee.git",
-#     "modern-greek-backend-eee @ git+https://codeberg.org/EEE-project/modern-greek-backend-eee.git",
+#     "eee-project>=1.1.0",
+#     "ancient-greek-backend-eee>=2.0.0",
+#     "unimorph-backend-eee>=1.0.3",
+#     "modern-greek-backend-eee>=1.0.0",
 # ]
-#
-# [tool.uv.sources]
-# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
-# ancient-greek-backend-eee = { git = "https://codeberg.org/EEE-project/ancient-greek-backend-eee.git" }
-# unimorph-backend-eee = { git = "https://codeberg.org/EEE-project/unimorph-backend-eee.git" }
-# modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
 # ///
 
 import marimo
@@ -40,10 +34,9 @@ def _(cfg):
     # vocabulary-specific data merged into ag_backend/ag_homer below,
     # alongside homer (same register), not lsj/byzantine (Attic/Koine).
     _odyssey_yamls = [_pl.Path(__file__).parent.parent / f"odyssey_morpheus_{_p}_lexicon.yaml" for _p in ("adjs", "nouns", "verbs")]
+    from eee_project import GreekUtils as _GU
     for _y in _odyssey_yamls:
-        if not _y.exists():
-            import urllib.request as _ur
-            _ur.urlretrieve(f"{cfg.raw_base}/{_y.name}", str(_y))
+        _GU.ensure_file(_y.name, nb_dir=_y.parent, remote_base=cfg.raw_base)
     ODYSSEY_EXTRA_LEXICONS = [str(_y) for _y in _odyssey_yamls]
     return (ODYSSEY_EXTRA_LEXICONS,)
 
@@ -567,12 +560,22 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(eee):
+def _(cfg, eee):
     from pathlib import Path as _P
+    from eee_project import GreekUtils as _GU
 
     _root = _P(__file__).parent
-    _greek = eee.parse_stanza_text((_root / "greek.md").read_text(encoding="utf-8"), ref_prefix="### Odyss. ")
-    _trans_ru, _desc_ru = eee.parse_stanza_translations((_root / "translations_ru.md").read_text(encoding="utf-8"), ref_prefix="### Odyss. ")
+    _session_remote = f"{cfg.raw_base}/2026_06_01"
+    _greek_md = _GU.ensure_file("greek.md", nb_dir=_root, remote_base=_session_remote)
+    _trans_md = _GU.ensure_file("translations_ru.md", nb_dir=_root, remote_base=_session_remote)
+    _ictus_html = _GU.ensure_file("ictus.html", nb_dir=_root, remote_base=_session_remote)
+    if _greek_md is None or _trans_md is None or _ictus_html is None:
+        raise FileNotFoundError(
+            "greek.md / translations_ru.md / ictus.html: one or more required "
+            "session files could not be fetched (see ensure_file diagnostics above)"
+        )
+    _greek = eee.parse_stanza_text(_greek_md.read_text(encoding="utf-8"), ref_prefix="### Odyss. ")
+    _trans_ru, _desc_ru = eee.parse_stanza_translations(_trans_md.read_text(encoding="utf-8"), ref_prefix="### Odyss. ")
     TRANS_DESC = _desc_ru
     STANZAS = [
         {
@@ -586,7 +589,7 @@ def _(eee):
     # ictus (rhythm) markup: one marked-up line per plain line, in the same
     # reading order as greek.md -- zipped by position, not re-keyed, so a plain
     # line's own accents/punctuation never need to match the markup exactly.
-    _ictus_lines = (_root / "ictus.html").read_text(encoding="utf-8").splitlines()
+    _ictus_lines = _ictus_html.read_text(encoding="utf-8").splitlines()
     _all_plain_lines = [line for lines in _greek.values() for line in lines]
     RHYTHM_HTML = dict(zip(_all_plain_lines, _ictus_lines))
     return RHYTHM_HTML, STANZAS, TRANS_DESC
@@ -595,14 +598,18 @@ def _(eee):
 @app.cell(hide_code=True)
 def _(
     ag_backend,
+    cfg,
     eee,
     grc_lexicons,
     gu,
 ):
     from pathlib import Path
 
+    _nb_dir = Path(__file__).parent
     QUIZ_WORDS_RAW = gu.resolve_word_grammar(
-        gu.load_inflected_vocab_tsv("vocab_I_1-21.tsv", nb_dir=Path(__file__).parent),
+        gu.load_inflected_vocab_tsv(
+            "vocab_I_1-21.tsv", nb_dir=_nb_dir, remote_base=f"{cfg.raw_base}/2026_06_01",
+        ),
         ag_backend, "ru"
     )
 
