@@ -184,15 +184,15 @@ def _(cfg, mo):
     from eee_project import GreekUtils, ANCIENT_GREEK, setup_ancient_greek
     from pathlib import Path as _Path
 
-    _yamls = [_Path(__file__).parent.parent / f"athenaze_cap{_n}_adjs.yaml" for _n in (1, 2)]
+    _yamls = [_Path(__file__).parent / f"athenaze_cap{_n}_adjs.yaml" for _n in (1, 2)]
     for _y in _yamls:
         GreekUtils.ensure_file(_y.name, nb_dir=_y.parent, remote_base=cfg.raw_base)
-    ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt", *[str(_y) for _y in _yamls]])
+    ag = AncientGreekBackend(lexicons=["pratt", "ltrg", "homer", "lxx", "morphgnt", *[str(_y.resolve()) for _y in _yamls]])
     setup_ancient_greek(ag)
 
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
 
-    NB_REMOTE = f"{cfg.raw_base}/2026_06_09"
+    NB_REMOTE = cfg.nb_remote("2026_06_09")
     for _pdf in (
         "Δίδαγμα α'.pdf",
         "ΣΤΟΙΧΕΙΑ.pdf",

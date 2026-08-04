@@ -3,13 +3,9 @@
 # dependencies = [
 #     "marimo>=0.23.14",
 #     "pandas>=2.0",
-#     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
-#     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
+#     "eee-project>=1.1.0",
+#     "ancient-greek-backend-eee>=2.0.0",
 # ]
-#
-# [tool.uv.sources]
-# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
-# ancient-greek-backend-eee = { git = "https://codeberg.org/EEE-project/ancient-greek-backend-eee.git" }
 # ///
 
 import marimo
@@ -516,7 +512,7 @@ def _(cfg, mo):
     from pathlib import Path as _Path
     gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
     NB_DIR = _Path(__file__).parent
-    NB_REMOTE = f"{cfg.raw_base}/2026_06_19"
+    NB_REMOTE = cfg.nb_remote("2026_06_19")
     eee_footer(mo, lang='ru')
     return NB_DIR, NB_REMOTE, gu
 

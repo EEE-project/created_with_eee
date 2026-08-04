@@ -2,13 +2,9 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.14",
-#     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
-#     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
+#     "eee-project>=1.1.0",
+#     "ancient-greek-backend-eee>=2.0.0",
 # ]
-#
-# [tool.uv.sources]
-# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
-# ancient-greek-backend-eee = { git = "https://codeberg.org/EEE-project/ancient-greek-backend-eee.git" }
 # ///
 
 import marimo
@@ -217,7 +213,7 @@ def _(cfg, mo):
     from pathlib import Path as _Path
 
     _gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
-    NB_REMOTE = f"{cfg.raw_base}/2026_06_12"
+    NB_REMOTE = cfg.nb_remote("2026_06_12")
     for _pdf in (
         "Greek Letter Practice - Vanguard Education.pdf",
         "Прописи.pdf",

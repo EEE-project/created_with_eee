@@ -37,7 +37,7 @@ def _(cfg):
     from eee_project import GreekUtils as _GU
     for _y in _odyssey_yamls:
         _GU.ensure_file(_y.name, nb_dir=_y.parent, remote_base=cfg.raw_base)
-    ODYSSEY_EXTRA_LEXICONS = [str(_y) for _y in _odyssey_yamls]
+    ODYSSEY_EXTRA_LEXICONS = [str(_y.resolve()) for _y in _odyssey_yamls]
     return (ODYSSEY_EXTRA_LEXICONS,)
 
 
@@ -560,15 +560,19 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(cfg, eee):
+async def _(cfg, eee):
     from pathlib import Path as _P
     from eee_project import GreekUtils as _GU
 
     _root = _P(__file__).parent
-    _session_remote = f"{cfg.raw_base}/2026_06_01"
-    _greek_md = _GU.ensure_file("greek.md", nb_dir=_root, remote_base=_session_remote)
-    _trans_md = _GU.ensure_file("translations_ru.md", nb_dir=_root, remote_base=_session_remote)
-    _ictus_html = _GU.ensure_file("ictus.html", nb_dir=_root, remote_base=_session_remote)
+    _session_remote = cfg.nb_remote("2026_06_01")
+    _fetched = await _GU.ensure_files(
+        "greek.md", "translations_ru.md", "ictus.html",
+        nb_dir=_root, remote_base=_session_remote,
+    )
+    _greek_md = _fetched["greek.md"]
+    _trans_md = _fetched["translations_ru.md"]
+    _ictus_html = _fetched["ictus.html"]
     if _greek_md is None or _trans_md is None or _ictus_html is None:
         raise FileNotFoundError(
             "greek.md / translations_ru.md / ictus.html: one or more required "
@@ -605,10 +609,9 @@ def _(
 ):
     from pathlib import Path
 
-    _nb_dir = Path(__file__).parent
     QUIZ_WORDS_RAW = gu.resolve_word_grammar(
         gu.load_inflected_vocab_tsv(
-            "vocab_I_1-21.tsv", nb_dir=_nb_dir, remote_base=f"{cfg.raw_base}/2026_06_01",
+            "vocab_I_1-21.tsv", nb_dir=Path(__file__).parent, remote_base=cfg.nb_remote("2026_06_01"),
         ),
         ag_backend, "ru"
     )
@@ -733,7 +736,7 @@ def _(mo):
 def _(cfg, gu):
     from pathlib import Path as _P
     NB_DIR = _P(__file__).parent
-    NB_REMOTE = f"{cfg.raw_base}/2026_06_01"
+    NB_REMOTE = cfg.nb_remote("2026_06_01")
     for _pdf in (
         'Одиссея. Зачин.pdf',
         'Одиссея_1-21_словарь.pdf',

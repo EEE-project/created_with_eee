@@ -3,13 +3,9 @@
 # dependencies = [
 #     "marimo>=0.23.14",
 #     "pandas>=2.0",
-#     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
-#     "ancient-greek-backend-eee @ git+https://codeberg.org/EEE-project/ancient-greek-backend-eee.git",
+#     "eee-project>=1.1.0",
+#     "ancient-greek-backend-eee>=2.0.0",
 # ]
-#
-# [tool.uv.sources]
-# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
-# ancient-greek-backend-eee = { git = "https://codeberg.org/EEE-project/ancient-greek-backend-eee.git" }
 # ///
 
 import marimo
@@ -717,10 +713,10 @@ def _(cfg, mo):
     from eee_project.notebook_utils import eee_footer
     from pathlib import Path as _Path
     NB_DIR = _Path(__file__).parent
-    NB_REMOTE = f"{cfg.raw_base}/2026_06_23"
+    NB_REMOTE = cfg.nb_remote("2026_06_23")
     _verb_yaml = NB_DIR.parent / "athenaze_cap1_verbs.yaml"
     GreekUtils.ensure_file(_verb_yaml.name, nb_dir=_verb_yaml.parent, remote_base=cfg.raw_base)
-    ag = AncientGreekBackend(lexicons=["pratt", "ltrg", str(_verb_yaml)])
+    ag = AncientGreekBackend(lexicons=["pratt", "ltrg", str(_verb_yaml.resolve())])
     setup_ancient_greek(ag)
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
     eee_footer(mo, lang='ru')
