@@ -1,15 +1,16 @@
-# created_with_eee
+# Interactive learning materials created with EEE
 
 Examples of interactive Greek-language course materials in notebook form,
 built on the [EEE](https://github.com/EEE-project/eee-project) morphology
-framework. No installation required, open directly in your Telegram
-messenger:
+framework. No installation required — open directly in your browser:
+
+1. **product** — [GitHub Pages](https://eee-project.github.io/created_with_eee/)
+2. **mirror** — [GitLab Pages](https://eee-project.gitlab.io/created_with_eee/)
+3. **devel** — [Codeberg Pages](https://eee-project.codeberg.page/created_with_eee/)
+
+or in your Telegram messenger:
 
 https://telegram.me/eee_project_greek_bot/created_with_eee
-
-or web-browser:
-
-https://molab.marimo.io/notebooks/nb_n9Es7EWQdEkMKCLcKwpTjg/app
 
 or run locally:
 
@@ -32,24 +33,26 @@ Very different course styles, spanning different periods of the Greek
 language:
 
 **Αρχαία Ελληνικά — Ancient Greek**
-- **Odyssey** (`ancient_greek/odyssey/`) — reading course through Homer's
+- **[Odyssey](ancient_greek/odyssey/)** — reading course through Homer's
   *Odyssey* Book IX, one lesson per lecture: Greek text with clickable
   word-by-word glosses, rhythm (ictus) markup, multiple literary translations
   side by side, and paradigm/vocabulary drills.
-- **Palaestra** (`ancient_greek/palaestra/`) — some first lessons from the
-  Ancient Greek for beginners course.
+- **[Palaestra](ancient_greek/palaestra/)** — Ancient Greek for beginners,
+  Summer 2026 intensive course.
 
 **Σύγχρονα Ελληνικά — Modern Greek**
-- **Ελληνικά Β** (`modern_greek/ellinika_b/`) — chaptered course following the
+- **[Ελληνικά Β](modern_greek/ellinika_b/)** — chaptered course following the
   Ελληνικά Β textbook.
 - **B1: Ελληνική Γλώσσα και Πολιτισμός** (`modern_greek/b1greeklanguageandculture/`)
-  — Greek language and culture, including lessons about the Kapodistrias,
-  Zorba, and Kavafis' Ithaki.
+  — Greek language and culture:
+  - **[Kapodistrias](modern_greek/b1greeklanguageandculture/kapodistrias/)**
+  - **[Zorba](modern_greek/b1greeklanguageandculture/zorba/)**
+  - **[Kavafis' Ithaki](modern_greek/b1greeklanguageandculture/kavafis_ithaki/)**
 
 Every course shares the same underlying drill/quiz machinery from
-[eee-project](https://github.com/EEE-project/eee-project); each course
-directory has its own `AGENTS.md` documenting its structure and content
-sources.
+[eee-project](https://github.com/EEE-project/eee-project). Each course
+directory has its own README (description + live links) and `AGENTS.md`
+(structure and content sources, for developers).
 
 ## EEE (Ελληνικά Εκπαιδευτικά Εργαλεία — Greek Language Educational Tools)
 

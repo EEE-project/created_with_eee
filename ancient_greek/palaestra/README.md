@@ -2,6 +2,11 @@
 
 Interactive notebooks for an Ancient Greek beginners course, built with [EEE](https://codeberg.org/EEE-project/eee-project) and [Marimo](https://marimo.io).
 
+**Live:**
+- [GitHub Pages](https://eee-project.github.io/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/)
+- [GitLab Pages](https://eee-project.gitlab.io/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/)
+- [Codeberg Pages](https://eee-project.codeberg.page/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/)
+
 ## Courses
 
 | Directory | Course |
