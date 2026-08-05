@@ -15,11 +15,10 @@ Interactive notebooks for an Ancient Greek beginners course, built with [EEE](ht
 
 ## Running notebooks
 
-### From molab (no install)
+### From the browser (no install)
 
-Open the course index — `ancient_greek.2026.summer/notebook.py`, itself on molab — for a
-clickable card per lesson (icon, title, description, direct link). It reads
-`index.tsv`; there's no need to open that file directly.
+Open any of the **Live** links above for a clickable card per lesson (icon,
+title, description, direct link) — no need to open `index.tsv` directly.
 
 ### Locally
 
@@ -41,7 +40,7 @@ The notebook opens in your browser. All exercises are interactive.
 
 ```
 ancient_greek.2026.summer/
-  index.tsv          ← lesson index (molab IDs, titles, descriptions)
+  index.tsv          ← lesson index (URLs, titles, descriptions)
   notebook.py          ← course index / lesson selector
   2026_06_09/          ← Занятие 1: Алфавит и повелительное наклонение
   2026_06_12/          ← Занятие 2: Ударения и просодия
