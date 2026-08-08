@@ -18,7 +18,7 @@ app = marimo.App(width="medium")
 @app.cell(hide_code=True)
 def _(language_selector, mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     _cfg = ConfigStore.from_file_or_url(
         __file__,
         f"{_ROOT}/modern_greek/ellinika_b/index.tsv",
@@ -1522,7 +1522,7 @@ def _():
     import pandas as pd
     import marimo as mo
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/ellinika_b/chapter_06"
+    RAW_BASE = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main/modern_greek/ellinika_b/chapter_06"
     return RAW_BASE, mo, notebook_dir, pd, random
 
 
