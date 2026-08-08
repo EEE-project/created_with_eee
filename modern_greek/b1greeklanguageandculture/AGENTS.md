@@ -1,5 +1,9 @@
 # B1 Greek Language and Culture — Agent Reference
 
+1. Read `../../AGENTS.md` (repo root) first — it covers policy shared by
+   every course.
+2. This file: what's specific to this umbrella and its 3 sub-courses.
+
 Covers all sub-courses under this umbrella: `kapodistrias/`, `zorba/`, and `kavafis_ithaki/`.
 **`kavafis_ithaki/` uses a different notebook architecture than the other two** — see
 "Kavafis Ithaki: a second notebook architecture" below before touching it.
@@ -36,7 +40,13 @@ verbs.tsv, nouns.tsv, adjectives.tsv   ← vocabulary (Word\tTranslation, 2-col)
 
 ## Source discipline — CRITICAL
 
-**Base every cell on the lecture's own materials in `~/work/greek/lectures/B1greeklanguageandculture/<Course>/<lesson>/`** — the presentation (`.pptx`), and for the vocabulary specifically, the master notes file described below. **Do not invent vocabulary, dates, or biographical facts** — everything in these notebooks should trace back to a slide, a quote, or a dated vocabulary entry.
+See the root `AGENTS.md`'s "Source discipline" for the policy (materials-only,
+ask before researching further). This course's materials live in
+`~/work/greek/lectures/B1greeklanguageandculture/<Course>/<lesson>/`: the
+presentation (`.pptx`), and for the vocabulary specifically, the master
+notes file described below. Everything in these notebooks should trace back
+to a slide, a quote, or a dated vocabulary entry — never an invented date or
+biographical fact.
 
 ### Extracting PPTX content
 
@@ -77,7 +87,14 @@ Leave the drill machinery, `UI_STRINGS`, language selector, and footer untouched
 
 ## Index notebook + index.tsv
 
-Each course's `notebook.py` reads its own `index.tsv` (trilingual schema — see Directory layout above) and renders one card per row via `ConfigStore.from_url(...)` + `eee_card_list(mo, cfg, lang_sel.value)` (shared across all index notebooks — don't hand-roll the card CSS/loop again). A row with an empty `url` renders as a disabled "coming soon"/"σύντομα"/"скоро" card — this is the correct state for a lesson that's built but not yet uploaded to molab. Once uploaded, add the real `url` (the full `https://molab.marimo.io/notebooks/nb_XXX/app` link) to both the lesson's own `_badge` line and its `index.tsv` row — these are two independent places, keep them in sync.
+Each course's `index.tsv` uses the trilingual schema (see Directory layout
+above) — the shared `ConfigStore`/`eee_card_list` index-notebook pattern
+(see the root `AGENTS.md`'s "Publishing a lesson/chapter to Pages") applies
+here too; don't hand-roll the card CSS/loop again. A row with an empty `url`
+renders as a disabled "coming soon"/"σύντομα"/"скоро" card — the correct
+state for a lesson that's built but not yet exported/published. `url` is
+the lesson's own relative directory name (hub keys here: `kapodistrias`,
+`zorba`, `kavafis_ithaki`).
 
 ### Course-index hero + topbar: own name vs. grouping context
 
@@ -193,10 +210,7 @@ chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
 
 **Kavafis Ithaki lesson 2's `vocabulary.tsv` 404'd (`FileNotFoundError: /marimo/vocabulary.tsv`)
 when the user raw-uploaded the not-yet-published `notebook.2.py` to molab for preview** — see the
-root `CLAUDE.md`'s "Notebook Content Gotchas" (2026-07-31 correction) for the full mechanism: a
-manually-uploaded single `.py` file (the only preview option before a notebook is committed/
-pushed) does not bring same-directory siblings along, contrary to the older guidance that a
-same-directory bare read is always safe. Fixed in lesson 2 by routing all 7 of its own local
+root `AGENTS.md`'s "Known gap" for the general mechanism. Fixed in lesson 2 by routing all 7 of its own local
 reads (`vocabulary.tsv`/`nouns.tsv`/`verbs.tsv`/`adjectives.tsv`/`poem_vocab.tsv`/
 `translation_presence.tsv`/`greek.md`/`translations.md`) through `gu2.ensure_file(filename,
 nb_dir=notebook_dir, remote_base=RAW_BASE)` instead of a bare `pd.read_csv(os.path.join(...))`/

@@ -1,5 +1,9 @@
 # Odyssey Notebooks — Agent Reference
 
+1. Read `../../AGENTS.md` (repo root) first — it covers policy shared by
+   every course.
+2. This file: what's specific to Odyssey.
+
 ## Directory layout
 
 ```
@@ -48,18 +52,12 @@ There is no more pilot exception.
 
 ## Source discipline — CRITICAL
 
-**Base every cell on the lecture's own materials in
-`~/work/greek/lectures/Odyssey/<date>/`** — the presentation PDF (`Одиссея N.pdf` /
+See the root `AGENTS.md`'s "Source discipline" for the policy (materials-only,
+ask before researching further). This course's materials live in
+`~/work/greek/lectures/Odyssey/<date>/`: the presentation PDF (`Одиссея N.pdf` /
 `Od_IX_*.pdf`), **`notes.md`**, the vocab `*.docx/.md`, and the images/diagrams in
 the presentation. **`notes.md` is a valid source — transcribe / distill it** (that
 is how the День-4 lotus material got in).
-
-**Do not do your own research beyond these files** — no web search, no invented
-proverbs / etymologies / historical asides / cross-references. **If research seems
-useful — or `notes.md` itself raises a question or points at a line of inquiry —
-ASK the user first; don't research or add it on your own.** (User rules,
-2026-07-07: *"use the lecture materials and notes as the basis; ask me if you want
-to research something — e.g. if the notes suggest it."*)
 
 - **Greek / interlinear / translations** (`greek.md`, `translations_ru.md` — the
   latter's `## подстрочник` section is the interlinear gloss, see below) —

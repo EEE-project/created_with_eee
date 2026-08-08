@@ -1,5 +1,9 @@
 # Ελληνικά Β — Agent Reference
 
+1. Read `../../AGENTS.md` (repo root) first — it covers policy shared by
+   every course.
+2. This file: what's specific to Ελληνικά Β.
+
 Chaptered to match the "Ελληνικά Β" (B1) textbook. 10 chapters currently built: `chapter_01`–`chapter_04`, `chapter_06`–`chapter_09`, `chapter_11`, `chapter_12`. Chapters 05 and 10 are deliberately skipped — they're pure repetition of prior material with no new content to teach or quiz, per the course's own structure (confirmed by the user, 2026-07-18).
 
 **Content-verification status**: ALL chapters (1-4, 6-9, 11, 12) have been fully verified against the source textbook (see "Verifying..." below) and their notebook cells rebuilt to match. Chapter 3's first extraction (NotebookLM) had the same failure modes as 1-2 plus a fabricated grammar pronoun ("ο καθένας", never in the book) and a mis-swapped Indefinite/Demonstrative categorization for ο ίδιος — corrected 2026-07-23, along with its `nouns.tsv`/`verbs.tsv`/`adjectives.tsv` (several bled/ungrounded entries removed, real chapter words added) and a genuine gap where the notebook's noun/adjective label cells were never wired with `lang=` at all (unlike chapters 1-2). **A second, separate gap surfaced the same day**: after the `.md` was corrected, only 2 of what should have been 5 grammar cells (plus a missing Pronunciation cell) were actually rebuilt in the live notebook — fixing the *wrong* content in the existing cells isn't the same as porting over everything the corrected `.md` documents. Chapter 3's notebook now has 5 grammar cells (Indefinite I/II/III split to match the book's own 3 non-adjacent boxes at pp. 45/53/54, Demonstrative at p. 52, a small παίρνω-vs-περνάω usage note) plus a Pronunciation cell for the Φωνή-γραφή glide-formation rules (pp. 58-59) that was missing outright — 46 cells total, up from 42. **When "fixing the .md" is followed by "fixing the notebook cells," explicitly diff the two for completeness, not just correctness** — a notebook cell can stop being *wrong* without becoming *complete*.
@@ -31,7 +35,7 @@ ellinika_b/
   index.tsv              # trilingual chapter index (url, icon, greek, label_{ru,el,en}, title_{ru,el,en}, desc_{ru,el,en}, index_url)
   notebook.py               # course index — reads index.tsv, one card per chapter
   chapter_NN/
-    chapter_NN_notebook.py         # the real, deployed notebook — multi-language (ru/el/en) in one file via language_selector, same pattern as every other course here. This is what molab actually serves (confirmed: index.tsv has exactly one molab id per chapter).
+    chapter_NN_notebook.py         # the real, deployed notebook — multi-language (ru/el/en) in one file via language_selector, same pattern as every other course here. This is what gets exported to Pages (confirmed: index.tsv has exactly one url per chapter, a relative directory name, not a molab link — see "Index notebook + index.tsv" below).
     chapter_NN_notebook_el.py      # ⚠ legacy single-language variant — NOT deployed (index.tsv has no id for these). Left over from an earlier per-language-file generation approach (see Architecture below). Don't edit these expecting them to reach students.
     chapter_NN_notebook_en.py      # same caveat
     chapter_NN_notebook_ru.py      # same caveat
@@ -238,20 +242,27 @@ Hit `StaleCellError` on a freshly-opened `code_mode` context while editing these
 
 ## Known gap: bare local-file reads break on a raw pre-publish molab upload
 
-All 10 chapters read their own local `nouns.tsv`/`verbs.tsv`/`adjectives.tsv`/`vocabulary.tsv`
-(and the `_ru.tsv` variants) as bare `pd.read_csv(os.path.join(notebook_dir, ...))` calls, zero
-`gu2.ensure_file()` usage anywhere in this course (confirmed by a repo-wide grep, 2026-07-31).
-This breaks with a `FileNotFoundError` if a chapter is ever raw-uploaded to molab for preview
-before being committed/pushed — a manually-uploaded single `.py` file does not bring
-same-directory siblings along, contrary to the older "same-directory bare read is always safe"
-guidance in the root `CLAUDE.md` (now corrected there, "Notebook Content Gotchas"). Found and
-fixed the hard way in `modern_greek/b1greeklanguageandculture/kavafis_ithaki/2/`'s notebook —
-see that course's own `AGENTS.md` for the concrete before/after and the `ensure_file()` pattern
-to copy. Since all 10 chapters here are already published, their real molab deployments were
-presumably created by importing from the published Codeberg URL rather than a raw upload, so
-this may not be live-broken today — but it's a real latent pattern, not yet fixed. Tracked in
+See the root `AGENTS.md`'s "Known gap" for the general mechanism. All 10
+chapters here read their own local
+`nouns.tsv`/`verbs.tsv`/`adjectives.tsv`/`vocabulary.tsv` (and the `_ru.tsv`
+variants) as bare `pd.read_csv(os.path.join(notebook_dir, ...))` calls, zero
+`gu2.ensure_file()` usage anywhere in this course (confirmed by a repo-wide
+grep, 2026-07-31). Found and fixed the hard way in
+`modern_greek/b1greeklanguageandculture/kavafis_ithaki/2/`'s notebook — see
+that course's own `AGENTS.md` for the concrete before/after and the
+`ensure_file()` pattern to copy. Since all 10 chapters here are already
+published, their real molab deployments were presumably created by importing
+from the published Codeberg URL rather than a raw upload, so this may not be
+live-broken today — but it's a real latent pattern, not yet fixed. Tracked in
 `~/work/greek/EEE/plans/TODO.md`'s Backlog.
 
 ## Index notebook + index.tsv
 
-Same shared pattern as every other course: `notebook.py` reads `index.tsv` and renders one card per chapter via `ConfigStore.from_url(...)` + `eee_card_list(mo, cfg, lang_sel.value)`. One molab id per chapter (not per language variant) — `index.tsv`'s `url` column points at `chapter_NN_notebook.py`'s upload, never at an `_el`/`_en`/`_ru` variant.
+The *published* hub (`modern_greek/ellinika_b/index.html` on the `pages`
+branch) is static HTML generated from this course's `index.tsv` by
+`tools/gen_hub.py ellinika_b` — see the root `AGENTS.md`'s "Publishing a
+lesson/chapter to Pages" (hub key: `ellinika_b`) for how a new chapter
+actually goes live. `index.tsv`'s `url` column is one relative directory name
+per chapter (`chapter_NN/`, not per language variant —
+`chapter_NN_notebook.py` is the file actually exported; the `_el`/`_en`/`_ru`
+legacy variants are never referenced there), never a molab link.

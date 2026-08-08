@@ -1,5 +1,9 @@
 # Palaestra — Ancient Greek 2026 Summer — Agent Reference
 
+1. Read `../../../AGENTS.md` (repo root) first — it covers policy shared by
+   every course.
+2. This file: what's specific to Palaestra.
+
 ## Directory layout
 
 ```
@@ -43,17 +47,14 @@ adjs.tsv           ← adjective base forms for ADV drill (lessons with adverb e
 
 ## Source discipline — CRITICAL
 
-**Base every cell on the session's own materials in
-`~/work/greek/lectures/Palaestra/ancient_greek.2026.summer/<date>/`** — that date's
-**`notes.md`**, handout PDFs, and vocab files. **`notes.md` is a valid source —
-transcribe / distill it.** (User rules, 2026-07-07.)
+See the root `AGENTS.md`'s "Source discipline" for the policy (materials-only,
+ask before researching further). This course's materials live in
+`~/work/greek/lectures/Palaestra/ancient_greek.2026.summer/<date>/`: that
+date's **`notes.md`**, handout PDFs, and vocab files. **`notes.md` is a valid
+source — transcribe / distill it.**
 
 - A session's `notes.md` goes into **that session's** notebook only — never another
   course's (Palaestra notes ≠ Odyssey).
-- Transcribe grammar/vocab from `notes.md`; **don't add your own examples,
-  etymologies, or tangents beyond it, and don't do your own research** (web search,
-  etc.). **If research seems useful — or `notes.md` itself suggests a line of
-  inquiry — ASK the user first** before pursuing or adding it.
 - **Do not copy one-off asides forward.** A note written for one session (e.g. the
   case-order history in `2026_06_26`) must not be duplicated into later sessions
   built from the same template — cut template-inherited cells that don't belong
@@ -651,9 +652,12 @@ NB_REMOTE = f"{cfg.raw_base}/2026_06_16"   # match lesson dir name
 ```
 
 `index.tsv` columns: `url`, `icon`, `greek`, `label`, `title`, `desc`, `index_url`.
-Add a row here when creating a new lesson notebook; `url` and `index_url` are both
-full, ready-to-link URLs (e.g. `https://molab.marimo.io/notebooks/nb_XXX/app`) —
-the TSV owns hosting details, not the notebook code.
+Add a row here when creating a new lesson notebook — `url` is the lesson's own
+directory name (e.g. `2026_07_15/`), `index_url` is this course's root-relative
+Pages path, the same on every row
+(`/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/`). Neither
+is a molab link — see the root `AGENTS.md`'s "Publishing a lesson/chapter to
+Pages" for how a new row actually goes live.
 
 ---
 
@@ -670,5 +674,7 @@ the TSV owns hosting details, not the notebook code.
    - **Pattern C** if the exercise requires filling in a full paradigm (all conjugation or
      declension slots at once). Use C-verb for verbs, C-noun for nouns (which needs article
      validation via `ARTS_N3`).
-6. Upload to molab, copy the `/app` URL, add a row to `index.tsv`.
-7. Update the molab badge URL in the title cell.
+6. Add a row to `index.tsv` (see "ConfigStore and navigation" above for the
+   `url`/`index_url` schema).
+7. Publish it — see the root `AGENTS.md`'s "Publishing a lesson/chapter to
+   Pages" (hub key: `palaestra`, matching `tools/gen_hub.py`'s `HUBS` dict).
