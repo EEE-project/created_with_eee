@@ -488,7 +488,7 @@ def _(clear_count_v, cv_verb, gu, tense_selector, words4test_verb, words_verb):
     _cv = cv_verb()
     _tense_key = tense_selector.value
     _ui_label = gu.TENSE_LABELS[_tense_key]['greek'] if _tense_key else "—"
-    verb_fields, _ = gu.create_verb_test_ui(_ui_label, words_verb, words4test_verb(), _cv)
+    verb_fields, _ = gu.create_verb_test_ui(_ui_label, words_verb, words4test_verb(), _cv, _tense_key)
     return (verb_fields,)
 
 

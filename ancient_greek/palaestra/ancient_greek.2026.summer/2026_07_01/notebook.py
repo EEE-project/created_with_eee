@@ -456,8 +456,9 @@ def _(
 ):
     cv_v3 = w4t_v3()[0] if w4t_v3() else None
     _entered_form_v3 = entered_v3().get(cv_v3["Word"]) if cv_v3 else None
+    verb_meta_v3 = gu.verb_drill_meta(cv_v3["Word"], "present") if cv_v3 else None
     verb_form_v3, prev_btn_v3, nxt_btn_v3, restart_btn_v3 = gu.paradigm_drill_widgets(
-        labels=["1 sg:", "2 sg:", "3 sg:", "1 pl:", "2 pl:", "3 pl:"],
+        labels=gu.verb_slot_labels(verb_meta_v3.active_slots if verb_meta_v3 else None),
         values=_entered_form_v3,
         history_len=len(hist_v3()),
         remaining_len=len(w4t_v3()),
@@ -467,7 +468,7 @@ def _(
     set_prev_cnt_v3(0)
     set_nxt_cnt_v3(0)
     set_entercnt_v3(0)
-    return cv_v3, nxt_btn_v3, prev_btn_v3, restart_btn_v3, verb_form_v3
+    return cv_v3, nxt_btn_v3, prev_btn_v3, restart_btn_v3, verb_form_v3, verb_meta_v3
 
 
 @app.cell(hide_code=True)
@@ -499,6 +500,7 @@ def _(
     set_w4t_v3,
     sub_cnt_v3,
     verb_form_v3,
+    verb_meta_v3,
     w4t_v3,
 ):
     gu.verb_paradigm_drill_form(
@@ -509,6 +511,7 @@ def _(
         restart_cnt_v3, set_restart_cnt_v3,
         cv_v3, verb_form_v3, check_btn_v3, prev_btn_v3, nxt_btn_v3, restart_btn_v3,
         vocab=WORDS_VERB_V3,
+        verb_meta=verb_meta_v3,
         tense="present",
         word_key="Word",
         meaning_key="Translation",

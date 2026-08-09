@@ -78,7 +78,7 @@ The **index/topbar infrastructure is unified** — Ellinika Β's own `chapter_NN
 | Test | Widget | Drill (check + display + nav) |
 |------|--------|-------------------------------|
 | NOUNS | `gu2.paradigm_drill_widgets(labels=gu2.noun_slot_labels(active_cases), ...)` | `gu2.noun_paradigm_drill_form(...)` |
-| VERBS | `gu2.paradigm_drill_widgets(labels=gu2.verb_slot_labels(), ...)` | `gu2.verb_paradigm_drill_form(..., tense=tense_selector.value)` |
+| VERBS | `gu2.paradigm_drill_widgets(labels=gu2.verb_slot_labels(active_slots), ...)` | `gu2.verb_paradigm_drill_form(..., verb_meta=verb_meta, tense=tense_selector.value)` |
 | ADJECTIVES | `gu2.paradigm_drill_widgets(labels=gu2.adjective_slot_labels(mode), ...)` | `gu2.adjective_paradigm_drill_form(..., mode=mode_selector.value)` |
 
 **Historical note (the old API, retired 2026-07-23):** every chapter previously used the free-function `gu` module — `gu.create_noun_test_ui(...)` / `gu.check_noun_test(word, answer, mode='simple'|'article')`, `gu.create_verb_test_ui(...)` / `gu.check_verb_test(word, answer, tense)`, `gu.create_adjective_test_ui(...)` / `gu.check_adjective_test(word, answer, mode=...)` — no Enter-key support, Submit/Skip/Clear buttons only. No chapter calls these anymore; kept here only in case an old commit or the `modern-greek-eee-skills` "eee" skill's `SKILL.md` (which also references a `process_noun_test()` never actually called anywhere) needs cross-referencing.

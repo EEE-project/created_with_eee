@@ -1200,10 +1200,10 @@ def _(
 ):
     # Verb form
     cv_verb = words4test_verb()[0] if words4test_verb() else None
-    _ = tense_selector.value  # rebuild the form (clear stale input) when the tense changes
     _entered_verb_form = entered_verb().get(cv_verb["Word"]) if cv_verb else None
+    verb_meta = gu2.verb_drill_meta(cv_verb["Word"], tense_selector.value) if cv_verb and tense_selector.value else None
     verb_form, prev_btn_v, next_btn_v, restart_btn_v = gu2.paradigm_drill_widgets(
-        labels=gu2.verb_slot_labels(),
+        labels=gu2.verb_slot_labels(verb_meta.active_slots if verb_meta else None),
         values=_entered_verb_form,
         history_len=len(hist_verb()),
         remaining_len=len(words4test_verb()),
@@ -1212,7 +1212,7 @@ def _(
     set_prev_count_v(0)
     set_next_count_v(0)
     set_enter_count_v(0)
-    return cv_verb, next_btn_v, prev_btn_v, restart_btn_v, verb_form
+    return cv_verb, next_btn_v, prev_btn_v, restart_btn_v, verb_form, verb_meta
 
 
 @app.cell(hide_code=True)
@@ -1265,6 +1265,7 @@ def _(
     t_ui,
     tense_selector,
     verb_form,
+    verb_meta,
     verb_msg,
     words4test_verb,
     words_verb,
@@ -1282,6 +1283,7 @@ def _(
             restart_count_v, set_restart_count_v,
             cv_verb, verb_form, check_btn_v, prev_btn_v, next_btn_v, restart_btn_v,
             vocab=words_verb,
+            verb_meta=verb_meta,
             tense=_tense_key,
             word_key="Word",
             meaning_key="Translation",

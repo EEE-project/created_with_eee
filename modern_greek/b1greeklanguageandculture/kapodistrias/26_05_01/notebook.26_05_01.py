@@ -640,7 +640,7 @@ def _(
     _tense_key = tense_selector.value
     _lang = language_selector.value
     _ui_label = gu.TENSE_LABELS.get(_tense_key, {}).get('label', {}).get(_lang, _tense_key) if _tense_key else "—"
-    verb_fields, _ = gu.create_verb_test_ui(_ui_label, words_verb, words4test_verb(), _cv)
+    verb_fields, _ = gu.create_verb_test_ui(_ui_label, words_verb, words4test_verb(), _cv, _tense_key)
     return (verb_fields,)
 
 
