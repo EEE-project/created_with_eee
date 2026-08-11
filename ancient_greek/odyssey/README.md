@@ -8,7 +8,7 @@ and [Marimo](https://marimo.io).
 
 **Live:**
 - [GitHub Pages](https://eee-project.github.io/created_with_eee/ancient_greek/odyssey/)
-- [GitLab Pages](https://eee-project.gitlab.io/created_with_eee/ancient_greek/odyssey/)
+- [GitLab Pages](https://eee-project.gitlab.io/created-with-eee-odyssey/) (split into its own project — GitLab's 1GB Pages limit)
 - [Codeberg Pages](https://eee-project.codeberg.page/created_with_eee/ancient_greek/odyssey/)
 
 8 lessons: a pilot lesson on Book I (opening lines), then a run through Book

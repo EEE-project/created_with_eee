@@ -5,7 +5,7 @@ built on the [EEE](https://github.com/EEE-project/eee-project) morphology
 framework. No installation required — open directly in your browser:
 
 1. **product** — [GitHub Pages](https://eee-project.github.io/created_with_eee/)
-2. **mirror** — [GitLab Pages](https://eee-project.gitlab.io/created_with_eee/)
+2. **mirror** — [GitLab Pages](https://eee-project.gitlab.io/created_with_eee/) (Odyssey, Palaestra, and B1 are split into their own GitLab projects — GitLab's Pages deployments are capped at 1GB uncompressed; see each course's own README for its link)
 3. **devel** — [Codeberg Pages](https://eee-project.codeberg.page/created_with_eee/)
 
 or in your Telegram messenger:

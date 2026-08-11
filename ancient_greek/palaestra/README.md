@@ -4,7 +4,7 @@ Interactive notebooks for an Ancient Greek beginners course, built with [EEE](ht
 
 **Live:**
 - [GitHub Pages](https://eee-project.github.io/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/)
-- [GitLab Pages](https://eee-project.gitlab.io/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/)
+- [GitLab Pages](https://eee-project.gitlab.io/created-with-eee-palaestra/) (split into its own project — GitLab's 1GB Pages limit)
 - [Codeberg Pages](https://eee-project.codeberg.page/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/)
 
 ## Courses
