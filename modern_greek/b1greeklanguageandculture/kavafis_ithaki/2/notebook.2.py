@@ -1087,11 +1087,18 @@ def _(
 
 @app.cell(hide_code=True)
 def _(mo):
+    from eee_project import language_bridge
+    lang_bridge = language_bridge(mo)
+    lang_bridge
+    return (lang_bridge,)
+
+
+@app.cell(hide_code=True)
+def _(lang_bridge, mo):
     # Fixed-position language selector overlay
-    language_selector = mo.ui.dropdown(
-        options={"Русский": "ru", "Ελληνικά": "el"},
-        value="Ελληνικά",
-        label="🌐",
+    from eee_project import language_selector as _language_selector
+    language_selector = _language_selector(
+        mo, lang_bridge, options={"Русский": "ru", "Ελληνικά": "el"}, default="el"
     )
     mo.Html(f"""
     <div style="position: fixed; top: 60px; right: 10px; z-index: 1000; background: white; padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
@@ -1099,6 +1106,13 @@ def _(mo):
     </div>
     """)
     return (language_selector,)
+
+
+@app.cell(hide_code=True)
+def _(lang_bridge, language_selector):
+    from eee_project import save_language_selection
+    save_language_selection(lang_bridge, language_selector)
+    return
 
 
 @app.cell(hide_code=True)
