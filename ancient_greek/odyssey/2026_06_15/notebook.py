@@ -877,9 +877,10 @@ def _(ODYSSEY_EXTRA_LEXICONS, mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(cfg, mo):
     from eee_project.notebook_utils import eee_footer
-    eee_footer(mo, lang="ru")
+    _prev_url, _next_url = cfg.adjacent_urls("2026_06_15/")
+    eee_footer(mo, lang="ru", prev_url=_prev_url, next_url=_next_url, same_window=True)
     return
 
 

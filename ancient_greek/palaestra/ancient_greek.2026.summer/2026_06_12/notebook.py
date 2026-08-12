@@ -221,7 +221,8 @@ def _(cfg, mo):
     ):
         _gu.ensure_file(_pdf, nb_dir=_Path(__file__).parent, remote_base=NB_REMOTE)
 
-    eee_footer(mo, lang="ru")
+    _prev_url, _next_url = cfg.adjacent_urls("2026_06_12/")
+    eee_footer(mo, lang="ru", prev_url=_prev_url, next_url=_next_url, same_window=True)
     return (NB_REMOTE,)
 
 

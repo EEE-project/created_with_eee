@@ -513,7 +513,8 @@ def _(cfg, mo):
     gu = GreekUtils(mo_module=mo, config=ANCIENT_GREEK)
     NB_DIR = _Path(__file__).parent
     NB_REMOTE = cfg.nb_remote("2026_06_19")
-    eee_footer(mo, lang='ru')
+    _prev_url, _next_url = cfg.adjacent_urls("2026_06_19/")
+    eee_footer(mo, lang='ru', prev_url=_prev_url, next_url=_next_url, same_window=True)
     return NB_DIR, NB_REMOTE, gu
 
 

@@ -1139,8 +1139,15 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(language_selector, mo):
+    from eee_project import ConfigStore as _ConfigStore
     from eee_project.notebook_utils import eee_footer
-    eee_footer(mo, lang=language_selector.value)
+    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _cfg = _ConfigStore.from_file_or_url(
+        __file__,
+        f"{_ROOT}/modern_greek/b1greeklanguageandculture/zorba/index.tsv",
+    )
+    _prev_url, _next_url = _cfg.adjacent_urls("26_07_17/")
+    eee_footer(mo, lang=language_selector.value, prev_url=_prev_url, next_url=_next_url, same_window=True)
     return
 
 

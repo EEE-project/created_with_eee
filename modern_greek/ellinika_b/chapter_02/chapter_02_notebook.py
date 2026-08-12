@@ -1397,6 +1397,20 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
+def _(language_selector, mo):
+    from eee_project import ConfigStore as _ConfigStore
+    from eee_project.notebook_utils import eee_footer
+    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _cfg = _ConfigStore.from_file_or_url(
+        __file__,
+        f"{_ROOT}/modern_greek/ellinika_b/index.tsv",
+    )
+    _prev_url, _next_url = _cfg.adjacent_urls("chapter_02/")
+    eee_footer(mo, lang=language_selector.value, prev_url=_prev_url, next_url=_next_url, same_window=True)
+    return
+
+
+@app.cell(hide_code=True)
 def _():
     # Imports
     import os

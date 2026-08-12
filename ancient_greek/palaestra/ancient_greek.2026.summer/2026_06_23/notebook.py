@@ -722,7 +722,8 @@ def _(cfg, mo):
     ag = AncientGreekBackend(lexicons=["pratt", "ltrg", str(_verb_yaml.resolve())])
     setup_ancient_greek(ag)
     gu = GreekUtils(ag, mo, eee_module=eee, config=ANCIENT_GREEK)
-    eee_footer(mo, lang='ru')
+    _prev_url, _next_url = cfg.adjacent_urls("2026_06_23/")
+    eee_footer(mo, lang='ru', prev_url=_prev_url, next_url=_next_url, same_window=True)
     return NB_DIR, NB_REMOTE, gu
 
 
