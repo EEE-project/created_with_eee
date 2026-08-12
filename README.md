@@ -54,6 +54,22 @@ Every course shares the same underlying drill/quiz machinery from
 directory has its own README (description + live links) and `AGENTS.md`
 (structure and content sources, for developers).
 
+## Maintainer tooling
+
+`make help` lists what's automated for syncing content across the 3 hosts —
+currently: syncing `main` (`make sync-main`, wraps `~/work/greek/git/push`)
+and re-applying the split-course session-page fix
+(`make fix-split-roots`, see `fix-split-session-root.py`). Both only stage
+local changes or run already-established scripts; committing and pushing
+stays a manual, Trezor-confirmed step per host — no target signs or pushes
+on its own.
+
+**Not yet automated**: rebuilding the `pages` branch itself (WASM
+re-export, hub regeneration) and splitting a new course off into its own
+GitLab project (see each split course's own README for GitLab's 1GB
+Pages-per-project limit that drove the split) — both are still manual,
+multi-step processes.
+
 ## EEE (Ελληνικά Εκπαιδευτικά Εργαλεία — Greek Language Educational Tools)
 
 🔓 Open source:
