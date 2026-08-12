@@ -56,19 +56,94 @@ directory has its own README (description + live links) and `AGENTS.md`
 
 ## Maintainer tooling
 
-`make help` lists what's automated for syncing content across the 3 hosts —
-currently: syncing `main` (`make sync-main`, wraps `~/work/greek/git/push`)
-and re-applying the split-course session-page fix
-(`make fix-split-roots`, see `fix-split-session-root.py`). Both only stage
-local changes or run already-established scripts; committing and pushing
-stays a manual, Trezor-confirmed step per host — no target signs or pushes
-on its own.
+`make help` lists what's automated for syncing content across hosts —
+currently: syncing `main` (`make sync-main`, wraps `~/work/greek/git/push`),
+re-exporting notebooks to the `pages` branch (`make export-notebooks`, see
+`export-notebooks.py`), re-applying the split-course session-page fix
+(`make fix-split-roots`), and re-applying the static-hub footer-host fix
+(`make fix-static-footer`). All only stage local changes or run
+already-established scripts; committing and pushing stays a manual,
+Trezor-confirmed step per host — no target signs or pushes on its own.
 
-**Not yet automated**: rebuilding the `pages` branch itself (WASM
-re-export, hub regeneration) and splitting a new course off into its own
-GitLab project (see each split course's own README for GitLab's 1GB
-Pages-per-project limit that drove the split) — both are still manual,
-multi-step processes.
+**Not yet automated**: hub regeneration (card-list index pages) and
+splitting a new course off into its own GitLab project (see each split
+course's own README for GitLab's 1GB Pages-per-project limit that drove the
+split) — both are still manual, multi-step processes.
+
+### Course deployment (notebook source change → live pages)
+
+A change to a notebook's own source (new/edited cells) is frozen at
+`marimo export html-wasm` time — unlike a pure `eee-project` library fix,
+which every already-deployed page picks up live from PyPI on next load, a
+source change needs re-exporting and redeploying everywhere the affected
+course is hosted. Full procedure:
+
+1. **Ship the source change to `main`** via the normal branch+PR workflow
+   (see the repo's own `CLAUDE.md`/global Claude conventions) — commit,
+   push, open a PR, merge, sync `main` to all 3 hosts (`make sync-main`).
+
+2. **Set up (or reuse) a `pages`-branch worktree per checkout** you'll
+   deploy to, so the corresponding `main` checkout stays on `main`:
+   ```bash
+   git worktree add ../created_with_eee-pages-worktree pages
+   ```
+   Do this once per local clone (Codeberg checkout, GitHub checkout, GitLab
+   unified checkout, and each of the 3 split-project checkouts — split
+   projects have no separate `main`, they're already on `pages`).
+
+3. **Re-export the affected notebooks** into the Codeberg pages worktree:
+   ```bash
+   make export-notebooks NOTEBOOKS="modern_greek/ellinika_b/chapter_01/chapter_01_notebook.py ..."
+   ```
+   Re-run for every changed notebook. The export is **host-portable** —
+   `eee_footer()`'s "Source" link and similar host-detection logic resolve
+   live in the browser (`js.self.location.hostname`), so the same exported
+   `index.html`/`assets/` can be copied verbatim to every host below rather
+   than re-exported per host.
+
+4. **Verify before committing anything** — a real browser check, not a
+   text-scrape (a marimo WASM export can render its own loading chrome even
+   when the underlying Python cell errored). Serve the pages worktree
+   locally and check with Playwright or similar:
+   ```bash
+   cd ../created_with_eee-pages-worktree && python3 -m http.server 8000
+   ```
+   Heavier notebooks (real backend/lexicon loading) can take 30–60s to
+   finish booting under Pyodide — don't mistake a still-loading page for a
+   broken one.
+
+5. **Watch for `marimo export`'s bundled `CLAUDE.md`.** Every export
+   directory gets its own copy of marimo's "notebook assistant" `CLAUDE.md`
+   file. This project's convention is CLAUDE.md is never committed — make
+   sure the checkout's `.gitignore` has `CLAUDE.md` (the main repo and the
+   GitLab unified/split-project checkouts should already have it; verify
+   before adding a brand-new checkout).
+
+6. **Commit + push the Codeberg pages branch** (Trezor-confirmed).
+
+7. **Copy the same exported directories into every other checkout that
+   hosts the affected course(s), then commit + push each** (Trezor-confirmed,
+   one host at a time):
+   - **GitHub** — full mirror, same content as Codeberg.
+   - **GitLab unified project** (`created_with_eee`) — trimmed to
+     `modern_greek/ellinika_b/` only (GitLab's 1GB Pages-per-project cap
+     drove the split below; this is what's left un-split).
+   - **GitLab split projects** — copy only the matching course's
+     directories, flattened to each project's root (no `ancient_greek/`
+     or `modern_greek/...` prefix):
+     - `created-with-eee-odyssey` ← `ancient_greek/odyssey/`
+     - `created-with-eee-palaestra` ← `ancient_greek/palaestra/ancient_greek.2026.summer/`
+     - `created-with-eee-b1glc` ← `modern_greek/b1greeklanguageandculture/{kapodistrias,kavafis_ithaki,zorba}/`
+
+8. **Wait for GitLab Pages' CI pipeline** on every GitLab target (a push
+   alone doesn't deploy there) — poll until it succeeds:
+   ```bash
+   glab api "projects/EEE-project%2F<repo>/pipelines?ref=pages&per_page=1"
+   ```
+
+9. **Verify live**, per host, with a real browser check (not just an HTTP
+   200) — the exported bundle needs Pyodide to actually boot before the
+   page is meaningfully "up".
 
 ## EEE (Ελληνικά Εκπαιδευτικά Εργαλεία — Greek Language Educational Tools)
 
