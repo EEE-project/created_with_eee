@@ -79,7 +79,10 @@ The **index/topbar infrastructure is unified** — Ellinika Β's own `chapter_NN
 |------|--------|-------------------------------|
 | NOUNS | `gu2.paradigm_drill_widgets(labels=gu2.noun_slot_labels(active_cases), ...)` | `gu2.noun_paradigm_drill_form(...)` |
 | VERBS | `gu2.paradigm_drill_widgets(labels=gu2.verb_slot_labels(active_slots), ...)` | `gu2.verb_paradigm_drill_form(..., verb_meta=verb_meta, tense=tense_selector.value)` |
-| ADJECTIVES | `gu2.paradigm_drill_widgets(labels=gu2.adjective_slot_labels(mode), ...)` | `gu2.adjective_paradigm_drill_form(..., mode=mode_selector.value)` |
+| ADJECTIVES | `gu2.paradigm_drill_widgets(labels=gu2.adjective_slot_labels(mode, active_slots=...), ...)` | `gu2.adjective_paradigm_drill_form(..., adj_meta=adj_meta, mode=mode_selector.value)` |
+| PRONOUNS | `gu2.paradigm_drill_widgets(labels=gu2.pronoun_slot_labels(mode, active_slots=...), ...)` | `gu2.pronoun_paradigm_drill_form(..., pron_meta=pron_meta, mode=mode_selector.value)` |
+
+**2026-08-14: `adj_meta`/`pron_meta` are required keyword-only args as of `eee-project` 1.7.0/1.7.1** — `adjective_drill_meta(word, mode)`/`pronoun_drill_meta(word, mode)` compute them per-word, and `active_slots=getattr(meta, "active_slots", None)` feeds into the matching `*_slot_labels()` call so a word missing a form (e.g. κανένας has no plural) shows fewer fields instead of an uninformative "?" — see `eee-project/docs/api-patterns.md`. Chapter_03 is the first (only, as of this date) chapter updated to this; chapters 1/2/4/6-9/11/12 still call `adjective_paradigm_drill_form`/`adjective_slot_labels` without these args, which will start raising `TypeError` once a newer `eee-project` is published to PyPI (their PEP-723 headers pin `eee-project>=1.1.0`, an open-ended constraint) — worth the same fix before that happens, not urgent today since PyPI still serves 1.6.0.
 
 **Historical note (the old API, retired 2026-07-23):** every chapter previously used the free-function `gu` module — `gu.create_noun_test_ui(...)` / `gu.check_noun_test(word, answer, mode='simple'|'article')`, `gu.create_verb_test_ui(...)` / `gu.check_verb_test(word, answer, tense)`, `gu.create_adjective_test_ui(...)` / `gu.check_adjective_test(word, answer, mode=...)` — no Enter-key support, Submit/Skip/Clear buttons only. No chapter calls these anymore; kept here only in case an old commit or the `modern-greek-eee-skills` "eee" skill's `SKILL.md` (which also references a `process_noun_test()` never actually called anywhere) needs cross-referencing.
 
@@ -98,6 +101,7 @@ eee_topbar cell                              (topbar, always cell 1)
 # Test 1 heading  →  [Noun section cells]
 # Test 2 heading  →  [Verb section cells]     (includes # Tense selector)
 # Test 3 heading  →  [Adjective section cells]
+# Test 4 heading  →  [Pronoun section cells]  (chapter_03 only, as of 2026-08-14 -- see the PRONOUNS row above)
 ── settings cluster, always at the very end, in this order ──
 t_ui = gu2.ui_label
 # Language selector

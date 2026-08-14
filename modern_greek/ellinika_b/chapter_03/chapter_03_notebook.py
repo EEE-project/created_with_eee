@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.1.0",
+#     "eee-project>=1.7.1",
 #     "marimo>=0.23.14",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas",
@@ -1086,9 +1086,10 @@ def _(
     # Adjective form
     cv_adj = words4test_adj()[0] if words4test_adj() else None
     _mode = mode_selector.value
+    adj_meta = gu2.adjective_drill_meta(cv_adj["Word"], _mode) if cv_adj else None
     _entered_adj_form = entered_adj().get(cv_adj["Word"]) if cv_adj else None
     adj_form, prev_btn_a, next_btn_a, restart_btn_a = gu2.paradigm_drill_widgets(
-        labels=gu2.adjective_slot_labels(_mode, lang=language_selector.value),
+        labels=gu2.adjective_slot_labels(_mode, lang=language_selector.value, active_slots=getattr(adj_meta, "active_slots", None)),
         values=_entered_adj_form,
         history_len=len(hist_adj()),
         remaining_len=len(words4test_adj()),
@@ -1097,7 +1098,7 @@ def _(
     set_prev_count_a(0)
     set_next_count_a(0)
     set_enter_count_a(0)
-    return adj_form, cv_adj, next_btn_a, prev_btn_a, restart_btn_a
+    return adj_form, adj_meta, cv_adj, next_btn_a, prev_btn_a, restart_btn_a
 
 
 @app.cell(hide_code=True)
@@ -1122,6 +1123,7 @@ def _(
 @app.cell(hide_code=True)
 def _(
     adj_form,
+    adj_meta,
     adj_msg,
     captured_adj,
     check_btn_a,
@@ -1165,6 +1167,7 @@ def _(
         restart_count_a, set_restart_count_a,
         cv_adj, adj_form, check_btn_a, prev_btn_a, next_btn_a, restart_btn_a,
         vocab=words_adj,
+        adj_meta=adj_meta,
         mode=_mode,
         word_key="Word",
         meaning_key="Translation",
@@ -1172,6 +1175,186 @@ def _(
         title=t_ui("adj_heading", _lang),
         done_message=t_ui("test3_done", _lang),
     ) if words_adj else mo.md(t_ui("adj_empty", _lang))
+    return
+
+
+@app.cell(hide_code=True)
+def _(language_selector, mo, t_ui):
+    # Test 4 heading
+    mo.md(t_ui("test4_heading", language_selector.value))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    # Pronoun file upload
+    file_upload_pron = mo.ui.file(label="Load pronouns TSV")
+    file_upload_pron
+    return (file_upload_pron,)
+
+
+@app.cell(hide_code=True)
+def _(RAW_BASE, file_upload_pron, gu2, language_selector, notebook_dir, pd):
+    # Load pronoun data
+    if file_upload_pron.value:
+        df_pron = gu2.load_data(file_upload_pron)
+    else:
+        _pron_fname = 'pronouns_ru.tsv' if language_selector.value == 'ru' else 'pronouns.tsv'
+        _pron_path = gu2.ensure_file(_pron_fname, nb_dir=notebook_dir, remote_base=RAW_BASE) or gu2.ensure_file("pronouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        df_pron = pd.read_csv(_pron_path, sep='\t') if _pron_path else None
+    return (df_pron,)
+
+
+@app.cell(hide_code=True)
+def _(df_pron, language_selector, mo, t_ui):
+    # Pronoun table
+    table_pron = mo.ui.table(df_pron, selection="multi", initial_selection=None) if df_pron is not None else None
+    _lang = language_selector.value
+    _table_pron = table_pron if table_pron is not None else mo.md(t_ui("pron_not_found", _lang))
+    mo.vstack([mo.md(t_ui("select_pron", _lang)), _table_pron])
+    return (table_pron,)
+
+
+@app.cell(hide_code=True)
+def _(gu2, random, table_pron):
+    # Pronoun words + state
+    words_pron = gu2.get_words(table_pron)
+    (words4test_pron, set_words4test_pron, hist_pron, set_hist_pron, pron_msg, set_pron_msg,
+     captured_pron, set_captured_pron, entered_pron, set_entered_pron,
+     submit_count_p, set_submit_count_p, prev_count_p, set_prev_count_p,
+     next_count_p, set_next_count_p, enter_count_p, set_enter_count_p,
+     restart_count_p, set_restart_count_p) = gu2.make_paradigm_drill_state(
+        random.sample(words_pron, len(words_pron)) if words_pron else []
+    )
+    return (
+        captured_pron,
+        enter_count_p,
+        entered_pron,
+        hist_pron,
+        next_count_p,
+        prev_count_p,
+        pron_msg,
+        restart_count_p,
+        set_captured_pron,
+        set_enter_count_p,
+        set_entered_pron,
+        set_hist_pron,
+        set_next_count_p,
+        set_prev_count_p,
+        set_pron_msg,
+        set_restart_count_p,
+        set_submit_count_p,
+        set_words4test_pron,
+        submit_count_p,
+        words4test_pron,
+        words_pron,
+    )
+
+
+@app.cell(hide_code=True)
+def _(
+    entered_pron,
+    gu2,
+    hist_pron,
+    language_selector,
+    mode_selector,
+    set_enter_count_p,
+    set_next_count_p,
+    set_prev_count_p,
+    words4test_pron,
+):
+    # Pronoun form
+    cv_pron = words4test_pron()[0] if words4test_pron() else None
+    _mode = mode_selector.value
+    pron_meta = gu2.pronoun_drill_meta(cv_pron["Word"], _mode) if cv_pron else None
+    _entered_pron_form = entered_pron().get(cv_pron["Word"]) if cv_pron else None
+    pron_form, prev_btn_p, next_btn_p, restart_btn_p = gu2.paradigm_drill_widgets(
+        labels=gu2.pronoun_slot_labels(_mode, lang=language_selector.value, active_slots=getattr(pron_meta, "active_slots", None)),
+        values=_entered_pron_form,
+        history_len=len(hist_pron()),
+        remaining_len=len(words4test_pron()),
+        lang=language_selector.value,
+    )
+    set_prev_count_p(0)
+    set_next_count_p(0)
+    set_enter_count_p(0)
+    return cv_pron, next_btn_p, prev_btn_p, pron_form, pron_meta, restart_btn_p
+
+
+@app.cell(hide_code=True)
+def _(
+    captured_pron,
+    cv_pron,
+    gu2,
+    language_selector,
+    pron_form,
+    set_submit_count_p,
+    t_ui,
+):
+    # Pronoun check button
+    check_btn_p = gu2.dirty_check_button(
+        pron_form, captured_pron, cv_pron, "pron_word", word_key="Word",
+        label=t_ui("check_label", language_selector.value),
+    )
+    set_submit_count_p(0)
+    return (check_btn_p,)
+
+
+@app.cell(hide_code=True)
+def _(
+    captured_pron,
+    check_btn_p,
+    cv_pron,
+    enter_count_p,
+    entered_pron,
+    gu2,
+    hist_pron,
+    language_selector,
+    mo,
+    mode_selector,
+    next_btn_p,
+    next_count_p,
+    prev_btn_p,
+    prev_count_p,
+    pron_form,
+    pron_meta,
+    pron_msg,
+    restart_btn_p,
+    restart_count_p,
+    set_captured_pron,
+    set_enter_count_p,
+    set_entered_pron,
+    set_hist_pron,
+    set_next_count_p,
+    set_prev_count_p,
+    set_pron_msg,
+    set_restart_count_p,
+    set_submit_count_p,
+    set_words4test_pron,
+    submit_count_p,
+    t_ui,
+    words4test_pron,
+    words_pron,
+):
+    # Pronoun drill
+    _lang = language_selector.value
+    _mode = mode_selector.value
+    gu2.pronoun_paradigm_drill_form(
+        words4test_pron, set_words4test_pron, hist_pron, set_hist_pron, pron_msg, set_pron_msg,
+        captured_pron, set_captured_pron, entered_pron, set_entered_pron,
+        submit_count_p, set_submit_count_p, prev_count_p, set_prev_count_p,
+        next_count_p, set_next_count_p, enter_count_p, set_enter_count_p,
+        restart_count_p, set_restart_count_p,
+        cv_pron, pron_form, check_btn_p, prev_btn_p, next_btn_p, restart_btn_p,
+        vocab=words_pron,
+        pron_meta=pron_meta,
+        mode=_mode,
+        word_key="Word",
+        meaning_key="Translation",
+        meaning_label=t_ui("translation_label", _lang).rstrip(":"),
+        title=t_ui("pron_heading", _lang),
+        done_message=t_ui("test4_done", _lang),
+    ) if words_pron else mo.md(t_ui("pron_empty", _lang))
     return
 
 
