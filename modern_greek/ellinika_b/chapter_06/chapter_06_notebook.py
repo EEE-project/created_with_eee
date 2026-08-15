@@ -1405,9 +1405,10 @@ def _(
     # Adjective form
     cv_adj = words4test_adj()[0] if words4test_adj() else None
     _mode = mode_selector.value
+    adj_meta = gu2.adjective_drill_meta(cv_adj["Word"], _mode) if cv_adj else None
     _entered_adj_form = entered_adj().get(cv_adj["Word"]) if cv_adj else None
     adj_form, prev_btn_a, next_btn_a, restart_btn_a = gu2.paradigm_drill_widgets(
-        labels=gu2.adjective_slot_labels(_mode, lang=language_selector.value),
+        labels=gu2.adjective_slot_labels(_mode, lang=language_selector.value, active_slots=adj_meta.active_slots if adj_meta else None),
         values=_entered_adj_form,
         history_len=len(hist_adj()),
         remaining_len=len(words4test_adj()),
@@ -1416,7 +1417,7 @@ def _(
     set_prev_count_a(0)
     set_next_count_a(0)
     set_enter_count_a(0)
-    return adj_form, cv_adj, next_btn_a, prev_btn_a, restart_btn_a
+    return adj_form, adj_meta, cv_adj, next_btn_a, prev_btn_a, restart_btn_a
 
 
 @app.cell(hide_code=True)
@@ -1441,6 +1442,7 @@ def _(
 @app.cell(hide_code=True)
 def _(
     adj_form,
+    adj_meta,
     adj_msg,
     captured_adj,
     check_btn_a,
@@ -1484,6 +1486,7 @@ def _(
         restart_count_a, set_restart_count_a,
         cv_adj, adj_form, check_btn_a, prev_btn_a, next_btn_a, restart_btn_a,
         vocab=words_adj,
+        adj_meta=adj_meta,
         mode=_mode,
         word_key="Word",
         meaning_key="Translation",

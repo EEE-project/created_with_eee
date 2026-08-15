@@ -563,7 +563,8 @@ def _(
     w4t_adj6,
 ):
     cv_adj6 = w4t_adj6()[0] if w4t_adj6() else None
-    _adj_labels_adj6 = gu.adjective_slot_labels("simple", lang="ru")
+    adj_meta_adj6 = gu.adjective_drill_meta(cv_adj6["Word"], "simple") if cv_adj6 else None
+    _adj_labels_adj6 = gu.adjective_slot_labels("simple", lang="ru", active_slots=adj_meta_adj6.active_slots if adj_meta_adj6 else None)
     _entered_form_adj6 = entered_adj6().get(cv_adj6["Word"]) if cv_adj6 else None
     adj_form_adj6, prev_btn_adj6, nxt_btn_adj6, restart_btn_adj6 = gu.paradigm_drill_widgets(
         labels=_adj_labels_adj6,
@@ -578,6 +579,7 @@ def _(
     set_entercnt_adj6(0)
     return (
         adj_form_adj6,
+        adj_meta_adj6,
         cv_adj6,
         nxt_btn_adj6,
         prev_btn_adj6,
@@ -589,6 +591,7 @@ def _(
 def _(
     WORDS_ADJ_ADJ6,
     adj_form_adj6,
+    adj_meta_adj6,
     cap_adj6,
     check_btn_adj6,
     cv_adj6,
@@ -624,6 +627,7 @@ def _(
         restart_cnt_adj6, set_restart_cnt_adj6,
         cv_adj6, adj_form_adj6, check_btn_adj6, prev_btn_adj6, nxt_btn_adj6, restart_btn_adj6,
         vocab=WORDS_ADJ_ADJ6,
+        adj_meta=adj_meta_adj6,
         mode="simple",
         word_key="Word",
         meaning_key="Translation",
