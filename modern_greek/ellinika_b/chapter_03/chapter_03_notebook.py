@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.7.1",
+#     "eee-project>=1.7.2",
 #     "marimo>=0.23.14",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas",
