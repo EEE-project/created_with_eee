@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.5"
+__generated_with = "0.23.16"
 app = marimo.App(width="medium", html_head_file="head.html")
 
 
@@ -195,30 +195,16 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    # Noun file upload
-    file_upload_noun = mo.ui.file(label="Load nouns TSV")
-    file_upload_noun
-    return (file_upload_noun,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_noun, gu, notebook_dir, os, pd):
+def _(gu, notebook_dir):
     # Load noun data
-    if file_upload_noun.value:
-        df_noun = gu.load_data(file_upload_noun, [])
-    else:
-        try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_noun = None
+    df_noun = gu.load_vocab_table("nouns.tsv", nb_dir=notebook_dir)
     return (df_noun,)
 
 
 @app.cell(hide_code=True)
-def _(df_noun, mo, tbl_sel_n):
+def _(df_noun, gu, mo, tbl_sel_n):
     # Noun table
-    table_noun = mo.ui.table(df_noun, selection="multi", initial_selection=tbl_sel_n()) if df_noun is not None else None
+    table_noun = gu.vocab_table(df_noun, initial_selection=tbl_sel_n())
     mo.vstack([mo.md("### Select nouns to practice"), table_noun if table_noun is not None else mo.md("_nouns.tsv not found — upload a file to begin._")])
     return (table_noun,)
 
@@ -515,30 +501,16 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    # Verb file upload
-    file_upload_verb = mo.ui.file(label="Load verbs TSV")
-    file_upload_verb
-    return (file_upload_verb,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_verb, gu, notebook_dir, os, pd):
+def _(gu, notebook_dir):
     # Load verb data
-    if file_upload_verb.value:
-        df_verb = gu.load_data(file_upload_verb, [])
-    else:
-        try:
-            df_verb = pd.read_csv(os.path.join(notebook_dir, 'verbs.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+    df_verb = gu.load_vocab_table("verbs.tsv", nb_dir=notebook_dir)
     return (df_verb,)
 
 
 @app.cell(hide_code=True)
-def _(df_verb, mo, tbl_sel_v):
+def _(df_verb, gu, mo, tbl_sel_v):
     # Verb table
-    table_verb = mo.ui.table(df_verb, selection="multi", initial_selection=tbl_sel_v()) if df_verb is not None else None
+    table_verb = gu.vocab_table(df_verb, initial_selection=tbl_sel_v())
     mo.vstack([mo.md("### Select verbs to practice"), table_verb if table_verb is not None else mo.md("_verbs.tsv not found — upload a file to begin._")])
     return (table_verb,)
 
@@ -767,30 +739,16 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    # Adj file upload
-    file_upload_adj = mo.ui.file(label="Load adjectives TSV")
-    file_upload_adj
-    return (file_upload_adj,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_adj, gu, notebook_dir, os, pd):
+def _(gu, notebook_dir):
     # Load adj data
-    if file_upload_adj.value:
-        df_adj = gu.load_data(file_upload_adj, [])
-    else:
-        try:
-            df_adj = pd.read_csv(os.path.join(notebook_dir, 'adjectives.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+    df_adj = gu.load_vocab_table("adjectives.tsv", nb_dir=notebook_dir)
     return (df_adj,)
 
 
 @app.cell(hide_code=True)
-def _(df_adj, mo, tbl_sel_a):
+def _(df_adj, gu, mo, tbl_sel_a):
     # Adj table
-    table_adj = mo.ui.table(df_adj, selection="multi", initial_selection=tbl_sel_a()) if df_adj is not None else None
+    table_adj = gu.vocab_table(df_adj, initial_selection=tbl_sel_a())
     mo.vstack([mo.md("### Select adjectives to practice"), table_adj if table_adj is not None else mo.md("_adjectives.tsv not found — upload a file to begin._")])
     return (table_adj,)
 
@@ -1009,11 +967,10 @@ def _():
     # Imports
     import os
     import random
-    import pandas as pd
     import marimo as mo
     from modern_greek_eee import greek_utils as gu
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, notebook_dir, os, pd, random
+    return gu, mo, notebook_dir, random
 
 
 if __name__ == "__main__":

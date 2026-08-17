@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.1"
+__generated_with = "0.23.16"
 app = marimo.App(width="medium")
 
 
@@ -139,13 +139,12 @@ def _(mo):
 def _():
     import os
     import random
-    import pandas as pd
     import marimo as mo
 
     from modern_greek_eee import greek_utils as gu
 
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, notebook_dir, os, pd, random
+    return gu, mo, notebook_dir, random
 
 
 @app.cell(hide_code=True)
@@ -158,27 +157,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    file_upload_noun = mo.ui.file(filetypes=[".tsv"], label="Загрузить nouns_ru.tsv (необязательно — используется встроенный файл)")
-    file_upload_noun
-    return (file_upload_noun,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_noun, gu, notebook_dir, os, pd):
-    if file_upload_noun.value:
-        df_noun = gu.load_data(file_upload_noun, [])
-    else:
-        try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns_ru.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_noun = None
+def _(gu, notebook_dir):
+    df_noun = gu.load_vocab_table("nouns_ru.tsv", nb_dir=notebook_dir)
     return (df_noun,)
 
 
 @app.cell(hide_code=True)
-def _(df_noun, mo):
-    table_noun = mo.ui.table(df_noun, selection="multi") if df_noun is not None else None
+def _(df_noun, gu, mo):
+    table_noun = gu.vocab_table(df_noun)
     mo.vstack([
         mo.md("### Выберите существительные для теста"),
         table_noun,
@@ -315,27 +301,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    file_upload_verb = mo.ui.file(filetypes=[".tsv"], label="Загрузить verbs_ru.tsv (необязательно — используется встроенный файл)")
-    file_upload_verb
-    return (file_upload_verb,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_verb, gu, notebook_dir, os, pd):
-    if file_upload_verb.value:
-        df_verb = gu.load_data(file_upload_verb, [])
-    else:
-        try:
-            df_verb = pd.read_csv(os.path.join(notebook_dir, 'verbs_ru.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+def _(gu, notebook_dir):
+    df_verb = gu.load_vocab_table("verbs_ru.tsv", nb_dir=notebook_dir)
     return (df_verb,)
 
 
 @app.cell(hide_code=True)
-def _(df_verb, mo):
-    table_verb = mo.ui.table(df_verb, selection="multi") if df_verb is not None else None
+def _(df_verb, gu, mo):
+    table_verb = gu.vocab_table(df_verb)
     mo.vstack([
         mo.md("### Выберите глаголы для теста"),
         table_verb,
@@ -439,27 +412,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    file_upload_adj = mo.ui.file(filetypes=[".tsv"], label="Загрузить adjectives_ru.tsv (необязательно — используется встроенный файл)")
-    file_upload_adj
-    return (file_upload_adj,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_adj, gu, notebook_dir, os, pd):
-    if file_upload_adj.value:
-        df_adj = gu.load_data(file_upload_adj, [])
-    else:
-        try:
-            df_adj = pd.read_csv(os.path.join(notebook_dir, 'adjectives_ru.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+def _(gu, notebook_dir):
+    df_adj = gu.load_vocab_table("adjectives_ru.tsv", nb_dir=notebook_dir)
     return (df_adj,)
 
 
 @app.cell(hide_code=True)
-def _(df_adj, mo):
-    table_adj = mo.ui.table(df_adj, selection="multi") if df_adj is not None else None
+def _(df_adj, gu, mo):
+    table_adj = gu.vocab_table(df_adj)
     mo.vstack([
         mo.md("### Выберите прилагательные для теста"),
         table_adj,

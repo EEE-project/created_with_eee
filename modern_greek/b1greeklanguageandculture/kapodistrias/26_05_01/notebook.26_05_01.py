@@ -10,7 +10,7 @@
 
 import marimo
 
-__generated_with = "0.23.14"
+__generated_with = "0.23.16"
 app = marimo.App(
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
@@ -199,7 +199,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir, pd, t_ui):
     _lang = language_selector.value
     _vocab_path = gu.ensure_file("vocabulary.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
     _df_vocab = pd.read_csv(_vocab_path, sep='\t') if _vocab_path else None
-    _tbl_vocab = mo.ui.table(_df_vocab, selection="multi") if _df_vocab is not None else None
+    _tbl_vocab = mo.ui.table(_df_vocab, selection="multi", page_size=len(_df_vocab)) if _df_vocab is not None else None
     mo.vstack([
         mo.md(t_ui("vocabulary_heading", _lang)),
         _tbl_vocab,
@@ -231,20 +231,16 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, file_upload_noun, gu, notebook_dir, pd):
+def _(RAW_BASE, file_upload_noun, gu, notebook_dir):
     # Noun data loading
-    if file_upload_noun.value:
-        df_noun = gu.load_data(file_upload_noun, [])
-    else:
-        _noun_path = gu.ensure_file("nouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
-        df_noun = pd.read_csv(_noun_path, sep='\t') if _noun_path else None
+    df_noun = gu.load_vocab_table("nouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE, file_upload=file_upload_noun)
     return (df_noun,)
 
 
 @app.cell(hide_code=True)
-def _(df_noun, language_selector, mo, t_ui, tbl_sel_n):
+def _(df_noun, gu, language_selector, mo, t_ui, tbl_sel_n):
     # Noun table display
-    table_noun = mo.ui.table(df_noun, selection="multi", initial_selection=(tbl_sel_n() if tbl_sel_n() is not None else list(range(len(df_noun))))) if df_noun is not None else None
+    table_noun = gu.vocab_table(df_noun, select_state=tbl_sel_n)
     mo.vstack([
         mo.md(t_ui("select_nouns", language_selector.value)),
         table_noun,
@@ -553,20 +549,16 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, file_upload_verb, gu, notebook_dir, pd):
+def _(RAW_BASE, file_upload_verb, gu, notebook_dir):
     # Verb data loading
-    if file_upload_verb.value:
-        df_verb = gu.load_data(file_upload_verb, [])
-    else:
-        _verb_path = gu.ensure_file("verbs.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
-        df_verb = pd.read_csv(_verb_path, sep='\t') if _verb_path else None
+    df_verb = gu.load_vocab_table("verbs.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE, file_upload=file_upload_verb)
     return (df_verb,)
 
 
 @app.cell(hide_code=True)
-def _(df_verb, language_selector, mo, t_ui, tbl_sel_v):
+def _(df_verb, gu, language_selector, mo, t_ui, tbl_sel_v):
     # Verb table display
-    table_verb = mo.ui.table(df_verb, selection="multi", initial_selection=(tbl_sel_v() if tbl_sel_v() is not None else list(range(len(df_verb))))) if df_verb is not None else None
+    table_verb = gu.vocab_table(df_verb, select_state=tbl_sel_v)
     mo.vstack([mo.md(t_ui("select_verbs", language_selector.value)), table_verb])
     return (table_verb,)
 
@@ -823,20 +815,16 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, file_upload_adj, gu, notebook_dir, pd):
+def _(RAW_BASE, file_upload_adj, gu, notebook_dir):
     # Adjective data loading
-    if file_upload_adj.value:
-        df_adj = gu.load_data(file_upload_adj, [])
-    else:
-        _adj_path = gu.ensure_file("adjectives.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
-        df_adj = pd.read_csv(_adj_path, sep='\t') if _adj_path else None
+    df_adj = gu.load_vocab_table("adjectives.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE, file_upload=file_upload_adj)
     return (df_adj,)
 
 
 @app.cell(hide_code=True)
-def _(df_adj, language_selector, mo, t_ui, tbl_sel_a):
+def _(df_adj, gu, language_selector, mo, t_ui, tbl_sel_a):
     # Adjective table display
-    table_adj = mo.ui.table(df_adj, selection="multi", initial_selection=(tbl_sel_a() if tbl_sel_a() is not None else list(range(len(df_adj))))) if df_adj is not None else None
+    table_adj = gu.vocab_table(df_adj, select_state=tbl_sel_a)
     mo.vstack([mo.md(t_ui("select_adjs", language_selector.value)), table_adj])
     return (table_adj,)
 

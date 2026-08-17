@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.1"
+__generated_with = "0.23.16"
 app = marimo.App(width="medium")
 
 
@@ -119,28 +119,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    file_upload_noun = mo.ui.file(label="Φόρτωση αρχείου ουσιαστικών (nouns.tsv) — προαιρετικό", filetypes=[".tsv"])
-    file_upload_noun
-    return (file_upload_noun,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_noun, notebook_dir, os, pd):
-    if file_upload_noun.value:
-        from modern_greek_eee import greek_utils as _gu
-        df_noun = _gu.load_data(file_upload_noun, [])
-    else:
-        try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_noun = None
+def _(gu, notebook_dir):
+    df_noun = gu.load_vocab_table("nouns.tsv", nb_dir=notebook_dir)
     return (df_noun,)
 
 
 @app.cell(hide_code=True)
-def _(df_noun, mo):
-    table_noun = mo.ui.table(df_noun, selection="multi") if df_noun is not None else None
+def _(df_noun, gu, mo):
+    table_noun = gu.vocab_table(df_noun)
     mo.vstack([
         mo.md("### Επιλέξτε ουσιαστικά για εξάσκηση"),
         table_noun if table_noun is not None else mo.md("_Το αρχείο nouns.tsv δεν βρέθηκε — φόρτωσε αρχείο._")
@@ -219,7 +205,14 @@ def _(gu, noun_current):
 
 
 @app.cell(hide_code=True)
-def _(art_noun_form, art_noun_trans, art_noun_word, mo, words4test_noun, words_noun):
+def _(
+    art_noun_form,
+    art_noun_trans,
+    art_noun_word,
+    mo,
+    words4test_noun,
+    words_noun,
+):
     _remaining = len(words4test_noun())
     _total = len(words_noun)
     if words4test_noun() and art_noun_word:
@@ -268,28 +261,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    file_upload_verb = mo.ui.file(label="Φόρτωση αρχείου ρημάτων (verbs.tsv) — προαιρετικό", filetypes=[".tsv"])
-    file_upload_verb
-    return (file_upload_verb,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_verb, notebook_dir, os, pd):
-    if file_upload_verb.value:
-        from modern_greek_eee import greek_utils as _gu
-        df_verb = _gu.load_data(file_upload_verb, [])
-    else:
-        try:
-            df_verb = pd.read_csv(os.path.join(notebook_dir, 'verbs.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+def _(gu, notebook_dir):
+    df_verb = gu.load_vocab_table("verbs.tsv", nb_dir=notebook_dir)
     return (df_verb,)
 
 
 @app.cell(hide_code=True)
-def _(df_verb, mo):
-    table_verb = mo.ui.table(df_verb, selection="multi") if df_verb is not None else None
+def _(df_verb, gu, mo):
+    table_verb = gu.vocab_table(df_verb)
     mo.vstack([
         mo.md("### Επιλέξτε ρήματα για εξάσκηση"),
         table_verb if table_verb is not None else mo.md("_Το αρχείο verbs.tsv δεν βρέθηκε — φόρτωσε αρχείο._")
@@ -400,28 +379,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    file_upload_adj = mo.ui.file(label="Φόρτωση αρχείου επιθέτων (adjectives.tsv) — προαιρετικό", filetypes=[".tsv"])
-    file_upload_adj
-    return (file_upload_adj,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_adj, notebook_dir, os, pd):
-    if file_upload_adj.value:
-        from modern_greek_eee import greek_utils as _gu
-        df_adj = _gu.load_data(file_upload_adj, [])
-    else:
-        try:
-            df_adj = pd.read_csv(os.path.join(notebook_dir, 'adjectives.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+def _(gu, notebook_dir):
+    df_adj = gu.load_vocab_table("adjectives.tsv", nb_dir=notebook_dir)
     return (df_adj,)
 
 
 @app.cell(hide_code=True)
-def _(df_adj, mo):
-    table_adj = mo.ui.table(df_adj, selection="multi") if df_adj is not None else None
+def _(df_adj, gu, mo):
+    table_adj = gu.vocab_table(df_adj)
     mo.vstack([
         mo.md("### Επιλέξτε επίθετα για εξάσκηση"),
         table_adj if table_adj is not None else mo.md("_Το αρχείο adjectives.tsv δεν βρέθηκε — φόρτωσε αρχείο._")
@@ -530,7 +495,6 @@ def _(adj_last_passed_mesg, mo):
 def _():
     import os
     import random
-    import pandas as pd
     import marimo as mo
 
     try:
@@ -539,7 +503,7 @@ def _():
         import greek_utils as gu
 
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, notebook_dir, os, pd, random
+    return gu, mo, notebook_dir, random
 
 
 if __name__ == "__main__":

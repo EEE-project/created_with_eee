@@ -36,9 +36,9 @@ ellinika_b/
   notebook.py               # course index — reads index.tsv, one card per chapter
   chapter_NN/
     chapter_NN_notebook.py         # the real, deployed notebook — multi-language (ru/el/en) in one file via language_selector, same pattern as every other course here. This is what gets exported to Pages (confirmed: index.tsv has exactly one url per chapter, a relative directory name, not a molab link — see "Index notebook + index.tsv" below).
-    chapter_NN_notebook_el.py      # ⚠ legacy single-language variant — NOT deployed (index.tsv has no id for these). Left over from an earlier per-language-file generation approach (see Architecture below). Don't edit these expecting them to reach students.
-    chapter_NN_notebook_en.py      # same caveat
-    chapter_NN_notebook_ru.py      # same caveat
+    chapter_NN_notebook_el.py      # single-language source variant — NOT directly deployed (index.tsv has no id for these; chapter_NN_notebook.py is what's served to students), but these ARE the source files that content gets authored/merged into the multilang notebook from. Keep them in sync with any repo-wide fix — do not skip them as dead.
+    chapter_NN_notebook_en.py      # same
+    chapter_NN_notebook_ru.py      # same
     nouns.tsv / verbs.tsv / adjectives.tsv / vocabulary.tsv   # Word\tTranslation, shared across all language variants
     chapter_NN_extracted_content.md   # full extraction from the textbook (source material, not read by the notebook at runtime)
     SUMMARY.md / README.md            # per-chapter quick-reference docs (grammar summary, vocab table, run instructions) — chapter-specific content lives here, not in this file

@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.1"
+__generated_with = "0.23.16"
 app = marimo.App(width="medium")
 
 
@@ -121,28 +121,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    file_upload_noun = mo.ui.file(label="Upload nouns.tsv (optional override)", filetypes=[".tsv", ".csv"])
-    file_upload_noun
-    return (file_upload_noun,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_noun, notebook_dir, os, pd):
-    if file_upload_noun.value:
-        import io as _io
-        df_noun = pd.read_csv(_io.BytesIO(file_upload_noun.value[0].contents), sep='\t')
-    else:
-        try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_noun = None
+def _(gu, notebook_dir):
+    df_noun = gu.load_vocab_table("nouns.tsv", nb_dir=notebook_dir)
     return (df_noun,)
 
 
 @app.cell(hide_code=True)
-def _(df_noun, mo):
-    table_noun = mo.ui.table(df_noun, selection="multi") if df_noun is not None else None
+def _(df_noun, gu, mo):
+    table_noun = gu.vocab_table(df_noun)
     mo.vstack([mo.md("### Select nouns to test"), table_noun if table_noun is not None else mo.md("_nouns.tsv not found — upload a file to begin._")])
     return (table_noun,)
 
@@ -184,7 +170,15 @@ def _(gu, noun_current):
 
 
 @app.cell(hide_code=True)
-def _(mo, noun_form, noun_msg, noun_trans, noun_word, words4test_noun, words_noun):
+def _(
+    mo,
+    noun_form,
+    noun_msg,
+    noun_trans,
+    noun_word,
+    words4test_noun,
+    words_noun,
+):
     if noun_word:
         _remaining = len(words4test_noun())
         _total = len(words_noun)
@@ -215,7 +209,15 @@ def _(gu, mo, noun_form, noun_word):
 
 
 @app.cell(hide_code=True)
-def _(mo, art_noun_form, art_noun_trans, art_noun_word, noun_msg, words4test_noun, words_noun):
+def _(
+    art_noun_form,
+    art_noun_trans,
+    art_noun_word,
+    mo,
+    noun_msg,
+    words4test_noun,
+    words_noun,
+):
     if art_noun_word:
         _remaining = len(words4test_noun())
         _total = len(words_noun)
@@ -234,7 +236,7 @@ def _(mo, art_noun_form, art_noun_trans, art_noun_word, noun_msg, words4test_nou
 
 
 @app.cell(hide_code=True)
-def _(gu, mo, art_noun_form, art_noun_word):
+def _(art_noun_form, art_noun_word, gu, mo):
     if art_noun_word and art_noun_form is not None and art_noun_form.value:
         with mo.capture_stdout() as _buf2:
             gu.check_noun_test(art_noun_word, art_noun_form, mode='article')
@@ -246,7 +248,17 @@ def _(gu, mo, art_noun_form, art_noun_word):
 
 
 @app.cell(hide_code=True)
-def _(gu, mo, noun_form, noun_word, set_noun_current, set_noun_msg, set_words4test_noun, words4test_noun, words_noun):
+def _(
+    gu,
+    mo,
+    noun_form,
+    noun_word,
+    set_noun_current,
+    set_noun_msg,
+    set_words4test_noun,
+    words4test_noun,
+    words_noun,
+):
     if noun_word and noun_form is not None and noun_form.value:
         with mo.capture_stdout() as _buf3:
             gu.process_noun_test(
@@ -257,7 +269,17 @@ def _(gu, mo, noun_form, noun_word, set_noun_current, set_noun_msg, set_words4te
 
 
 @app.cell(hide_code=True)
-def _(gu, mo, art_noun_form, art_noun_word, set_noun_current, set_noun_msg, set_words4test_noun, words4test_noun, words_noun):
+def _(
+    art_noun_form,
+    art_noun_word,
+    gu,
+    mo,
+    set_noun_current,
+    set_noun_msg,
+    set_words4test_noun,
+    words4test_noun,
+    words_noun,
+):
     if art_noun_word and art_noun_form is not None and art_noun_form.value:
         with mo.capture_stdout() as _buf4:
             gu.process_noun_test(
@@ -284,28 +306,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    file_upload_verb = mo.ui.file(label="Upload verbs.tsv (optional override)", filetypes=[".tsv", ".csv"])
-    file_upload_verb
-    return (file_upload_verb,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_verb, notebook_dir, os, pd):
-    if file_upload_verb.value:
-        import io as _io2
-        df_verb = pd.read_csv(_io2.BytesIO(file_upload_verb.value[0].contents), sep='\t')
-    else:
-        try:
-            df_verb = pd.read_csv(os.path.join(notebook_dir, 'verbs.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+def _(gu, notebook_dir):
+    df_verb = gu.load_vocab_table("verbs.tsv", nb_dir=notebook_dir)
     return (df_verb,)
 
 
 @app.cell(hide_code=True)
-def _(df_verb, mo):
-    table_verb = mo.ui.table(df_verb, selection="multi") if df_verb is not None else None
+def _(df_verb, gu, mo):
+    table_verb = gu.vocab_table(df_verb)
     mo.vstack([mo.md("### Select verbs to test"), table_verb if table_verb is not None else mo.md("_verbs.tsv not found — upload a file to begin._")])
     return (table_verb,)
 
@@ -378,7 +386,16 @@ def _(cv_verb, gu, mo, tense_selector, verb_form, words4test_verb, words_verb):
 
 
 @app.cell(hide_code=True)
-def _(cv_verb, gu, mo, set_verb_msg, set_words4test_verb, tense_selector, verb_form, words4test_verb, words_verb):
+def _(
+    cv_verb,
+    gu,
+    set_verb_msg,
+    set_words4test_verb,
+    tense_selector,
+    verb_form,
+    words4test_verb,
+    words_verb,
+):
     if cv_verb and tense_selector.value and verb_form is not None and verb_form.value:
         _ok, _ = gu.check_verb_test(cv_verb['Word'], verb_form, tense_selector.value)
         if _ok:
@@ -406,28 +423,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    file_upload_adj = mo.ui.file(label="Upload adjectives.tsv (optional override)", filetypes=[".tsv", ".csv"])
-    file_upload_adj
-    return (file_upload_adj,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_adj, notebook_dir, os, pd):
-    if file_upload_adj.value:
-        import io as _io3
-        df_adj = pd.read_csv(_io3.BytesIO(file_upload_adj.value[0].contents), sep='\t')
-    else:
-        try:
-            df_adj = pd.read_csv(os.path.join(notebook_dir, 'adjectives.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+def _(gu, notebook_dir):
+    df_adj = gu.load_vocab_table("adjectives.tsv", nb_dir=notebook_dir)
     return (df_adj,)
 
 
 @app.cell(hide_code=True)
-def _(df_adj, mo):
-    table_adj = mo.ui.table(df_adj, selection="multi") if df_adj is not None else None
+def _(df_adj, gu, mo):
+    table_adj = gu.vocab_table(df_adj)
     mo.vstack([mo.md("### Select adjectives to test"), table_adj if table_adj is not None else mo.md("_adjectives.tsv not found — upload a file to begin._")])
     return (table_adj,)
 
@@ -495,7 +498,17 @@ def _(adj_cv, adj_form, adj_words, adj_words4test, gu, mo, mode_selector):
 
 
 @app.cell(hide_code=True)
-def _(adj_cv, adj_form, adj_words, adj_words4test, gu, mode_selector, set_adj_cv, set_adj_last_passed_mesg, set_adj_words4test):
+def _(
+    adj_cv,
+    adj_form,
+    adj_words,
+    adj_words4test,
+    gu,
+    mode_selector,
+    set_adj_cv,
+    set_adj_last_passed_mesg,
+    set_adj_words4test,
+):
     _adj = adj_cv()
     if adj_form is not None and _adj and adj_form.value:
         _ok, _ = gu.check_adjective_test(_adj['Word'], adj_form, mode=mode_selector.value)
@@ -517,13 +530,12 @@ def _(adj_last_passed_mesg, mo):
 def _():
     import os
     import random
-    import pandas as pd
     import marimo as mo
 
     from modern_greek_eee import greek_utils as gu
 
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, random, pd, os, notebook_dir
+    return gu, mo, notebook_dir, random
 
 
 if __name__ == "__main__":

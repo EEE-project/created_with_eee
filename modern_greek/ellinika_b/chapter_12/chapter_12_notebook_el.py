@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.5"
+__generated_with = "0.23.16"
 app = marimo.App(width="medium", html_head_file="head.html")
 
 
@@ -242,30 +242,16 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    # Noun file upload
-    file_upload_noun = mo.ui.file(label="Φόρτωση TSV ουσιαστικών")
-    file_upload_noun
-    return (file_upload_noun,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_noun, gu, notebook_dir, os, pd):
+def _(gu, notebook_dir):
     # Load noun data
-    if file_upload_noun.value:
-        df_noun = gu.load_data(file_upload_noun, [])
-    else:
-        try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_noun = None
+    df_noun = gu.load_vocab_table("nouns.tsv", nb_dir=notebook_dir)
     return (df_noun,)
 
 
 @app.cell(hide_code=True)
-def _(df_noun, mo, tbl_sel_n):
+def _(df_noun, gu, mo, tbl_sel_n):
     # Noun table
-    table_noun = mo.ui.table(df_noun, selection="multi", initial_selection=tbl_sel_n()) if df_noun is not None else None
+    table_noun = gu.vocab_table(df_noun, initial_selection=tbl_sel_n())
     mo.vstack([mo.md("### Επιλέξτε ουσιαστικά για εξάσκηση"), table_noun])
     return (table_noun,)
 
@@ -332,7 +318,14 @@ def _(clear_count_n, current_noun, gu):
 
 
 @app.cell(hide_code=True)
-def _(art_noun_form, captured_article, captured_simple, mo, noun_form, set_submit_count_n):
+def _(
+    art_noun_form,
+    captured_article,
+    captured_simple,
+    mo,
+    noun_form,
+    set_submit_count_n,
+):
     # Submit button N
     _vals_s = noun_form.value if noun_form is not None else []
     _vals_a = art_noun_form.value if art_noun_form is not None else []
@@ -350,7 +343,19 @@ def _(art_noun_form, captured_article, captured_simple, mo, noun_form, set_submi
 
 
 @app.cell(hide_code=True)
-def _(captured_simple, clear_button_n, gu, mo, noun_form, noun_trans, noun_word, session_total_n, skip_button_n, submit_button_n, words4test_noun):
+def _(
+    captured_simple,
+    clear_button_n,
+    gu,
+    mo,
+    noun_form,
+    noun_trans,
+    noun_word,
+    session_total_n,
+    skip_button_n,
+    submit_button_n,
+    words4test_noun,
+):
     # Noun simple display
     _feedback = mo.md("")
     if words4test_noun() and noun_word:
@@ -374,7 +379,19 @@ def _(captured_simple, clear_button_n, gu, mo, noun_form, noun_trans, noun_word,
 
 
 @app.cell(hide_code=True)
-def _(art_noun_form, art_noun_trans, art_noun_word, captured_article, clear_button_n, gu, mo, session_total_n, skip_button_n, submit_button_n, words4test_noun):
+def _(
+    art_noun_form,
+    art_noun_trans,
+    art_noun_word,
+    captured_article,
+    clear_button_n,
+    gu,
+    mo,
+    session_total_n,
+    skip_button_n,
+    submit_button_n,
+    words4test_noun,
+):
     # Noun article display
     _feedback_a = mo.md("")
     if words4test_noun() and art_noun_word:
@@ -405,7 +422,22 @@ def _(mo, noun_msg):
 
 
 @app.cell(hide_code=True)
-def _(captured_article, captured_simple, current_noun, df_noun, gu, random, session_total_n, set_captured_article, set_captured_simple, set_current_noun, set_noun_msg, set_tbl_sel_n, set_words4test_noun, words4test_noun):
+def _(
+    captured_article,
+    captured_simple,
+    current_noun,
+    df_noun,
+    gu,
+    random,
+    session_total_n,
+    set_captured_article,
+    set_captured_simple,
+    set_current_noun,
+    set_noun_msg,
+    set_tbl_sel_n,
+    set_words4test_noun,
+    words4test_noun,
+):
     # Noun pass handler
     _cn = current_noun()
     _cs = captured_simple()
@@ -430,7 +462,18 @@ def _(captured_article, captured_simple, current_noun, df_noun, gu, random, sess
 
 
 @app.cell(hide_code=True)
-def _(art_noun_form, art_noun_word, gu, noun_form, noun_word, set_captured_article, set_captured_simple, set_submit_count_n, submit_button_n, submit_count_n):
+def _(
+    art_noun_form,
+    art_noun_word,
+    gu,
+    noun_form,
+    noun_word,
+    set_captured_article,
+    set_captured_simple,
+    set_submit_count_n,
+    submit_button_n,
+    submit_count_n,
+):
     # Noun submit handler
     if (submit_button_n.value or 0) > submit_count_n():
         set_submit_count_n(submit_button_n.value)
@@ -442,7 +485,20 @@ def _(art_noun_form, art_noun_word, gu, noun_form, noun_word, set_captured_artic
 
 
 @app.cell(hide_code=True)
-def _(current_noun, df_noun, random, set_captured_article, set_captured_simple, set_current_noun, set_skip_count_n, set_tbl_sel_n, set_words4test_noun, skip_button_n, skip_count_n, words4test_noun):
+def _(
+    current_noun,
+    df_noun,
+    random,
+    set_captured_article,
+    set_captured_simple,
+    set_current_noun,
+    set_skip_count_n,
+    set_tbl_sel_n,
+    set_words4test_noun,
+    skip_button_n,
+    skip_count_n,
+    words4test_noun,
+):
     # Noun skip handler
     if (skip_button_n.value or 0) > skip_count_n():
         set_skip_count_n(skip_button_n.value)
@@ -459,7 +515,13 @@ def _(current_noun, df_noun, random, set_captured_article, set_captured_simple, 
 
 
 @app.cell(hide_code=True)
-def _(clear_button_n, clear_count_n, set_captured_article, set_captured_simple, set_clear_count_n):
+def _(
+    clear_button_n,
+    clear_count_n,
+    set_captured_article,
+    set_captured_simple,
+    set_clear_count_n,
+):
     # Noun clear handler
     if (clear_button_n.value or 0) > clear_count_n():
         set_clear_count_n(clear_button_n.value)
@@ -486,30 +548,16 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    # Verb file upload
-    file_upload_verb = mo.ui.file(label="Φόρτωση TSV ρημάτων")
-    file_upload_verb
-    return (file_upload_verb,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_verb, gu, notebook_dir, os, pd):
+def _(gu, notebook_dir):
     # Load verb data
-    if file_upload_verb.value:
-        df_verb = gu.load_data(file_upload_verb, [])
-    else:
-        try:
-            df_verb = pd.read_csv(os.path.join(notebook_dir, 'verbs.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+    df_verb = gu.load_vocab_table("verbs.tsv", nb_dir=notebook_dir)
     return (df_verb,)
 
 
 @app.cell(hide_code=True)
-def _(df_verb, mo, tbl_sel_v):
+def _(df_verb, gu, mo, tbl_sel_v):
     # Verb table
-    table_verb = mo.ui.table(df_verb, selection="multi", initial_selection=tbl_sel_v()) if df_verb is not None else None
+    table_verb = gu.vocab_table(df_verb, initial_selection=tbl_sel_v())
     mo.vstack([mo.md("### Επιλέξτε ρήματα για εξάσκηση"), table_verb])
     return (table_verb,)
 
@@ -533,7 +581,7 @@ def _(gu, mo):
 
 
 @app.cell(hide_code=True)
-def _(gu, mo, random, session_total_v, set_session_total_v, table_verb):
+def _(gu, mo, session_total_v, set_session_total_v, table_verb):
     # Verb words
     words_verb = gu.get_words(table_verb)
     words4test_verb, set_words4test_verb = mo.state(words_verb.copy() if words_verb else [])
@@ -598,7 +646,20 @@ def _(captured_verb, mo, set_submit_count_v, tense_selector, verb_fields):
 
 
 @app.cell(hide_code=True)
-def _(captured_verb, clear_button_v, cv_verb, gu, mo, session_total_v, skip_button_v, submit_button_v, tense_selector, verb_fields, verb_msg, words4test_verb):
+def _(
+    captured_verb,
+    clear_button_v,
+    cv_verb,
+    gu,
+    mo,
+    session_total_v,
+    skip_button_v,
+    submit_button_v,
+    tense_selector,
+    verb_fields,
+    verb_msg,
+    words4test_verb,
+):
     # Verb display
     _TENSE_LABELS = {k: gu.TENSE_LABELS[k]['greek'] for k in gu.TENSE_LABELS}
     if not words4test_verb():
@@ -628,7 +689,19 @@ def _(captured_verb, clear_button_v, cv_verb, gu, mo, session_total_v, skip_butt
 
 
 @app.cell(hide_code=True)
-def _(captured_verb, cv_verb, df_verb, gu, session_total_v, set_captured_verb, set_tbl_sel_v, set_verb_msg, set_words4test_verb, tense_selector, words4test_verb):
+def _(
+    captured_verb,
+    cv_verb,
+    df_verb,
+    gu,
+    session_total_v,
+    set_captured_verb,
+    set_tbl_sel_v,
+    set_verb_msg,
+    set_words4test_verb,
+    tense_selector,
+    words4test_verb,
+):
     # Verb pass handler
     _tense_key = tense_selector.value
     _c = captured_verb()
@@ -646,7 +719,16 @@ def _(captured_verb, cv_verb, df_verb, gu, session_total_v, set_captured_verb, s
 
 
 @app.cell(hide_code=True)
-def _(cv_verb, gu, set_captured_verb, set_submit_count_v, submit_button_v, submit_count_v, tense_selector, verb_fields):
+def _(
+    cv_verb,
+    gu,
+    set_captured_verb,
+    set_submit_count_v,
+    submit_button_v,
+    submit_count_v,
+    tense_selector,
+    verb_fields,
+):
     # Verb submit handler
     if (submit_button_v.value or 0) > submit_count_v():
         set_submit_count_v(submit_button_v.value)
@@ -656,7 +738,17 @@ def _(cv_verb, gu, set_captured_verb, set_submit_count_v, submit_button_v, submi
 
 
 @app.cell(hide_code=True)
-def _(cv_verb, df_verb, set_captured_verb, set_skip_count_v, set_tbl_sel_v, set_words4test_verb, skip_button_v, skip_count_v, words4test_verb):
+def _(
+    cv_verb,
+    df_verb,
+    set_captured_verb,
+    set_skip_count_v,
+    set_tbl_sel_v,
+    set_words4test_verb,
+    skip_button_v,
+    skip_count_v,
+    words4test_verb,
+):
     # Verb skip handler
     if (skip_button_v.value or 0) > skip_count_v():
         set_skip_count_v(skip_button_v.value)
@@ -697,30 +789,16 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    # Adj file upload
-    file_upload_adj = mo.ui.file(label="Φόρτωση TSV επιθέτων")
-    file_upload_adj
-    return (file_upload_adj,)
-
-
-@app.cell(hide_code=True)
-def _(file_upload_adj, gu, notebook_dir, os, pd):
+def _(gu, notebook_dir):
     # Load adj data
-    if file_upload_adj.value:
-        df_adj = gu.load_data(file_upload_adj, [])
-    else:
-        try:
-            df_adj = pd.read_csv(os.path.join(notebook_dir, 'adjectives.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+    df_adj = gu.load_vocab_table("adjectives.tsv", nb_dir=notebook_dir)
     return (df_adj,)
 
 
 @app.cell(hide_code=True)
-def _(df_adj, mo, tbl_sel_a):
+def _(df_adj, gu, mo, tbl_sel_a):
     # Adj table
-    table_adj = mo.ui.table(df_adj, selection="multi", initial_selection=tbl_sel_a()) if df_adj is not None else None
+    table_adj = gu.vocab_table(df_adj, initial_selection=tbl_sel_a())
     mo.vstack([mo.md("### Επιλέξτε επίθετα για εξάσκηση"), table_adj])
     return (table_adj,)
 
@@ -804,7 +882,19 @@ def _(adj_form, captured_adj, mo, set_submit_count_a):
 
 
 @app.cell(hide_code=True)
-def _(adj_cv, adj_form, captured_adj, clear_button_a, gu, mo, mode_selector, session_total_a, skip_button_a, submit_button_a, words4test_adj):
+def _(
+    adj_cv,
+    adj_form,
+    captured_adj,
+    clear_button_a,
+    gu,
+    mo,
+    mode_selector,
+    session_total_a,
+    skip_button_a,
+    submit_button_a,
+    words4test_adj,
+):
     # Adj display
     _adj = adj_cv()
     if words4test_adj() and _adj:
@@ -835,7 +925,20 @@ def _(adj_last_passed_mesg, mo):
 
 
 @app.cell(hide_code=True)
-def _(adj_cv, captured_adj, df_adj, gu, random, session_total_a, set_adj_cv, set_adj_last_passed_mesg, set_captured_adj, set_tbl_sel_a, set_words4test_adj, words4test_adj):
+def _(
+    adj_cv,
+    captured_adj,
+    df_adj,
+    gu,
+    random,
+    session_total_a,
+    set_adj_cv,
+    set_adj_last_passed_mesg,
+    set_captured_adj,
+    set_tbl_sel_a,
+    set_words4test_adj,
+    words4test_adj,
+):
     # Adj pass handler
     _adj = adj_cv()
     _c = captured_adj()
@@ -854,7 +957,15 @@ def _(adj_cv, captured_adj, df_adj, gu, random, session_total_a, set_adj_cv, set
 
 
 @app.cell(hide_code=True)
-def _(adj_cv, adj_form, gu, set_captured_adj, set_submit_count_a, submit_button_a, submit_count_a):
+def _(
+    adj_cv,
+    adj_form,
+    gu,
+    set_captured_adj,
+    set_submit_count_a,
+    submit_button_a,
+    submit_count_a,
+):
     # Adj submit handler
     if (submit_button_a.value or 0) > submit_count_a():
         set_submit_count_a(submit_button_a.value)
@@ -865,7 +976,19 @@ def _(adj_cv, adj_form, gu, set_captured_adj, set_submit_count_a, submit_button_
 
 
 @app.cell(hide_code=True)
-def _(adj_cv, df_adj, random, set_adj_cv, set_captured_adj, set_skip_count_a, set_tbl_sel_a, set_words4test_adj, skip_button_a, skip_count_a, words4test_adj):
+def _(
+    adj_cv,
+    df_adj,
+    random,
+    set_adj_cv,
+    set_captured_adj,
+    set_skip_count_a,
+    set_tbl_sel_a,
+    set_words4test_adj,
+    skip_button_a,
+    skip_count_a,
+    words4test_adj,
+):
     # Adj skip handler
     if (skip_button_a.value or 0) > skip_count_a():
         set_skip_count_a(skip_button_a.value)
@@ -894,11 +1017,10 @@ def _():
     # Imports
     import os
     import random
-    import pandas as pd
     import marimo as mo
     from modern_greek_eee import greek_utils as gu
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, notebook_dir, os, pd, random
+    return gu, mo, notebook_dir, random
 
 
 if __name__ == "__main__":

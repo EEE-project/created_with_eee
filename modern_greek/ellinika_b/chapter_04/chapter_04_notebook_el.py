@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.1"
+__generated_with = "0.23.16"
 app = marimo.App(width="medium")
 
 
@@ -81,20 +81,13 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(df_noun, mo):
-    table_noun = mo.ui.table(df_noun, selection="multi") if df_noun is not None else None
+def _(df_noun, gu, mo):
+    table_noun = gu.vocab_table(df_noun)
     mo.vstack([
         mo.md("## Τεστ 1: Ουσιαστικά\n\n### Επιλέξτε ουσιαστικά για εξάσκηση"),
         table_noun,
     ])
     return (table_noun,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    file_upload_noun = mo.ui.file(label="Φόρτωση TSV ουσιαστικών")
-    file_upload_noun
-    return (file_upload_noun,)
 
 
 @app.cell(hide_code=True)
@@ -158,17 +151,10 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(df_verb, mo):
-    table_verb = mo.ui.table(df_verb, selection="multi") if df_verb is not None else None
+def _(df_verb, gu):
+    table_verb = gu.vocab_table(df_verb)
     table_verb
     return (table_verb,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    file_upload_verb = mo.ui.file(label="Φόρτωση TSV ρημάτων")
-    file_upload_verb
-    return (file_upload_verb,)
 
 
 @app.cell(hide_code=True)
@@ -213,14 +199,8 @@ def _(cv_verb, gu, mo, tense_selector, verb_form, words4test_verb, words_verb):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_noun, gu, notebook_dir, os, pd):
-    if file_upload_noun.value:
-        df_noun = gu.load_data(file_upload_noun, [])
-    else:
-        try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_noun = None
+def _(gu, notebook_dir):
+    df_noun = gu.load_vocab_table("nouns.tsv", nb_dir=notebook_dir)
     return (df_noun,)
 
 
@@ -295,14 +275,8 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(file_upload_verb, gu, notebook_dir, os, pd):
-    if file_upload_verb.value:
-        df_verb = gu.load_data(file_upload_verb, [])
-    else:
-        try:
-            df_verb = pd.read_csv(os.path.join(notebook_dir, 'verbs.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+def _(gu, notebook_dir):
+    df_verb = gu.load_vocab_table("verbs.tsv", nb_dir=notebook_dir)
     return (df_verb,)
 
 
@@ -365,17 +339,10 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(df_adj, mo):
-    table_adj = mo.ui.table(df_adj, selection="multi") if df_adj is not None else None
+def _(df_adj, gu):
+    table_adj = gu.vocab_table(df_adj)
     table_adj
     return (table_adj,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    file_upload_adj = mo.ui.file(label="Φόρτωση TSV επιθέτων")
-    file_upload_adj
-    return (file_upload_adj,)
 
 
 @app.cell(hide_code=True)
@@ -419,14 +386,8 @@ def _(adj_last_passed_mesg, mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_adj, gu, notebook_dir, os, pd):
-    if file_upload_adj.value:
-        df_adj = gu.load_data(file_upload_adj, [])
-    else:
-        try:
-            df_adj = pd.read_csv(os.path.join(notebook_dir, 'adjectives.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+def _(gu, notebook_dir):
+    df_adj = gu.load_vocab_table("adjectives.tsv", nb_dir=notebook_dir)
     return (df_adj,)
 
 
@@ -483,11 +444,10 @@ def _(
 def _():
     import os
     import random
-    import pandas as pd
     import marimo as mo
     from modern_greek_eee import greek_utils as gu
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, notebook_dir, os, pd, random
+    return gu, mo, notebook_dir, random
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.23.5"
+__generated_with = "0.23.16"
 app = marimo.App(
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
@@ -105,20 +105,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_noun, gu, notebook_dir, os, pd):
-    if file_upload_noun.value:
-        df_noun = gu.load_data(file_upload_noun, [])
-    else:
-        try:
-            df_noun = pd.read_csv(os.path.join(notebook_dir, 'nouns.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_noun = None
+def _(file_upload_noun, gu, notebook_dir):
+    df_noun = gu.load_vocab_table("nouns.tsv", nb_dir=notebook_dir, file_upload=file_upload_noun)
     return (df_noun,)
 
 
 @app.cell(hide_code=True)
-def _(df_noun, mo, tbl_sel_n):
-    table_noun = mo.ui.table(df_noun, selection="multi", initial_selection=(tbl_sel_n() if tbl_sel_n() is not None else list(range(len(df_noun))))) if df_noun is not None else None
+def _(df_noun, gu, mo, tbl_sel_n):
+    table_noun = gu.vocab_table(df_noun, select_state=tbl_sel_n)
     mo.vstack([
         mo.md("### Επιλέξτε ουσιαστικά για εξάσκηση"),
         table_noun,
@@ -411,20 +405,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_verb, gu, notebook_dir, os, pd):
-    if file_upload_verb.value:
-        df_verb = gu.load_data(file_upload_verb, [])
-    else:
-        try:
-            df_verb = pd.read_csv(os.path.join(notebook_dir, 'verbs.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_verb = None
+def _(file_upload_verb, gu, notebook_dir):
+    df_verb = gu.load_vocab_table("verbs.tsv", nb_dir=notebook_dir, file_upload=file_upload_verb)
     return (df_verb,)
 
 
 @app.cell(hide_code=True)
-def _(df_verb, mo, tbl_sel_v):
-    table_verb = mo.ui.table(df_verb, selection="multi", initial_selection=(tbl_sel_v() if tbl_sel_v() is not None else list(range(len(df_verb))))) if df_verb is not None else None
+def _(df_verb, gu, mo, tbl_sel_v):
+    table_verb = gu.vocab_table(df_verb, select_state=tbl_sel_v)
     mo.vstack([mo.md("### Επιλέξτε ρήματα για εξάσκηση"), table_verb])
     return (table_verb,)
 
@@ -660,20 +648,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(file_upload_adj, gu, notebook_dir, os, pd):
-    if file_upload_adj.value:
-        df_adj = gu.load_data(file_upload_adj, [])
-    else:
-        try:
-            df_adj = pd.read_csv(os.path.join(notebook_dir, 'adjectives.tsv'), sep='\t')
-        except FileNotFoundError:
-            df_adj = None
+def _(file_upload_adj, gu, notebook_dir):
+    df_adj = gu.load_vocab_table("adjectives.tsv", nb_dir=notebook_dir, file_upload=file_upload_adj)
     return (df_adj,)
 
 
 @app.cell(hide_code=True)
-def _(df_adj, mo, tbl_sel_a):
-    table_adj = mo.ui.table(df_adj, selection="multi", initial_selection=(tbl_sel_a() if tbl_sel_a() is not None else list(range(len(df_adj))))) if df_adj is not None else None
+def _(df_adj, gu, mo, tbl_sel_a):
+    table_adj = gu.vocab_table(df_adj, select_state=tbl_sel_a)
     mo.vstack([mo.md("### Επιλέξτε επίθετα για εξάσκηση"), table_adj])
     return (table_adj,)
 
@@ -887,7 +869,7 @@ def _():
     eee.register_backend("el", mg)
     gu = GreekUtils(mg, mo, pd, eee_module=eee)
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    return gu, mo, notebook_dir, os, pd, random
+    return eee, gu, mo, notebook_dir, os, random
 
 
 if __name__ == "__main__":

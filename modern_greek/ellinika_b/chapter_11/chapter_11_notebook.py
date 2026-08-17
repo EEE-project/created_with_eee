@@ -10,7 +10,7 @@
 
 import marimo
 
-__generated_with = "0.23.14"
+__generated_with = "0.23.16"
 app = marimo.App(width="medium", html_head_file="head.html")
 
 
@@ -656,30 +656,17 @@ def _(language_selector, mo, t_ui):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    # Noun file upload
-    file_upload_noun = mo.ui.file(label="Load nouns TSV")
-    file_upload_noun
-    return (file_upload_noun,)
-
-
-@app.cell(hide_code=True)
-def _(RAW_BASE, file_upload_noun, gu2, language_selector, notebook_dir, pd):
+def _(RAW_BASE, gu2, language_selector, notebook_dir):
     # Load noun data
-    if file_upload_noun.value:
-        df_noun = gu2.load_data(file_upload_noun)
-    else:
-        _noun_fname = 'nouns_ru.tsv' if language_selector.value == 'ru' else 'nouns.tsv'
-        _noun_path = gu2.ensure_file(_noun_fname, nb_dir=notebook_dir, remote_base=RAW_BASE) or gu2.ensure_file("nouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
-        df_noun = pd.read_csv(_noun_path, sep='\t') if _noun_path else None
+    df_noun = gu2.load_vocab_table("nouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE, ru_variant=True, language=language_selector.value)
     return (df_noun,)
 
 
 @app.cell(hide_code=True)
-def _(df_noun, language_selector, mo, t_ui):
+def _(df_noun, gu2, language_selector, mo, t_ui):
     # Noun table
     _lang = language_selector.value
-    table_noun = mo.ui.table(df_noun, selection="multi", initial_selection=None) if df_noun is not None else None
+    table_noun = gu2.vocab_table(df_noun)
     _display = table_noun if table_noun is not None else mo.md(t_ui("nouns_not_found", _lang))
     mo.vstack([mo.md(t_ui("select_nouns", _lang)), _display])
     return (table_noun,)
@@ -886,30 +873,17 @@ def _(language_selector, mo, t_ui):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    # Verb file upload
-    file_upload_verb = mo.ui.file(label="Load verbs TSV")
-    file_upload_verb
-    return (file_upload_verb,)
-
-
-@app.cell(hide_code=True)
-def _(RAW_BASE, file_upload_verb, gu2, language_selector, notebook_dir, pd):
+def _(RAW_BASE, gu2, language_selector, notebook_dir):
     # Load verb data
-    if file_upload_verb.value:
-        df_verb = gu2.load_data(file_upload_verb)
-    else:
-        _verb_fname = 'verbs_ru.tsv' if language_selector.value == 'ru' else 'verbs.tsv'
-        _verb_path = gu2.ensure_file(_verb_fname, nb_dir=notebook_dir, remote_base=RAW_BASE) or gu2.ensure_file("verbs.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
-        df_verb = pd.read_csv(_verb_path, sep='\t') if _verb_path else None
+    df_verb = gu2.load_vocab_table("verbs.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE, ru_variant=True, language=language_selector.value)
     return (df_verb,)
 
 
 @app.cell(hide_code=True)
-def _(df_verb, language_selector, mo, t_ui):
+def _(df_verb, gu2, language_selector, mo, t_ui):
     # Verb table
     _lang = language_selector.value
-    table_verb = mo.ui.table(df_verb, selection="multi", initial_selection=None) if df_verb is not None else None
+    table_verb = gu2.vocab_table(df_verb)
     _display = table_verb if table_verb is not None else mo.md(t_ui("verbs_not_found", _lang))
     mo.vstack([mo.md(t_ui("select_verbs", _lang)), _display])
     return (table_verb,)
@@ -1088,30 +1062,17 @@ def _(language_selector, mo, t_ui):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    # Adj file upload
-    file_upload_adj = mo.ui.file(label="Load adjectives TSV")
-    file_upload_adj
-    return (file_upload_adj,)
-
-
-@app.cell(hide_code=True)
-def _(RAW_BASE, file_upload_adj, gu2, language_selector, notebook_dir, pd):
+def _(RAW_BASE, gu2, language_selector, notebook_dir):
     # Load adj data
-    if file_upload_adj.value:
-        df_adj = gu2.load_data(file_upload_adj)
-    else:
-        _adj_fname = 'adjectives_ru.tsv' if language_selector.value == 'ru' else 'adjectives.tsv'
-        _adj_path = gu2.ensure_file(_adj_fname, nb_dir=notebook_dir, remote_base=RAW_BASE) or gu2.ensure_file("adjectives.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
-        df_adj = pd.read_csv(_adj_path, sep='\t') if _adj_path else None
+    df_adj = gu2.load_vocab_table("adjectives.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE, ru_variant=True, language=language_selector.value)
     return (df_adj,)
 
 
 @app.cell(hide_code=True)
-def _(df_adj, language_selector, mo, t_ui):
+def _(df_adj, gu2, language_selector, mo, t_ui):
     # Adj table
     _lang = language_selector.value
-    table_adj = mo.ui.table(df_adj, selection="multi", initial_selection=None) if df_adj is not None else None
+    table_adj = gu2.vocab_table(df_adj)
     _display = table_adj if table_adj is not None else mo.md(t_ui("adjs_not_found", _lang))
     mo.vstack([mo.md(t_ui("select_adjs", _lang)), _display])
     return (table_adj,)
