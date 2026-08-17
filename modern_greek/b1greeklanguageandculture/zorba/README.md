@@ -8,7 +8,7 @@ course, built with [EEE](https://codeberg.org/EEE-project/eee-project) and
 
 **Live:**
 - [GitHub Pages](https://eee-project.github.io/created_with_eee/modern_greek/b1greeklanguageandculture/zorba/)
-- [GitLab Pages](https://eee-project.gitlab.io/created_with_eee/modern_greek/b1greeklanguageandculture/zorba/)
+- [GitLab Pages](https://eee-project.gitlab.io/created-with-eee-b1glc/zorba/) (split into its own project — GitLab's 1GB Pages limit)
 - [Codeberg Pages](https://eee-project.codeberg.page/created_with_eee/modern_greek/b1greeklanguageandculture/zorba/)
 
 3 lessons (one per lecture date).

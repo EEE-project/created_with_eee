@@ -8,7 +8,7 @@ and discussion material, and vocabulary drills. Part of the B1: Ελληνική
 
 **Live:**
 - [GitHub Pages](https://eee-project.github.io/created_with_eee/modern_greek/b1greeklanguageandculture/kavafis_ithaki/)
-- [GitLab Pages](https://eee-project.gitlab.io/created_with_eee/modern_greek/b1greeklanguageandculture/kavafis_ithaki/)
+- [GitLab Pages](https://eee-project.gitlab.io/created-with-eee-b1glc/kavafis_ithaki/) (split into its own project — GitLab's 1GB Pages limit)
 - [Codeberg Pages](https://eee-project.codeberg.page/created_with_eee/modern_greek/b1greeklanguageandculture/kavafis_ithaki/)
 
 2 lessons, numbered (not dated) to match the source material's own numbering.
