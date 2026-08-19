@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-08-19
+- Added `verify-pages-deploy.py`, a standalone script that checks whether
+  created_with_eee's Pages deployments are actually serving current content
+  across all 6 known sites (Codeberg/GitHub/GitLab for the main repo, plus
+  the three GitLab split projects: odyssey, palaestra, b1glc) -- a clean
+  `git push` to a `pages` branch is not evidence the site updated. Built
+  after GitHub's legacy Pages build got silently stuck "building" for 24+
+  hours after a transient 503 from GitHub's own deploy API, with zero
+  signal from the push itself. Cross-checks the legacy builds API against
+  the Actions run for the same commit (the builds API can show "building"
+  forever even after the Actions run actually succeeded) via `gh`, checks
+  the latest pipeline for GitLab's CI/CD-based Pages via `glab`, and falls
+  back to a live no-store fetch (status/last-modified/etag) everywhere,
+  since Codeberg has no deploy-status API at all. Tested against the
+  current, already-verified-healthy deployment state: all 6 sites report
+  `[OK]` (or `[--]` for Codeberg, by design).
+
 ## 2026-08-17
 - Removed the "Load nouns/verbs/adjectives/pronouns TSV" upload buttons from
   every ellinika_b chapter (01-12, including its `_el`/`_en`/`_ru` legacy

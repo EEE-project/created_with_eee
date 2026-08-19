@@ -60,9 +60,12 @@ directory has its own README (description + live links) and `AGENTS.md`
 currently: syncing `main` (`make sync-main`, wraps `~/work/greek/git/push`),
 re-exporting notebooks to the `pages` branch (`make export-notebooks`, see
 `export-notebooks.py`), re-applying the split-course session-page fix
-(`make fix-split-roots`), and re-applying the static-hub footer-host fix
-(`make fix-static-footer`). All only stage local changes or run
-already-established scripts; committing and pushing stays a manual,
+(`make fix-split-roots`), re-applying the static-hub footer-host fix
+(`make fix-static-footer`), and checking whether Pages deployments are
+actually live rather than just pushed (`make verify-pages-deploy`, see
+`verify-pages-deploy.py`). The first four only stage local changes or run
+already-established scripts; `verify-pages-deploy` is read-only and makes
+no local changes at all. Committing and pushing stays a manual,
 Trezor-confirmed step per host — no target signs or pushes on its own.
 
 **Not yet automated**: hub regeneration (card-list index pages) and
