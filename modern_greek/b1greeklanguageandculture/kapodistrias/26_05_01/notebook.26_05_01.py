@@ -22,7 +22,7 @@ app = marimo.App(
 @app.cell(hide_code=True)
 def _(language_selector, mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     _cfg = ConfigStore.from_file_or_url(
         __file__,
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/kapodistrias/index.tsv",
@@ -1156,7 +1156,7 @@ def _(lang_bridge, language_selector):
 def _(language_selector, mo):
     from eee_project import ConfigStore as _ConfigStore
     from eee_project.notebook_utils import eee_footer
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     _cfg = _ConfigStore.from_file_or_url(
         __file__,
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/kapodistrias/index.tsv",
@@ -1176,7 +1176,7 @@ def _():
     eee.register_backend("el", mg)
     gu = GreekUtils(mg, mo, pd, eee_module=eee)
     notebook_dir = os.path.dirname(os.path.abspath(__file__))
-    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/kapodistrias/26_05_01"
+    RAW_BASE = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main/modern_greek/b1greeklanguageandculture/kapodistrias/26_05_01"
     return RAW_BASE, eee, gu, mo, notebook_dir, pd, random
 
 

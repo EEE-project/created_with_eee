@@ -16,7 +16,7 @@ app = marimo.App(width="medium")
 def _(mo):
     from eee_project import ConfigStore, eee_topbar
     from eee_project.notebook_utils import parent_back_url
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
         f"{_ROOT}/ancient_greek/palaestra/ancient_greek.2026.summer/index.tsv",

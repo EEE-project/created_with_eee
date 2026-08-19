@@ -18,7 +18,7 @@ app = marimo.App(width="medium")
 @app.cell(hide_code=True)
 def _(mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
     eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles={
         "ru": "Одиссея для отважных",
@@ -51,7 +51,7 @@ def _(eee, mo):
         mo.md(_badge),
         mo.md("## День 6 · Odyss. IX.130–151"),
     ])
-    _img = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_07_20", width=280)
+    _img = eee.magnify_image(mo, _thumb_path, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_07_20", width=280)
     _right = mo.vstack([_img], align="center")
     mo.hstack([_left, _right], align="start")
     return
@@ -69,7 +69,7 @@ def _(eee, mo):
     from pathlib import Path as _Path
     _vase_path = _Path(__file__).parent / "kleos_aphthiton_vase.jpg"
     _vine_path = _Path(__file__).parent / "aphthitoi_ampeloi_vineyard.jpg"
-    _raw = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_07_20"
+    _raw = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_07_20"
     _vase = mo.vstack([
         eee.magnify_image(mo, _vase_path, raw_base=_raw, width=220),
         mo.md("<div style='text-align:center'>κλέος ἄφθιτον</div>"),

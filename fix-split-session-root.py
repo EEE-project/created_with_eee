@@ -27,7 +27,7 @@ import argparse
 import pathlib
 import sys
 
-OLD_PLAIN = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+OLD_PLAIN = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
 NEW_PLAIN = "https://gitlab.com/EEE-project/created_with_eee/-/raw/main"
 
 OLD_ENCODED = (

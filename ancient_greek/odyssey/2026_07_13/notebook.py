@@ -18,7 +18,7 @@ app = marimo.App(width="medium")
 @app.cell(hide_code=True)
 def _(mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
     eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles={
         "ru": "Одиссея для отважных",
@@ -51,7 +51,7 @@ def _(eee, mo):
         mo.md(_badge),
         mo.md("## День 5 · Odyss. IX.105–129"),
     ])
-    _img = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_07_13", width=280)
+    _img = eee.magnify_image(mo, _thumb_path, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_07_13", width=280)
     _cap = mo.md(
             "<div style='font-size:.8em;color:#9ca3af;text-align:center'>"
             "Одна из гипотез геомифологии: крупная носовая полость в центре черепа "
