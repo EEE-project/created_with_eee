@@ -380,23 +380,29 @@ def _(WORDS_NOUN_N3, mo):
     nxt_cnt_n3, set_nxt_cnt_n3 = mo.state(0)
     restart_cnt_n3, set_restart_cnt_n3 = mo.state(0)
     entercnt_n3, set_entercnt_n3 = mo.state(0)
+    errors_n3, set_errors_n3 = mo.state({})
+    retry_cnt_n3, set_retry_cnt_n3 = mo.state(0)
     return (
         cap_n3,
         entercnt_n3,
         entered_n3,
+        errors_n3,
         hist_n3,
         msg_n3,
         nxt_cnt_n3,
         prev_cnt_n3,
         restart_cnt_n3,
+        retry_cnt_n3,
         set_cap_n3,
         set_entercnt_n3,
         set_entered_n3,
+        set_errors_n3,
         set_hist_n3,
         set_msg_n3,
         set_nxt_cnt_n3,
         set_prev_cnt_n3,
         set_restart_cnt_n3,
+        set_retry_cnt_n3,
         set_sub_cnt_n3,
         set_w4t_n3,
         sub_cnt_n3,
@@ -447,6 +453,7 @@ def _(
     cv_n3,
     entercnt_n3,
     entered_n3,
+    errors_n3,
     gu,
     hist_n3,
     msg_n3,
@@ -458,14 +465,18 @@ def _(
     prev_cnt_n3,
     restart_btn_n3,
     restart_cnt_n3,
+    retry_btn_n3,
+    retry_cnt_n3,
     set_cap_n3,
     set_entercnt_n3,
     set_entered_n3,
+    set_errors_n3,
     set_hist_n3,
     set_msg_n3,
     set_nxt_cnt_n3,
     set_prev_cnt_n3,
     set_restart_cnt_n3,
+    set_retry_cnt_n3,
     set_sub_cnt_n3,
     set_w4t_n3,
     sub_cnt_n3,
@@ -485,6 +496,9 @@ def _(
         meaning_label="Перевод",
         title="## Упражнение 3 · Склонение существительных",
         done_message="✅ Все существительные пройдены!",
+        get_errors=errors_n3, set_errors=set_errors_n3,
+        get_retry_cnt=retry_cnt_n3, set_retry_cnt=set_retry_cnt_n3,
+        retry_btn=retry_btn_n3,
     )
     return
 
@@ -711,6 +725,13 @@ def _(cap_n3, cv_n3, gu, noun_form_n3, set_sub_cnt_n3):
     )
     set_sub_cnt_n3(0)
     return (check_btn_n3,)
+
+
+@app.cell(hide_code=True)
+def _(errors_n3, gu):
+    # Noun retry-mistakes button
+    retry_btn_n3 = gu.retry_mistakes_button(errors_n3())
+    return (retry_btn_n3,)
 
 
 if __name__ == "__main__":

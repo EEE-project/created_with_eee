@@ -835,23 +835,28 @@ def _(gu2, random, table_noun):
      restart_count_n, set_restart_count_n) = gu2.make_paradigm_drill_state(
         random.sample(words_noun, len(words_noun)) if words_noun else []
     )
+    errors_noun, set_errors_noun, retry_count_n, set_retry_count_n = gu2.make_error_tracking_state()
     return (
         captured_noun,
         enter_count_n,
         entered_noun,
+        errors_noun,
         hist_noun,
         next_count_n,
         noun_msg,
         prev_count_n,
         restart_count_n,
+        retry_count_n,
         set_captured_noun,
         set_enter_count_n,
         set_entered_noun,
+        set_errors_noun,
         set_hist_noun,
         set_next_count_n,
         set_noun_msg,
         set_prev_count_n,
         set_restart_count_n,
+        set_retry_count_n,
         set_submit_count_n,
         set_words4test_noun,
         submit_count_n,
@@ -922,12 +927,20 @@ def _(
 
 
 @app.cell(hide_code=True)
+def _(errors_noun, gu2, language_selector):
+    # Noun retry-mistakes button
+    retry_btn_n = gu2.retry_mistakes_button(errors_noun(), lang=language_selector.value)
+    return (retry_btn_n,)
+
+
+@app.cell(hide_code=True)
 def _(
     captured_noun,
     check_btn_n,
     cv_noun,
     enter_count_n,
     entered_noun,
+    errors_noun,
     gu2,
     hist_noun,
     indefinite_toggle_n,
@@ -943,14 +956,18 @@ def _(
     prev_count_n,
     restart_btn_n,
     restart_count_n,
+    retry_btn_n,
+    retry_count_n,
     set_captured_noun,
     set_enter_count_n,
     set_entered_noun,
+    set_errors_noun,
     set_hist_noun,
     set_next_count_n,
     set_noun_msg,
     set_prev_count_n,
     set_restart_count_n,
+    set_retry_count_n,
     set_submit_count_n,
     set_words4test_noun,
     submit_count_n,
@@ -979,6 +996,9 @@ def _(
         meaning_label=t_ui("translation_label", _lang).rstrip(":"),
         title=_title,
         done_message=t_ui("test1_done", _lang),
+        get_errors=errors_noun, set_errors=set_errors_noun,
+        get_retry_cnt=retry_count_n, set_retry_cnt=set_retry_count_n,
+        retry_btn=retry_btn_n,
     ) if words_noun else mo.md(t_ui("noun_empty", _lang))
     return
 
@@ -1034,21 +1054,26 @@ def _(gu2, random, table_verb):
      restart_count_v, set_restart_count_v) = gu2.make_paradigm_drill_state(
         random.sample(words_verb, len(words_verb)) if words_verb else []
     )
+    errors_verb, set_errors_verb, retry_count_v, set_retry_count_v = gu2.make_error_tracking_state()
     return (
         captured_verb,
         enter_count_v,
         entered_verb,
+        errors_verb,
         hist_verb,
         next_count_v,
         prev_count_v,
         restart_count_v,
+        retry_count_v,
         set_captured_verb,
         set_enter_count_v,
         set_entered_verb,
+        set_errors_verb,
         set_hist_verb,
         set_next_count_v,
         set_prev_count_v,
         set_restart_count_v,
+        set_retry_count_v,
         set_submit_count_v,
         set_verb_msg,
         set_words4test_verb,
@@ -1108,12 +1133,20 @@ def _(
 
 
 @app.cell(hide_code=True)
+def _(errors_verb, gu2, language_selector):
+    # Verb retry-mistakes button
+    retry_btn_v = gu2.retry_mistakes_button(errors_verb(), lang=language_selector.value)
+    return (retry_btn_v,)
+
+
+@app.cell(hide_code=True)
 def _(
     captured_verb,
     check_btn_v,
     cv_verb,
     enter_count_v,
     entered_verb,
+    errors_verb,
     gu2,
     hist_verb,
     language_selector,
@@ -1124,13 +1157,17 @@ def _(
     prev_count_v,
     restart_btn_v,
     restart_count_v,
+    retry_btn_v,
+    retry_count_v,
     set_captured_verb,
     set_enter_count_v,
     set_entered_verb,
+    set_errors_verb,
     set_hist_verb,
     set_next_count_v,
     set_prev_count_v,
     set_restart_count_v,
+    set_retry_count_v,
     set_submit_count_v,
     set_verb_msg,
     set_words4test_verb,
@@ -1163,6 +1200,9 @@ def _(
             meaning_label=t_ui("translation_label", _lang).rstrip(":"),
             title=f"{t_ui('verb_heading', _lang)} — {_tlabel}",
             done_message=t_ui("test2_done", _lang),
+            get_errors=errors_verb, set_errors=set_errors_verb,
+            get_retry_cnt=retry_count_v, set_retry_cnt=set_retry_count_v,
+            retry_btn=retry_btn_v,
         )
     elif not words_verb:
         _output = mo.md(t_ui("verb_empty", _lang))
@@ -1234,23 +1274,28 @@ def _(gu2, random, table_adj):
      restart_count_a, set_restart_count_a) = gu2.make_paradigm_drill_state(
         random.sample(words_adj, len(words_adj)) if words_adj else []
     )
+    errors_adj, set_errors_adj, retry_count_a, set_retry_count_a = gu2.make_error_tracking_state()
     return (
         adj_msg,
         captured_adj,
         enter_count_a,
         entered_adj,
+        errors_adj,
         hist_adj,
         next_count_a,
         prev_count_a,
         restart_count_a,
+        retry_count_a,
         set_adj_msg,
         set_captured_adj,
         set_enter_count_a,
         set_entered_adj,
+        set_errors_adj,
         set_hist_adj,
         set_next_count_a,
         set_prev_count_a,
         set_restart_count_a,
+        set_retry_count_a,
         set_submit_count_a,
         set_words4test_adj,
         submit_count_a,
@@ -1309,6 +1354,13 @@ def _(
 
 
 @app.cell(hide_code=True)
+def _(errors_adj, gu2, language_selector):
+    # Adjective retry-mistakes button
+    retry_btn_a = gu2.retry_mistakes_button(errors_adj(), lang=language_selector.value)
+    return (retry_btn_a,)
+
+
+@app.cell(hide_code=True)
 def _(
     adj_form,
     adj_meta,
@@ -1318,6 +1370,7 @@ def _(
     cv_adj,
     enter_count_a,
     entered_adj,
+    errors_adj,
     gu2,
     hist_adj,
     language_selector,
@@ -1329,14 +1382,18 @@ def _(
     prev_count_a,
     restart_btn_a,
     restart_count_a,
+    retry_btn_a,
+    retry_count_a,
     set_adj_msg,
     set_captured_adj,
     set_enter_count_a,
     set_entered_adj,
+    set_errors_adj,
     set_hist_adj,
     set_next_count_a,
     set_prev_count_a,
     set_restart_count_a,
+    set_retry_count_a,
     set_submit_count_a,
     set_words4test_adj,
     submit_count_a,
@@ -1362,6 +1419,9 @@ def _(
         meaning_label=t_ui("translation_label", _lang).rstrip(":"),
         title=t_ui("adj_heading", _lang),
         done_message=t_ui("test3_done", _lang),
+        get_errors=errors_adj, set_errors=set_errors_adj,
+        get_retry_cnt=retry_count_a, set_retry_cnt=set_retry_count_a,
+        retry_btn=retry_btn_a,
     ) if words_adj else mo.md(t_ui("adj_empty", _lang))
     return
 

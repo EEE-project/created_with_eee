@@ -391,23 +391,29 @@ def _(WORDS_NOUN_N3, mo):
     nxt_cnt_n3, set_nxt_cnt_n3 = mo.state(0)
     restart_cnt_n3, set_restart_cnt_n3 = mo.state(0)
     entercnt_n3, set_entercnt_n3 = mo.state(0)
+    errors_n3, set_errors_n3 = mo.state({})
+    retry_cnt_n3, set_retry_cnt_n3 = mo.state(0)
     return (
         cap_n3,
         entercnt_n3,
         entered_n3,
+        errors_n3,
         hist_n3,
         msg_n3,
         nxt_cnt_n3,
         prev_cnt_n3,
         restart_cnt_n3,
+        retry_cnt_n3,
         set_cap_n3,
         set_entercnt_n3,
         set_entered_n3,
+        set_errors_n3,
         set_hist_n3,
         set_msg_n3,
         set_nxt_cnt_n3,
         set_prev_cnt_n3,
         set_restart_cnt_n3,
+        set_retry_cnt_n3,
         set_sub_cnt_n3,
         set_w4t_n3,
         sub_cnt_n3,
@@ -458,6 +464,7 @@ def _(
     cv_n3,
     entercnt_n3,
     entered_n3,
+    errors_n3,
     gu,
     hist_n3,
     msg_n3,
@@ -469,14 +476,18 @@ def _(
     prev_cnt_n3,
     restart_btn_n3,
     restart_cnt_n3,
+    retry_btn_n3,
+    retry_cnt_n3,
     set_cap_n3,
     set_entercnt_n3,
     set_entered_n3,
+    set_errors_n3,
     set_hist_n3,
     set_msg_n3,
     set_nxt_cnt_n3,
     set_prev_cnt_n3,
     set_restart_cnt_n3,
+    set_retry_cnt_n3,
     set_sub_cnt_n3,
     set_w4t_n3,
     sub_cnt_n3,
@@ -496,6 +507,9 @@ def _(
         meaning_label="Перевод",
         title="## Упражнение 3 · Склонение существительных",
         done_message="✅ Все существительные пройдены!",
+        get_errors=errors_n3, set_errors=set_errors_n3,
+        get_retry_cnt=retry_cnt_n3, set_retry_cnt=set_retry_cnt_n3,
+        retry_btn=retry_btn_n3,
     )
     return
 
@@ -529,23 +543,29 @@ def _(WORDS_ADJ_ADJ6, mo):
     nxt_cnt_adj6, set_nxt_cnt_adj6 = mo.state(0)
     restart_cnt_adj6, set_restart_cnt_adj6 = mo.state(0)
     entercnt_adj6, set_entercnt_adj6 = mo.state(0)
+    errors_adj6, set_errors_adj6 = mo.state({})
+    retry_cnt_adj6, set_retry_cnt_adj6 = mo.state(0)
     return (
         cap_adj6,
         entercnt_adj6,
         entered_adj6,
+        errors_adj6,
         hist_adj6,
         msg_adj6,
         nxt_cnt_adj6,
         prev_cnt_adj6,
         restart_cnt_adj6,
+        retry_cnt_adj6,
         set_cap_adj6,
         set_entercnt_adj6,
         set_entered_adj6,
+        set_errors_adj6,
         set_hist_adj6,
         set_msg_adj6,
         set_nxt_cnt_adj6,
         set_prev_cnt_adj6,
         set_restart_cnt_adj6,
+        set_retry_cnt_adj6,
         set_sub_cnt_adj6,
         set_w4t_adj6,
         sub_cnt_adj6,
@@ -598,6 +618,7 @@ def _(
     cv_adj6,
     entercnt_adj6,
     entered_adj6,
+    errors_adj6,
     gu,
     hist_adj6,
     msg_adj6,
@@ -607,14 +628,18 @@ def _(
     prev_cnt_adj6,
     restart_btn_adj6,
     restart_cnt_adj6,
+    retry_btn_adj6,
+    retry_cnt_adj6,
     set_cap_adj6,
     set_entercnt_adj6,
     set_entered_adj6,
+    set_errors_adj6,
     set_hist_adj6,
     set_msg_adj6,
     set_nxt_cnt_adj6,
     set_prev_cnt_adj6,
     set_restart_cnt_adj6,
+    set_retry_cnt_adj6,
     set_sub_cnt_adj6,
     set_w4t_adj6,
     sub_cnt_adj6,
@@ -635,6 +660,9 @@ def _(
         meaning_label="Перевод",
         title="## Упражнение 4 · Склонение прилагательных",
         done_message="✅ Все прилагательные пройдены!",
+        get_errors=errors_adj6, set_errors=set_errors_adj6,
+        get_retry_cnt=retry_cnt_adj6, set_retry_cnt=set_retry_cnt_adj6,
+        retry_btn=retry_btn_adj6,
     )
     return
 
@@ -868,12 +896,26 @@ def _(cap_n3, cv_n3, gu, noun_form_n3, set_sub_cnt_n3):
 
 
 @app.cell(hide_code=True)
+def _(errors_n3, gu):
+    # Noun retry-mistakes button
+    retry_btn_n3 = gu.retry_mistakes_button(errors_n3())
+    return (retry_btn_n3,)
+
+
+@app.cell(hide_code=True)
 def _(adj_form_adj6, cap_adj6, cv_adj6, gu, set_sub_cnt_adj6):
     check_btn_adj6 = gu.dirty_check_button(
         adj_form_adj6, cap_adj6, cv_adj6, "adj_word", word_key="Word", label="Проверить"
     )
     set_sub_cnt_adj6(0)
     return (check_btn_adj6,)
+
+
+@app.cell(hide_code=True)
+def _(errors_adj6, gu):
+    # Adjective retry-mistakes button
+    retry_btn_adj6 = gu.retry_mistakes_button(errors_adj6())
+    return (retry_btn_adj6,)
 
 
 if __name__ == "__main__":

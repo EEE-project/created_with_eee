@@ -408,23 +408,29 @@ def _(WORDS_VERB_V3, mo):
     nxt_cnt_v3, set_nxt_cnt_v3 = mo.state(0)
     restart_cnt_v3, set_restart_cnt_v3 = mo.state(0)
     entercnt_v3, set_entercnt_v3 = mo.state(0)
+    errors_v3, set_errors_v3 = mo.state({})
+    retry_cnt_v3, set_retry_cnt_v3 = mo.state(0)
     return (
         cap_v3,
         entercnt_v3,
         entered_v3,
+        errors_v3,
         hist_v3,
         msg_v3,
         nxt_cnt_v3,
         prev_cnt_v3,
         restart_cnt_v3,
+        retry_cnt_v3,
         set_cap_v3,
         set_entercnt_v3,
         set_entered_v3,
+        set_errors_v3,
         set_hist_v3,
         set_msg_v3,
         set_nxt_cnt_v3,
         set_prev_cnt_v3,
         set_restart_cnt_v3,
+        set_retry_cnt_v3,
         set_sub_cnt_v3,
         set_w4t_v3,
         sub_cnt_v3,
@@ -467,6 +473,7 @@ def _(
     cv_v3,
     entercnt_v3,
     entered_v3,
+    errors_v3,
     gu,
     hist_v3,
     msg_v3,
@@ -476,14 +483,18 @@ def _(
     prev_cnt_v3,
     restart_btn_v3,
     restart_cnt_v3,
+    retry_btn_v3,
+    retry_cnt_v3,
     set_cap_v3,
     set_entercnt_v3,
     set_entered_v3,
+    set_errors_v3,
     set_hist_v3,
     set_msg_v3,
     set_nxt_cnt_v3,
     set_prev_cnt_v3,
     set_restart_cnt_v3,
+    set_retry_cnt_v3,
     set_sub_cnt_v3,
     set_w4t_v3,
     sub_cnt_v3,
@@ -503,6 +514,9 @@ def _(
         tense="present",
         word_key="Word",
         meaning_key="Translation",
+        get_errors=errors_v3, set_errors=set_errors_v3,
+        get_retry_cnt=retry_cnt_v3, set_retry_cnt=set_retry_cnt_v3,
+        retry_btn=retry_btn_v3,
         meaning_label="Перевод",
         title="## Упражнение 3 · Спряжение в настоящем времени",
         done_message="✅ Все глаголы пройдены!",
@@ -734,6 +748,13 @@ def _(cap_v3, cv_v3, gu, set_sub_cnt_v3, verb_form_v3):
     )
     set_sub_cnt_v3(0)
     return (check_btn_v3,)
+
+
+@app.cell(hide_code=True)
+def _(errors_v3, gu):
+    # Verb retry-mistakes button
+    retry_btn_v3 = gu.retry_mistakes_button(errors_v3())
+    return (retry_btn_v3,)
 
 
 if __name__ == "__main__":
