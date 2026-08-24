@@ -39,8 +39,6 @@ def _(mo):
     mo.md(r"""
     # Δίδαγμα α'
     **Palaestra — Древнегреческий язык, начальный уровень — Лето 2026**
-
-    [![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_6yCT2rFgPRPqBPNKo3g3uj)
     """)
     return
 

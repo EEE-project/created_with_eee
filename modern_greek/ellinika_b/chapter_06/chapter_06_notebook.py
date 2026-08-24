@@ -34,7 +34,6 @@ def _(language_selector, mo):
 def _(language_selector, mo):
     # Title
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_YcQQNnMdSaQeRHmHDGY7KM)"
     if _lang == "ru":
         _sub = "Глава 6 — Еда и напитки · B1"
         _gl, _tl = "Грамматика", "Тесты"
@@ -49,7 +48,7 @@ def _(language_selector, mo):
         _tc = "Nouns · Verbs · Adjectives"
     _gc = "Ουσιαστικά (αρσ. -άς/-ές/-ης/-ής/-ούς · θηλ. -ά/-ού · ουδ. -ας) · Αόριστος"
     _out = mo.md(f"""# «Φάγαμε, ήπιαμε…» 🍽️
-    ## {_sub} {_badge}
+    ## {_sub}
 
     **{_gl}:** {_gc}
     **{_tl}:** {_tc}

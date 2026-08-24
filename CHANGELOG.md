@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-08-25 (2)
+- Removed the "Open in molab" badge from every notebook's title cell
+  (41 files across ellinika_b, odyssey, palaestra, kapodistrias,
+  kavafis_ithaki, zorba, and the modern_greek hub) -- content is served
+  from self-hosted WASM Pages now, not molab, and the badges pointed at
+  molab uploads that are no longer the primary way students reach a
+  lesson. Per AGENTS.md, the badge was always "a separate, optional
+  convenience link... no connection to index.tsv or to whether the lesson
+  is actually live on Pages" -- removing it doesn't touch deployment.
+  Three distinct removal shapes depending on how the badge was wired in:
+  a `_badge` variable interpolated into a title string (ellinika_b,
+  kapodistrias, kavafis_ithaki, zorba), `_badge` rendered as its own
+  `mo.md(_badge)` list element (odyssey), or the badge markdown inlined
+  directly with no variable at all (palaestra, modern_greek hub -- the
+  latter's badge was its own standalone cell, removed entirely rather
+  than left empty). The two code comments elsewhere describing molab's
+  file-bundling behavior (odyssey, kavafis_ithaki) are about a real,
+  separate authoring gotcha and were left untouched. Verified live
+  (marimo check clean repo-wide; a 5-notebook sample spanning every
+  removal shape executes with zero errors).
+
 ## 2026-08-25
 - Added `athenaze_cap1_adjs.yaml`/`athenaze_cap2_adjs.yaml`, Palaestra's
   Athenaze chapters I/II adjective lexicons (`2026_06_09`'s notebook

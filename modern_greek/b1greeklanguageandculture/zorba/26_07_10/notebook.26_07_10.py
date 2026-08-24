@@ -37,14 +37,13 @@ def _(language_selector, mo):
 @app.cell(hide_code=True)
 def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_zofvgfss3kXyEg7ChJy6oD)"
     def _img(n):
         _p = gu.ensure_file(f'slide-{n}.jpg', nb_dir=notebook_dir, remote_base=RAW_BASE)
         return mo.image(src=open(_p, 'rb').read(), width=700) if _p else mo.md("")
     if _lang == "ru":
         _c = mo.vstack([
             mo.md(f"""
-            # **Зорбас: почему он стал легендой?** {_badge}
+            # **Зорбас: почему он стал легендой?**
             По материалам презентации «ΖΟΡΜΠΑΣ ΜΑΘΗΜΑ 2 3» и записей занятий 3/7 и 10/7/2026:
             """),
             _img(1),
@@ -203,7 +202,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     elif _lang == "el":
         _c = mo.vstack([
             mo.md(f"""
-            # **Ζορμπάς: γιατί έγινε θρύλος;** {_badge}
+            # **Ζορμπάς: γιατί έγινε θρύλος;**
             Με βάση την παρουσίαση «ΖΟΡΜΠΑΣ ΜΑΘΗΜΑ 2 3» και τις σημειώσεις των μαθημάτων 3/7 και 10/7/2026:
             """),
             _img(1),
@@ -362,7 +361,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     else:
         _c = mo.vstack([
             mo.md(f"""
-            # **Zorbas: Why Did He Become a Legend?** {_badge}
+            # **Zorbas: Why Did He Become a Legend?**
             Based on the presentation "ΖΟΡΜΠΑΣ ΜΑΘΗΜΑ 2 3" and notes from the lessons on 3/7 and 10/7/2026:
             """),
             _img(1),

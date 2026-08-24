@@ -37,14 +37,13 @@ def _(language_selector, mo):
 @app.cell(hide_code=True)
 def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_pu2EGqRo7BhpptX7jmE3nL)"
     def _img(n):
         _p = gu.ensure_file(f'slide-{n}.jpg', nb_dir=notebook_dir, remote_base=RAW_BASE)
         return mo.image(src=open(_p, 'rb').read(), width=700) if _p else mo.md("")
     if _lang == "ru":
         _c = mo.vstack([
             mo.md(f"""
-            # **КОНЕЦ КАПОДИСТРИАСА** {_badge}
+            # **КОНЕЦ КАПОДИСТРИАСА**
             #### *Иоаннис Каподистриас · Урок 4*
             Краткое содержание материалов занятия от 22/5/2026.
             """),
@@ -128,7 +127,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     elif _lang == "el":
         _c = mo.vstack([
             mo.md(f"""
-            # **ΤΟ ΤΕΛΟΣ ΤΟΥ ΚΑΠΟΔΙΣΤΡΙΑ** {_badge}
+            # **ΤΟ ΤΕΛΟΣ ΤΟΥ ΚΑΠΟΔΙΣΤΡΙΑ**
             #### *Ιωάννης Καποδίστριας · Μάθημα 4*
             Σύνοψη υλικών από το μάθημα της 22/5/2026.
             """),
@@ -209,7 +208,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     else:
         _c = mo.vstack([
             mo.md(f"""
-            # **THE END OF KAPODISTRIAS** {_badge}
+            # **THE END OF KAPODISTRIAS**
             #### *Ioannis Kapodistrias · Lesson 4*
             Summary of materials from the lesson of 22/5/2026.
             """),

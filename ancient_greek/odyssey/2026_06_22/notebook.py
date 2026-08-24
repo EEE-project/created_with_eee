@@ -45,10 +45,8 @@ def _(cfg):
 def _(eee, mo):
     from pathlib import Path as _Path
     _thumb_path = _Path(__file__).parent / "map_ortelius.jpg"
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_PWHcMdBAUW2bygSvQbeTjE)"
     _left = mo.vstack([
         mo.md("# Одиссея для отважных"),
-        mo.md(_badge),
         mo.md("## День 2 · Odyss. IX.39–61"),
     ])
     _right = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_22", width=280)

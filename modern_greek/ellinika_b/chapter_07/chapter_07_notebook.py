@@ -33,7 +33,6 @@ def _(language_selector, mo):
 def _(language_selector, mo):
     # Title
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_hEpco3G84DGNdFXpVYZ3y4)"
     if _lang == "ru":
         _sub = "Глава 7 — Образы из прошлого · B1"
         _gl, _tl = "Грамматика", "Тесты"
@@ -48,7 +47,7 @@ def _(language_selector, mo):
         _tc = "Nouns · Verbs · Adjectives"
     _gc = "Παρατατικός (Α, Β1, Β2, ΑΒ) · Χρονικές συνδέσεις"
     _out = mo.md(f"""# «Θυμάμαι ότι παίζαμε όλη μέρα...» 🏘️
-    ## {_sub} {_badge}
+    ## {_sub}
 
     **{_gl}:** {_gc}
     **{_tl}:** {_tc}

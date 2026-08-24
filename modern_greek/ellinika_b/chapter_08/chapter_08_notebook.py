@@ -33,11 +33,10 @@ def _(language_selector, mo):
 def _(language_selector, mo):
     # Title
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_ALxQFbGS9Jq8phLPQbGrru)"
     if _lang == "ru":
         _out = mo.md(f"""
     # «Έχει ο καιρός γυρίσματα» 🌤️
-    ## Глава 8 — Погода переменчива · B1 {_badge}
+    ## Глава 8 — Погода переменчива · B1
 
     **Грамматика:** Απλός Μέλλοντας · Условные предложения (Αν…) · Прилагательные на -ης/-α/-ικο
     **Тесты:** Существительные · Глаголы · Прилагательные
@@ -45,7 +44,7 @@ def _(language_selector, mo):
     elif _lang == "el":
         _out = mo.md(f"""
     # «Έχει ο καιρός γυρίσματα» 🌤️
-    ## Ενότητα 8 — Ο καιρός είναι άστατος · B1 {_badge}
+    ## Ενότητα 8 — Ο καιρός είναι άστατος · B1
 
     **Γραμματική:** Απλός Μέλλοντας · Υποθετικές προτάσεις (Αν…) · Επίθετα σε -ης/-α/-ικο
     **Τεστ:** Ουσιαστικά · Ρήματα · Επίθετα
@@ -53,7 +52,7 @@ def _(language_selector, mo):
     else:
         _out = mo.md(f"""
     # «Έχει ο καιρός γυρίσματα» 🌤️
-    ## Unit 8 — Weather is Changeable · B1 {_badge}
+    ## Unit 8 — Weather is Changeable · B1
 
     **Grammar:** Απλός Μέλλοντας · Conditional sentences (Αν…) · Adjectives in -ης/-α/-ικο
     **Tests:** Nouns · Verbs · Adjectives

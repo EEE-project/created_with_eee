@@ -44,10 +44,8 @@ def _(cfg):
 @app.cell(hide_code=True)
 def _(eee, mo):
     from pathlib import Path as _Ph
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_LtJRZFGZ4wFNFPk4edTAbL)"
     _left = mo.vstack([
         mo.md("# Одиссея для отважных"),
-        mo.md(_badge),
         mo.md("## День 1 · Odyss. IX.19–38"),
     ])
     _img = eee.magnify_image(mo, _Ph(__file__).parent / "map_ithaca.jpg", raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=280)

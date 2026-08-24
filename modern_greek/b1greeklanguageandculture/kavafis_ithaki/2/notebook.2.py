@@ -33,8 +33,7 @@ def _(language_selector, mo):
 def _(img, language_selector, mo):
     # Title + badge + painting
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_HSFHB31SYFX7i6ibHwsh4a)"
-    _heading = mo.md(f"# C. P. Cavafy — «Ithaki» {_badge}") if _lang == "en" else mo.md(f"# Κ. Π. Καβάφης — «Ιθάκη» {_badge}")
+    _heading = mo.md(f"# C. P. Cavafy — «Ithaki»") if _lang == "en" else mo.md(f"# Κ. Π. Καβάφης — «Ιθάκη»")
     if _lang == "ru":
         _subtitle = mo.md("Второй урок из цикла о стихотворении Константиноса Кавафиса «Итака» (1911): Лестригоны, Циклопы и Посейдон.")
     elif _lang == "el":

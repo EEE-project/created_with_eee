@@ -37,14 +37,13 @@ def _(language_selector, mo):
 @app.cell(hide_code=True)
 def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_XS3qPmXh4EibY7vf9rmQfS)"
     def _img(n):
         _p = gu.ensure_file(f'slide-{n}.jpg', nb_dir=notebook_dir, remote_base=RAW_BASE)
         return mo.image(src=open(_p, 'rb').read(), width=700) if _p else mo.md("")
     if _lang == "ru":
         _c = mo.vstack([
             mo.md(f"""
-            # **В каком состоянии Грецию нашёл Каподистриас** {_badge}
+            # **В каком состоянии Грецию нашёл Каподистриас**
             Ниже приводится краткое содержание материалов презентации [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) и записей занятия 8/5/2026:
             """),
             _img(1),
@@ -88,7 +87,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     elif _lang == "el":
         _c = mo.vstack([
             mo.md(f"""
-            # **Η Ελλάδα που Βρήκε ο Καποδίστριας** {_badge}
+            # **Η Ελλάδα που Βρήκε ο Καποδίστριας**
             Παρακάτω παρουσιάζεται σύνοψη του υλικού από την παρουσίαση [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) και τις σημειώσεις του μαθήματος 8/5/2026:
             """),
             _img(1),
@@ -134,7 +133,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     else:
         _c = mo.vstack([
             mo.md(f"""
-            # **The Greece that Kapodistrias Found** {_badge}
+            # **The Greece that Kapodistrias Found**
             Below is a summary of the materials from the presentation [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) and notes from the lesson on 8/5/2026:
             """),
             _img(1),

@@ -37,14 +37,13 @@ def _(language_selector, mo):
 @app.cell(hide_code=True)
 def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_CHTRKm9qTf6hSeF455c8iV)"
     def _img(n):
         _p = gu.ensure_file(f'slide-{n}.jpg', nb_dir=notebook_dir, remote_base=RAW_BASE)
         return mo.image(src=open(_p, 'rb').read(), width=700) if _p else mo.md("")
     if _lang == "ru":
         _c = mo.vstack([
             mo.md(f"""
-            # **Алексис Зорбас: кто он?** {_badge}
+            # **Алексис Зорбас: кто он?**
             По материалам презентации «ΑΛΕΞΗΣ ΖΟΡΜΠΑΣ» и записей занятия 26/6/2026:
             """),
             _img(1),
@@ -134,7 +133,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     elif _lang == "el":
         _c = mo.vstack([
             mo.md(f"""
-            # **Αλέξης Ζορμπάς: ποιος είναι;** {_badge}
+            # **Αλέξης Ζορμπάς: ποιος είναι;**
             Με βάση την παρουσίαση «ΑΛΕΞΗΣ ΖΟΡΜΠΑΣ» και τις σημειώσεις του μαθήματος 26/6/2026:
             """),
             _img(1),
@@ -224,7 +223,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     else:
         _c = mo.vstack([
             mo.md(f"""
-            # **Alexis Zorbas: Who Is He?** {_badge}
+            # **Alexis Zorbas: Who Is He?**
             Based on the presentation "ΑΛΕΞΗΣ ΖΟΡΜΠΑΣ" and notes from the lesson on 26/6/2026:
             """),
             _img(1),

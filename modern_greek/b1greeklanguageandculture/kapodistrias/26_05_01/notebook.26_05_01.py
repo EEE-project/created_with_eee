@@ -38,7 +38,6 @@ def _(language_selector, mo):
 def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     # Content + slides
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_7wUv6eX2PPjoWc7ix63W7n)"
     def _img(n):
         _p = gu.ensure_file(f'slide-{n}.jpg', nb_dir=notebook_dir, remote_base=RAW_BASE)
         return mo.image(src=open(_p, 'rb').read(), width=700) if _p else mo.md("")
@@ -54,7 +53,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     if _lang == "ru":
         _c = mo.vstack([
             mo.md(f"""
-            # **Иоаннис Каподистриас: Первый Губернатор Греции** {_badge}
+            # **Иоаннис Каподистриас: Первый Губернатор Греции**
             Ниже приводится краткое содержание информации об Иоаннисе Каподистриасе из [презентации](https://docs.google.com/presentation/d/1Za9Z9vyZDUYFn_Rv_QZBga_GxfO5fn9I/edit?usp=sharing&ouid=114390708685640574713&rtpof=true&sd=true) и фильма «Иоаннис Каподистриас — Невероятная история первого губернатора Греции» ([субтитры](https://drive.google.com/file/d/1z-3NR6gyGQg4kugiOVovggtP4_UWoIKh/view?usp=drive_link)):
             """),
             _img(1),
@@ -100,7 +99,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     elif _lang == "el":
         _c = mo.vstack([
             mo.md(f"""
-            # **Ιωάννης Καποδίστριας: Ο Πρώτος Κυβερνήτης της Ελλάδας** {_badge}
+            # **Ιωάννης Καποδίστριας: Ο Πρώτος Κυβερνήτης της Ελλάδας**
             Ακολουθεί μια σύνοψη των πληροφοριών για τον Ιωάννη Καποδίστρια από την [παρουσίαση](https://docs.google.com/presentation/d/1Za9Z9vyZDUYFn_Rv_QZBga_GxfO5fn9I/edit?usp=sharing&ouid=114390708685640574713&rtpof=true&sd=true) και την ταινία "Ιωάννης Καποδίστριας – Η Συγκλονιστική Ιστορία του Πρώτου Κυβερνήτη της Ελλάδας" ([υπότιτλοι](https://drive.google.com/file/d/1z-3NR6gyGQg4kugiOVovggtP4_UWoIKh/view?usp=drive_link)):
             """),
             _img(1),
@@ -146,7 +145,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     else:
         _c = mo.vstack([
             mo.md(f"""
-            # **Ioannis Kapodistrias: The First Governor of Greece** {_badge}
+            # **Ioannis Kapodistrias: The First Governor of Greece**
             The following is a summary of information about Ioannis Kapodistrias from the [presentation](https://docs.google.com/presentation/d/1Za9Z9vyZDUYFn_Rv_QZBga_GxfO5fn9I/edit?usp=sharing&ouid=114390708685640574713&rtpof=true&sd=true) and the film "Ioannis Kapodistrias – The Incredible Story of Greece's First Governor" ([subtitles](https://drive.google.com/file/d/1z-3NR6gyGQg4kugiOVovggtP4_UWoIKh/view?usp=drive_link)):
             """),
             _img(1),

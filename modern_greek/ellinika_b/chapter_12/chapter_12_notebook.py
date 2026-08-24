@@ -33,11 +33,10 @@ def _(language_selector, mo):
 def _(language_selector, mo):
     # Title
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_wmHMbhTAmq3rix5PbYseQV)"
     if _lang == "ru":
         _out = mo.md(f"""
     # «Ένα ατύχημα στους δρόμους» 🚑
-    ## Глава 12 — Авария на дороге · B1 {_badge}
+    ## Глава 12 — Авария на дороге · B1
 
     **Грамматика:** Ενδοιαστικές · Сослагательное (Простое и Длительное) · Λέει να vs Λέει ότι
     **Тесты:** Существительные · Глаголы · Прилагательные
@@ -45,7 +44,7 @@ def _(language_selector, mo):
     elif _lang == "el":
         _out = mo.md(f"""
     # «Ένα ατύχημα στους δρόμους» 🚑
-    ## Ενότητα 12 — Ένα ατύχημα στους δρόμους · B1 {_badge}
+    ## Ενότητα 12 — Ένα ατύχημα στους δρόμους · B1
 
     **Γραμματική:** Ενδοιαστικές · Υποτακτική (Απλή & Συνεχής) · Λέει να vs Λέει ότι
     **Τεστ:** Ουσιαστικά · Ρήματα · Επίθετα
@@ -53,7 +52,7 @@ def _(language_selector, mo):
     else:
         _out = mo.md(f"""
     # «Ένα ατύχημα στους δρόμους» 🚑
-    ## Unit 12 — An Accident on the Road · B1 {_badge}
+    ## Unit 12 — An Accident on the Road · B1
 
     **Grammar:** Subjunctive (Simple & Continuous) · Ενδοιαστικές · Λέει να vs Λέει ότι
     **Tests:** Nouns · Verbs · Adjectives

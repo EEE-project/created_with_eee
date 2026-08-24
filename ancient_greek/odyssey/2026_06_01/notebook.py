@@ -44,10 +44,8 @@ def _(cfg):
 @app.cell(hide_code=True)
 def _(eee, mo):
     from pathlib import Path as _Ph
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_32dyZq8gA6x14GL2Zwa6ZU)"
     _left = mo.vstack([
         mo.md("# Одиссея для отважных"),
-        mo.md(_badge),
         mo.md("## Пилотное занятие · Odyss. I.1–21"),
     ])
     _img = eee.magnify_image(

@@ -33,7 +33,6 @@ def _(language_selector, mo):
 def _(language_selector, mo):
     # Title
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_Jet2XzZu3epyb6M7N9K3JA)"
     if _lang == "ru":
         _sub = "Глава 1 — Социальные контакты · B1"
         _gl, _tl = "Грамматика", "Тесты"
@@ -48,7 +47,7 @@ def _(language_selector, mo):
         _tc = "Nouns · Verbs · Adjectives"
     _gc = "Αντωνυμίες (αδύν. τύποι αιτ.) · Ουσιαστικά (ον./αιτ./κλητ.) · Απαλοιφή"
     _out = mo.md(f"""# «Αφήστε το μήνυμά σας» 📞
-    ## {_sub} {_badge}
+    ## {_sub}
 
     **{_gl}:** {_gc}
     **{_tl}:** {_tc}

@@ -33,11 +33,10 @@ def _(language_selector, mo):
 def _(language_selector, mo):
     # Title
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_NK69X9ZtB785PTA971TNSD)"
     if _lang == "ru":
         _out = mo.md(f"""
     # «Αλλάζουμε συνήθειες» ♻️
-    ## Глава 9 — Окружающая среда и экологические привычки · B1 {_badge}
+    ## Глава 9 — Окружающая среда и экологические привычки · B1
 
     **Грамматика:** Будущее продолженное · Сравнение времён · Косвенные вопросы
     **Тесты:** Существительные · Глаголы · Прилагательные
@@ -45,7 +44,7 @@ def _(language_selector, mo):
     elif _lang == "el":
         _out = mo.md(f"""
     # «Αλλάζουμε συνήθειες» ♻️
-    ## Ενότητα 9 — Περιβάλλον και Οικολογικές Συνήθειες · B1 {_badge}
+    ## Ενότητα 9 — Περιβάλλον και Οικολογικές Συνήθειες · B1
 
     **Γραμματική:** Συνεχής Μέλλοντας · Σύγκριση χρόνων · Πλάγιες Ερωτηματικές
     **Τεστ:** Ουσιαστικά · Ρήματα · Επίθετα
@@ -53,7 +52,7 @@ def _(language_selector, mo):
     else:
         _out = mo.md(f"""
     # «Αλλάζουμε συνήθειες» ♻️
-    ## Unit 9 — Environment & Ecological Habits · B1 {_badge}
+    ## Unit 9 — Environment & Ecological Habits · B1
 
     **Grammar:** Continuous Future · Tenses in Context · Indirect Questions
     **Tests:** Nouns · Verbs · Adjectives

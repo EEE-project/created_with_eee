@@ -37,14 +37,13 @@ def _(language_selector, mo):
 @app.cell(hide_code=True)
 def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_xcsgHTBZe6zzcD3hTUyveV)"
     def _img(n):
         _p = gu.ensure_file(f'slide-{n}.jpg', nb_dir=notebook_dir, remote_base=RAW_BASE)
         return mo.image(src=open(_p, 'rb').read(), width=700) if _p else mo.md("")
     if _lang == "ru":
         _c = mo.vstack([
             mo.md(f"""
-            # **Что нас всё-таки научил Зорбас?** {_badge}
+            # **Что нас всё-таки научил Зорбас?**
             По материалам презентации «ΤΙ ΜΑΣ ΔΊΔΑΞΕ ΤΕΛΙΚΆ Ο ΖΟΡΜΠΆΣ; — ΜΑΘΗΜΑ 4Ο» и записи занятия 17/7/2026:
             """),
             _img(1),
@@ -106,7 +105,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     elif _lang == "el":
         _c = mo.vstack([
             mo.md(f"""
-            # **Τι μας δίδαξε τελικά ο Ζορμπάς;** {_badge}
+            # **Τι μας δίδαξε τελικά ο Ζορμπάς;**
             Με βάση την παρουσίαση «ΤΙ ΜΑΣ ΔΊΔΑΞΕ ΤΕΛΙΚΆ Ο ΖΟΡΜΠΆΣ; — ΜΑΘΗΜΑ 4Ο» και τις σημειώσεις του μαθήματος 17/7/2026:
             """),
             _img(1),
@@ -168,7 +167,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
     else:
         _c = mo.vstack([
             mo.md(f"""
-            # **What Did Zorbas Ultimately Teach Us?** {_badge}
+            # **What Did Zorbas Ultimately Teach Us?**
             Based on the presentation "ΤΙ ΜΑΣ ΔΊΔΑΞΕ ΤΕΛΙΚΆ Ο ΖΟΡΜΠΆΣ; — ΜΑΘΗΜΑ 4Ο" and the 17/7/2026 session notes:
             """),
             _img(1),

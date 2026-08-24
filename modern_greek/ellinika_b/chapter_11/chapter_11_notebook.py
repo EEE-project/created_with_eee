@@ -33,11 +33,10 @@ def _(language_selector, mo):
 def _(language_selector, mo):
     # Title
     _lang = language_selector.value
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_EDUnXkowen3RAuckrYhYUb)"
     if _lang == "ru":
         _out = mo.md(f"""
     # «Πάμε διακοπές;» ✈️
-    ## Глава 11 — Поедем в отпуск? · B1 {_badge}
+    ## Глава 11 — Поедем в отпуск? · B1
 
     **Грамматика:** Простое сослагательное (Απλή Υποτακτική) · Условные и уступительные предложения
     **Тесты:** Существительные · Глаголы · Прилагательные
@@ -45,7 +44,7 @@ def _(language_selector, mo):
     elif _lang == "el":
         _out = mo.md(f"""
     # «Πάμε διακοπές;» ✈️
-    ## Ενότητα 11 — Πάμε διακοπές; · B1 {_badge}
+    ## Ενότητα 11 — Πάμε διακοπές; · B1
 
     **Γραμματική:** Απλή Υποτακτική · Υποθετικές και Εναντιωματικές προτάσεις
     **Τεστ:** Ουσιαστικά · Ρήματα · Επίθετα
@@ -53,7 +52,7 @@ def _(language_selector, mo):
     else:
         _out = mo.md(f"""
     # «Πάμε διακοπές;» ✈️
-    ## Unit 11 — Shall We Go on Holiday? · B1 {_badge}
+    ## Unit 11 — Shall We Go on Holiday? · B1
 
     **Grammar:** Simple Subjunctive (Απλή Υποτακτική) · Conditional & Concessive Clauses
     **Tests:** Nouns · Verbs · Adjectives

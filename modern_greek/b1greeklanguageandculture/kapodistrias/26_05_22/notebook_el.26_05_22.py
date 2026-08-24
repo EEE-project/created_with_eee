@@ -25,13 +25,12 @@ app = marimo.App(
 
 @app.cell(hide_code=True)
 def _(mo, notebook_dir, os):
-    _badge = "[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/notebooks/nb_pu2EGqRo7BhpptX7jmE3nL)"
     def _img(n):
         _p = os.path.join(notebook_dir, f'slide-{n}.jpg')
         return mo.image(src=open(_p, 'rb').read(), width=700) if os.path.exists(_p) else mo.md("")
     mo.vstack([
         mo.md(f"""
-        # **ΤΟ ΤΕΛΟΣ ΤΟΥ ΚΑΠΟΔΙΣΤΡΙΑ** {_badge}
+        # **ΤΟ ΤΕΛΟΣ ΤΟΥ ΚΑΠΟΔΙΣΤΡΙΑ**
         #### *Ιωάννης Καποδίστριας · Μάθημα 4*
         Σύνοψη υλικών από το μάθημα της 22/5/2026.
         """),
