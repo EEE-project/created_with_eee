@@ -62,10 +62,13 @@ def main():
                 print(f"[{name}] FAIL: root hub has no cards")
                 ok = False
 
-            # walk down through each path segment except the last (the lesson itself)
-            for _ in lesson_parts[:-1]:
+            # walk down through each path segment except the last (the lesson itself),
+            # matching the card whose href contains that segment -- clicking nth=0
+            # blindly would always follow the first card regardless of --lesson-path
+            for segment in lesson_parts[:-1]:
+                card = f'a.eee-card[href*="{segment}"]'
                 with page.expect_navigation(timeout=10000):
-                    page.click("a.eee-card >> nth=0")
+                    page.click(f"{card} >> nth=0")
                 page.wait_for_timeout(300)
                 cards = page.locator("a.eee-card").count()
                 print(f"[{name}] -> {page.url} cards={cards}")
@@ -74,7 +77,8 @@ def main():
             # make that exceed 10s over a real network) -- click, confirm the URL
             # changed, then wait out the known WASM boot before reading content.
             t1 = time.time()
-            page.click("a.eee-card >> nth=0", timeout=10000)
+            last_segment = lesson_parts[-1]
+            page.click(f'a.eee-card[href*="{last_segment}"] >> nth=0', timeout=10000)
             page.wait_for_timeout(1500)
             lesson_url = page.url
             print(f"[{name}] -> {lesson_url} (WASM boot starting)")
