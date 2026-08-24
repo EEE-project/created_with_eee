@@ -1,0 +1,119 @@
+# Athenaze Chapter I — adjective stems, same mechanism as
+# athenaze_cap1_nouns.yaml/athenaze_cap1_verbs.yaml (a plain lexicon file
+# path in AncientGreekBackend's lexicons=[...] list; load_adj_lexicons()
+# picks it up the same way load_noun_lexicons() picks up the noun YAMLs).
+# Stems are deliberately left UNACCENTED, same convention as
+# pratt_adjs_lexicon.yaml/athenaze_cap2_adjs.yaml -- see that file's own
+# header for why (a pre-accented stem freezes the lemma's own accent
+# syllable onto every cell instead of letting the recession-limit
+# computation run).
+
+# 2-1-2 declension (-ός, -ή, -όν), oxytone -- same class as pratt's
+# ἀγαθός; stem doesn't end in ε/ι/ρ so feminine takes -η, not -α; every
+# cell confirmed via Perseids Morpheus (stemtype os_h_on, Attic).
+καλός:
+    stems:
+        M: καλο
+        F: καλη
+        N: καλο
+    accents:
+        - ["..N", "καλός"]
+
+χαλεπός:
+    stems:
+        M: χαλεπο
+        F: χαλεπη
+        N: χαλεπο
+    accents:
+        - ["..N", "χαλεπός"]
+
+ἱκανός:
+    stems:
+        M: ἱκανο
+        F: ἱκανη
+        N: ἱκανο
+    accents:
+        - ["..N", "ἱκανός"]
+
+# Attic declension mechanism (contracted, irregular) not applicable here --
+# regular 2-1-2, oxytone, but stem ends in -ρ-, so the "α-purum" rule keeps
+# long alpha throughout the singular feminine instead of shifting to eta.
+# The stems:/accents: mechanism gets GSF wrong: it generates μικρῆς (eta),
+# but Morpheus tags that spelling epic/Ionic-only -- the genuinely Attic
+# form is μικρᾶς (alpha). Full forms: override (same reasoning as
+# athenaze_cap2_adjs.yaml's φίλος/ἐχθρός entries), every other cell
+# confirmed against the same mechanism's own (correct) output.
+μικρός:
+    forms:
+        NSM: μικρός
+        GSM: μικροῦ
+        DSM: μικρῷ
+        ASM: μικρόν
+        VSM: μικρέ
+        NSF: μικρά
+        GSF: μικρᾶς
+        DSF: μικρᾷ
+        ASF: μικράν
+        VSF: μικρά
+        NSN: μικρόν
+        GSN: μικροῦ
+        DSN: μικρῷ
+        ASN: μικρόν
+        VSN: μικρόν
+        NPM: μικροί
+        GPM: μικρῶν
+        DPM: μικροῖς
+        APM: μικρούς
+        VPM: μικροί
+        NPF: μικραί
+        GPF: μικρῶν
+        DPF: μικραῖς
+        APF: μικράς
+        VPF: μικραί
+        NPN: μικρά
+        GPN: μικρῶν
+        DPN: μικροῖς
+        APN: μικρά
+        VPN: μικρά
+
+# Regular 2-1-2, oxytone, feminine -α (stem ends in -ι- of the diphthong
+# -αι-, same "α-purum" rule as μικρός above). The mechanism gets GSF *and*
+# DSF wrong here (a diphthong-final stem hits this differently than a
+# plain consonant-final ρ-stem): it generates acute σκαιάς for GSF, but
+# Morpheus attests that spelling only as accusative plural (genuine
+# syncretism, same shape as πολύς's noted in
+# odyssey_morpheus_adjs_lexicon.yaml), never genitive singular -- only
+# circumflex σκαιᾶς is; and epic/Ionic-only σκαιῇ for DSF where Attic keeps
+# alpha (σκαιᾷ). Full forms: override, same reasoning as μικρός above.
+σκαιός:
+    forms:
+        NSM: σκαιός
+        GSM: σκαιοῦ
+        DSM: σκαιῷ
+        ASM: σκαιόν
+        VSM: σκαιέ
+        NSF: σκαιά
+        GSF: σκαιᾶς
+        DSF: σκαιᾷ
+        ASF: σκαιάν
+        VSF: σκαιά
+        NSN: σκαιόν
+        GSN: σκαιοῦ
+        DSN: σκαιῷ
+        ASN: σκαιόν
+        VSN: σκαιόν
+        NPM: σκαιοί
+        GPM: σκαιῶν
+        DPM: σκαιοῖς
+        APM: σκαιούς
+        VPM: σκαιοί
+        NPF: σκαιαί
+        GPF: σκαιῶν
+        DPF: σκαιαῖς
+        APF: σκαιάς
+        VPF: σκαιαί
+        NPN: σκαιά
+        GPN: σκαιῶν
+        DPN: σκαιοῖς
+        APN: σκαιά
+        VPN: σκαιά

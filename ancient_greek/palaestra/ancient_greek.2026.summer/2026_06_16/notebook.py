@@ -10,7 +10,7 @@
 
 import marimo
 
-__generated_with = "0.23.10"
+__generated_with = "0.23.13"
 app = marimo.App(width="medium")
 
 
@@ -41,7 +41,9 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
-    mo.md(f"**Материалы занятия:** [дз+энклитики+заметки.pdf]({NB_REMOTE}/дз+энклитики+заметки.pdf) · [κεφ\\_Ι(0,5)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ_Ι(0,5)_ἀσκήματα.pdf) · [энклитики+немного\\_алфавита\\_и\\_практики\\_письма.pdf]({NB_REMOTE}/энклитики+немного_алфавита_и_практики_письма.pdf) · [Athenaze\\_1\\_vocabula.pdf]({NB_REMOTE}/Athenaze_1_vocabula.pdf)")
+    mo.md(f"""
+    **Материалы занятия:** [дз+энклитики+заметки.pdf]({NB_REMOTE}/дз+энклитики+заметки.pdf) · [κεφ\\_Ι(0,5)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ_Ι(0,5)_ἀσκήματα.pdf) · [энклитики+немного\\_алфавита\\_и\\_практики\\_письма.pdf]({NB_REMOTE}/энклитики+немного_алфавита_и_практики_письма.pdf) · [Athenaze\\_1\\_vocabula.pdf]({NB_REMOTE}/Athenaze_1_vocabula.pdf)
+    """)
     return
 
 

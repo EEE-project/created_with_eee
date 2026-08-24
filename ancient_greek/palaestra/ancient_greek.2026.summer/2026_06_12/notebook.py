@@ -9,7 +9,7 @@
 
 import marimo
 
-__generated_with = "0.23.10"
+__generated_with = "0.23.13"
 app = marimo.App(width="medium")
 
 
@@ -40,7 +40,9 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
-    mo.md(f"**Материалы занятия:** [Greek Letter Practice]({NB_REMOTE}/Greek%20Letter%20Practice%20-%20Vanguard%20Education.pdf) · [Прописи.pdf]({NB_REMOTE}/Прописи.pdf) · [τόνος+λέξεις(προλεγόμενον).pdf]({NB_REMOTE}/τόνος+λέξεις(προλεγόμενον).pdf)")
+    mo.md(f"""
+    **Материалы занятия:** [Greek Letter Practice]({NB_REMOTE}/Greek%20Letter%20Practice%20-%20Vanguard%20Education.pdf) · [Прописи.pdf]({NB_REMOTE}/Прописи.pdf) · [τόνος+λέξεις(προλεγόμενον).pdf]({NB_REMOTE}/τόνος+λέξεις(προλεγόμενον).pdf)
+    """)
     return
 
 

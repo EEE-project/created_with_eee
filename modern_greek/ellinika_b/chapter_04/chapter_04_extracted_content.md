@@ -160,7 +160,7 @@ Title idiom: **Φωτιά και λαύρα, Παναγιώτη μου!** ("fire
 | Greek (as printed) | English |
 |---|---|
 | Για να το δω λίγο. | Let me have a look at it. |
-| Ακολουθήστε πιστά τις οδηγίες; | Did you follow the instructions exactly? |
+| Ακολουθήσατε πιστά τις οδηγίες; | Did you follow the instructions exactly? |
 | Εννοείται! | Of course! |
 | Ασφαλώς. | Certainly. |
 | Αλίμονο! | Not at all! (deflecting thanks) |
@@ -221,7 +221,7 @@ Examples (bold as printed):
 - Η Χριστίνα αγόρασε για το μωρό μια ωραία, **θαλασσιά** φόρμα.
 - Εκείνο το **πορτοκαλί** κασκόλ μού αρέσει πολύ. Θα το αγοράσω.
 
-Invariance note box — **καφετής – καφετιά – καφετί = καφετί**: in casual usage the neuter form is often used unchanged regardless of the noun's gender/number (i.e. καφετί can substitute for καφετιά/καφετιούς/etc.). Fill-in examples printed as either/or pairs:
+Invariance note box — **καφετής – καφετιά – καφετί = καφετί**: in casual usage an indeclinable form — identical to the neuter singular — is often used regardless of the noun's gender/number (i.e. καφετί can substitute for καφετιά/καφετιούς/etc.). Fill-in examples printed as either/or pairs:
 - Γιατί δε φοράς εκείνη την **καφετιά/καφετί** μπλούζα που σου αγόρασα πέρσι;
 - Μου αρέσουν τα ρούχα σε **καφετιούς/καφετί** τόνους.
 - Πού είναι τα **καφετιά/καφετί** μου παπούτσια;

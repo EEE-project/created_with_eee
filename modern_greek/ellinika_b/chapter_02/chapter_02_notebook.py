@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.1.0",
+#     "eee-project>=1.10.0",
 #     "marimo>=0.23.14",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas",
@@ -218,7 +218,7 @@ def _(language_selector, mo):
 
         | Местоимение | Слабая форма | Пример | Перевод |
         |---|---|---|---|
-        | εγώ | **Μου** | Μου έδωσε το τηλέφωνο του. | Он дал мне свой номер телефона. |
+        | εγώ | **Μου** | Μου έδωσε το τηλέφωνό του. | Он дал мне свой номер телефона. |
         | εσύ | **Σου** | Σου μίλησε ο Νίκος. | Никос поговорил с тобой. |
         | αυτός | **Του** | Του άρεσε το σπίτι. | Ему понравился дом. |
         | αυτή | **Της** | — | — |
@@ -233,7 +233,7 @@ def _(language_selector, mo):
 
         | Местоимение | Сильная форма | Пример | Перевод |
         |---|---|---|---|
-        | εγώ | **Εμένα** | Εμένα μου έδωσε το τηλέφωνο του. Εσένα; | МНЕ он дал свой номер. А тебе? |
+        | εγώ | **Εμένα** | Εμένα μου έδωσε το τηλέφωνό του. Εσένα; | МНЕ он дал свой номер. А тебе? |
         | εσύ | **Εσένα** | Εσένα σου μίλησε. Εμένα γιατί δε μου μίλησε; | С ТОБОЙ он поговорил. А со мной почему не поговорил? |
         | αυτός | **Αυτού** / Αυτουνού | — | — |
         | αυτή | **Αυτής** / Αυτηνής | Αυτής της άρεσε το σπίτι. Εμένα όχι. | ЕЙ понравился дом. Мне — нет. |
@@ -270,7 +270,7 @@ def _(language_selector, mo):
 
         | Αντωνυμία | Αδύνατος τύπος | Παράδειγμα | Μετάφραση |
         |---|---|---|---|
-        | εγώ | **Μου** | Μου έδωσε το τηλέφωνο του. | He gave me his phone number. |
+        | εγώ | **Μου** | Μου έδωσε το τηλέφωνό του. | He gave me his phone number. |
         | εσύ | **Σου** | Σου μίλησε ο Νίκος. | Nikos spoke to you. |
         | αυτός | **Του** | Του άρεσε το σπίτι. | He liked the house. |
         | αυτή | **Της** | — | — |
@@ -285,7 +285,7 @@ def _(language_selector, mo):
 
         | Αντωνυμία | Δυνατός τύπος | Παράδειγμα | Μετάφραση |
         |---|---|---|---|
-        | εγώ | **Εμένα** | Εμένα μου έδωσε το τηλέφωνο του. Εσένα; | He gave ME his number. You? |
+        | εγώ | **Εμένα** | Εμένα μου έδωσε το τηλέφωνό του. Εσένα; | He gave ME his number. You? |
         | εσύ | **Εσένα** | Εσένα σου μίλησε. Εμένα γιατί δε μου μίλησε; | He spoke to YOU. Why didn't he speak to me? |
         | αυτός | **Αυτού** / Αυτουνού | — | — |
         | αυτή | **Αυτής** / Αυτηνής | Αυτής της άρεσε το σπίτι. Εμένα όχι. | SHE liked the house. I didn't. |
@@ -322,7 +322,7 @@ def _(language_selector, mo):
 
         | Pronoun | Weak form | Example | Translation |
         |---|---|---|---|
-        | εγώ | **Μου** | Μου έδωσε το τηλέφωνο του. | He gave me his phone number. |
+        | εγώ | **Μου** | Μου έδωσε το τηλέφωνό του. | He gave me his phone number. |
         | εσύ | **Σου** | Σου μίλησε ο Νίκος. | Nikos spoke to you. |
         | αυτός | **Του** | Του άρεσε το σπίτι. | He liked the house. |
         | αυτή | **Της** | — | — |
@@ -337,7 +337,7 @@ def _(language_selector, mo):
 
         | Pronoun | Strong form | Example | Translation |
         |---|---|---|---|
-        | εγώ | **Εμένα** | Εμένα μου έδωσε το τηλέφωνο του. Εσένα; | He gave ME his number. You? |
+        | εγώ | **Εμένα** | Εμένα μου έδωσε το τηλέφωνό του. Εσένα; | He gave ME his number. You? |
         | εσύ | **Εσένα** | Εσένα σου μίλησε. Εμένα γιατί δε μου μίλησε; | He spoke to YOU. Why didn't he speak to me? |
         | αυτός | **Αυτού** / Αυτουνού | — | — |
         | αυτή | **Αυτής** / Αυτηνής | Αυτής της άρεσε το σπίτι. Εμένα όχι. | SHE liked the house. I didn't. |
@@ -703,7 +703,7 @@ def _(language_selector, mo):
         | Правило | Пример |
         |---|---|
         | μου, σου, του + α, ο, ου → μ', σ', τ' | – Μου αρέσει = Μ' αρέσει. · – Σου αρέσει = Σ' αρέσει. |
-        | μου, σου, του + [θ/ι] → μου'-, σου'-, του'- | Μου έδωσε το κλειδί. = Μου 'δωσε το κλειδί. |
+        | Перед глаголом на другую гласную (напр. **ε**-) может, наоборот, потерять гласную сам глагол | Μου έδωσε το κλειδί. = Μου 'δωσε το κλειδί. |
         """)
     elif _lang == 'el':
         _md = mo.md("""
@@ -722,7 +722,7 @@ def _(language_selector, mo):
         | Κανόνας | Παράδειγμα |
         |---|---|
         | μου, σου, του + α, ο, ου → μ', σ', τ' | – Μου αρέσει = Μ' αρέσει. · – Σου αρέσει = Σ' αρέσει. |
-        | μου, σου, του + [θ/ι] → μου'-, σου'-, του'- | Μου έδωσε το κλειδί. = Μου 'δωσε το κλειδί. |
+        | Πριν από ρήμα με άλλο φωνήεν (π.χ. **ε**-) μπορεί, αντίθετα, να χαθεί το φωνήεν του ρήματος | Μου έδωσε το κλειδί. = Μου 'δωσε το κλειδί. |
         """)
     else:
         _md = mo.md("""
@@ -742,7 +742,7 @@ def _(language_selector, mo):
         | Rule | Example |
         |---|---|
         | μου, σου, του + α, ο, ου → μ', σ', τ' | – Μου αρέσει = Μ' αρέσει. · – Σου αρέσει = Σ' αρέσει. |
-        | μου, σου, του + [θ/ι] → μου'-, σου'-, του'- | Μου έδωσε το κλειδί. = Μου 'δωσε το κλειδί. |
+        | Before a verb starting with another vowel (e.g. **ε**-), the verb's own vowel can drop instead | Μου έδωσε το κλειδί. = Μου 'δωσε το κλειδί. |
         """)
     _md
     return
@@ -1399,6 +1399,214 @@ def _(
 
 
 @app.cell(hide_code=True)
+def _(language_selector, mo, t_ui):
+    mo.md(t_ui("phrases_heading", language_selector.value))
+    return
+
+
+@app.cell(hide_code=True)
+def _(RAW_BASE, gu2, language_selector, notebook_dir):
+    df_phrases = gu2.load_vocab_table("phrases.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE, ru_variant=True, language=language_selector.value)
+    return (df_phrases,)
+
+
+@app.cell(hide_code=True)
+def _(df_phrases, gu2, language_selector, mo, t_ui):
+    _lang = language_selector.value
+    table_phrases = gu2.vocab_table(df_phrases)
+    _display = table_phrases if table_phrases is not None else mo.md(t_ui("phrases_not_found", _lang))
+    mo.vstack([mo.md(t_ui("select_phrases", _lang)), _display])
+    return (table_phrases,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    confirmed_phrases, set_confirmed_phrases = mo.state([])
+    return confirmed_phrases, set_confirmed_phrases
+
+
+@app.cell(hide_code=True)
+def _(
+    confirmed_phrases,
+    set_checked_phrase_d,
+    set_confirmed_phrases,
+    set_cv_phrase,
+    set_remaining_phrase,
+    table_phrases,
+):
+    if table_phrases.value is not None and not table_phrases.value.empty:
+        _new_vocab = []
+        for _, r in table_phrases.value.iterrows():
+            _word = str(r.get("Word", "")).strip()
+            if not _word:
+                continue
+            _new_vocab.append({"form": _word, "meaning": str(r.get("Translation", "")).strip()})
+    else:
+        _new_vocab = []
+
+    if _new_vocab != confirmed_phrases():
+        set_confirmed_phrases(_new_vocab)
+        # Selection or language changed -- restart the quiz fresh instead of
+        # keeping a frozen question/meaning from before the change (word_quiz_form/
+        # word_drill_form only ever consult vocab on their own first init, per
+        # their `if remaining is None:` init gate -- a later vocab change is
+        # otherwise silently ignored until the quiz reaches "done").
+        set_remaining_phrase(None)
+        set_cv_phrase(None)
+        set_checked_phrase_d(None)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    cv_phrase, set_cv_phrase = mo.state(None)
+    remaining_phrase, set_remaining_phrase = mo.state(None)
+    score_phrase, set_score_phrase = mo.state({"correct": 0, "total": 0})
+    restore_phrase, set_restore_phrase = mo.state(None)
+    history_phrase, set_history_phrase = mo.state([])
+    future_phrase, set_future_phrase = mo.state([])
+    checked_phrase_d, set_checked_phrase_d = mo.state(None)
+    return (
+        checked_phrase_d,
+        cv_phrase,
+        future_phrase,
+        history_phrase,
+        remaining_phrase,
+        restore_phrase,
+        score_phrase,
+        set_checked_phrase_d,
+        set_cv_phrase,
+        set_future_phrase,
+        set_history_phrase,
+        set_remaining_phrase,
+        set_restore_phrase,
+        set_score_phrase,
+    )
+
+
+@app.cell(hide_code=True)
+def _(language_selector, mo, t_ui):
+    _lang = language_selector.value
+    phrase_mode = mo.ui.radio(
+        options={t_ui("quiz_mode_choice", _lang): "choice", t_ui("quiz_mode_type", _lang): "type"},
+        value=t_ui("quiz_mode_choice", _lang),
+        label=t_ui("phrase_mode_label", _lang),
+    )
+    phrase_mode
+    return (phrase_mode,)
+
+
+@app.cell(hide_code=True)
+def _(
+    confirmed_phrases,
+    cv_phrase,
+    gu2,
+    history_phrase,
+    language_selector,
+    phrase_mode,
+    remaining_phrase,
+    restore_phrase,
+):
+    _lang = language_selector.value
+    if phrase_mode.value == "type":
+        write_input_phrase, dia_phrase, _plain_check_btn_phrase, prev_btn_phrase, next_btn_phrase = gu2.word_drill_widgets(
+            cv=cv_phrase(), remaining=remaining_phrase(),
+            restore_entry=restore_phrase(), history_len=len(history_phrase()),
+            lang=_lang,
+        )
+        answer_radio_phrase = None
+    else:
+        answer_radio_phrase, next_btn_phrase, prev_btn_phrase = gu2.word_quiz_widgets(
+            cv=cv_phrase(), remaining=remaining_phrase(), vocab=confirmed_phrases(),
+            restore_entry=restore_phrase(),
+            history_len=len(history_phrase()),
+            lang=_lang,
+        )
+        write_input_phrase = dia_phrase = None
+    return (
+        answer_radio_phrase,
+        dia_phrase,
+        next_btn_phrase,
+        prev_btn_phrase,
+        write_input_phrase,
+    )
+
+
+@app.cell(hide_code=True)
+def _(checked_phrase_d, dia_phrase, gu2, language_selector, phrase_mode, t_ui):
+    # Built in its own cell (mirrors dirty_check_button's own paradigm-drill
+    # pattern) so it re-renders -- and recolors -- on every keystroke via
+    # dia_phrase, without rebuilding write_input_phrase itself.
+    if phrase_mode.value == "type":
+        check_btn_phrase_d = gu2.word_drill_check_button(
+            dia_phrase, checked_phrase_d(),
+            label=t_ui("check_label", language_selector.value),
+        )
+    else:
+        check_btn_phrase_d = None
+    return (check_btn_phrase_d,)
+
+
+@app.cell(hide_code=True)
+def _(
+    answer_radio_phrase,
+    check_btn_phrase_d,
+    checked_phrase_d,
+    confirmed_phrases,
+    cv_phrase,
+    dia_phrase,
+    future_phrase,
+    gu2,
+    history_phrase,
+    language_selector,
+    mo,
+    next_btn_phrase,
+    phrase_mode,
+    prev_btn_phrase,
+    remaining_phrase,
+    restore_phrase,
+    score_phrase,
+    set_checked_phrase_d,
+    set_cv_phrase,
+    set_future_phrase,
+    set_history_phrase,
+    set_remaining_phrase,
+    set_restore_phrase,
+    set_score_phrase,
+    t_ui,
+    write_input_phrase,
+):
+    _lang = language_selector.value
+    if not confirmed_phrases():
+        _out = mo.md(t_ui("phrases_empty", _lang))
+    elif phrase_mode.value == "choice" and len(confirmed_phrases()) < 4:
+        _out = mo.md(t_ui("phrases_too_few", _lang))
+    elif phrase_mode.value == "type":
+        _out = gu2.word_drill_form(
+            cv_phrase, set_cv_phrase, remaining_phrase, set_remaining_phrase,
+            score_phrase, set_score_phrase, restore_phrase, set_restore_phrase,
+            history_phrase, set_history_phrase, future_phrase, set_future_phrase,
+            write_input_phrase, dia_phrase, check_btn_phrase_d, prev_btn_phrase, next_btn_phrase,
+            vocab=confirmed_phrases(),
+            title=t_ui("phrase_heading", _lang),
+            lang=_lang,
+            get_checked=checked_phrase_d, set_checked=set_checked_phrase_d,
+        )
+    else:
+        _out = gu2.word_quiz_form(
+            cv_phrase, set_cv_phrase, remaining_phrase, set_remaining_phrase,
+            score_phrase, set_score_phrase, restore_phrase, set_restore_phrase,
+            history_phrase, set_history_phrase, future_phrase, set_future_phrase,
+            answer_radio_phrase, next_btn_phrase, prev_btn_phrase,
+            vocab=confirmed_phrases(),
+            title=t_ui("phrase_heading", _lang),
+            lang=_lang,
+        )
+    _out
+    return
+
+
+@app.cell(hide_code=True)
 def _(gu2):
     t_ui = gu2.ui_label
     return (t_ui,)
@@ -1461,20 +1669,26 @@ def _():
 @app.cell(hide_code=True)
 def _():
     # Modern Greek eee_project: imports
+    import dataclasses
     import eee_project as eee
     from eee_project import GreekUtils, MODERN_GREEK
     from modern_greek_backend_eee import ModernGreekBackend
 
-    return GreekUtils, MODERN_GREEK, ModernGreekBackend, eee
+    return GreekUtils, MODERN_GREEK, ModernGreekBackend, dataclasses, eee
 
 
 @app.cell(hide_code=True)
-def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, eee, mo, pd):
+def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, dataclasses, eee, mo, pd):
     # Modern Greek eee_project: backend setup
     _mg_backend = ModernGreekBackend()
     eee.register_backend("el", _mg_backend, backend="modern-greek")
     eee.set_chain("el", ["modern-greek"])
-    gu2 = GreekUtils(_mg_backend, mo, pd, eee_module=eee, config=MODERN_GREEK)
+    # nav_icons/show_prev_when_done (eee-project 1.10.0+): this course wants
+    # the ◀/▶/↺ nav-icon treatment and reviewable done screen everywhere, so
+    # it's set once here via the course's own config instead of repeating
+    # both kwargs at every quiz/drill call site.
+    _config = dataclasses.replace(MODERN_GREEK, nav_icons=True, show_prev_when_done=True)
+    gu2 = GreekUtils(_mg_backend, mo, pd, eee_module=eee, config=_config)
     return (gu2,)
 
 

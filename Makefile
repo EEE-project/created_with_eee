@@ -13,7 +13,7 @@ PAGES_DIR ?= $(CURDIR)/../created_with_eee-pages-worktree
 
 EEE_PYTHON ?= $(HOME)/.venv/eee/bin/python3
 
-.PHONY: help sync-main fix-split-roots fix-static-footer export-notebooks verify-pages-deploy
+.PHONY: help sync-main fix-split-roots fix-static-footer export-notebooks verify-pages-deploy check-vocab
 
 help:
 	@echo "Targets:"
@@ -46,6 +46,10 @@ help:
 	@echo "                      fetch everywhere. Read-only, no Trezor step. Optional"
 	@echo "                      SITE= filters to sites whose name matches, e.g."
 	@echo "                      make verify-pages-deploy SITE=odyssey"
+	@echo "  check-vocab         Find vocab TSVs where 2 different Greek words share"
+	@echo "                      the same Translation value (unanswerable in a quiz)."
+	@echo "                      Read-only. Optional SCOPE= limits to one course, e.g."
+	@echo "                      make check-vocab SCOPE=modern_greek/ellinika_b"
 	@echo ""
 	@echo "NOT automated here (still manual -- see README's Maintainer tooling"
 	@echo "section): hub regeneration and splitting a new course off into its own"
@@ -81,3 +85,6 @@ export-notebooks:
 
 verify-pages-deploy:
 	SPLIT_PROJECTS="$(SPLIT_PROJECTS)" python3 verify-pages-deploy.py $(SITE)
+
+check-vocab:
+	python3 check-vocab-collisions.py $(SCOPE)

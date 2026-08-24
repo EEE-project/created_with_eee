@@ -50,6 +50,72 @@ rule — check the specific file's header row and the owning course's own
   `modern_greek/b1greeklanguageandculture/AGENTS.md` for the fullest example
   of several schemas coexisting in one course.
 
+## Vocabulary TSV translation collisions
+
+Two *different* Greek words sharing the exact same `Translation` value within
+one TSV makes that pair impossible for a student to distinguish in a
+quiz/checker (the prompt shown is the translation, so both words look like
+the "same" answer). This is a real, previously-shipped bug class — found and
+fixed 2026-08-21 across `ellinika_b` and `kapodistrias` (e.g. `η συγκοινωνία`
+and `η μεταφορά` both flattened to plain "транспорт"; `η καταγωγή` and `η
+προέλευση` both to "происхождение").
+
+**Mechanical check** — `python3 check-vocab-collisions.py` (repo root) groups
+every TSV's rows by `Translation` and flags any value shared by 2+ distinct
+`Word` values; exits non-zero if any are found. Takes an optional directory
+argument to scope to one course, e.g.
+`python3 check-vocab-collisions.py modern_greek/ellinika_b`. Run this after
+adding or editing vocab TSVs, not just when a report comes in.
+
+**Resolution priority, in order:**
+1. Check the same chapter's own richer content first — the notebook's own
+   prose glossary table, or its `*_extracted_content.md` source — often
+   already has a more precise, already-vetted distinct translation for one or
+   both words that the flatter drill TSV lost when authored separately.
+   Reuse that text verbatim rather than inventing new wording.
+2. If the collision exists even in the source textbook material itself (not
+   just the TSV), don't silently guess a fix on language-learning content —
+   propose a specific distinguishing translation with your reasoning and get
+   the user's confirmation before applying.
+3. Watch for the case that *isn't* actually an error: genuine morphological
+   doublets of the same verb (e.g. `κοιτάζω`/`κοιτάω`, an -άζω/-άω pair) can
+   legitimately share one translation because they mean the same thing —
+   confirm via the chapter's own grammar tables (e.g. a future-tense
+   stem-formation list showing both as parallel, equally-valid forms) before
+   treating a shared translation as a bug.
+
+When editing a TSV directly via Python (bypassing the Edit tool, which can
+fail to match old_string against Greek/Cyrillic text) rather than a targeted
+tool edit, check the file's original line-ending style first — some TSVs in
+this repo are CRLF while sibling files in the same course are plain LF, and
+Python's default text-mode write silently normalizes CRLF to LF, bloating the
+diff to the whole file instead of just the changed line.
+
+## Course-wide GreekConfig customization (nav_icons, etc.)
+
+`GreekUtils` is constructed once per notebook from a `GreekConfig`
+(`MODERN_GREEK`/`ANCIENT_GREEK` from `eee_project`). `GreekConfig` is frozen —
+never assign to a field on the shared singleton directly
+(`MODERN_GREEK.nav_icons = True` raises `dataclasses.FrozenInstanceError`,
+and would otherwise silently affect every other course reusing that same
+singleton). To opt a course into a config-level default — e.g. the ◀/▶/↺
+nav-icon treatment and reviewable done screens — derive a new instance once
+at construction time instead:
+
+```python
+import dataclasses
+_config = dataclasses.replace(MODERN_GREEK, nav_icons=True, show_prev_when_done=True)
+gu = GreekUtils(backend, mo, pd, eee_module=eee, config=_config)
+```
+
+`ellinika_b`'s 10 chapters all follow this pattern (needs `eee-project`
+>=1.10.0). See eee-project's own `docs/api-patterns.md` for the full
+`GreekConfig` field list and which of the nine quiz/drill functions resolve
+`nav_icons`/`show_prev_when_done` from `self._cfg` when the caller omits
+them. Don't repeat `nav_icons=True`/`show_prev_when_done=True` at individual
+call sites once the course-level config already sets it — that's the
+redundant, harder-to-maintain pattern this replaced.
+
 ## Publishing a lesson/chapter to Pages
 
 Locally (via `marimo edit`), a course's own `notebook.py` still renders its

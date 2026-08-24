@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.1.0",
+#     "eee-project>=1.10.0",
 #     "marimo>=0.23.14",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas",
@@ -114,7 +114,7 @@ def _(language_selector, mo):
     - Η Χριστίνα αγόρασε για το μωρό μια ωραία, **θαλασσιά** φόρμα. — _Христина купила малышу красивый комбинезон морского цвета._
     - Εκείνο το **πορτοκαλί** κασκόλ μού αρέσει πολύ. Θα το αγοράσω. — _Мне очень нравится тот оранжевый шарф. Я его куплю._
 
-    **καφετής – καφετιά – καφετί = καφετί**: в разговорной речи форма среднего рода часто используется неизменной вместо согласующейся формы:
+    **καφετής – καφετιά – καφετί = καφετί**: в разговорной речи вместо согласующейся формы часто используется несклоняемый вариант — по форме совпадающий со средним родом единственного числа:
     - Γιατί δε φοράς εκείνη την **καφετιά/καφετί** μπλούζα που σου αγόρασα πέρσι; — _Почему ты не носишь ту коричневую блузку, которую я купил(а) тебе в прошлом году?_
     - Μου αρέσουν τα ρούχα σε **καφετιούς/καφετί** τόνους. — _Мне нравится одежда коричневых тонов._
     - Πού είναι τα **καφετιά/καφετί** μου παπούτσια; — _Где мои коричневые туфли?_
@@ -175,7 +175,7 @@ def _(language_selector, mo):
     - Η Χριστίνα αγόρασε για το μωρό μια ωραία, **θαλασσιά** φόρμα. ("Christina bought the baby a nice sea-blue onesie.")
     - Εκείνο το **πορτοκαλί** κασκόλ μού αρέσει πολύ. Θα το αγοράσω. ("I really like that orange scarf. I'll buy it.")
 
-    **καφετής – καφετιά – καφετί = καφετί**: στην καθομιλουμένη, ο ουδέτερος τύπος χρησιμοποιείται συχνά αμετάβλητος αντί για τον κανονικό τύπο:
+    **καφετής – καφετιά – καφετί = καφετί**: στην καθομιλουμένη, αντί για τον κανονικό (συμφωνούντα) τύπο χρησιμοποιείται συχνά ένας άκλιτος τύπος — ίδιος στη μορφή με το ουδέτερο ενικού:
     - Γιατί δε φοράς εκείνη την **καφετιά/καφετί** μπλούζα που σου αγόρασα πέρσι; ("Why don't you wear that brown blouse I bought you last year?")
     - Μου αρέσουν τα ρούχα σε **καφετιούς/καφετί** τόνους. ("I like clothes in brown tones.")
     - Πού είναι τα **καφετιά/καφετί** μου παπούτσια; ("Where are my brown shoes?")
@@ -236,7 +236,7 @@ def _(language_selector, mo):
     - Η Χριστίνα αγόρασε για το μωρό μια ωραία, **θαλασσιά** φόρμα. — _Christina bought the baby a nice sea-blue onesie._
     - Εκείνο το **πορτοκαλί** κασκόλ μού αρέσει πολύ. Θα το αγοράσω. — _I really like that orange scarf. I'll buy it._
 
-    **καφετής – καφετιά – καφετί = καφετί**: in everyday speech the neuter form is often used unchanged instead of the properly agreeing form:
+    **καφετής – καφετιά – καφετί = καφετί**: in everyday speech, an indeclinable form — identical to the neuter singular — is often used instead of the properly agreeing form:
     - Γιατί δε φοράς εκείνη την **καφετιά/καφετί** μπλούζα που σου αγόρασα πέρσι; — _Why don't you wear that brown blouse I bought you last year?_
     - Μου αρέσουν τα ρούχα σε **καφετιούς/καφετί** τόνους. — _I like clothes in brown tones._
     - Πού είναι τα **καφετιά/καφετί** μου παπούτσια; — _Where are my brown shoes?_
@@ -313,7 +313,7 @@ def _(language_selector, mo):
     | Греческий | Русский |
     |-----------|---------|
     | Για να το δω λίγο. | Дайте-ка я посмотрю. |
-    | Ακολουθήστε πιστά τις οδηγίες; | Вы точно следовали инструкции? |
+    | Ακολουθήσατε πιστά τις οδηγίες; | Вы точно следовали инструкции? |
     | Εννοείται! | Конечно! |
     | Ασφαλώς. | Разумеется. |
     | Αλίμονο! | Да что вы, не за что! |
@@ -355,7 +355,7 @@ def _(language_selector, mo):
     | **Θέλετε βοήθεια;** _(Do you need help?)_ | Όχι, ευχαριστώ! Τα καταφέρνω και μόνος/μόνη μου. _(No, thanks! I can manage on my own.)_ |
     | **Πώς μπορώ να σας εξυπηρετήσω;** _(How can I help you?)_ | Έχετε αυτή την μπλούζα σε πράσινο χρώμα; _(Do you have this blouse in green?)_ |
     | **Τι θέλει η κοπέλα / ο νεαρός;** _(What would the young lady/man like?)_ | Θέλω / Θα ήθελα δύο ζευγάρια κάλτσες. _(I want / I'd like two pairs of socks.)_ |
-    | **Εσύ τι λες; / Πώς σου φαίνεται; / Εσείς τι λέτε; / Πώς το βλέπετε; / Πώς σας φαίνεται;** _(What do you say? How does it look to you?)_ | Είναι πολύ ωραίο πάνω σου/σας. _(It looks great on you.)_ Σου/Σας πάει πολύ. _(It really suits you.)_ Σου/Σας ταιριάζει. _(It fits you.)_ Είναι τέλειο. _(It's perfect.)_ Είναι φανταστικό. _(It's fantastic.)_ Είναι καλύτερο από το προηγούμενο. _(It's better than the previous one.)_ Αυτό μου αρέσει πιο πολύ. _(I like this one more.)_ Δε σου/σας πάει πολύ. _(It doesn't suit you well.)_ Δε μου αρέσει καθόλου. Είναι χάλια! _(I don't like it at all. It's terrible!)_ |
+    | **Εσύ τι λες; / Πώς σου φαίνεται; / Εσείς τι λέτε; / Πώς το βλέπετε; / Πώς σας φαίνεται;** _(What do you say? How does it look to you?)_ | Είναι πολύ ωραίο πάνω σου/σας. _(It looks great on you.)_ Σου/Σας πάει πολύ. _(It really suits you.)_ Σου/Σας ταιριάζει. _(It suits you.)_ Είναι τέλειο. _(It's perfect.)_ Είναι φανταστικό. _(It's fantastic.)_ Είναι καλύτερο από το προηγούμενο. _(It's better than the previous one.)_ Αυτό μου αρέσει πιο πολύ. _(I like this one more.)_ Δε σου/σας πάει πολύ. _(It doesn't suit you well.)_ Δε μου αρέσει καθόλου. Είναι χάλια! _(I don't like it at all. It's terrible!)_ |
 
     **Σ. 70 — «Φωτιά και λαύρα, Παναγιώτη μου!» (διάλογος A18):**
 
@@ -380,7 +380,7 @@ def _(language_selector, mo):
     | Ελληνικά | Αγγλικά |
     |----------|---------|
     | Για να το δω λίγο. | Let me have a look at it. |
-    | Ακολουθήστε πιστά τις οδηγίες; | Did you follow the instructions exactly? |
+    | Ακολουθήσατε πιστά τις οδηγίες; | Did you follow the instructions exactly? |
     | Εννοείται! | Of course! |
     | Ασφαλώς. | Certainly. |
     | Αλίμονο! | Not at all! |
@@ -422,7 +422,7 @@ def _(language_selector, mo):
     | **Θέλετε βοήθεια;** _(Do you need help?)_ | Όχι, ευχαριστώ! Τα καταφέρνω και μόνος/μόνη μου. _(No, thanks! I can manage on my own.)_ |
     | **Πώς μπορώ να σας εξυπηρετήσω;** _(How can I help you?)_ | Έχετε αυτή την μπλούζα σε πράσινο χρώμα; _(Do you have this blouse in green?)_ |
     | **Τι θέλει η κοπέλα / ο νεαρός;** _(What would the young lady/man like?)_ | Θέλω / Θα ήθελα δύο ζευγάρια κάλτσες. _(I want / I'd like two pairs of socks.)_ |
-    | **Εσύ τι λες; / Πώς σου φαίνεται; / Εσείς τι λέτε; / Πώς το βλέπετε; / Πώς σας φαίνεται;** _(What do you say? How does it look to you?)_ | Είναι πολύ ωραίο πάνω σου/σας. _(It looks great on you.)_ Σου/Σας πάει πολύ. _(It really suits you.)_ Σου/Σας ταιριάζει. _(It fits you.)_ Είναι τέλειο. _(It's perfect.)_ Είναι φανταστικό. _(It's fantastic.)_ Είναι καλύτερο από το προηγούμενο. _(It's better than the previous one.)_ Αυτό μου αρέσει πιο πολύ. _(I like this one more.)_ Δε σου/σας πάει πολύ. _(It doesn't suit you well.)_ Δε μου αρέσει καθόλου. Είναι χάλια! _(I don't like it at all. It's terrible!)_ |
+    | **Εσύ τι λες; / Πώς σου φαίνεται; / Εσείς τι λέτε; / Πώς το βλέπετε; / Πώς σας φαίνεται;** _(What do you say? How does it look to you?)_ | Είναι πολύ ωραίο πάνω σου/σας. _(It looks great on you.)_ Σου/Σας πάει πολύ. _(It really suits you.)_ Σου/Σας ταιριάζει. _(It suits you.)_ Είναι τέλειο. _(It's perfect.)_ Είναι φανταστικό. _(It's fantastic.)_ Είναι καλύτερο από το προηγούμενο. _(It's better than the previous one.)_ Αυτό μου αρέσει πιο πολύ. _(I like this one more.)_ Δε σου/σας πάει πολύ. _(It doesn't suit you well.)_ Δε μου αρέσει καθόλου. Είναι χάλια! _(I don't like it at all. It's terrible!)_ |
 
     **p. 70 — "Φωτιά και λαύρα, Παναγιώτη μου!" (dialogue A18):**
 
@@ -447,7 +447,7 @@ def _(language_selector, mo):
     | Greek | English |
     |-------|---------|
     | Για να το δω λίγο. | Let me have a look at it. |
-    | Ακολουθήστε πιστά τις οδηγίες; | Did you follow the instructions exactly? |
+    | Ακολουθήσατε πιστά τις οδηγίες; | Did you follow the instructions exactly? |
     | Εννοείται! | Of course! |
     | Ασφαλώς. | Certainly. |
     | Αλίμονο! | Not at all! |
@@ -1150,6 +1150,214 @@ def _(
 
 
 @app.cell(hide_code=True)
+def _(language_selector, mo, t_ui):
+    mo.md(t_ui("phrases_heading", language_selector.value))
+    return
+
+
+@app.cell(hide_code=True)
+def _(RAW_BASE, gu2, language_selector, notebook_dir):
+    df_phrases = gu2.load_vocab_table("phrases.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE, ru_variant=True, language=language_selector.value)
+    return (df_phrases,)
+
+
+@app.cell(hide_code=True)
+def _(df_phrases, gu2, language_selector, mo, t_ui):
+    _lang = language_selector.value
+    table_phrases = gu2.vocab_table(df_phrases)
+    _display = table_phrases if table_phrases is not None else mo.md(t_ui("phrases_not_found", _lang))
+    mo.vstack([mo.md(t_ui("select_phrases", _lang)), _display])
+    return (table_phrases,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    confirmed_phrases, set_confirmed_phrases = mo.state([])
+    return confirmed_phrases, set_confirmed_phrases
+
+
+@app.cell(hide_code=True)
+def _(
+    confirmed_phrases,
+    set_checked_phrase_d,
+    set_confirmed_phrases,
+    set_cv_phrase,
+    set_remaining_phrase,
+    table_phrases,
+):
+    if table_phrases.value is not None and not table_phrases.value.empty:
+        _new_vocab = []
+        for _, r in table_phrases.value.iterrows():
+            _word = str(r.get("Word", "")).strip()
+            if not _word:
+                continue
+            _new_vocab.append({"form": _word, "meaning": str(r.get("Translation", "")).strip()})
+    else:
+        _new_vocab = []
+
+    if _new_vocab != confirmed_phrases():
+        set_confirmed_phrases(_new_vocab)
+        # Selection or language changed -- restart the quiz fresh instead of
+        # keeping a frozen question/meaning from before the change (word_quiz_form/
+        # word_drill_form only ever consult vocab on their own first init, per
+        # their `if remaining is None:` init gate -- a later vocab change is
+        # otherwise silently ignored until the quiz reaches "done").
+        set_remaining_phrase(None)
+        set_cv_phrase(None)
+        set_checked_phrase_d(None)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    cv_phrase, set_cv_phrase = mo.state(None)
+    remaining_phrase, set_remaining_phrase = mo.state(None)
+    score_phrase, set_score_phrase = mo.state({"correct": 0, "total": 0})
+    restore_phrase, set_restore_phrase = mo.state(None)
+    history_phrase, set_history_phrase = mo.state([])
+    future_phrase, set_future_phrase = mo.state([])
+    checked_phrase_d, set_checked_phrase_d = mo.state(None)
+    return (
+        checked_phrase_d,
+        cv_phrase,
+        future_phrase,
+        history_phrase,
+        remaining_phrase,
+        restore_phrase,
+        score_phrase,
+        set_checked_phrase_d,
+        set_cv_phrase,
+        set_future_phrase,
+        set_history_phrase,
+        set_remaining_phrase,
+        set_restore_phrase,
+        set_score_phrase,
+    )
+
+
+@app.cell(hide_code=True)
+def _(language_selector, mo, t_ui):
+    _lang = language_selector.value
+    phrase_mode = mo.ui.radio(
+        options={t_ui("quiz_mode_choice", _lang): "choice", t_ui("quiz_mode_type", _lang): "type"},
+        value=t_ui("quiz_mode_choice", _lang),
+        label=t_ui("phrase_mode_label", _lang),
+    )
+    phrase_mode
+    return (phrase_mode,)
+
+
+@app.cell(hide_code=True)
+def _(
+    confirmed_phrases,
+    cv_phrase,
+    gu2,
+    history_phrase,
+    language_selector,
+    phrase_mode,
+    remaining_phrase,
+    restore_phrase,
+):
+    _lang = language_selector.value
+    if phrase_mode.value == "type":
+        write_input_phrase, dia_phrase, _plain_check_btn_phrase, prev_btn_phrase, next_btn_phrase = gu2.word_drill_widgets(
+            cv=cv_phrase(), remaining=remaining_phrase(),
+            restore_entry=restore_phrase(), history_len=len(history_phrase()),
+            lang=_lang,
+        )
+        answer_radio_phrase = None
+    else:
+        answer_radio_phrase, next_btn_phrase, prev_btn_phrase = gu2.word_quiz_widgets(
+            cv=cv_phrase(), remaining=remaining_phrase(), vocab=confirmed_phrases(),
+            restore_entry=restore_phrase(),
+            history_len=len(history_phrase()),
+            lang=_lang,
+        )
+        write_input_phrase = dia_phrase = None
+    return (
+        answer_radio_phrase,
+        dia_phrase,
+        next_btn_phrase,
+        prev_btn_phrase,
+        write_input_phrase,
+    )
+
+
+@app.cell(hide_code=True)
+def _(checked_phrase_d, dia_phrase, gu2, language_selector, phrase_mode, t_ui):
+    # Built in its own cell (mirrors dirty_check_button's own paradigm-drill
+    # pattern) so it re-renders -- and recolors -- on every keystroke via
+    # dia_phrase, without rebuilding write_input_phrase itself.
+    if phrase_mode.value == "type":
+        check_btn_phrase_d = gu2.word_drill_check_button(
+            dia_phrase, checked_phrase_d(),
+            label=t_ui("check_label", language_selector.value),
+        )
+    else:
+        check_btn_phrase_d = None
+    return (check_btn_phrase_d,)
+
+
+@app.cell(hide_code=True)
+def _(
+    answer_radio_phrase,
+    check_btn_phrase_d,
+    checked_phrase_d,
+    confirmed_phrases,
+    cv_phrase,
+    dia_phrase,
+    future_phrase,
+    gu2,
+    history_phrase,
+    language_selector,
+    mo,
+    next_btn_phrase,
+    phrase_mode,
+    prev_btn_phrase,
+    remaining_phrase,
+    restore_phrase,
+    score_phrase,
+    set_checked_phrase_d,
+    set_cv_phrase,
+    set_future_phrase,
+    set_history_phrase,
+    set_remaining_phrase,
+    set_restore_phrase,
+    set_score_phrase,
+    t_ui,
+    write_input_phrase,
+):
+    _lang = language_selector.value
+    if not confirmed_phrases():
+        _out = mo.md(t_ui("phrases_empty", _lang))
+    elif phrase_mode.value == "choice" and len(confirmed_phrases()) < 4:
+        _out = mo.md(t_ui("phrases_too_few", _lang))
+    elif phrase_mode.value == "type":
+        _out = gu2.word_drill_form(
+            cv_phrase, set_cv_phrase, remaining_phrase, set_remaining_phrase,
+            score_phrase, set_score_phrase, restore_phrase, set_restore_phrase,
+            history_phrase, set_history_phrase, future_phrase, set_future_phrase,
+            write_input_phrase, dia_phrase, check_btn_phrase_d, prev_btn_phrase, next_btn_phrase,
+            vocab=confirmed_phrases(),
+            title=t_ui("phrase_heading", _lang),
+            lang=_lang,
+            get_checked=checked_phrase_d, set_checked=set_checked_phrase_d,
+        )
+    else:
+        _out = gu2.word_quiz_form(
+            cv_phrase, set_cv_phrase, remaining_phrase, set_remaining_phrase,
+            score_phrase, set_score_phrase, restore_phrase, set_restore_phrase,
+            history_phrase, set_history_phrase, future_phrase, set_future_phrase,
+            answer_radio_phrase, next_btn_phrase, prev_btn_phrase,
+            vocab=confirmed_phrases(),
+            title=t_ui("phrase_heading", _lang),
+            lang=_lang,
+        )
+    _out
+    return
+
+
+@app.cell(hide_code=True)
 def _(gu2):
     t_ui = gu2.ui_label
     return (t_ui,)
@@ -1212,21 +1420,27 @@ def _():
 @app.cell(hide_code=True)
 def _():
     # Modern Greek eee_project: imports
+    import dataclasses
     import eee_project as eee
     from eee_project import GreekUtils, MODERN_GREEK
     from modern_greek_backend_eee import ModernGreekBackend
 
 
-    return GreekUtils, MODERN_GREEK, ModernGreekBackend, eee
+    return GreekUtils, MODERN_GREEK, ModernGreekBackend, dataclasses, eee
 
 
 @app.cell(hide_code=True)
-def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, eee, mo, pd):
+def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, dataclasses, eee, mo, pd):
     # Modern Greek eee_project: backend setup
     _mg_backend = ModernGreekBackend()
     eee.register_backend("el", _mg_backend, backend="modern-greek")
     eee.set_chain("el", ["modern-greek"])
-    gu2 = GreekUtils(_mg_backend, mo, pd, eee_module=eee, config=MODERN_GREEK)
+    # nav_icons/show_prev_when_done (eee-project 1.10.0+): this course wants
+    # the ◀/▶/↺ nav-icon treatment and reviewable done screen everywhere, so
+    # it's set once here via the course's own config instead of repeating
+    # both kwargs at every quiz/drill call site.
+    _config = dataclasses.replace(MODERN_GREEK, nav_icons=True, show_prev_when_done=True)
+    gu2 = GreekUtils(_mg_backend, mo, pd, eee_module=eee, config=_config)
     return (gu2,)
 
 

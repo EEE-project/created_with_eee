@@ -136,7 +136,7 @@ The book prints this as two parallel tables — a weak-form table and a strong-f
 
 | Pronoun | Weak form | Example |
 |---|---|---|
-| εγώ | **Μου** | Μου έδωσε το τηλέφωνο του. |
+| εγώ | **Μου** | Μου έδωσε το τηλέφωνό του. |
 | εσύ | **Σου** | Σου μίλησε ο Νίκος. |
 | αυτός | **Του** | Του άρεσε το σπίτι. |
 | αυτή | **Της** | — |
@@ -151,7 +151,7 @@ The book prints this as two parallel tables — a weak-form table and a strong-f
 
 | Pronoun | Strong form | Example |
 |---|---|---|
-| εγώ | **Εμένα** | Εμένα μου έδωσε το τηλέφωνο του. Εσένα; |
+| εγώ | **Εμένα** | Εμένα μου έδωσε το τηλέφωνό του. Εσένα; |
 | εσύ | **Εσένα** | Εσένα σου μίλησε. Εμένα γιατί δε μου μίλησε; |
 | αυτός | **Αυτού** / Αυτουνού | — |
 | αυτή | **Αυτής** / Αυτηνής | Αυτής της άρεσε το σπίτι. Εμένα όχι. |
@@ -225,7 +225,7 @@ A chapter-specific supplementary segment, as in Chapter 1 — this chapter's own
 | Rule | Example |
 |---|---|
 | μου, σου, του + α, ο, ου → μ', σ', τ' | – Μου αρέσει = Μ' αρέσει. · – Σου αρέσει = Σ' αρέσει. |
-| μου, σου, του + [θ/ι] → μου'-, σου'-, του'- | Μου έδωσε το κλειδί. = Μου 'δωσε το κλειδί. |
+| Before a verb starting with another vowel (e.g. **ε**-), the verb's own vowel can drop instead | Μου έδωσε το κλειδί. = Μου 'δωσε το κλειδί. |
 
 ---
 

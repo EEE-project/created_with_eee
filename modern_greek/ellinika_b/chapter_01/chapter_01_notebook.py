@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.1.0",
+#     "eee-project>=1.10.0",
 #     "marimo>=0.23.14",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas",
@@ -76,31 +76,31 @@ def _(language_selector, mo):
 
         | Местоимение | Слабая форма | Пример | Перевод |
         |---|---|---|---|
-        | εγώ | **Με** | Με ζήτησες; | Ты спрашивал(а) обо мне? |
-        | εσύ | **Σε** | Σε ζήτησα. | Я спрашивал(а) о тебе. |
-        | αυτός | **Τον** | Τον ζήτησαν στο τηλέφωνο. | Его спрашивали по телефону. |
-        | αυτή | **Τη(ν)** | Τη(ν) ζήτησαν στο τηλέφωνο. | Её спрашивали по телефону. |
-        | αυτό | **Το** | Το ζήτησε η Αρλέτα. | Арлета спрашивала об этом. |
-        | εμείς | **Μας** | Μας ζήτησαν; | О нас спрашивали? |
-        | εσείς | **Σας** | Σας ζήτησαν. | О вас спрашивали. |
-        | αυτοί | **Τους** | Τους ζήτησε ο Αντώνης. | Андонис спрашивал о них (м.р.). |
-        | αυτές | **Τις** | Τις ζήτησε ο Αντώνης. | Андонис спрашивал о них (ж.р.). |
-        | αυτά | **Τα** | Τα ζήτησε ο Αντώνης. | Андонис спрашивал о них (ср.р.). |
+        | εγώ | **Με** | Με ζήτησες; | Ты меня искал(а)? |
+        | εσύ | **Σε** | Σε ζήτησα. | Я тебя искал(а). |
+        | αυτός | **Τον** | Τον ζήτησαν στο τηλέφωνο. | Его звали к телефону. |
+        | αυτή | **Τη(ν)** | Τη(ν) ζήτησαν στο τηλέφωνο. | Её звали к телефону. |
+        | αυτό | **Το** | Το ζήτησε η Αρλέτα. | Арлета его попросила. |
+        | εμείς | **Μας** | Μας ζήτησαν; | Нас искали? |
+        | εσείς | **Σας** | Σας ζήτησαν. | Вас искали. |
+        | αυτοί | **Τους** | Τους ζήτησε ο Αντώνης. | Андонис их искал (м.р.). |
+        | αυτές | **Τις** | Τις ζήτησε ο Αντώνης. | Андонис их искал (ж.р.). |
+        | αυτά | **Τα** | Τα ζήτησε ο Αντώνης. | Андонис их искал (ср.р.). |
 
         **Сильная форма (δυνατός τύπος)** — те же предложения, с уточнением в скобках:
 
         | Местоимение | Сильная форма | Пример | Перевод | Уточнение |
         |---|---|---|---|---|
-        | εγώ | **Εμένα** | Εμένα ζήτησες; | МЕНЯ ты спрашивал(а)? | (или Никоса?) |
-        | εσύ | **Εσένα** | Εσένα ζήτησα. | ТЕБЯ я спрашивал(а). | (не Никоса) |
-        | αυτός | **Αυτόν** | Αυτόν ζήτησαν στο τηλέφωνο. | ЕГО спрашивали по телефону. | (Никоса, не Эрвина) |
-        | αυτή | **Αυτή(ν)** | Αυτή(ν) ζήτησαν στο τηλέφωνο. | ЕЁ спрашивали по телефону. | (Марину, не Мелек) |
-        | αυτό | **Αυτό** | Αυτό ζήτησε η Αρλέτα. | ИМЕННО ЭТО спрашивала Арлета. | (не другое) |
-        | εμείς | **Εμάς** | Εμάς ζήτησαν; | НАС спрашивали? | (или вас?) |
-        | εσείς | **Εσάς** | Εσάς ζήτησαν. | ВАС спрашивали. | (не нас) |
-        | αυτοί | **Αυτούς** | Αυτούς ζήτησε ο Αντώνης. | ИМЕННО ИХ (м.р.) спрашивал Андонис. | (не других) |
-        | αυτές | **Αυτές** | Αυτές ζήτησε ο Αντώνης. | ИМЕННО ИХ (ж.р.) спрашивал Андонис. | (не других) |
-        | αυτά | **Αυτά** | Αυτά ζήτησε ο Αντώνης. | ИМЕННО ИХ (ср.р.) спрашивал Андонис. | (не других) |
+        | εγώ | **Εμένα** | Εμένα ζήτησες; | МЕНЯ ты искал(а)? | (или Никоса?) |
+        | εσύ | **Εσένα** | Εσένα ζήτησα. | ТЕБЯ я искал(а). | (не Никоса) |
+        | αυτός | **Αυτόν** | Αυτόν ζήτησαν στο τηλέφωνο. | ЕГО звали к телефону. | (Никоса, не Эрвина) |
+        | αυτή | **Αυτή(ν)** | Αυτή(ν) ζήτησαν στο τηλέφωνο. | ЕЁ звали к телефону. | (Марину, не Мелек) |
+        | αυτό | **Αυτό** | Αυτό ζήτησε η Αρλέτα. | ИМЕННО ЭТО попросила Арлета. | (не другое) |
+        | εμείς | **Εμάς** | Εμάς ζήτησαν; | НАС искали? | (или вас?) |
+        | εσείς | **Εσάς** | Εσάς ζήτησαν. | ВАС искали. | (не нас) |
+        | αυτοί | **Αυτούς** | Αυτούς ζήτησε ο Αντώνης. | ИМЕННО ИХ (м.р.) искал Андонис. | (не других) |
+        | αυτές | **Αυτές** | Αυτές ζήτησε ο Αντώνης. | ИМЕННО ИХ (ж.р.) искал Андонис. | (не других) |
+        | αυτά | **Αυτά** | Αυτά ζήτησε ο Αντώνης. | ИМЕННО ИХ (ср.р.) искал Андонис. | (не других) |
 
         Слабая форма — обычная, ставится **перед** глаголом. Сильная используется для акцента,
         как однословный ответ, или после предлога — слабая форма никогда не ставится после предлога.
@@ -1366,6 +1366,214 @@ def _(
 
 
 @app.cell(hide_code=True)
+def _(language_selector, mo, t_ui):
+    mo.md(t_ui("phrases_heading", language_selector.value))
+    return
+
+
+@app.cell(hide_code=True)
+def _(RAW_BASE, gu2, language_selector, notebook_dir):
+    df_phrases = gu2.load_vocab_table("phrases.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE, ru_variant=True, language=language_selector.value)
+    return (df_phrases,)
+
+
+@app.cell(hide_code=True)
+def _(df_phrases, gu2, language_selector, mo, t_ui):
+    _lang = language_selector.value
+    table_phrases = gu2.vocab_table(df_phrases)
+    _display = table_phrases if table_phrases is not None else mo.md(t_ui("phrases_not_found", _lang))
+    mo.vstack([mo.md(t_ui("select_phrases", _lang)), _display])
+    return (table_phrases,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    confirmed_phrases, set_confirmed_phrases = mo.state([])
+    return confirmed_phrases, set_confirmed_phrases
+
+
+@app.cell(hide_code=True)
+def _(
+    confirmed_phrases,
+    set_checked_phrase_d,
+    set_confirmed_phrases,
+    set_cv_phrase,
+    set_remaining_phrase,
+    table_phrases,
+):
+    if table_phrases.value is not None and not table_phrases.value.empty:
+        _new_vocab = []
+        for _, r in table_phrases.value.iterrows():
+            _word = str(r.get("Word", "")).strip()
+            if not _word:
+                continue
+            _new_vocab.append({"form": _word, "meaning": str(r.get("Translation", "")).strip()})
+    else:
+        _new_vocab = []
+
+    if _new_vocab != confirmed_phrases():
+        set_confirmed_phrases(_new_vocab)
+        # Selection or language changed -- restart the quiz fresh instead of
+        # keeping a frozen question/meaning from before the change (word_quiz_form/
+        # word_drill_form only ever consult vocab on their own first init, per
+        # their `if remaining is None:` init gate -- a later vocab change is
+        # otherwise silently ignored until the quiz reaches "done").
+        set_remaining_phrase(None)
+        set_cv_phrase(None)
+        set_checked_phrase_d(None)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    cv_phrase, set_cv_phrase = mo.state(None)
+    remaining_phrase, set_remaining_phrase = mo.state(None)
+    score_phrase, set_score_phrase = mo.state({"correct": 0, "total": 0})
+    restore_phrase, set_restore_phrase = mo.state(None)
+    history_phrase, set_history_phrase = mo.state([])
+    future_phrase, set_future_phrase = mo.state([])
+    checked_phrase_d, set_checked_phrase_d = mo.state(None)
+    return (
+        checked_phrase_d,
+        cv_phrase,
+        future_phrase,
+        history_phrase,
+        remaining_phrase,
+        restore_phrase,
+        score_phrase,
+        set_checked_phrase_d,
+        set_cv_phrase,
+        set_future_phrase,
+        set_history_phrase,
+        set_remaining_phrase,
+        set_restore_phrase,
+        set_score_phrase,
+    )
+
+
+@app.cell(hide_code=True)
+def _(language_selector, mo, t_ui):
+    _lang = language_selector.value
+    phrase_mode = mo.ui.radio(
+        options={t_ui("quiz_mode_choice", _lang): "choice", t_ui("quiz_mode_type", _lang): "type"},
+        value=t_ui("quiz_mode_choice", _lang),
+        label=t_ui("phrase_mode_label", _lang),
+    )
+    phrase_mode
+    return (phrase_mode,)
+
+
+@app.cell(hide_code=True)
+def _(
+    confirmed_phrases,
+    cv_phrase,
+    gu2,
+    history_phrase,
+    language_selector,
+    phrase_mode,
+    remaining_phrase,
+    restore_phrase,
+):
+    _lang = language_selector.value
+    if phrase_mode.value == "type":
+        write_input_phrase, dia_phrase, _plain_check_btn_phrase, prev_btn_phrase, next_btn_phrase = gu2.word_drill_widgets(
+            cv=cv_phrase(), remaining=remaining_phrase(),
+            restore_entry=restore_phrase(), history_len=len(history_phrase()),
+            lang=_lang,
+        )
+        answer_radio_phrase = None
+    else:
+        answer_radio_phrase, next_btn_phrase, prev_btn_phrase = gu2.word_quiz_widgets(
+            cv=cv_phrase(), remaining=remaining_phrase(), vocab=confirmed_phrases(),
+            restore_entry=restore_phrase(),
+            history_len=len(history_phrase()),
+            lang=_lang,
+        )
+        write_input_phrase = dia_phrase = None
+    return (
+        answer_radio_phrase,
+        dia_phrase,
+        next_btn_phrase,
+        prev_btn_phrase,
+        write_input_phrase,
+    )
+
+
+@app.cell(hide_code=True)
+def _(checked_phrase_d, dia_phrase, gu2, language_selector, phrase_mode, t_ui):
+    # Built in its own cell (mirrors dirty_check_button's own paradigm-drill
+    # pattern) so it re-renders -- and recolors -- on every keystroke via
+    # dia_phrase, without rebuilding write_input_phrase itself.
+    if phrase_mode.value == "type":
+        check_btn_phrase_d = gu2.word_drill_check_button(
+            dia_phrase, checked_phrase_d(),
+            label=t_ui("check_label", language_selector.value),
+        )
+    else:
+        check_btn_phrase_d = None
+    return (check_btn_phrase_d,)
+
+
+@app.cell(hide_code=True)
+def _(
+    answer_radio_phrase,
+    check_btn_phrase_d,
+    checked_phrase_d,
+    confirmed_phrases,
+    cv_phrase,
+    dia_phrase,
+    future_phrase,
+    gu2,
+    history_phrase,
+    language_selector,
+    mo,
+    next_btn_phrase,
+    phrase_mode,
+    prev_btn_phrase,
+    remaining_phrase,
+    restore_phrase,
+    score_phrase,
+    set_checked_phrase_d,
+    set_cv_phrase,
+    set_future_phrase,
+    set_history_phrase,
+    set_remaining_phrase,
+    set_restore_phrase,
+    set_score_phrase,
+    t_ui,
+    write_input_phrase,
+):
+    _lang = language_selector.value
+    if not confirmed_phrases():
+        _out = mo.md(t_ui("phrases_empty", _lang))
+    elif phrase_mode.value == "choice" and len(confirmed_phrases()) < 4:
+        _out = mo.md(t_ui("phrases_too_few", _lang))
+    elif phrase_mode.value == "type":
+        _out = gu2.word_drill_form(
+            cv_phrase, set_cv_phrase, remaining_phrase, set_remaining_phrase,
+            score_phrase, set_score_phrase, restore_phrase, set_restore_phrase,
+            history_phrase, set_history_phrase, future_phrase, set_future_phrase,
+            write_input_phrase, dia_phrase, check_btn_phrase_d, prev_btn_phrase, next_btn_phrase,
+            vocab=confirmed_phrases(),
+            title=t_ui("phrase_heading", _lang),
+            lang=_lang,
+            get_checked=checked_phrase_d, set_checked=set_checked_phrase_d,
+        )
+    else:
+        _out = gu2.word_quiz_form(
+            cv_phrase, set_cv_phrase, remaining_phrase, set_remaining_phrase,
+            score_phrase, set_score_phrase, restore_phrase, set_restore_phrase,
+            history_phrase, set_history_phrase, future_phrase, set_future_phrase,
+            answer_radio_phrase, next_btn_phrase, prev_btn_phrase,
+            vocab=confirmed_phrases(),
+            title=t_ui("phrase_heading", _lang),
+            lang=_lang,
+        )
+    _out
+    return
+
+
+@app.cell(hide_code=True)
 def _(gu2):
     t_ui = gu2.ui_label
     return (t_ui,)
@@ -1428,20 +1636,26 @@ def _():
 @app.cell(hide_code=True)
 def _():
     # Modern Greek eee_project: imports
+    import dataclasses
     import eee_project as eee
     from eee_project import GreekUtils, MODERN_GREEK
     from modern_greek_backend_eee import ModernGreekBackend
 
-    return GreekUtils, MODERN_GREEK, ModernGreekBackend, eee
+    return GreekUtils, MODERN_GREEK, ModernGreekBackend, dataclasses, eee
 
 
 @app.cell(hide_code=True)
-def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, eee, mo, pd):
+def _(GreekUtils, MODERN_GREEK, ModernGreekBackend, dataclasses, eee, mo, pd):
     # Modern Greek eee_project: backend setup
     _mg_backend = ModernGreekBackend()
     eee.register_backend("el", _mg_backend, backend="modern-greek")
     eee.set_chain("el", ["modern-greek"])
-    gu2 = GreekUtils(_mg_backend, mo, pd, eee_module=eee, config=MODERN_GREEK)
+    # nav_icons/show_prev_when_done (eee-project 1.10.0+): this course wants
+    # the ◀/▶/↺ nav-icon treatment and reviewable done screen everywhere, so
+    # it's set once here via the course's own config instead of repeating
+    # both kwargs at every quiz/drill call site.
+    _config = dataclasses.replace(MODERN_GREEK, nav_icons=True, show_prev_when_done=True)
+    gu2 = GreekUtils(_mg_backend, mo, pd, eee_module=eee, config=_config)
     return (gu2,)
 
 
