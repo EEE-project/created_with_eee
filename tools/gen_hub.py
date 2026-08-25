@@ -337,7 +337,16 @@ function setLang(lang) {{
   document.querySelectorAll('[data-lang]').forEach(el => {{
     el.style.display = (el.getAttribute('data-lang') === lang) ? '' : 'none';
   }});
+  localStorage.setItem('eee_lang', lang);
 }}
+document.addEventListener('DOMContentLoaded', function() {{
+  var stored = localStorage.getItem('eee_lang');
+  if (stored) {{
+    var sel = document.querySelector('#lang-picker select');
+    if (sel) sel.value = stored;
+    setLang(stored);
+  }}
+}});
 </script>"""
 
 
