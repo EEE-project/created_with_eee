@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-08-25 (3)
+- Fixed grammar explanations and translations in ellinika_b chapters 6-8,
+  found via cross-AI review reports (analisys/ellinika_b1/ch0{6,7,8}.md)
+  and verified page-by-page against the source textbook before changing
+  anything. ch06: the aorist stress-rule sentence (claimed an exact "3rd
+  syllable" position rather than a ceiling), the -δες plural "one rule
+  across all genders" framing (conflates the masc/fem -δ- patterns with
+  the unrelated neuter -ατα pattern), and translated the el branch's -δες
+  grammar cell into actual Greek (it had been left as an untranslated
+  duplicate of the English branch). ch07: the augment rule wrongly said
+  "monosyllabic" stems (ru already correctly said "two-syllable"; neither
+  cited example, παίζω/γράφω, is monosyllabic), the -αν/ε ending notation
+  (book uses -αν(ε)), and an elision bracket reading [ε-, ι-] while its
+  own table lists a η-initial example (το ήξερε). ch08: the Simple
+  Future's "single, completed action" definition (conflates completion
+  with perfective aspect, same issue as ch06/ch07's tense definitions), an
+  overly narrow θα αγοράζω gloss, a stale "Πώς κάνεις έτσι;" translation
+  that didn't match the chapter's own already-verified
+  extracted_content.md, an absolute "often colloquial" framing on the
+  -ης/-α/-ικο adjective type, and a wind-direction list missing the head
+  noun on ανατολικός/δυτικός. Left untouched: several other reviewer-
+  flagged items that turned out to be faithful transcriptions of the book
+  itself -- the conditional clause's "χωρίς το θα" phrasing is the
+  textbook's own verbatim wording; γκρινιάρης's blank Gen.Pl.Fem. cell,
+  ανεβαίνω/κατεβαίνω's dual future forms, and μικρούλης's inclusion in the
+  adjective list are all exactly as printed.
+
 ## 2026-08-25 (2)
 - Removed the "Open in molab" badge from every notebook's title cell
   (41 files across ellinika_b, odyssey, palaestra, kapodistrias,
