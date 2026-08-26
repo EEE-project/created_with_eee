@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-08-26
+- Fixed broken hub-card links to the 3 GitLab-split courses (odyssey,
+  palaestra, b1greeklanguageandculture) on the GitLab-hosted copy of the
+  unified project's ancient_greek/modern_greek hub pages -- reported live as
+  a 404 on eee-project.gitlab.io/created_with_eee/ancient_greek/odyssey/.
+  gen_hub.py had no host-awareness at all: every hub card's href is read
+  verbatim from index.tsv as a root-relative path, which is correct on
+  Codeberg/GitHub (where these 3 courses live at that path) but wrong on
+  GitLab specifically, since all 3 were deliberately split into their own
+  GitLab projects for the 1GB Pages-per-project cap (see README). Fixed by
+  baking a small client-side host check into gen_hub.py's own template
+  (matching the same live-hostname-detection pattern eee_footer()'s "Source"
+  link and the 2026-08-25 eee_lang fix already use, rather than a
+  fragile post-generation hand-patch): affected cards get a
+  `data-gitlab-href` pointing at the split project's own Pages URL, and a
+  small inline script swaps it in only when `location.hostname ===
+  'eee-project.gitlab.io'` -- Codeberg and GitHub keep the unmodified
+  root-relative href. Verified via Playwright with real route interception
+  (not a `location` object mock, which Chromium doesn't allow overriding) at
+  both the true GitLab hostname and a non-GitLab one. Regenerating the two
+  affected hubs also incidentally picked up an unrelated, already-committed
+  source fix (Odyssey's Russian title in ancient_greek/index.tsv had said
+  "Одиссея для отважных" since at least 2026-08-05, but the deployed hub was
+  never regenerated to pick it up) -- hub regeneration is a manual step per
+  the README, so this kind of drift is expected until it's automated.
+
 ## 2026-08-25 (3)
 - Fixed grammar explanations and translations in ellinika_b chapters 6-8,
   found via cross-AI review reports (analisys/ellinika_b1/ch0{6,7,8}.md)

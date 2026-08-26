@@ -21,6 +21,27 @@ LANG_OPTIONS = {"Ελληνικά": "el", "Русский": "ru", "English": "en
 FOOTER_LABEL = {"ru": "Исходный код:", "en": "Source:", "el": "Πηγαίος κώδικας:"}
 CARD_LIST_SOON = {"ru": "скоро", "el": "σύντομα", "en": "coming soon"}
 
+# odyssey/palaestra/b1greeklanguageandculture are split into their own GitLab
+# projects (1GB Pages-per-project cap -- see README's GitLab Pages section),
+# so a hub card's normal root-relative url (correct on Codeberg/GitHub, where
+# these courses are NOT split out) 404s when this same generated page is
+# deployed to the unified GitLab project. Resolved client-side, matching how
+# eee_footer()'s own "Source" link already detects its host at runtime.
+GITLAB_SPLIT_OVERRIDES = {
+    "/created_with_eee/ancient_greek/odyssey/": "https://eee-project.gitlab.io/created-with-eee-odyssey/",
+    "/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/": "https://eee-project.gitlab.io/created-with-eee-palaestra/",
+    "/created_with_eee/modern_greek/b1greeklanguageandculture/": "https://eee-project.gitlab.io/created-with-eee-b1glc/",
+}
+
+GITLAB_SPLIT_SCRIPT = """<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (location.hostname !== 'eee-project.gitlab.io') return;
+  document.querySelectorAll('[data-gitlab-href]').forEach(function(el) {
+    el.href = el.getAttribute('data-gitlab-href');
+  });
+});
+</script>"""
+
 # Each hub: tsv (its own card-list source), parent_tsv (None for root --
 # back_url is a fixed self-badge, not a link), out (destination dir),
 # titles/parent_titles (topbar), hero (None to reuse palaestra's hand-rolled
@@ -285,6 +306,7 @@ def render_hero(hero: "dict[str, tuple[str, str]]", langs: "list[str]") -> str:
 
 def render_cards(rows: "list[dict]", langs: "list[str]") -> str:
     cards = []
+    used_gitlab_override = False
     for row in rows:
         url = row["url"] or None
         header = f"""<div class="eee-card-header">
@@ -310,10 +332,18 @@ def render_cards(rows: "list[dict]", langs: "list[str]") -> str:
             arrow_block += f'<div class="eee-card-arrow" data-lang="{lang}" style="{display}">{"◀" if url else esc(soon)}</div>'
         inner = header + desc_block + arrow_block
         if url:
-            cards.append(f'<a class="eee-card" href="{esc(url)}">{inner}</a>')
+            gitlab_href = GITLAB_SPLIT_OVERRIDES.get(url)
+            if gitlab_href:
+                used_gitlab_override = True
+                cards.append(f'<a class="eee-card" href="{esc(url)}" data-gitlab-href="{esc(gitlab_href)}">{inner}</a>')
+            else:
+                cards.append(f'<a class="eee-card" href="{esc(url)}">{inner}</a>')
         else:
             cards.append(f'<div class="eee-card eee-card-disabled">{inner}</div>')
-    return CARD_LIST_CSS + "\n".join(cards)
+    result = CARD_LIST_CSS + "\n".join(cards)
+    if used_gitlab_override:
+        result += GITLAB_SPLIT_SCRIPT
+    return result
 
 
 def render_footer(langs: "list[str]") -> str:
