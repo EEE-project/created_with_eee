@@ -8,13 +8,13 @@ overwrites its own target directory (`-f`) and leaves every other directory
 untouched.
 
 Usage:
-    python3 export-notebooks.py --pages-dir <path-to-pages-worktree> \\
+    python3 tools/export-notebooks.py --pages-dir <path-to-pages-worktree> \\
         modern_greek/ellinika_b/chapter_01/chapter_01_notebook.py \\
         ancient_greek/odyssey/2026_06_01/notebook.py ...
 
-Notebook paths are relative to this repo's root (main branch, where this
-script lives). Requires the same Python environment the notebooks declare
-in their PEP 723 header (this project's convention: ~/.venv/eee).
+Notebook paths are relative to this repo's root (main branch). Requires
+the same Python environment the notebooks declare in their PEP 723 header
+(this project's convention: ~/.venv/eee).
 """
 import argparse
 import pathlib

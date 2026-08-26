@@ -16,7 +16,7 @@ branch (fix that data first; this script only fixes which host the page
 fetches it from).
 
 Usage:
-    python3 fix-split-session-root.py <split-project-checkout-dir> [...]
+    python3 tools/fix-split-session-root.py <split-project-checkout-dir> [...]
 
 Run against a local checkout of a split course's `pages` branch (e.g.
 `~/work/greek/git/gitlab/EEE-project/created-with-eee-<course>`) *after*
@@ -25,7 +25,8 @@ changes; does not commit or push -- that stays a separate, confirmed step.
 """
 import argparse
 import pathlib
-import sys
+
+from _fix_common import run_fix
 
 OLD_PLAIN = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
 NEW_PLAIN = "https://gitlab.com/EEE-project/created_with_eee/-/raw/main"
@@ -63,18 +64,7 @@ def main() -> None:
         help="One or more local checkouts of a split course's `pages` branch",
     )
     args = parser.parse_args()
-
-    total = 0
-    for target_dir in args.target_dirs:
-        if not target_dir.is_dir():
-            print(f"skip (not a directory): {target_dir}", file=sys.stderr)
-            continue
-        changed = fix_directory(target_dir)
-        for f in changed:
-            print(f"fixed: {f}")
-        total += len(changed)
-
-    print(f"\n{total} file(s) changed.")
+    run_fix(args.target_dirs, fix_directory)
 
 
 if __name__ == "__main__":

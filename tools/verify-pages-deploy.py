@@ -12,8 +12,8 @@ authenticated, for the host-specific checks; falls back to the live fetch
 alone if either is unavailable.
 
 Usage:
-    python3 verify-pages-deploy.py            # check every known site
-    python3 verify-pages-deploy.py odyssey    # only sites whose name matches
+    python3 tools/verify-pages-deploy.py            # check every known site
+    python3 tools/verify-pages-deploy.py odyssey    # only sites whose name matches
 
 The GitLab split-project list is read from the SPLIT_PROJECTS env var
 (space-separated bare repo names, same as the Makefile's own SPLIT_PROJECTS)

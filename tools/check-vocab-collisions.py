@@ -16,8 +16,8 @@ propose+confirm with the user if the source material itself collapsed it;
 recognize genuine morphological doublets like κοιτάζω/κοιτάω as not an error).
 
 Usage:
-    python3 check-vocab-collisions.py             # scan the whole repo
-    python3 check-vocab-collisions.py modern_greek/ellinika_b  # one course
+    python3 tools/check-vocab-collisions.py             # scan the whole repo
+    python3 tools/check-vocab-collisions.py modern_greek/ellinika_b  # one course
 """
 import argparse
 import sys

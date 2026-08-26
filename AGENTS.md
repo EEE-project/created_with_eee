@@ -60,12 +60,12 @@ fixed 2026-08-21 across `ellinika_b` and `kapodistrias` (e.g. `η συγκοιν
 and `η μεταφορά` both flattened to plain "транспорт"; `η καταγωγή` and `η
 προέλευση` both to "происхождение").
 
-**Mechanical check** — `python3 check-vocab-collisions.py` (repo root) groups
-every TSV's rows by `Translation` and flags any value shared by 2+ distinct
-`Word` values; exits non-zero if any are found. Takes an optional directory
-argument to scope to one course, e.g.
-`python3 check-vocab-collisions.py modern_greek/ellinika_b`. Run this after
-adding or editing vocab TSVs, not just when a report comes in.
+**Mechanical check** — `python3 tools/check-vocab-collisions.py` (repo root)
+groups every TSV's rows by `Translation` and flags any value shared by 2+
+distinct `Word` values; exits non-zero if any are found. Takes an optional
+directory argument to scope to one course, e.g.
+`python3 tools/check-vocab-collisions.py modern_greek/ellinika_b`. Run this
+after adding or editing vocab TSVs, not just when a report comes in.
 
 **Resolution priority, in order:**
 1. Check the same chapter's own richer content first — the notebook's own

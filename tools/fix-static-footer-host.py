@@ -12,8 +12,8 @@ at whatever time it was last built/patched, correct by default for
 Codeberg but wrong everywhere else until patched by hand.
 
 Usage:
-    python3 fix-static-footer-host.py --host https://github.com/EEE-project <dir> [...]
-    python3 fix-static-footer-host.py --host https://gitlab.com/EEE-project <dir> [...]
+    python3 tools/fix-static-footer-host.py --host https://github.com/EEE-project <dir> [...]
+    python3 tools/fix-static-footer-host.py --host https://gitlab.com/EEE-project <dir> [...]
 
 Run against a local checkout of a `pages` branch (unified or a split
 GitLab project). Prints every file it changes; does not commit or push --
@@ -21,7 +21,8 @@ that stays a separate, confirmed step.
 """
 import argparse
 import pathlib
-import sys
+
+from _fix_common import run_fix
 
 CODEBERG_LINK = (
     '<a href="https://codeberg.org/EEE-project" target="_blank">'
@@ -57,18 +58,7 @@ def main() -> None:
         help="One or more local checkouts of a `pages` branch (unified or a split GitLab project)",
     )
     args = parser.parse_args()
-
-    total = 0
-    for target_dir in args.target_dirs:
-        if not target_dir.is_dir():
-            print(f"skip (not a directory): {target_dir}", file=sys.stderr)
-            continue
-        changed = fix_directory(target_dir, args.host)
-        for f in changed:
-            print(f"fixed: {f}")
-        total += len(changed)
-
-    print(f"\n{total} file(s) changed.")
+    run_fix(args.target_dirs, lambda target_dir: fix_directory(target_dir, args.host))
 
 
 if __name__ == "__main__":

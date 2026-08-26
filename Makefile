@@ -13,7 +13,7 @@ PAGES_DIR ?= $(CURDIR)/../created_with_eee-pages-worktree
 
 EEE_PYTHON ?= $(HOME)/.venv/eee/bin/python3
 
-.PHONY: help sync-main fix-split-roots fix-static-footer export-notebooks verify-pages-deploy check-vocab
+.PHONY: help sync-main fix-split-roots fix-static-footer fix-split-hub-links export-notebooks verify-pages-deploy check-vocab
 
 help:
 	@echo "Targets:"
@@ -21,17 +21,23 @@ help:
 	@echo "                      GitLab (wraps ~/work/greek/git/push). Trezor-confirmed"
 	@echo "                      per host as you run it."
 	@echo "  fix-split-roots     Re-apply the session-page _ROOT fix (see"
-	@echo "                      fix-split-session-root.py) to local checkouts of the 3"
+	@echo "                      tools/fix-split-session-root.py) to local checkouts of the 3"
 	@echo "                      split GitLab projects. Only edits files locally --"
 	@echo "                      review with git status/diff, then commit + push each"
 	@echo "                      by hand (Trezor-confirmed)."
 	@echo "  fix-static-footer   Re-apply the static hub footer host fix (see"
-	@echo "                      fix-static-footer-host.py) to GitHub + GitLab local"
+	@echo "                      tools/fix-static-footer-host.py) to GitHub + GitLab local"
 	@echo "                      checkouts. Requires GITHUB_PAGES_DIR and"
 	@echo "                      GITLAB_UNIFIED_PAGES_DIR checked out on the pages"
 	@echo "                      branch (a worktree, not a branch switch, if the main"
 	@echo "                      checkout needs to stay on main) -- only edits files"
 	@echo "                      locally, review + commit + push by hand per host."
+	@echo "  fix-split-hub-links Re-apply the split-project hub card-link fix (see"
+	@echo "                      tools/fix-split-hub-card-links.py) to b1glc's local"
+	@echo "                      checkout -- the only split project with its own"
+	@echo "                      internal card-hub (odyssey/palaestra are flat lesson"
+	@echo "                      lists, no equivalent bug). Only edits files locally,"
+	@echo "                      review + commit + push by hand."
 	@echo "  export-notebooks    Re-export NOTEBOOKS (space-separated source paths) to"
 	@echo "                      WASM into PAGES_DIR (default: a sibling"
 	@echo "                      created_with_eee-pages-worktree checked out on pages)."
@@ -59,22 +65,29 @@ sync-main:
 	$(HOME)/work/greek/git/push
 
 fix-split-roots:
-	python3 fix-split-session-root.py $(foreach p,$(SPLIT_PROJECTS),$(SPLIT_PROJECTS_DIR)/$(p))
+	python3 tools/fix-split-session-root.py $(foreach p,$(SPLIT_PROJECTS),$(SPLIT_PROJECTS_DIR)/$(p))
 	@echo ""
 	@echo "Local files only -- review with 'git status'/'git diff' in each project"
 	@echo "directory above, then commit + push by hand (Trezor-confirmed, one at a"
 	@echo "time). This target never commits or pushes."
 
 fix-static-footer:
-	python3 fix-static-footer-host.py --host https://github.com/EEE-project $(GITHUB_PAGES_DIR)
-	python3 fix-static-footer-host.py --host https://gitlab.com/EEE-project $(GITLAB_UNIFIED_PAGES_DIR) $(foreach p,$(SPLIT_PROJECTS),$(SPLIT_PROJECTS_DIR)/$(p))
+	python3 tools/fix-static-footer-host.py --host https://github.com/EEE-project $(GITHUB_PAGES_DIR)
+	python3 tools/fix-static-footer-host.py --host https://gitlab.com/EEE-project $(GITLAB_UNIFIED_PAGES_DIR) $(foreach p,$(SPLIT_PROJECTS),$(SPLIT_PROJECTS_DIR)/$(p))
 	@echo ""
 	@echo "Local files only -- review with 'git status'/'git diff' in each checkout"
 	@echo "above, then commit + push by hand (Trezor-confirmed, one at a time). This"
 	@echo "target never commits or pushes. Codeberg needs no fix -- it's the default."
 
+fix-split-hub-links:
+	python3 tools/fix-split-hub-card-links.py --prefix /created_with_eee/modern_greek/b1greeklanguageandculture/ $(SPLIT_PROJECTS_DIR)/created-with-eee-b1glc
+	@echo ""
+	@echo "Local files only -- review with 'git status'/'git diff' in the project"
+	@echo "directory above, then commit + push by hand (Trezor-confirmed). This"
+	@echo "target never commits or pushes."
+
 export-notebooks:
-	$(EEE_PYTHON) export-notebooks.py --pages-dir $(PAGES_DIR) $(NOTEBOOKS)
+	$(EEE_PYTHON) tools/export-notebooks.py --pages-dir $(PAGES_DIR) $(NOTEBOOKS)
 	@echo ""
 	@echo "Exported into $(PAGES_DIR) -- review with 'git status'/'git diff' there,"
 	@echo "then commit + push by hand per host (Trezor-confirmed). This target never"
@@ -84,7 +97,7 @@ export-notebooks:
 	@echo "no need to re-run per host)."
 
 verify-pages-deploy:
-	SPLIT_PROJECTS="$(SPLIT_PROJECTS)" python3 verify-pages-deploy.py $(SITE)
+	SPLIT_PROJECTS="$(SPLIT_PROJECTS)" python3 tools/verify-pages-deploy.py $(SITE)
 
 check-vocab:
-	python3 check-vocab-collisions.py $(SCOPE)
+	python3 tools/check-vocab-collisions.py $(SCOPE)

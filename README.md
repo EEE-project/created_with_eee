@@ -59,14 +59,17 @@ directory has its own README (description + live links) and `AGENTS.md`
 `make help` lists what's automated for syncing content across hosts —
 currently: syncing `main` (`make sync-main`, wraps `~/work/greek/git/push`),
 re-exporting notebooks to the `pages` branch (`make export-notebooks`, see
-`export-notebooks.py`), re-applying the split-course session-page fix
+`tools/export-notebooks.py`), re-applying the split-course session-page fix
 (`make fix-split-roots`), re-applying the static-hub footer-host fix
-(`make fix-static-footer`), and checking whether Pages deployments are
-actually live rather than just pushed (`make verify-pages-deploy`, see
-`verify-pages-deploy.py`). The first four only stage local changes or run
-already-established scripts; `verify-pages-deploy` is read-only and makes
-no local changes at all. Committing and pushing stays a manual,
-Trezor-confirmed step per host — no target signs or pushes on its own.
+(`make fix-static-footer`), re-applying the split-project hub card-link fix
+(`make fix-split-hub-links`, see `tools/fix-split-hub-card-links.py`), and
+checking whether Pages deployments are actually live rather than just
+pushed (`make verify-pages-deploy`, see `tools/verify-pages-deploy.py`).
+The first five only stage local changes or run already-established
+scripts; `verify-pages-deploy` is read-only and makes no local changes at
+all. Committing and pushing stays a manual, Trezor-confirmed step per host
+— no target signs or pushes on its own. All maintainer scripts live under
+`tools/`.
 
 **Not yet automated**: hub regeneration (card-list index pages) and
 splitting a new course off into its own GitLab project (see each split
