@@ -195,20 +195,20 @@ def _(language_selector, mo):
     | εσείς | **θα ανακυκλώνετε** |
     | αυτοί/ές/ά | **θα ανακυκλώνουν** |
 
-    > **Сравнение:** Простое будущее (θα + основа аориста) = одно завершённое действие
-    > Будущее продолженное (θα + Настоящее) = повторяющееся / продолжающееся
+    > **Сравнение:** Простое будущее (θα + основа аориста) = единое, ограниченное событие
+    > Будущее продолженное (θα + Настоящее) = повторяющееся / продолжающееся / привычное
     >
     > Пример: *Αύριο θα ανακυκλώσω* ("Завтра я сдам это в переработку" — один раз) / *Από τώρα θα ανακυκλώνω κάθε μέρα* ("С этого момента я буду сдавать в переработку каждый день" — привычка)
     """)
     elif _lang == "el":
         _out = mo.md("""
-    ## Grammar: Continuous Future (Συνεχής Μέλλοντας)
+    ## Γραμματική: Συνεχής Μέλλοντας
 
-    Used for **repeated, habitual, or ongoing** actions in the future.
+    Χρησιμοποιείται για **επαναλαμβανόμενες, συνηθισμένες ή διαρκείς** πράξεις στο μέλλον.
 
-    **Formation:** θα + Present tense (Ενεστώτας)
+    **Σχηματισμός:** θα + Ενεστώτας
 
-    | Person | ανακυκλώνω (to recycle) |
+    | Πρόσωπο | ανακυκλώνω (to recycle) |
     |:-------|:------------------------|
     | εγώ | **θα ανακυκλώνω** |
     | εσύ | **θα ανακυκλώνεις** |
@@ -217,10 +217,10 @@ def _(language_selector, mo):
     | εσείς | **θα ανακυκλώνετε** |
     | αυτοί/ές/ά | **θα ανακυκλώνουν** |
 
-    > **Compare:** Simple Future (θα + aorist stem) = one completed action
-    > Continuous Future (θα + Present) = repeated / ongoing
+    > **Σύγκριση:** Απλός Μέλλοντας (θα + αοριστικό θέμα) = ένα ενιαίο, περιορισμένο γεγονός
+    > Συνεχής Μέλλοντας (θα + Ενεστώτας) = επαναλαμβανόμενο / διαρκές / συνηθισμένο
     >
-    > Example: *Αύριο θα ανακυκλώσω* ("Tomorrow I'll recycle it" — once) / *Από τώρα θα ανακυκλώνω κάθε μέρα* ("From now on I'll recycle every day" — habit)
+    > Παράδειγμα: *Αύριο θα ανακυκλώσω* ("Tomorrow I'll recycle it" — once) / *Από τώρα θα ανακυκλώνω κάθε μέρα* ("From now on I'll recycle every day" — habit)
     """)
     else:
         _out = mo.md("""
@@ -239,8 +239,8 @@ def _(language_selector, mo):
     | εσείς | **θα ανακυκλώνετε** |
     | αυτοί/ές/ά | **θα ανακυκλώνουν** |
 
-    > **Compare:** Simple Future (θα + aorist stem) = one completed action
-    > Continuous Future (θα + Present) = repeated / ongoing
+    > **Compare:** Simple Future (θα + aorist stem) = a single, bounded event
+    > Continuous Future (θα + Present) = repeated / ongoing / habitual
     >
     > Example: *Αύριο θα ανακυκλώσω* ("Tomorrow I'll recycle it" — once) / *Από τώρα θα ανακυκλώνω κάθε μέρα* ("From now on I'll recycle every day" — habit)
     """)
@@ -256,7 +256,7 @@ def _(language_selector, mo):
         _out = mo.md("""
     ## Грамматика: Сравнение времён (Για δες)
 
-    | | Прошедшее (один раз) | | Прошедшее (длительно / часто) |
+    | | Перфектив / суммарный вид | | Имперфектив / длительный вид |
     |:--|:--|:--|:--|
     | **Аорист** | Χτες **διάβασα** εφημερίδα. ("Вчера я почитал газету.") | **Имперфект** | Παλιά **διάβαζα** εφημερίδα κάθε μέρα. ("Раньше я читал газету каждый день.") |
     | **Простое будущее** | Αύριο **θα διαβάσω** για το τεστ. ("Завтра я почитаю к тесту.") | **Будущее продолженное** | Από αύριο **θα διαβάζω** τρεις ώρες την ημέρα. ("Начиная с завтра я буду читать по три часа в день.") |
@@ -274,16 +274,16 @@ def _(language_selector, mo):
     """)
     elif _lang == "el":
         _out = mo.md("""
-    ## Grammar: Tenses in Context (Για δες)
+    ## Γραμματική: Σύγκριση χρόνων (Για δες)
 
-    | | Past (once) | | Past (ongoing / habitual) |
+    | | Συνοπτική όψη | | Εξακολουθητική όψη |
     |:--|:--|:--|:--|
-    | **Aorist** | Χτες **διάβασα** εφημερίδα. ("Yesterday I read a newspaper.") | **Imperfect** | Παλιά **διάβαζα** εφημερίδα κάθε μέρα. ("I used to read a newspaper every day.") |
-    | **Simple Future** | Αύριο **θα διαβάσω** για το τεστ. ("Tomorrow I'll read for the test.") | **Continuous Future** | Από αύριο **θα διαβάζω** τρεις ώρες την ημέρα. ("Starting tomorrow I'll read three hours a day.") |
+    | **Αόριστος** | Χτες **διάβασα** εφημερίδα. ("Yesterday I read a newspaper.") | **Παρατατικός** | Παλιά **διάβαζα** εφημερίδα κάθε μέρα. ("I used to read a newspaper every day.") |
+    | **Απλός Μέλλοντας** | Αύριο **θα διαβάσω** για το τεστ. ("Tomorrow I'll read for the test.") | **Συνεχής Μέλλοντας** | Από αύριο **θα διαβάζω** τρεις ώρες την ημέρα. ("Starting tomorrow I'll read three hours a day.") |
 
-    **Continuous Future — time expressions:**
+    **Συνεχής Μέλλοντας — εκφράσεις χρόνου:**
 
-    | Expression | Example |
+    | Έκφραση | Παράδειγμα |
     |:-----------|:--------|
     | Από αύριο ("Starting tomorrow") | θα ανακυκλώνω. ("...I'll recycle.") |
     | Από 'δώ και πέρα ("From now on") | θα αγοράζω βιολογικά τρόφιμα. ("...I'll buy organic food.") |
@@ -296,7 +296,7 @@ def _(language_selector, mo):
         _out = mo.md("""
     ## Grammar: Tenses in Context (Για δες)
 
-    | | Past (once) | | Past (ongoing / habitual) |
+    | | Perfective / summary | | Imperfective / continuous |
     |:--|:--|:--|:--|
     | **Aorist** | Χτες **διάβασα** εφημερίδα. ("Yesterday I read a newspaper.") | **Imperfect** | Παλιά **διάβαζα** εφημερίδα κάθε μέρα. ("I used to read a newspaper every day.") |
     | **Simple Future** | Αύριο **θα διαβάσω** για το τεστ. ("Tomorrow I'll read for the test.") | **Continuous Future** | Από αύριο **θα διαβάζω** τρεις ώρες την ημέρα. ("Starting tomorrow I'll read three hours a day.") |
@@ -416,7 +416,7 @@ def _(language_selector, mo):
         _out = mo.md("""
     ## Грамматика: Косвенные вопросы (Πλάγιες Ερωτηματικές)
 
-    Прямые вопросы становятся косвенными придаточными с тем же вопросительным словом:
+    Прямые вопросы становятся косвенными придаточными с тем же вопросительным словом (τι, πώς, πότε, γιατί, πού...). Вопрос типа «да/нет» вводится союзом **αν** («ли») — тем же словом, что и условное **αν** («если») из Главы 8, но это другая конструкция.
 
     | Прямой вопрос | Косвенный (пересказ) |
     |:--------------|:--------------------|
@@ -429,11 +429,11 @@ def _(language_selector, mo):
     """)
     elif _lang == "el":
         _out = mo.md("""
-    ## Grammar: Indirect Questions (Πλάγιες Ερωτηματικές)
+    ## Γραμματική: Πλάγιες Ερωτηματικές
 
-    Direct questions become indirect clauses using the same question word:
+    Οι ευθείες ερωτήσεις γίνονται πλάγιες προτάσεις με το ίδιο ερωτηματικό μόριο (τι, πώς, πότε, γιατί, πού...). Οι ερωτήσεις ναι/όχι εισάγονται με το **αν** ("whether") — την ίδια λέξη με το υποθετικό **αν** ("if") από την Ενότητα 8, αλλά πρόκειται για διαφορετική κατασκευή.
 
-    | Direct question | Indirect (reported) |
+    | Ευθεία ερώτηση | Πλάγια (αναφορά) |
     |:----------------|:--------------------|
     | **Τι** μπορώ να κάνω για το περιβάλλον; ("**What** can I do for the environment?") | Η Αρλέτα θέλει να μάθει **τι** μπορεί να κάνει. ("Arleta wants to find out **what** she can do.") |
     | **Πώς** θα πηγαίνεις στη δουλειά σου; ("**How** will you get to work?") | Ο Ερβίν ρώτησε **πώς** θα πηγαίνει. ("Ervin asked **how** he would get there.") |
@@ -446,7 +446,7 @@ def _(language_selector, mo):
         _out = mo.md("""
     ## Grammar: Indirect Questions (Πλάγιες Ερωτηματικές)
 
-    Direct questions become indirect clauses using the same question word:
+    Direct questions become indirect clauses using the same question word (τι, πώς, πότε, γιατί, πού...). A yes/no question uses **αν** ("whether") instead — the same word as the conditional **αν** ("if") from Unit 8, but a different construction.
 
     | Direct question | Indirect (reported) |
     |:----------------|:--------------------|
@@ -495,31 +495,31 @@ def _(language_selector, mo):
     """)
     elif _lang == "el":
         _out = mo.md("""
-    ## Pronunciation & Spelling (Φωνή-γραφή)
+    ## Προφορά και Ορθογραφία (Φωνή-γραφή)
 
-    ### p. 143 — Elision (Αποκοπή)
+    ### σ. 143 — Αποκοπή
 
-    Words beginning with a vowel can drop it after a word ending in a vowel:
+    Λέξεις που αρχίζουν με φωνήεν μπορούν να χάσουν τον αρχικό ήχο μετά από λέξη που τελειώνει σε φωνήεν:
 
-    | Full form | Short form | Example |
+    | Πλήρης τύπος | Σύντομος τύπος | Παράδειγμα |
     |:----------|:-----------|:--------|
-    | εγώ | 'γώ | Ξέρω **'γώ**; ("How should I know?") |
-    | εδώ | 'δώ | Από **'δώ** και πέρα ("From now on") |
-    | εκεί | 'κεί | Από **'κεί** ("From there") |
+    | εγώ | 'γώ | Ξέρω **'γώ**; / Ξέρω εγώ; ("How should I know?") |
+    | εδώ | 'δώ | Από **'δώ** και πέρα / Από εδώ και πέρα ("From now on") |
+    | εκεί | 'κεί | Από **'κεί** / Από εκεί ("From there") |
 
-    ### p. 150 — Επιτονισμός (Intonation and stress)
+    ### σ. 150 — Επιτονισμός (τονισμός και έμφαση)
 
-    **Plain intonation** (same words, three meanings by intonation alone):
-    - Η Μελέκ είναι φοιτήτρια. ("Melek is a student.") (= I know this for a fact, it's certain)
-    - Η Μελέκ είναι φοιτήτρια; ("Melek is a student?") (= tell me, I have no idea)
-    - Η Μελέκ είναι φοιτήτρια! ("Melek is a student!") (= really? What a surprise!)
+    **Απλός τονισμός** (ίδιες λέξεις, τρεις σημασίες μόνο με τον τονισμό):
+    - Η Μελέκ είναι φοιτήτρια. ("Melek is a student.") (= το ξέρω σίγουρα)
+    - Η Μελέκ είναι φοιτήτρια; ("Melek is a student?") (= πες μου, δεν έχω ιδέα)
+    - Η Μελέκ είναι φοιτήτρια! ("Melek is a student!") (= αλήθεια; Τι έκπληξη!)
 
-    **Emphatic/contrastive stress:**
-    - Ο Νίκος θα έρθει με το ποδήλατο. ("Nikos will come by bike.") (neutral statement)
-    - – Ο Πάμπλο θα έρθει με το ποδήλατο; – **Ο ΝΙΚΟΣ** θα έρθει με το ποδήλατο. ("— Will Pablo come by bike? — NIKOS will come by bike.") (= not Pablo)
-    - – Ο Νίκος θα έρθει με το αυτοκίνητο; – Ο Νίκος θα έρθει με το **ΠΟΔΗΛΑΤΟ**. ("— Will Nikos come by car? — Nikos will come by BIKE.") (= not by car)
-    - – Ο Νίκος δε θα έρθει με το ποδήλατο; – **ΘΑ** έρθει με το ποδήλατο. ("— Won't Nikos come by bike? — He WILL come by bike.") (contradicting a negative assumption)
-    - Η δασκάλα **σας** περιμένει. ("Your teacher is waiting.") (unstressed σας = "your," possessive) vs. Η δασκάλα **σάς** περιμένει. ("The teacher is waiting for you.") (stressed σάς = "you," object) — a weak-vs-strong pronoun pair distinguished only by stress.
+    **Εμφατικός/αντιθετικός τονισμός:**
+    - Ο Νίκος θα έρθει με το ποδήλατο. ("Nikos will come by bike.") (ουδέτερη πρόταση)
+    - – Ο Πάμπλο θα έρθει με το ποδήλατο; – **Ο ΝΙΚΟΣ** θα έρθει με το ποδήλατο. ("— Will Pablo come by bike? — NIKOS will come by bike.") (= όχι ο Πάμπλο)
+    - – Ο Νίκος θα έρθει με το αυτοκίνητο; – Ο Νίκος θα έρθει με το **ΠΟΔΗΛΑΤΟ**. ("— Will Nikos come by car? — Nikos will come by BIKE.") (= όχι με αυτοκίνητο)
+    - – Ο Νίκος δε θα έρθει με το ποδήλατο; – **ΘΑ** έρθει με το ποδήλατο. ("— Won't Nikos come by bike? — He WILL come by bike.") (αντίκρουση άρνησης)
+    - Η δασκάλα **σας** περιμένει. ("Your teacher is waiting.") (άτονο σας = «δικός σας», κτητικό) vs. Η δασκάλα **σάς** περιμένει. ("The teacher is waiting for you.") (τονισμένο σάς = «εσάς», αντικείμενο) — ζευγάρι που διαφέρει μόνο στον τονισμό.
     """)
     else:
         _out = mo.md("""

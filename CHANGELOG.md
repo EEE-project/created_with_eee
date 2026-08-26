@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-08-26 (2)
+- Fixed grammar explanations and translations in ellinika_b chapters 9, 11,
+  and 12, found via cross-AI review reports (analisys/ellinika_b1/ch{09,11,
+  12}.md) and verified page-by-page against the source textbook, continuing
+  the same pass that covered chapters 6-8 (see 2026-08-25 (3) below). ch09:
+  the "Simple Future = one completed action" comparison note recurring in
+  its own Continuous Future cell, the Tenses-in-Context table's column
+  headers literally mislabeling Future-tense rows as "Past," an
+  indirect-questions rule missing the yes/no-uses-αν case, and translated
+  the el branch's four grammar/pronunciation cells into actual Greek (same
+  untranslated-duplicate pattern as ch06's -δες cell -- the fourth, the
+  Φωνή-γραφή/elision cell, was missed by an initial byte-identity check
+  since it differed from the en branch by two table alternates, not zero,
+  and was only caught on a later pass). ch11: the Simple Subjunctive's
+  "same stem as Simple Future, swap θα for να" framing (checked against the
+  book's own pp. 168-169 -- pure example lists and bare formation tables,
+  no such prose rule at all), and a conditional section that collapsed the
+  book's own two explicitly-labeled patterns (open condition vs.
+  invitation/advice) into one undifferentiated table. ch12: a notebook-only
+  "same stem" sentence that also mixed a 2nd-person conjugated form (τρως)
+  into what was presented as "the stem," and "Once / completed" /
+  "Ongoing / repeated" table headers where the book's own labels (checked
+  against p. 192) are the bare "μία φορά" / "συνέχεια συχνά," no
+  completion/repetition claim attached.
+
+  ch12 in particular turned out to be a striking check-before-fixing case:
+  of 6 items both reviewers flagged as high-confidence, 4 were verified
+  word-for-word against book pages 188-192 and found to be the textbook's
+  own stated framing -- including "Φοβάμαι ότι = certainty," which the book
+  glosses explicitly as "Είμαι σχεδόν σίγουρος" (I am almost certain).
+  Neither reviewer had access to the book to catch this.
+
 ## 2026-08-26
 - Fixed broken hub-card links to the 3 GitLab-split courses (odyssey,
   palaestra, b1greeklanguageandculture) on the GitLab-hosted copy of the
