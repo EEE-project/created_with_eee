@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-08-26 (3)
+- Fixed b1greeklanguageandculture's own hub page (kapodistrias/kavafis_ithaki/
+  zorba course cards) 404ing on its GitLab split project
+  (created-with-eee-b1glc) -- reported live by the user right after the
+  2026-08-26 ancient_greek/modern_greek hub-link fix below. Root cause was
+  different from that fix, and simpler: modern_greek/b1greeklanguageandculture/
+  index.tsv's own `url` column used absolute unified-project paths
+  (`/created_with_eee/modern_greek/b1greeklanguageandculture/kapodistrias/`),
+  while ancient_greek/odyssey/index.tsv's equivalent column already used
+  plain relative paths (`2026_06_01/`) for the exact same
+  hub-card-to-immediate-subdirectory relationship. Since both the unified
+  deployment and the split project keep each course/lesson directory
+  directly nested under its own hub, a bare relative href resolves
+  correctly in both places with no client-side host detection needed --
+  matched b1glc's TSV to the convention odyssey's already used. Verified
+  against both the unified pages-worktree layout and the actual
+  created-with-eee-b1glc checkout directly (both serve the linked
+  subdirectories at HTTP 200 via the same relative hrefs).
+
 ## 2026-08-26 (2)
 - Fixed grammar explanations and translations in ellinika_b chapters 9, 11,
   and 12, found via cross-AI review reports (analisys/ellinika_b1/ch{09,11,
