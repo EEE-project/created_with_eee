@@ -26,7 +26,7 @@ def _(lang_sel, mo):
     eee_topbar(mo, back_url=back_url, lang=lang_sel.value, titles={
         "ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture",
     }, parent_titles={
-        "ru": "Σύγχρονα Ελληνικά", "el": "Σύγχρονα Ελληνικά", "en": "Modern Greek",
+        "ru": "Νέα Ελληνικά", "el": "Νέα Ελληνικά", "en": "Modern Greek",
     }, style="index", ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 

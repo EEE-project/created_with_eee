@@ -12,6 +12,7 @@ import marimo
 
 __generated_with = "0.23.16"
 app = marimo.App(
+    app_title="Καποδίστριας — Μάθημα 4 · 22/05/2026: Το Τέλος του Καποδίστρια",
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
     html_head_file="head.html",

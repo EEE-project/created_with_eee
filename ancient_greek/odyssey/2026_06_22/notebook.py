@@ -12,7 +12,7 @@
 import marimo
 
 __generated_with = "0.23.14"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="Одиссея для отважных — День 2: Одиссея IX.39–61")
 
 
 @app.cell(hide_code=True)

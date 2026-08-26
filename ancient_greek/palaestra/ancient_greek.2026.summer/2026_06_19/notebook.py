@@ -11,7 +11,7 @@
 import marimo
 
 __generated_with = "0.23.13"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="Palaestra — Занятие 4 · 19.06.2026: Средний залог и II склонение")
 
 
 @app.cell(hide_code=True)

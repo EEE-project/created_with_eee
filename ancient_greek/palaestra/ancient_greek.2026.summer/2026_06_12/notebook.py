@@ -10,7 +10,7 @@
 import marimo
 
 __generated_with = "0.23.13"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="Palaestra — Занятие 2 · 12.06.2026: Ударения и просодия")
 
 
 @app.cell(hide_code=True)

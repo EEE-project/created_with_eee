@@ -72,11 +72,11 @@ HUBS = {
     },
     "modern_greek": {
         "tsv": "modern_greek/index.tsv", "parent_tsv": "index.tsv", "out": "modern_greek",
-        "titles": {"ru": "Σύγχρονα Ελληνικά", "el": "Σύγχρονα Ελληνικά", "en": "Modern Greek"},
+        "titles": {"ru": "Νέα Ελληνικά", "el": "Νέα Ελληνικά", "en": "Modern Greek"},
         "parent_titles": {"ru": "EEE", "el": "EEE", "en": "EEE"},
         "hero": {
-            "ru": ("Σύγχρονα Ελληνικά", "Курсы современного греческого языка"),
-            "el": ("Σύγχρονα Ελληνικά", "Μαθήματα σύγχρονης ελληνικής γλώσσας"),
+            "ru": ("Νέα Ελληνικά", "Курсы современного греческого языка"),
+            "el": ("Νέα Ελληνικά", "Μαθήματα σύγχρονης ελληνικής γλώσσας"),
             "en": ("Modern Greek", "Modern Greek language courses"),
         },
         "default_lang": "el", "footer_lang": None,
@@ -86,7 +86,7 @@ HUBS = {
         "parent_tsv": "modern_greek/index.tsv",
         "out": "modern_greek/b1greeklanguageandculture",
         "titles": {"ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture"},
-        "parent_titles": {"ru": "Σύγχρονα Ελληνικά", "el": "Σύγχρονα Ελληνικά", "en": "Modern Greek"},
+        "parent_titles": {"ru": "Νέα Ελληνικά", "el": "Νέα Ελληνικά", "en": "Modern Greek"},
         "hero": {
             "ru": ("B1: Греческий язык и культура", "Курс по истории и культуре Греции"),
             "el": ("B1: Ελληνική Γλώσσα και Πολιτισμός", "Μάθημα ιστορίας και πολιτισμού της Ελλάδας"),
@@ -111,12 +111,12 @@ HUBS = {
     "ellinika_b": {
         "tsv": "modern_greek/ellinika_b/index.tsv", "parent_tsv": "modern_greek/index.tsv",
         "out": "modern_greek/ellinika_b",
-        "titles": {"ru": "Ελληνικά Β", "el": "Ελληνικά Β", "en": "Ελληνικά Β"},
-        "parent_titles": {"ru": "Σύγχρονα Ελληνικά", "el": "Σύγχρονα Ελληνικά", "en": "Modern Greek"},
+        "titles": {"ru": "Ελληνικά Β1", "el": "Ελληνικά Β1", "en": "Ελληνικά Β1"},
+        "parent_titles": {"ru": "Νέα Ελληνικά", "el": "Νέα Ελληνικά", "en": "Modern Greek"},
         "hero": {
-            "ru": ("Ελληνικά Β — Интерактивные тетради", "Уроки современного греческого языка"),
-            "el": ("Ελληνικά Β — Διαδραστικά Τετράδια", "Μαθήματα σύγχρονων ελληνικών"),
-            "en": ("Ελληνικά Β — Interactive Notebooks", "Modern Greek language lessons"),
+            "ru": ("Ελληνικά Β1 — Интерактивные тетради", "Уроки современного греческого языка"),
+            "el": ("Ελληνικά Β1 — Διαδραστικά Τετράδια", "Μαθήματα σύγχρονων ελληνικών"),
+            "en": ("Ελληνικά Β1 — Interactive Notebooks", "Modern Greek language lessons"),
         },
         "default_lang": "en", "footer_lang": None,
     },

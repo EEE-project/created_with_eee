@@ -12,6 +12,7 @@ import marimo
 
 __generated_with = "0.23.16"
 app = marimo.App(
+    app_title="Αλέξης Ζορμπάς — Μάθημα 2-3 · 03–10/07/2026: Ζορμπάς: γιατί έγινε θρύλος;",
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
     html_head_file="head.html",

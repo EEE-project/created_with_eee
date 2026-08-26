@@ -24,7 +24,7 @@ def _(lang_sel, mo):
     )
     back_url = parent_back_url(f"{_ROOT}/index.tsv")
     eee_topbar(mo, back_url=back_url, lang=lang_sel.value, titles={
-        "ru": "Σύγχρονα Ελληνικά", "el": "Σύγχρονα Ελληνικά", "en": "Modern Greek",
+        "ru": "Νέα Ελληνικά", "el": "Νέα Ελληνικά", "en": "Modern Greek",
     }, parent_titles={
         "ru": "EEE", "el": "EEE", "en": "EEE",
     }, style="index", ga_config=cfg.ga_config(), same_window=True)
@@ -35,8 +35,8 @@ def _(lang_sel, mo):
 def _(lang_sel, mo):
     from eee_project.notebook_utils import eee_hero
     eee_hero(mo, lang_sel.value, {
-        "ru": ("Σύγχρονα Ελληνικά", "Курсы современного греческого языка"),
-        "el": ("Σύγχρονα Ελληνικά", "Μαθήματα σύγχρονης ελληνικής γλώσσας"),
+        "ru": ("Νέα Ελληνικά", "Курсы современного греческого языка"),
+        "el": ("Νέα Ελληνικά", "Μαθήματα σύγχρονης ελληνικής γλώσσας"),
         "en": ("Modern Greek", "Modern Greek language courses"),
     })
     return

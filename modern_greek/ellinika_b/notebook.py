@@ -24,9 +24,9 @@ def _(lang_sel, mo):
     )
     back_url = parent_back_url(f"{_ROOT}/modern_greek/index.tsv")
     eee_topbar(mo, back_url=back_url, lang=lang_sel.value, titles={
-        "ru": "Ελληνικά Β", "el": "Ελληνικά Β", "en": "Ελληνικά Β",
+        "ru": "Ελληνικά Β1", "el": "Ελληνικά Β1", "en": "Ελληνικά Β1",
     }, parent_titles={
-        "ru": "Σύγχρονα Ελληνικά", "el": "Σύγχρονα Ελληνικά", "en": "Modern Greek",
+        "ru": "Νέα Ελληνικά", "el": "Νέα Ελληνικά", "en": "Modern Greek",
     }, style="index", ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
@@ -35,9 +35,9 @@ def _(lang_sel, mo):
 def _(lang_sel, mo):
     from eee_project.notebook_utils import eee_hero
     eee_hero(mo, lang_sel.value, {
-        "ru": ("Ελληνικά Β — Интерактивные тетради", "Уроки современного греческого языка"),
-        "el": ("Ελληνικά Β — Διαδραστικά Τετράδια", "Μαθήματα σύγχρονων ελληνικών"),
-        "en": ("Ελληνικά Β — Interactive Notebooks", "Modern Greek language lessons"),
+        "ru": ("Ελληνικά Β1 — Интерактивные тетради", "Уроки современного греческого языка"),
+        "el": ("Ελληνικά Β1 — Διαδραστικά Τετράδια", "Μαθήματα σύγχρονων ελληνικών"),
+        "en": ("Ελληνικά Β1 — Interactive Notebooks", "Modern Greek language lessons"),
     }, lang_fallback="en")
     return
 

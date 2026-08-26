@@ -11,7 +11,7 @@
 import marimo
 
 __generated_with = "0.23.13"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="Palaestra — Занятие 7 · 01.07.2026: Императив и глаголы Κεφ. II")
 
 
 @app.cell(hide_code=True)

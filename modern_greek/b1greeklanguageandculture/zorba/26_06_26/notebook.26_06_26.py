@@ -12,6 +12,7 @@ import marimo
 
 __generated_with = "0.23.16"
 app = marimo.App(
+    app_title="Αλέξης Ζορμπάς — Μάθημα 1 · 26/06/2026: Ποιος είναι ο Αλέξης Ζορμπάς;",
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
     html_head_file="head.html",

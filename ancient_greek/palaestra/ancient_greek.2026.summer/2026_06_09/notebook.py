@@ -10,7 +10,7 @@
 import marimo
 
 __generated_with = "0.23.15"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="Palaestra — Занятие 1 · 09.06.2026: Алфавит и повелительное наклонение")
 
 
 @app.cell(hide_code=True)

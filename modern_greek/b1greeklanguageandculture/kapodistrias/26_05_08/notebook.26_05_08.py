@@ -12,6 +12,7 @@ import marimo
 
 __generated_with = "0.23.16"
 app = marimo.App(
+    app_title="Καποδίστριας — Μάθημα 2 · 08/05/2026: Η Ελλάδα που Βρήκε ο Καποδίστριας",
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
     html_head_file="head.html",

@@ -11,7 +11,7 @@
 import marimo
 
 __generated_with = "0.23.16"
-app = marimo.App(width="medium", html_head_file="head.html")
+app = marimo.App(width="medium", html_head_file="head.html", app_title="Ελληνικά Β1 — Chapter 12: An Accident on the Road")
 
 
 @app.cell(hide_code=True)
@@ -24,7 +24,7 @@ def _(language_selector, mo):
         ga=f"{_ROOT}/ga.json",
     )
     eee_topbar(mo, back_url=_cfg.index_url(), lang=language_selector.value, titles={
-        "ru": "Ελληνικά Β", "el": "Ελληνικά Β", "en": "Ελληνικά Β",
+        "ru": "Ελληνικά Β1", "el": "Ελληνικά Β1", "en": "Ελληνικά Β1",
     }, ga_config=_cfg.ga_config(), same_window=True)
     return
 

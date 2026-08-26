@@ -11,7 +11,7 @@
 import marimo
 
 __generated_with = "0.23.16"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="Καβάφης — Ιθάκη — Μάθημα 2: Οι Λαιστρυγόνες, οι Κύκλωπες και ο Ποσειδώνας")
 
 
 @app.cell(hide_code=True)
