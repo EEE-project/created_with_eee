@@ -39,7 +39,7 @@ ellinika_b/
     chapter_NN_notebook_el.py      # single-language source variant — NOT directly deployed (index.tsv has no id for these; chapter_NN_notebook.py is what's served to students), but these ARE the source files that content gets authored/merged into the multilang notebook from. Keep them in sync with any repo-wide fix — do not skip them as dead.
     chapter_NN_notebook_en.py      # same
     chapter_NN_notebook_ru.py      # same
-    nouns.tsv / verbs.tsv / adjectives.tsv / vocabulary.tsv   # Word\tTranslation, shared across all language variants
+    nouns.tsv / verbs.tsv / adjectives.tsv / phrases.tsv   # Word\tTranslation, shared across all language variants
     chapter_NN_extracted_content.md   # full extraction from the textbook (source material, not read by the notebook at runtime)
     SUMMARY.md / README.md            # per-chapter quick-reference docs (grammar summary, vocab table, run instructions) — chapter-specific content lives here, not in this file
 ```
@@ -246,19 +246,112 @@ Hit `StaleCellError` on a freshly-opened `code_mode` context while editing these
 
 ## Known gap: bare local-file reads break on a raw pre-publish molab upload
 
-See the root `AGENTS.md`'s "Known gap" for the general mechanism. All 10
-chapters here read their own local
-`nouns.tsv`/`verbs.tsv`/`adjectives.tsv`/`vocabulary.tsv` (and the `_ru.tsv`
-variants) as bare `pd.read_csv(os.path.join(notebook_dir, ...))` calls, zero
-`gu2.ensure_file()` usage anywhere in this course (confirmed by a repo-wide
-grep, 2026-07-31). Found and fixed the hard way in
-`modern_greek/b1greeklanguageandculture/kavafis_ithaki/2/`'s notebook — see
-that course's own `AGENTS.md` for the concrete before/after and the
-`ensure_file()` pattern to copy. Since all 10 chapters here are already
-published, their real molab deployments were presumably created by importing
-from the published Codeberg URL rather than a raw upload, so this may not be
-live-broken today — but it's a real latent pattern, not yet fixed. Tracked in
-`~/work/greek/EEE/plans/TODO.md`'s Backlog.
+**Superseded 2026-08-01, re-verified 2026-08-27 — this note was just never
+updated.** This originally reported (2026-07-31 grep) that all 10 chapters
+read their vocab TSVs as bare `pd.read_csv(os.path.join(notebook_dir, ...))`
+calls with zero `ensure_file()` protection. Per `~/work/greek/EEE/plans/
+TODO.md`'s own DONE entry, this was fixed the very next day (2026-08-01,
+commit `dd1d31d`, PR #25) by routing all local reads through
+`gu2.ensure_file()` across all 17 affected files course-wide (10 ellinika_b
+chapters + 4 Kapodistrias + 3 Zorba). Re-verified directly 2026-08-27: every
+chapter's `nouns.tsv`/`verbs.tsv`/`adjectives.tsv`/`phrases.tsv` load now
+goes through `gu2.load_vocab_table(filename, nb_dir=notebook_dir,
+remote_base=RAW_BASE, ...)`, and `remote_base` being set means
+`_resolve_tsv_path` calls `self.ensure_file(...)` internally — confirmed by
+reading `eee_project/notebook_utils.py`'s `_resolve_tsv_path`, not just by
+grepping for the literal string `ensure_file()` (which is likely why this
+note was never updated: the call is indirect, inside a shared helper, not
+spelled out in each chapter). The raw-pre-publish-upload gap this section
+describes no longer
+applies to these four TSVs. See the root `AGENTS.md`'s "Known gap" for the
+general mechanism this pattern protects against.
+
+## Vocabulary-table drift and the orphaned `vocabulary.tsv` (fixed 2026-08-27)
+
+A cross-course `/simplify` audit (2026-08-26) found that most chapters keep
+two independently-typed copies of the same vocabulary: a live table loaded
+from a TSV for the quiz, and a hand-typed reference table (Useful Phrases /
+Grammar examples) that nothing keeps in sync with it. Found and fixed
+per-chapter drift in ch01 (a character's surname transliterated two ways —
+picked one and normalized, no textbook signal either way), ch02 (a dropped
+object pronoun), ch04 (word-order variant), ch06 (`phrases.tsv` was simply
+missing the "Τι θα πάρετε;" row the 2026-07-23 fix already corrected in the
+notebook — see the chapter_06 entry above), ch07 ("Enough already!" vs. the
+extraction-verified "Good grief!"), and ch11 (a ferry-phrase wording and,
+more substantively, "ο Δεκαπενταύγουστος" had three different translations
+across the notebook/`nouns.tsv`/`vocabulary.tsv` — the notebook's fuller
+"Feast of the Dormition (August 15th)" was right, matching the extraction's
+own Russian gloss; `nouns.tsv`/`nouns_ru.tsv` corrected to match). Each
+fix was individually checked against that chapter's own
+`chapter_NN_extracted_content.md` or, where the extraction was silent,
+resolved by internal consistency — never a blanket "TSV wins" rule (ch06 is
+the standing counter-example: its `phrases.tsv` was the one still carrying
+a pre-2026-07-23 wrong phrase).
+
+**The orphaned `vocabulary.tsv`, present in all 10 chapters and loaded by
+none of them, turned out to be ~100% redundant** with `nouns.tsv`/
+`verbs.tsv`/`adjectives.tsv` — not the "distinct content nobody sees" the
+initial audit pass suggested. That first read was wrong because
+`vocabulary.tsv` writes fuller forms (`νόστιμος, -η, -ο`; `ο/η γείτονας`)
+that don't substring-match the plainer forms already in the loaded TSVs
+(`νόστιμος`; `ο γείτονας`) — same word, different string, false "unique"
+hit. Verified chapter-by-chapter, by hand, after the first automated pass
+also flagged chapter_03 entries that were actually already covered by a
+`pronouns.tsv` the check didn't look at (`κανένας`/`ίδιος`/`κάποιος`/
+`τέτοιος`/`τόσος`) — chapter_03's one remaining candidate, "ο καθένας", is
+the pronoun **already documented as fabricated** earlier in this file, so
+its absence from `nouns.tsv` was correct, not a gap.
+
+Two genuine, extraction-verified gaps survived this check and were migrated
+before deletion rather than silently dropped: ch11's noun "ευκαιρία"
+(opportunity) → added to `nouns.tsv`/`nouns_ru.tsv`; and 11 multi-word
+phrases in ch08 (3), ch09 (1), and ch11 (7) that exist nowhere else in the
+deployed material (not even in those chapters' own `phrases.tsv`) →
+migrated to each chapter's `phrases.tsv`/`phrases_ru.tsv`. ch12's 4
+"unique" phrases turned out to already be in its `phrases.tsv` (case
+difference only) — no migration needed there. All 10 `vocabulary.tsv` (+
+ch03's `vocabulary_ru.tsv`) deleted after migration.
+
+**Lesson for next time:** before trusting a "this content exists nowhere
+else" claim about an orphaned file, check word-by-word for substring
+matches against every plausible sibling TSV, not just the ones a script's
+first pass happened to search — formatting differences (gender-ending
+suffixes, `ο/η` common-gender markers, inline `=`/`≠` glosses) produce
+false "unique" hits far more often than genuinely missing content.
+
+## Idiom/naturalness translation review (2026-08-27) — external AI review checked against the real PDF
+
+The user supplied an external ChatGPT review (`analisys/ellinika_b1/tr-s.md`)
+of Russian-translation naturalness across every chapter. Its 6 highest-
+confidence "❌ wrong" flags were each checked against the real book page
+(`/home/sadov/work/greek/books/Ellininka/Ελληνικά Β - Επίπεδο Β1 -
+2013.pdf`), not just accepted — 5 confirmed genuine, 1 (ch12's "προσέξεις τη
+μηχανή" → "следить за мотоциклом") was actually **correct as written**:
+ChatGPT's suggested "следить за дорогой" would have lost the point, since
+page 187's dialogue is specifically about the driver missing *the other
+party's motorcycle* (confirmed by "Είδα τη μηχανή την τελευταία στιγμή"
+two lines earlier), not a generic road-safety remark.
+
+**Same finding shape as the vocabulary-drift audit above, one file removed:**
+for 4 of the 5 confirmed fixes (ch06 ×2, ch08, ch11), `chapter_NN_notebook.py`
+— what students actually see — already had the correct translation. It was
+specifically the standalone `phrases.tsv`/`phrases_ru.tsv` (and, for ch08,
+the `_el`/`_en`/`_ru` source variants) still carrying the older, wrong
+version. `tr-s.md`'s own Russian column matches the TSVs, not the notebook —
+worth remembering if this review is revisited, since several of its flags
+were already non-issues in the deployed material.
+
+ch01's fix was the only one needing a real semantic correction rather than a
+consistency sync: "Α, και πού 'σαι..." had been glossed everywhere (this
+extraction, all 3 notebook language branches, both `phrases.tsv` files) as
+the literal "Oh, and where are you...", but it's a Greek discourse idiom
+("oh, and one more thing...") — confirmed via the real p. 10 dialogue, which
+is an **answering-machine message** (Foivos leaving Niko a voicemail): a
+literal "where are you" question addressed mid-monologue to someone who
+isn't there to answer makes no sense, while "oh, and one more thing... tell
+Pamplo and the others too" reads naturally. Left the grammar-note mentions
+of "(= πού είσαι)" alone — that's a separate, correct point about the vowel
+elision itself, not a claim about the idiom's meaning.
 
 ## Index notebook + index.tsv
 

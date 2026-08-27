@@ -195,7 +195,7 @@ def _(mo):
     | Για ποιά άτομα; | For how many people? |
     | Να είστε εδώ μέχρι …, γιατί διαφορετικά θα δώσουμε το τραπέζι. | Be here by …, otherwise we'll give away the table. |
     | Μια παραγγελία θα ήθελα να κάνω. | I would like to place an order. |
-    | Τι θα θέλατε; | What would you like? |
+    | Τι θα πάρετε; | What will you have? |
     | Θα ήθελα μία μπριζόλα, αν γίνεται. | I would like a steak, if possible. |
     | Πώς δε γίνεται; | Why wouldn't it be possible? (Of course!) |
     | Μια μερίδα γέμιστα, παρακαλώ. | A portion of stuffed vegetables, please. |

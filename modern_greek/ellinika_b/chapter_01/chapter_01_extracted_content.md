@@ -104,7 +104,7 @@ Transcribed exactly as printed, box by box (source = printed page number, 2013 e
 | Θα επικοινωνήσω μαζί σας το συντομότερο δυνατόν. | I will contact you as soon as possible. |
 | Θα σε ξαναπάρω το βράδυ. | I'll call you back tonight. |
 | Τα έμαθες; Θα γίνει χαμός! | Did you hear the news? It's going to be wild! |
-| Α, και πού 'σαι... | Oh, and where are you... |
+| Α, και πού 'σαι... | Oh, and one more thing... |
 
 ### p. 12 — Για δες ("Στο τηλέφωνο")
 

@@ -76,7 +76,7 @@ def _(mo):
     | Άντε, ρε! | Come on! / Give me a break! |
     | Η θερμοκρασία θα πέσει πολύ. | The temperature will drop a lot. |
     | Ελπίζω ο καιρός να μας κάνει τη χάρη. | I hope the weather will do us the favor. |
-    | Πώς κάνεις έτσι; | How can you do this? |
+    | Πώς κάνεις έτσι; | Why are you acting like this? |
     | Τι παραπονιάρης που είσαι... | What a whiner you are... |
     | Ελάτε, παιδιά! | Come on, kids! |
     | Μη μαλώνετε! | Don't argue! |

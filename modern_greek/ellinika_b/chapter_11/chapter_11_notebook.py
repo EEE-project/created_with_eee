@@ -579,7 +579,7 @@ def _(language_selector, mo):
     | Θέλουμε να χαλαρώσουμε, χωρίς να πληρώσουμε μια περιουσία. | We want to relax without spending a fortune. |
     | Καιρό είχαμε να τα πούμε. | It's been a while since we talked. |
     | Αξίζει! | It's worth it! |
-    | Παίρνω το πλοίο της γραμμής. | I'm taking the regular ferry. |
+    | Παίρνω το πλοίο της γραμμής. | I take the scheduled ferry. |
     | Θα σας έρθει πολύ πιο φτηνά. | It will cost you much less. |
     | Να αποφασίσετε όσο το δυνατόν πιο γρήγορα. | Decide as quickly as possible. |
     | Μου λείπει η Αθήνα. | I miss Athens. |
@@ -600,7 +600,7 @@ def _(language_selector, mo):
     | Θέλουμε να χαλαρώσουμε, χωρίς να πληρώσουμε μια περιουσία. | We want to relax without spending a fortune. |
     | Καιρό είχαμε να τα πούμε. | It's been a while since we talked. |
     | Αξίζει! | It's worth it! |
-    | Παίρνω το πλοίο της γραμμής. | I'm taking the regular ferry. |
+    | Παίρνω το πλοίο της γραμμής. | I take the scheduled ferry. |
     | Θα σας έρθει πολύ πιο φτηνά. | It will cost you much less. |
     | Να αποφασίσετε όσο το δυνατόν πιο γρήγορα. | Decide as quickly as possible. |
     | Μου λείπει η Αθήνα. | I miss Athens. |

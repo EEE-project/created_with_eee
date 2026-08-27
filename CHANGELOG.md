@@ -1,5 +1,52 @@
 # Changelog
 
+## 2026-08-27 (6)
+- Cross-checked an external ChatGPT naturalness review of ellinika_b's
+  Russian translations (`analisys/ellinika_b1/tr-s.md`) against the real
+  textbook PDF rather than accepting it at face value: of its 6 highest-
+  confidence "wrong" flags, 5 were genuine and fixed (ch01's "Α, και πού
+  'σαι..." was glossed everywhere as literal "where are you" instead of the
+  discourse idiom "oh, one more thing..." -- confirmed via p.10's dialogue,
+  an answering-machine message where a literal reading is impossible; ch03
+  "Δε μου λες", ch06 "Για πότε ενδιαφέρεστε;" and "Γίνεται χαμός.", ch08
+  "Πώς κάνεις έτσι;"), and 1 was confirmed correct as already written
+  (ch12's "προσέξεις τη μηχανή" -- the real p.187 dialogue ties "τη μηχανή"
+  specifically to the other party's motorcycle, so ChatGPT's suggested
+  "the road" would have been less accurate, not more). For 4 of the 5 real
+  fixes, `chapter_NN_notebook.py` already had the correct text -- only the
+  standalone `phrases.tsv`/`phrases_ru.tsv` (and ch08's `_el`/`_en`/`_ru`
+  variants) still carried the older, wrong version.
+
+## 2026-08-27 (5)
+- Audited every course notebook's vocabulary/phrase tables against their
+  TSV sources (`/simplify`-style 4-agent pass): fixed real drift in
+  ellinika_b ch01 (a character's surname transliterated two ways), ch02
+  (dropped object pronoun), ch04 (word-order variant), ch06 (`phrases.tsv`
+  was missing the "Τι θα πάρετε;" row a 2026-07-23 fix already corrected in
+  the notebook), ch07 ("Enough already!" vs. the extraction-verified "Good
+  grief!"), and ch11 (a ferry-phrase wording, plus "ο Δεκαπενταύγουστος"
+  had three different translations across the notebook/`nouns.tsv`/
+  `vocabulary.tsv` -- corrected to the notebook's fuller, extraction-backed
+  reading). Also fixed 2 Palaestra lessons' `οὐκέτι` (a real grammar error,
+  not just a style variant), a missing `ὦ` in their reference tables, and
+  a spurious second sense on ch06_09's `λέγω`. Each fix was checked against
+  that chapter's own textbook extraction or resolved by internal
+  consistency -- never a blanket "TSV wins" rule.
+
+  Deleted all 10 ellinika_b `vocabulary.tsv` (+ ch03's `vocabulary_ru.tsv`)
+  as orphaned, loaded by zero notebooks -- verified ~100% redundant with
+  `nouns.tsv`/`verbs.tsv`/`adjectives.tsv` after a first automated pass
+  wrongly flagged real overlap as "unique content" (missed by gender-suffix
+  and common-gender-marker formatting differences between the files).
+  Migrated the two genuine, extraction-verified gaps that survived manual
+  verification before deleting: ch11's noun "ευκαιρία" and 11 multi-word
+  phrases across ch08/09/11 that existed nowhere else in the deployed
+  material, into `nouns.tsv`/`phrases.tsv` (+`_ru`) so they actually reach
+  students. Also corrected `ellinika_b/AGENTS.md`'s "Known gap" section,
+  which was still describing a bare-`pd.read_csv` bug that was actually
+  fixed course-wide back on 2026-08-01 (commit `dd1d31d`, PR #25) -- the
+  note was just never updated afterward.
+
 ## 2026-08-27 (4)
 - Same regression class as the Odyssey title fix below, found while
   investigating it: `Ελληνικά Β1`'s Russian hero subtitle was deliberately
