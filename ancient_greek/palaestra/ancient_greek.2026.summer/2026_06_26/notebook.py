@@ -164,14 +164,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_DIR, NB_REMOTE, gu):
-    import pandas as _pd_tsv
-
-    def load_tsv(filename):
-        return _pd_tsv.read_csv(
-            gu.ensure_file(filename, nb_dir=NB_DIR, remote_base=NB_REMOTE),
-            sep="\t",
-        )
-
     _course_remote = NB_REMOTE.replace("/2026_06_26", "")
     _cap1_remote = NB_REMOTE.replace("/2026_06_26", "/2026_06_16")
     gu.ensure_file('CONSPECTVS GRAMMATICVS I_graecus.pdf', nb_dir=NB_DIR, remote_base=_course_remote)
@@ -185,13 +177,13 @@ def _(NB_DIR, NB_REMOTE, gu):
         gu.ensure_file(_pdf, nb_dir=NB_DIR, remote_base=NB_REMOTE)
     for _f in ('cap1_verbs.tsv', 'cap1_nouns.tsv', 'cap1_adjectives.tsv', 'cap1_particles.tsv'):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)
-    return (load_tsv,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(load_tsv, mo):
-    _verbs = load_tsv("verbs.tsv")
-    _nouns = load_tsv("nouns.tsv")
+def _(NB_DIR, NB_REMOTE, gu, mo):
+    _verbs = gu.load_vocab_table("verbs.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE)
+    _nouns = gu.load_vocab_table("nouns.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE)
     mo.vstack([
         mo.md("## Νέαι λέξεις · Новые слова"),
         mo.md("**Verba (глаголы):**"),

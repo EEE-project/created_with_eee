@@ -1,5 +1,41 @@
 # Changelog
 
+## 2026-08-27 (2)
+- Deduplicated vocabulary-table loading across Palaestra and Kapodistrias,
+  found while auditing notebook-table/TSV consistency: 8 of 10 Palaestra
+  lessons reimplemented `GreekUtils.load_vocab_table()` locally instead of
+  calling it; 3 of those also computed an identical second word-list
+  (`VOCAB_ALL`) from the same files already loaded as `VOCAB_WORDS` earlier
+  in the same file, for no functional difference. Collapsed both to the
+  shared helper / single load. Left `2026_06_09`'s `csv.DictReader`-based
+  read alone -- that notebook doesn't declare `pandas` as a dependency,
+  which is exactly why it avoided the pandas-based shared helper in the
+  first place; verified this the hard way (a first attempt to "simplify"
+  it broke the page under Pyodide with `ModuleNotFoundError: No module
+  named 'pandas'`, silently, with no visible error in the page text --
+  only caught via the browser console). Also swapped
+  `kapodistrias/26_05_01`'s manual `pd.read_csv` vocabulary-table read for
+  the same shared helper already used two lines below it for nouns, and
+  deleted `kapodistrias/26_05_01/verbs+.tsv`, an unreferenced duplicate of
+  9 rows already present in that lesson's `vocabulary.tsv`.
+
+## 2026-08-27
+- Renamed "Ελληνικά Β" to "Ελληνικά Β1" and "Σύγχρονα Ελληνικά" to "Νέα
+  Ελληνικά" everywhere either appears as a UI label (hub cards, topbar
+  titles, browser-tab titles) across `gen_hub.py`, both `index.tsv` hub
+  files, and the ellinika_b course-index and all 10 chapter notebooks.
+  Left every textbook-citation instance untouched (extracted_content.md
+  files, "**Textbook:** Ελληνικά Β'..." lines, and the per-chapter
+  AGENTS.md/README.md prose) -- those describe the real printed book's
+  title, not the UI label being renamed. Also added an explicit
+  `app_title` to all 37 lesson/chapter notebooks across every course
+  (ellinika_b, odyssey, palaestra, kapodistrias, zorba, kavafis_ithaki):
+  marimo falls back to the bare filename (e.g. "chapter 01 notebook") as
+  the exported page's browser-tab title when `app_title` is unset, which
+  every one of these notebooks previously left unset. Each title is built
+  from that course's own already-vetted `index.tsv` label/title columns,
+  verbatim, in the course's own default UI language -- no invented text.
+
 ## 2026-08-26 (3)
 - Fixed b1greeklanguageandculture's own hub page (kapodistrias/kavafis_ithaki/
   zorba course cards) 404ing on its GitLab split project

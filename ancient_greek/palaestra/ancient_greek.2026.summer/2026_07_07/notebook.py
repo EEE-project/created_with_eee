@@ -177,14 +177,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_DIR, NB_REMOTE, gu):
-    import pandas as _pd_tsv
-
-    def load_tsv(filename):
-        return _pd_tsv.read_csv(
-            gu.ensure_file(filename, nb_dir=NB_DIR, remote_base=NB_REMOTE),
-            sep="\t",
-        )
-
     for _pdf in (
         'κεφΙΙ(1,5).pdf',
         'κεφΙΙ(1,5)_λέξεις.pdf',
@@ -196,13 +188,13 @@ def _(NB_DIR, NB_REMOTE, gu):
         gu.ensure_file(_pdf, nb_dir=NB_DIR, remote_base=NB_REMOTE)
     for _f in ('cap2_nouns.tsv', 'cap2_adjectives.tsv', 'nouns.tsv', 'adjectives.tsv'):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)
-    return (load_tsv,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(load_tsv, mo):
-    _nouns = load_tsv("nouns.tsv")
-    _adj = load_tsv("adjectives.tsv")
+def _(NB_DIR, NB_REMOTE, gu, mo):
+    _nouns = gu.load_vocab_table("nouns.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE)
+    _adj = gu.load_vocab_table("adjectives.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE)
     mo.vstack([
         mo.md("## Νέαι λέξεις · Новые слова"),
         mo.md("**Nomina substantiva (существительные):**"),
@@ -690,15 +682,6 @@ def _(NB_REMOTE, mo):
 
 
 @app.cell(hide_code=True)
-def _(NB_DIR, NB_REMOTE, gu):
-    VOCAB_ALL = gu.load_vocab_tsv(
-        'nouns.tsv', 'adjectives.tsv',
-        nb_dir=NB_DIR, remote_base=NB_REMOTE,
-    )
-    return (VOCAB_ALL,)
-
-
-@app.cell(hide_code=True)
 def _(mo):
     cv_a, set_cv_a = mo.state(None)
     score_a, set_score_a = mo.state({'correct': 0, 'total': 0})
@@ -723,12 +706,12 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(VOCAB_ALL, cv_a, gu, history_a, remaining_a, restore_entry_a):
+def _(VOCAB_WORDS, cv_a, gu, history_a, remaining_a, restore_entry_a):
     _ = cv_a()
     answer_radio_a, next_btn_a, prev_btn_a = gu.word_quiz_widgets(
         cv=cv_a(),
         remaining=remaining_a(),
-        vocab=VOCAB_ALL,
+        vocab=VOCAB_WORDS,
         restore_entry=restore_entry_a(),
         history_len=len(history_a()),
     )
@@ -737,7 +720,7 @@ def _(VOCAB_ALL, cv_a, gu, history_a, remaining_a, restore_entry_a):
 
 @app.cell(hide_code=True)
 def _(
-    VOCAB_ALL,
+    VOCAB_WORDS,
     answer_radio_a,
     cv_a,
     future_a,
@@ -760,7 +743,7 @@ def _(
         score_a, set_score_a, restore_entry_a, set_restore_entry_a,
         history_a, set_history_a, future_a, set_future_a,
         answer_radio_a, next_btn_a, prev_btn_a,
-        vocab=VOCAB_ALL,
+        vocab=VOCAB_WORDS,
         title='## Упражнение 5 · Выбрать слово',
     )
     return
@@ -804,7 +787,7 @@ def _(cv_aw, gu, history_aw, remaining_aw, restore_entry_aw):
 
 @app.cell(hide_code=True)
 def _(
-    VOCAB_ALL,
+    VOCAB_WORDS,
     check_btn_aw,
     cv_aw,
     dia_aw,
@@ -829,7 +812,7 @@ def _(
         score_aw, set_score_aw, restore_entry_aw, set_restore_entry_aw,
         history_aw, set_history_aw, future_aw, set_future_aw,
         write_input_aw, dia_aw, check_btn_aw, prev_btn_aw, next_btn_aw,
-        vocab=VOCAB_ALL,
+        vocab=VOCAB_WORDS,
         title='## Упражнение 6 · Написать греческое слово',
         comment='Для ввода используйте **polytonic Greek keyboard** или кнопки диакритики ниже.<br>**Как пользоваться:** нажмите кнопку знака диакритики → введите гласную → знак применится. Нажмите повторно или введите согласную — снимается.',
     )
@@ -842,16 +825,6 @@ def _(VOCAB_WORDS):
     assert VOCAB_WORDS, "load_vocab_tsv returned empty list"
     assert all(_REQUIRED <= set(w) for w in VOCAB_WORDS), f"word missing keys: {VOCAB_WORDS}"
     assert all(w["form"] and w["meaning"] for w in VOCAB_WORDS), "word has empty form or meaning"
-    del _REQUIRED
-    return
-
-
-@app.cell(hide_code=True)
-def _(VOCAB_ALL):
-    _REQUIRED = {"form", "meaning"}
-    assert VOCAB_ALL, "load_vocab_tsv returned empty list (cap1)"
-    assert all(_REQUIRED <= set(w) for w in VOCAB_ALL), f"cap1 word missing keys: {VOCAB_ALL}"
-    assert all(w["form"] and w["meaning"] for w in VOCAB_ALL), "cap1 word has empty form or meaning"
     del _REQUIRED
     return
 

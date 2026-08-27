@@ -192,14 +192,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_DIR, NB_REMOTE, gu):
-    import pandas as _pd_tsv
-
-    def load_tsv(filename):
-        return _pd_tsv.read_csv(
-            gu.ensure_file(filename, nb_dir=NB_DIR, remote_base=NB_REMOTE),
-            sep="\t",
-        )
-
     for _pdf in (
         'κεφΙΙ(0,5).pdf',
         'Κεφ.II(1)_μετάφρασις.pdf',
@@ -210,13 +202,13 @@ def _(NB_DIR, NB_REMOTE, gu):
         gu.ensure_file(_pdf, nb_dir=NB_DIR, remote_base=NB_REMOTE)
     for _f in ('cap2_verbs.tsv', 'nouns.tsv', 'adjectives.tsv'):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)
-    return (load_tsv,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(load_tsv, mo):
-    _nouns = load_tsv("nouns.tsv")
-    _adj = load_tsv("adjectives.tsv")
+def _(NB_DIR, NB_REMOTE, gu, mo):
+    _nouns = gu.load_vocab_table("nouns.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE)
+    _adj = gu.load_vocab_table("adjectives.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE)
     mo.vstack([
         mo.md("## Νέαι λέξεις · Новые слова"),
         mo.md("**Nomina substantiva (существительные):**"),

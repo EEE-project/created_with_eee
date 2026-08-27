@@ -194,11 +194,10 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, gu, language_selector, mo, notebook_dir, pd, t_ui):
+def _(RAW_BASE, gu, language_selector, mo, notebook_dir, t_ui):
     # Vocabulary table
     _lang = language_selector.value
-    _vocab_path = gu.ensure_file("vocabulary.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
-    _df_vocab = pd.read_csv(_vocab_path, sep='\t') if _vocab_path else None
+    _df_vocab = gu.load_vocab_table("vocabulary.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
     _tbl_vocab = mo.ui.table(_df_vocab, selection="multi", page_size=len(_df_vocab)) if _df_vocab is not None else None
     mo.vstack([
         mo.md(t_ui("vocabulary_heading", _lang)),

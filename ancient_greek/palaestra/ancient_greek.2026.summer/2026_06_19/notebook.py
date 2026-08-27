@@ -213,14 +213,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_DIR, NB_REMOTE, gu):
-    import pandas as _pd_tsv
-
-    def load_tsv(filename):
-        return _pd_tsv.read_csv(
-            gu.ensure_file(filename, nb_dir=NB_DIR, remote_base=NB_REMOTE),
-            sep="\t",
-        )
-
     for _pdf in (
         'Κεφ.I(1).pdf',
         'заметки_19.06.pdf',
@@ -228,14 +220,14 @@ def _(NB_DIR, NB_REMOTE, gu):
         'энклитики+немного_алфавита_и_практики_письма_τέλος.pdf',
     ):
         gu.ensure_file(_pdf, nb_dir=NB_DIR, remote_base=NB_REMOTE)
-    return (load_tsv,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(load_tsv, mo):
-    _verbs = load_tsv("verbs.tsv")
-    _nouns = load_tsv("nouns.tsv")
-    _adj = load_tsv("adjectives.tsv")
+def _(NB_DIR, NB_REMOTE, gu, mo):
+    _verbs = gu.load_vocab_table("verbs.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE)
+    _nouns = gu.load_vocab_table("nouns.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE)
+    _adj = gu.load_vocab_table("adjectives.tsv", nb_dir=NB_DIR, remote_base=NB_REMOTE)
     mo.vstack([
         mo.md("## Capitulum I · Словарь Athenaze"),
         mo.md("**Verba (глаголы):**"),
