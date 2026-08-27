@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-08-27 (8)
+- Added `tools/fix-gitlab-unified-pages-scope.py` (+ `make
+  fix-gitlab-unified-scope`), a deterministic fix for a regression that hit
+  live Pages twice (2026-08-12, 2026-08-18 per project history, and again
+  today): `git reset --hard codeberg/pages` on GitLab's unified
+  `created_with_eee` checkout silently reintroduces the split-off
+  odyssey/palaestra/kapodistrias/kavafis_ithaki/zorba content and deletes
+  `.gitlab-ci.yml` -- neither exists on Codeberg's `pages` branch to reset
+  "back" to, so a plain reset can't recover them. The script removes the
+  5 course directories and restores `.gitlab-ci.yml` from its last-known
+  content; idempotent, prints nothing when already correct.
+
+  Also fixed a real, separate Makefile bug found while wiring this up:
+  `GITHUB_PAGES_DIR`/`GITLAB_UNIFIED_PAGES_DIR` defaulted to the `main`-branch
+  checkouts, not the `-pages-worktree` ones every other pages-branch target
+  actually needs -- `make fix-gitlab-unified-scope` run against the wrong
+  default briefly deleted tracked source files from the GitLab `main`
+  checkout (working-tree only, nothing staged or pushed, fully recovered via
+  `git checkout --`). Corrected both defaults to point at the
+  `-pages-worktree` checkouts, matching `PAGES_DIR`'s existing convention.
+
 ## 2026-08-27 (7)
 - Completed the vocabulary/phrase-drift audit from (5)/(6) above with a
   systematic script-driven pass instead of spot examples: checked every

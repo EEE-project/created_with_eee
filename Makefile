@@ -7,13 +7,13 @@
 SPLIT_PROJECTS_DIR ?= $(HOME)/work/greek/git/gitlab/EEE-project
 SPLIT_PROJECTS := created-with-eee-odyssey created-with-eee-palaestra created-with-eee-b1glc
 
-GITHUB_PAGES_DIR ?= $(HOME)/work/greek/git/github/EEE-project/created_with_eee
-GITLAB_UNIFIED_PAGES_DIR ?= $(HOME)/work/greek/git/gitlab/EEE-project/created_with_eee
+GITHUB_PAGES_DIR ?= $(HOME)/work/greek/git/github/EEE-project/created_with_eee-pages-worktree
+GITLAB_UNIFIED_PAGES_DIR ?= $(HOME)/work/greek/git/gitlab/EEE-project/created_with_eee-pages-worktree
 PAGES_DIR ?= $(CURDIR)/../created_with_eee-pages-worktree
 
 EEE_PYTHON ?= $(HOME)/.venv/eee/bin/python3
 
-.PHONY: help sync-main fix-split-roots fix-static-footer fix-split-hub-links export-notebooks verify-pages-deploy check-vocab
+.PHONY: help sync-main fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks verify-pages-deploy check-vocab
 
 help:
 	@echo "Targets:"
@@ -24,6 +24,18 @@ help:
 	@echo "                      tools/fix-split-session-root.py) to local checkouts of the 3"
 	@echo "                      split GitLab projects. Only edits files locally --"
 	@echo "                      review with git status/diff, then commit + push each"
+	@echo "                      by hand (Trezor-confirmed)."
+	@echo "  fix-gitlab-unified-scope"
+	@echo "                      Re-apply GitLab-unified-specific scope (see"
+	@echo "                      tools/fix-gitlab-unified-pages-scope.py) after any"
+	@echo "                      'git reset --hard codeberg/pages' on"
+	@echo "                      GITLAB_UNIFIED_PAGES_DIR: removes the split-off"
+	@echo "                      odyssey/palaestra/kapodistrias/kavafis_ithaki/zorba"
+	@echo "                      content and restores .gitlab-ci.yml, neither of which"
+	@echo "                      exists on Codeberg's pages branch to reset 'back' to."
+	@echo "                      MANDATORY after every such reset -- has silently"
+	@echo "                      regressed live Pages twice without it. Idempotent,"
+	@echo "                      only edits files locally -- review, then commit + push"
 	@echo "                      by hand (Trezor-confirmed)."
 	@echo "  fix-static-footer   Re-apply the static hub footer host fix (see"
 	@echo "                      tools/fix-static-footer-host.py) to GitHub + GitLab local"
@@ -70,6 +82,13 @@ fix-split-roots:
 	@echo "Local files only -- review with 'git status'/'git diff' in each project"
 	@echo "directory above, then commit + push by hand (Trezor-confirmed, one at a"
 	@echo "time). This target never commits or pushes."
+
+fix-gitlab-unified-scope:
+	python3 tools/fix-gitlab-unified-pages-scope.py $(GITLAB_UNIFIED_PAGES_DIR)
+	@echo ""
+	@echo "Local files only -- review with 'git status'/'git diff' in"
+	@echo "GITLAB_UNIFIED_PAGES_DIR, then commit + push by hand (Trezor-confirmed)."
+	@echo "This target never commits or pushes."
 
 fix-static-footer:
 	python3 tools/fix-static-footer-host.py --host https://github.com/EEE-project $(GITHUB_PAGES_DIR)
