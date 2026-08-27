@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-08-27 (7)
+- Completed the vocabulary/phrase-drift audit from (5)/(6) above with a
+  systematic script-driven pass instead of spot examples: checked every
+  chapter's "Useful Phrases" table against `phrases_ru.tsv` (all 10
+  chapters) and "Vocabulary" table against `nouns/verbs/adjectives_ru.tsv`
+  (ch07-09, 11-12, the chapters Pattern B was originally flagged in). Also
+  re-verified Kapodistrias's 4 lessons word-by-word -- the original audit's
+  "2 of 4 drifted" claim didn't hold up; only the already-reviewed
+  `σύγκρουση` case (left as-is) was real. Result: ~110 apparent mismatches
+  surfaced, all but one were pairs of equally-valid Russian phrasings (e.g.
+  "Как поживаешь?" vs "Как у тебя дела?") with no pedagogical difference --
+  left alone rather than arbitrarily picking one over the other. The one
+  genuine find: ch12's `ζαλίζομαι` was glossed "кружиться голова", an
+  ungrammatical wrong-verb-form construction, fixed to match the TSV's
+  correct "чувствовать головокружение" in both `chapter_12_notebook.py`
+  and its `_ru` variant.
+
 ## 2026-08-27 (6)
 - Cross-checked an external ChatGPT naturalness review of ellinika_b's
   Russian translations (`analisys/ellinika_b1/tr-s.md`) against the real
