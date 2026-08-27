@@ -24,7 +24,7 @@ def _(mo):
     )
     back_url = parent_back_url(f"{_ROOT}/ancient_greek/index.tsv")
     eee_topbar(mo, back_url=back_url, lang="ru", titles={
-        "ru": "Одиссея для отважных",
+        "ru": "Одиссея с Гомером",
     }, parent_titles={
         "ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek",
     }, style="index", ga_config=cfg.ga_config(), same_window=True)

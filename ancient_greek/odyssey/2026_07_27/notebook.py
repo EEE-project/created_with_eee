@@ -12,7 +12,7 @@
 import marimo
 
 __generated_with = "0.23.14"
-app = marimo.App(width="medium", app_title="Одиссея для отважных — День 7: Одиссея IX.152–180")
+app = marimo.App(width="medium", app_title="Одиссея с Гомером — День 7: Одиссея IX.152–180")
 
 
 @app.cell(hide_code=True)
@@ -21,7 +21,7 @@ def _(mo):
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
     eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles={
-        "ru": "Одиссея для отважных",
+        "ru": "Одиссея с Гомером",
     }, ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
@@ -46,7 +46,7 @@ def _(eee, mo):
     from pathlib import Path as _Path
     _thumb_path = _Path(__file__).parent / "meeting7_vase.jpg"
     _left = mo.vstack([
-        mo.md("# Одиссея для отважных"),
+        mo.md("# Одиссея с Гомером"),
         mo.md("## День 7 · Odyss. IX.152–180"),
     ])
     _img = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_07_27", width=280)

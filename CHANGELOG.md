@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-08-27 (3)
+- Correction to the 2026-08-26 entry below about Odyssey's Russian title: that
+  entry had the direction backwards. "Одиссея с Гомером" was a deliberate
+  rename applied directly to the deployed hub HTML on 2026-08-13, but
+  `gen_hub.py`'s own `titles` dict (and `ancient_greek/index.tsv`'s
+  `title_ru` column) were never updated to match. Regenerating the hub via
+  `gen_hub.py` in the 2026-08-26 fix below read from that stale dict and
+  silently reverted the deployed title back to "Одиссея для отважных" --
+  the opposite of "incidentally picked up" a fix. Corrected the source
+  (`gen_hub.py`, `ancient_greek/index.tsv`) and every place the name is
+  repeated in the course's own notebooks (topbar title, page heading,
+  `app_title`, across the course-index notebook and all 8 lesson
+  notebooks) to "Одиссея с Гомером" throughout.
+
 ## 2026-08-27 (2)
 - Deduplicated vocabulary-table loading across Palaestra and Kapodistrias,
   found while auditing notebook-table/TSV consistency: 8 of 10 Palaestra

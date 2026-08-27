@@ -97,7 +97,7 @@ HUBS = {
     "odyssey": {
         "tsv": "ancient_greek/odyssey/index.tsv", "parent_tsv": "ancient_greek/index.tsv",
         "out": "ancient_greek/odyssey",
-        "titles": {"ru": "Одиссея для отважных"}, "parent_titles": {"ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek"},
+        "titles": {"ru": "Одиссея с Гомером"}, "parent_titles": {"ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek"},
         "hero": None, "default_lang": "ru", "footer_lang": "ru",
     },
     "palaestra": {
