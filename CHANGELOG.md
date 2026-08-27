@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-08-27 (4)
+- Same regression class as the Odyssey title fix below, found while
+  investigating it: `Ελληνικά Β1`'s Russian hero subtitle was deliberately
+  changed from "Интерактивные тетради" to "Интерактивные конспекты" directly
+  on the deployed hub HTML on 2026-08-13, but `gen_hub.py`'s `HUBS["ellinika_b"]`
+  hero dict and `modern_greek/index.tsv`'s `title_ru` column were never
+  updated to match, so any hub regeneration would have silently reverted it.
+  Corrected the source (`gen_hub.py`, `modern_greek/index.tsv`) and the
+  course-index notebook's own hero cell (`modern_greek/ellinika_b/notebook.py`)
+  to "Интерактивные конспекты" throughout. The unrelated root-hub occurrence
+  of "Интерактивные тетради" (the top-level courses page, not this course)
+  is correct as-is and was left untouched.
+
 ## 2026-08-27 (3)
 - Correction to the 2026-08-26 entry below about Odyssey's Russian title: that
   entry had the direction backwards. "Одиссея с Гомером" was a deliberate

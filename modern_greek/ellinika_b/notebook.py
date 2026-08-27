@@ -35,7 +35,7 @@ def _(lang_sel, mo):
 def _(lang_sel, mo):
     from eee_project.notebook_utils import eee_hero
     eee_hero(mo, lang_sel.value, {
-        "ru": ("Ελληνικά Β1 — Интерактивные тетради", "Уроки современного греческого языка"),
+        "ru": ("Ελληνικά Β1 — Интерактивные конспекты", "Уроки современного греческого языка"),
         "el": ("Ελληνικά Β1 — Διαδραστικά Τετράδια", "Μαθήματα σύγχρονων ελληνικών"),
         "en": ("Ελληνικά Β1 — Interactive Notebooks", "Modern Greek language lessons"),
     }, lang_fallback="en")
