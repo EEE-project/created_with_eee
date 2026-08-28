@@ -11,7 +11,7 @@ and discussion material, and vocabulary drills. Part of the B1: Ελληνική
 - [GitLab Pages](https://eee-project.gitlab.io/created-with-eee-b1glc/kavafis_ithaki/) (split into its own project — GitLab's 1GB Pages limit)
 - [Codeberg Pages](https://eee-project.codeberg.page/created_with_eee/modern_greek/b1greeklanguageandculture/kavafis_ithaki/)
 
-2 lessons, numbered (not dated) to match the source material's own numbering.
+3 lessons, numbered (not dated) to match the source material's own numbering.
 
 Uses a different notebook architecture than Kapodistrias/Zorba — see
 [`../AGENTS.md`](../AGENTS.md) ("Kavafis Ithaki: a second notebook

@@ -1,5 +1,46 @@
 # Changelog
 
+## 2026-08-28 (2)
+- Added `kavafis_ithaki/3-4/`, the course's 3rd lesson (στ. 13-23, continuing
+  directly after lesson 2's στ. 4-12), built from the `Kavafis_Ithaki/3-4/`
+  pptx. подстрочник (this notebook's own corrected literal gloss -- the
+  source pptx's own RU caption mistranslated σεντέφια as "шёлк", fixed
+  rather than propagated) plus Шмаков/Бродский and Ильинская. Левитов
+  dropped for this lesson only: his stihi.ru source page is genuinely gone
+  ("Автор закрыл свою страницу"), confirmed via a live browser render, not
+  just a fetch failure. Vocabulary hand-curated from the stanza + the
+  pptx's own thematic slides -- the master dated-notes file's only
+  Kavafis session (24/7/2026) turned out to already be fully consumed by
+  lesson 1. `translation_presence.tsv` was hand-judged, then corrected 5
+  times against live quiz testing (σπουδασμένος/Ильинская,
+  σταματήσεις/both translators, εύχεσαι/Ильинская, μαθαίνω/Ильинская, all
+  yes->no) -- Ильинская's more freely-restructured translation style kept
+  substituting a related-but-different action or referent for the exact
+  word being tested. Added a question-count selector (10/20/Все) to the
+  presence exercise, wired to `balance_presence_items`'s existing `n=`
+  parameter (needs `eee-project>=1.10.2`). `index.tsv`/`README.md` updated;
+  `AGENTS.md` build-history note added.
+
+## 2026-08-28 (1)
+- ellinika_b chapter_11: translated all 14 previously-untranslated example
+  sentences in the "Когда используется" grammar table (RU/EL/EN, main
+  notebook + `_ru`/`_el` variant files); added a clarifying sentence on
+  να/ας/μη(ν) alternatives to Απλή Υποτακτική; reworded the RU intro
+  paragraph; applied a user-supplied corrected table (guillemets, reworded
+  glosses), then reverted an initial "Θέλω/θα ήθελα" row-split back to one
+  combined row after checking the real textbook, which presents it as a
+  single item.
+- ellinika_b chapter_12: 2 small wording fixes (μη(ν)/μήπως + θα phrasing;
+  "с завтрашнего дня" gloss).
+- ellinika_b chapter_08: cross-checked an external grammar review
+  (`analisys/ellinika_b1/ch08.notes.md`) against the real textbook -- 2 of
+  its claims didn't hold up (the book already uses the stated conditional
+  terminology; γκρινιάρης's declension dash is in the book too), 2 did and
+  were applied: broadened an overly-narrow adjectives-section header and
+  removed 3 duplicate words from the "other adjectives" list (RU/EL/EN,
+  main notebook + all 3 `_ru`/`_el`/`_en` variant files); added explicit
+  «ты» to 3 conditional-sentence rows for pronoun consistency (RU only).
+
 ## 2026-08-27 (8)
 - Added `tools/fix-gitlab-unified-pages-scope.py` (+ `make
   fix-gitlab-unified-scope`), a deterministic fix for a regression that hit

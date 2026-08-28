@@ -224,6 +224,35 @@ nb_dir=notebook_dir, remote_base=RAW_BASE)` instead of a bare `pd.read_csv(os.pa
 (unlike lesson 2's — see that course's own build history) — the sync found nothing to correct,
 confirming its lemma/form columns were already ordered correctly.
 
+**Kavafis Ithaki lesson 3 (`3-4/`, 2026-08-28) built fresh with `ensure_file` from the start** —
+no retrofit needed. Source material was a single pptx (`Kavafis_Ithaki/3-4/`, no `notes.md`),
+covering στ. 13–23 (the stanza continuing directly after lesson 2's στ. 4–12). Vocabulary was
+hand-curated from the stanza + the pptx's own thematic slides rather than the master dated-notes
+file — that file's only Kavafis-dated session (24/7/2026) turned out to already be fully consumed
+by lesson 1 (verified via direct diff against lesson 1's `nouns.tsv`/`verbs.tsv`/`adjectives.tsv`,
+exact match). **Левитов dropped for this lesson only**: his stihi.ru source
+(`stihi.ru/2021/02/15/6272`, linked from lesson 1's `notes.md`) now shows "Автор закрыл свою
+страницу" — a real, deliberate takedown (confirmed via a live browser render, not just a fetch
+failure) — user decided not to substitute a reconstructed-from-memory or scraped-mirror text
+under his name; `LITERARY_TRANSLATORS`/`trans_selector` here list only Шмаков/Бродский +
+Ильинская. `vocabulary.tsv` omitted entirely (and its notebook cells skipped) — no genuine
+multi-word phrase in this stanza's material, unlike lesson 2's one entry. подстрочник is this
+notebook's own corrected literal gloss: the source pptx's own RU caption mistranslated
+`σεντέφια` (mother-of-pearl) as "шёлк" (silk) — fixed rather than propagated, since подстрочник
+is explicitly this notebook's own addition, not a source-traced quote. Tested via
+`marimo run --no-sandbox` + Playwright (not `marimo edit` + code_mode — no active session without
+a real browser tab attached): 0 console errors, 0 error-indicator text anywhere in the rendered
+body across all `_lang` branches' cells. `mo.ui.table` content is invisible to `inner_text`
+(confirmed again this session) — verified all 3 vocab tables via locator `.count()` instead.
+Every one of the 15 nouns/2 verbs/4 adjectives independently verified against the real backend
+(`noun_drill_meta`/`verb_drill_meta`/`adjective_drill_meta`, not just whichever one word the
+random sampler picked on a given page load) — all succeed, no lookup failures. Stanza/translation
+parsing and the translation-presence sync verified directly against the pipeline functions:
+3 translators × 11 lines parsed correctly, 23/23 `poem_vocab.tsv` rows are content-POS, sync
+found nothing to add/correct against the hand-authored 46-row `translation_presence.tsv` (23
+words × 2 translators, matching lesson 1's own "sync found nothing to correct" precedent),
+18 balanced quiz items built.
+
 **Still not fixed: the other two courses under this umbrella (Kapodistrias, all 16 files;
 Zorba, all 3 files) still read their own local TSVs bare, zero `ensure_file` usage.** A
 repo-wide grep (2026-07-31) confirms Odyssey and Palaestra already use `ensure_file`
