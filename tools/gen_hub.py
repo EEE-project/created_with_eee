@@ -274,6 +274,26 @@ def read_self_index_url(path: Path) -> str:
     return rows[0]["index_url"]
 
 
+def read_ga_snippet() -> str:
+    """Same ga.json every notebook's ConfigStore reads -- see reference in
+    eee_project.notebook_utils.load_ga_config. These are plain static pages
+    (no mo.Html() inert-script issue), so a synchronous <script> works as-is."""
+    ga_path = REPO_ROOT / "ga.json"
+    if not ga_path.exists():
+        return ""
+    measurement_id = json.loads(ga_path.read_text(encoding="utf-8")).get("measurement_id")
+    if not measurement_id:
+        return ""
+    mid = js_str(measurement_id)
+    return f"""<script async src="https://www.googletagmanager.com/gtag/js?id={measurement_id}"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){{dataLayer.push(arguments);}}
+gtag('js', new Date());
+gtag('config', {mid});
+</script>"""
+
+
 def render_topbar(cfg: dict, langs: "list[str]", back_url: "str | None") -> str:
     """Matches eee_topbar's style="index" branch: self-badge when no back_url,
     else a "◀ {parent_title}" link. Trilingual pages render one <span>/<a> per
@@ -414,6 +434,7 @@ def gen_hub(key: str, cfg: dict, out_root: Path) -> None:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title_text)}</title>
+{read_ga_snippet()}
 </head>
 <body>
 {chr(10).join(body)}
