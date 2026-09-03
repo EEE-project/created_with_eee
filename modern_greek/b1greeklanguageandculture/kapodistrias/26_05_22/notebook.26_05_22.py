@@ -238,9 +238,9 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
             """),
             _img(4),
             mo.md(r"""
-            ### **3. The Film: "Ioannis Kapodistrias" (Smaradis)**
+            ### **3. The Film: "Ioannis Kapodistrias" (Smaragdis)**
 
-            In the lesson we watched a clip from the OPEN TV documentary about Yannis Smaradis's film (starring Antonis Myriagkos).
+            In the lesson we watched a clip from the OPEN TV documentary about Yannis Smaragdis's film (starring Antonis Myriagkos).
 
             > *«Δολοφονήθηκε... από χέρι ελληνικό με τις ευλογίες ξένων δυνάμεων.»*
             > "He was assassinated... by a Greek hand, with the blessing of foreign powers."
