@@ -18,7 +18,7 @@ app = marimo.App(width="medium", app_title="Одиссея с Гомером —
 @app.cell(hide_code=True)
 def _(mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
     eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles={
         "ru": "Одиссея с Гомером",
@@ -49,7 +49,7 @@ def _(eee, mo):
         mo.md("# Одиссея с Гомером"),
         mo.md("## День 2 · Odyss. IX.39–61"),
     ])
-    _right = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_22", width=280)
+    _right = eee.magnify_image(mo, _thumb_path, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_22", width=280)
     mo.hstack([_left, _right], align="start")
     return
 

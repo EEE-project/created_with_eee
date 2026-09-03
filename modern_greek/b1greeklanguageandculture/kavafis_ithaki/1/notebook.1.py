@@ -17,7 +17,7 @@ app = marimo.App(width="medium", app_title="Καβάφης — Ιθάκη — Μ
 @app.cell(hide_code=True)
 def _(language_selector, mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv",
@@ -1020,7 +1020,7 @@ def _(gu2):
 @app.cell(hide_code=True)
 def _(eee, mo, notebook_dir):
     from pathlib import Path as _Path
-    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/kavafis_ithaki/1"
+    RAW_BASE = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main/modern_greek/b1greeklanguageandculture/kavafis_ithaki/1"
     def img(name, width=700):
         return eee.magnify_image(mo, _Path(notebook_dir) / name, raw_base=RAW_BASE, width=width, prefer_local=True)
 
@@ -1069,7 +1069,7 @@ def _(RAW_BASE, gu2, notebook_dir):
 def _(language_selector, mo):
     from eee_project import ConfigStore as _ConfigStore
     from eee_project.notebook_utils import eee_footer
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     _cfg = _ConfigStore.from_file_or_url(
         __file__,
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv",
