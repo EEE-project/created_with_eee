@@ -8,12 +8,12 @@
 
 import marimo
 
-__generated_with = "0.23.14"
+__generated_with = "0.23.13"
 app = marimo.App(width="medium")
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(lang_sel, mo):
     from eee_project import ConfigStore, eee_topbar
     from eee_project.notebook_utils import parent_back_url
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
@@ -23,8 +23,10 @@ def _(mo):
         ga=f"{_ROOT}/ga.json",
     )
     back_url = parent_back_url(f"{_ROOT}/ancient_greek/index.tsv")
-    eee_topbar(mo, back_url=back_url, lang="ru", titles={
+    eee_topbar(mo, back_url=back_url, lang=lang_sel.value, titles={
         "ru": "Одиссея с Гомером",
+        "en": "Odyssey with Homer",
+        "el": "Οδύσσεια με τον Όμηρο",
     }, parent_titles={
         "ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek",
     }, style="index", ga_config=cfg.ga_config(), same_window=True)
@@ -32,16 +34,27 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(cfg, mo):
-    from eee_project.notebook_utils import eee_card_list
-    eee_card_list(mo, cfg, "ru", lang_fallback="ru", same_window=True)
+def _(lang_sel, mo):
+    from eee_project.notebook_utils import eee_hero
+    eee_hero(mo, lang_sel.value, {
+        "ru": ("Одиссея с Гомером", "Αρχαία Ελληνικά"),
+        "el": ("Οδύσσεια με τον Όμηρο", "Αρχαία Ελληνικά"),
+        "en": ("Odyssey with Homer", "Ancient Greek"),
+    })
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(cfg, lang_sel, mo):
+    from eee_project.notebook_utils import eee_card_list
+    eee_card_list(mo, cfg, lang_sel.value, lang_fallback="ru", same_window=True)
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
     from eee_project.notebook_utils import eee_footer
-    eee_footer(mo, lang="ru")
+    eee_footer(mo, lang=lang_sel.value)
     return
 
 
@@ -50,6 +63,23 @@ def _():
     import marimo as mo
 
     return (mo,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    lang_sel = mo.ui.dropdown(
+        options={"English": "en", "Русский": "ru", "Ελληνικά": "el"},
+        value="English",
+        label="🌐",
+    )
+    mo.Html(f"""
+    <div style="position:fixed;top:56px;right:12px;z-index:1000;
+                background:white;padding:6px 10px;border-radius:8px;
+                box-shadow:0 2px 8px rgba(0,0,0,.12);">
+      {lang_sel}
+    </div>
+    """)
+    return (lang_sel,)
 
 
 if __name__ == "__main__":

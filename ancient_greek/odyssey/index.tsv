@@ -1,10 +1,9 @@
-url	icon	greek	label_ru	title_ru	desc_ru	index_url
-2026_06_01/	🏺	Οδ. Α.1–21	Пробный урок	Одиссея I.1–21	Зачин поэмы: Муза, скитания Одиссея, гнев богов.	/created_with_eee/ancient_greek/odyssey/
-2026_06_15/	🗺️	Οδ. Θ.19–38	День 1	Одиссея IX.19–38	Одиссей называет своё имя. Описание Итаки.	/created_with_eee/ancient_greek/odyssey/
-2026_06_22/	⛵	Οδ. Θ.39–61	День 2	Одиссея IX.39–61	Киконы.	/created_with_eee/ancient_greek/odyssey/
-2026_06_29/	🌀	Οδ. Θ.62–81	День 3	Одиссея IX.62–81	Буря у мыса Малея.	/created_with_eee/ancient_greek/odyssey/
-2026_07_06/	🪷	Οδ. Θ.82–104	День 4	Одиссея IX.82–104	Лотофаги.	/created_with_eee/ancient_greek/odyssey/
-2026_07_13/	👁️	Οδ. Θ.105–129	День 5	Одиссея IX.105–129	Циклопы.	/created_with_eee/ancient_greek/odyssey/
-2026_07_20/	🏝️	Οδ. Θ.130–151	День 6	Одиссея IX.130–151	Плодородный остров. Ночная высадка.	/created_with_eee/ancient_greek/odyssey/
-2026_07_27/	🐐	Οδ. Θ.152–180	День 7	Одиссея IX.152–180	Охота на коз. Первый взгляд на землю циклопов.	/created_with_eee/ancient_greek/odyssey/
-
+url	icon	greek	label_ru	label_el	label_en	title_ru	title_el	title_en	desc_ru	desc_el	desc_en	index_url
+2026_06_01/	🏺	Οδ. Α.1–21	Пробный урок	Πιλοτικό μάθημα	Pilot lesson	Одиссея I.1–21	Οδύσσεια I.1–21	Odyssey I.1–21	Зачин поэмы: Муза, скитания Одиссея, гнев богов.	Προοίμιο του ποιήματος: η Μούσα, οι περιπλανήσεις του Οδυσσέα, η οργή των θεών.	Opening of the poem: the Muse, Odysseus's wanderings, the wrath of the gods.	/created_with_eee/ancient_greek/odyssey/
+2026_06_15/	🗺️	Οδ. Θ.19–38	День 1	Ημέρα 1	Day 1	Одиссея IX.19–38	Οδύσσεια IX.19–38	Odyssey IX.19–38	Одиссей называет своё имя. Описание Итаки.	Ο Οδυσσέας λέει το όνομά του. Περιγραφή της Ιθάκης.	Odysseus names himself. A description of Ithaca.	/created_with_eee/ancient_greek/odyssey/
+2026_06_22/	⛵	Οδ. Θ.39–61	День 2	Ημέρα 2	Day 2	Одиссея IX.39–61	Οδύσσεια IX.39–61	Odyssey IX.39–61	Киконы.	Οι Κίκονες.	The Cicones.	/created_with_eee/ancient_greek/odyssey/
+2026_06_29/	🌀	Οδ. Θ.62–81	День 3	Ημέρα 3	Day 3	Одиссея IX.62–81	Οδύσσεια IX.62–81	Odyssey IX.62–81	Буря у мыса Малея.	Καταιγίδα στο ακρωτήριο Μαλέα.	A storm off Cape Malea.	/created_with_eee/ancient_greek/odyssey/
+2026_07_06/	🪷	Οδ. Θ.82–104	День 4	Ημέρα 4	Day 4	Одиссея IX.82–104	Οδύσσεια IX.82–104	Odyssey IX.82–104	Лотофаги.	Οι Λωτοφάγοι.	The Lotus-Eaters.	/created_with_eee/ancient_greek/odyssey/
+2026_07_13/	👁️	Οδ. Θ.105–129	День 5	Ημέρα 5	Day 5	Одиссея IX.105–129	Οδύσσεια IX.105–129	Odyssey IX.105–129	Циклопы.	Οι Κύκλωπες.	The Cyclopes.	/created_with_eee/ancient_greek/odyssey/
+2026_07_20/	🏝️	Οδ. Θ.130–151	День 6	Ημέρα 6	Day 6	Одиссея IX.130–151	Οδύσσεια IX.130–151	Odyssey IX.130–151	Плодородный остров. Ночная высадка.	Εύφορο νησί. Νυχτερινή απόβαση.	A fertile island. A night landing.	/created_with_eee/ancient_greek/odyssey/
+2026_07_27/	🐐	Οδ. Θ.152–180	День 7	Ημέρα 7	Day 7	Одиссея IX.152–180	Οδύσσεια IX.152–180	Odyssey IX.152–180	Охота на коз. Первый взгляд на землю циклопов.	Κυνήγι κατσικιών. Πρώτη ματιά στη γη των Κυκλώπων.	A goat hunt. A first sight of the Cyclopes' land.	/created_with_eee/ancient_greek/odyssey/
