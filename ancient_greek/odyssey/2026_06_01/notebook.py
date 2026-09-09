@@ -782,19 +782,35 @@ def _(cfg, gu):
 
 @app.cell(hide_code=True)
 def _(mo):
-    lang_sel = mo.ui.dropdown(
-        options={"English": "en", "Русский": "ru", "Ελληνικά": "el"},
-        value="English",
-        label="🌐",
-    )
+    from eee_project import language_bridge
+    # own cell, undisplayed: a cell that also displays/uses this would
+    # rerun (and reset the bridge) on every dependent re-render
+    bridge = language_bridge(mo)
+    return (bridge,)
+
+
+@app.cell(hide_code=True)
+def _(bridge, mo):
+    from eee_project import language_selector
+    # takes `bridge` as a parameter (not just via closure) so marimo
+    # reruns this cell -- rebuilding the dropdown with the persisted
+    # language -- the moment the browser's async localStorage read lands
+    lang_sel = language_selector(mo, bridge)
+    return (lang_sel,)
+
+
+@app.cell(hide_code=True)
+def _(bridge, lang_sel, mo):
+    from eee_project import save_language_selection
+    save_language_selection(bridge, lang_sel)
     mo.Html(f"""
     <div style="position:fixed;top:56px;right:12px;z-index:1000;
                 background:white;padding:6px 10px;border-radius:8px;
                 box-shadow:0 2px 8px rgba(0,0,0,.12);">
-      {lang_sel}
+      {lang_sel}{bridge}
     </div>
     """)
-    return (lang_sel,)
+    return
 
 
 if __name__ == "__main__":

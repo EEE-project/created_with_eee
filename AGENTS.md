@@ -116,6 +116,31 @@ them. Don't repeat `nav_icons=True`/`show_prev_when_done=True` at individual
 call sites once the course-level config already sets it — that's the
 redundant, harder-to-maintain pattern this replaced.
 
+## Cross-page UI language persistence
+
+A lesson notebook's UI-language dropdown should use `eee_project`'s
+`language_bridge`/`language_selector`/`save_language_selection` trio, not a
+plain `mo.ui.dropdown` — see eee-project's own `docs/api-patterns.md` for the
+exact 3-cell wiring (bridge, selector, save — each needs its own cell so
+marimo's reactivity reruns them at the right time). It persists the choice to
+the browser's `localStorage` under the key `"eee_lang"`, so navigating between
+pages keeps the same language selected instead of resetting to the notebook's
+hardcoded default.
+
+This key is shared site-wide: `tools/gen_hub.py`'s static hub pages read/write
+the same `"eee_lang"` key via their own vanilla-JS `setLang()` (no Pyodide —
+see that course's own note on hub pages being statically generated, not a WASM
+export of `notebook.py`). A language picked on a hub page carries into
+whichever lesson is opened next, and vice versa, precisely because both sides
+target the same key — don't invent a different key or mechanism for a new
+course, or that course's pages will silently fall out of the shared
+persistence.
+
+Already wired: `ellinika_b`, `b1greeklanguageandculture` (kapodistrias, zorba,
+kavafis_ithaki), and Odyssey's two oldest lessons (`2026_06_01`, `2026_06_15`
+— the rest of Odyssey and all of Palaestra still use a plain, non-persisted
+dropdown as of 2026-09-09).
+
 ## Publishing a lesson/chapter to Pages
 
 Locally (via `marimo edit`), a course's own `notebook.py` still renders its

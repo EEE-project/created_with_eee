@@ -83,6 +83,7 @@ Identify cells by content, not by ID — IDs change after each save.
 | content / first line | role |
 |---|---|
 | `eee_topbar(mo, ...)` | EEE navigation bar |
+| `{lang_sel}{bridge}` (floating div, top-right) | language switcher, cross-page persisted via `eee_project.language_bridge`/`language_selector`/`save_language_selection` (browser `localStorage`, key `"eee_lang"` — same key `tools/gen_hub.py` uses for the hub pages, so a hub selection carries into a lesson) |
 | `mo.md("# Одиссея…")` + image | title, molab badge, lesson image |
 | `**Материалы занятия:**` PDF links | materials links |
 | `## Слова, слова…` | per-lesson vocabulary notes (optional section) |
@@ -110,6 +111,7 @@ Identify cells by content, not by ID — IDs change after each save.
 | `tp_cv, tp_set_cv = mo.state(None)` | translation-presence state (own `tp_*` state block) |
 | `stanza_selector = mo.ui.dropdown(...)` | stanza picker |
 | `trans_selector = mo.ui.dropdown(...)` | translation picker |
+| `bridge = eee_project.language_bridge(mo)` | localStorage bridge for `lang_sel` (own cell, undisplayed — see visible-cells row above) |
 | `eee.parse_stanza_text(...)` / `eee.parse_stanza_translations(...)` | text parsers (shared `eee_project` functions, `ref_prefix="### Odyss. "`) + `STANZAS`/`RHYTHM_HTML`/`TRANS_DESC` builders |
 | `import csv` / `QUIZ_WORDS_RAW = gu.resolve_word_grammar(...)` | vocab TSV loader |
 | `QUIZ_WORDS = gu.sample_session_items(...)` | word-quiz session sample (filter hardcoded `"none"`) |
@@ -198,7 +200,8 @@ a new corpus-level translator, give it a real `<!-- **...** -->` comment like
 
 ## Paradigm table slots — eee_project library, not per-lesson files
 
-The quiz paradigm table is rendered by `eee.build_grc_paradigm_table(ag_backend, um_backend)`.
+The quiz paradigm table is rendered by `eee.build_grc_paradigm_table(ag_backend, um_backend, lang=lang_sel.value)`
+(the `lang=` argument must track `lang_sel` — see the language-switcher row above — so the labels re-render when the UI language changes).
 Which grammatical slots appear is determined by the **top-level eee_project library**:
 
 - `eee_project/data/labels/{pos}-{lang}.tsv` — UD feature rows and their labels
