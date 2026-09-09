@@ -18,6 +18,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).parent.parent
 
 LANG_OPTIONS = {"Ελληνικά": "el", "Русский": "ru", "English": "en"}
+LANG_NAMES = {code: name for name, code in LANG_OPTIONS.items()}
 FOOTER_LABEL = {"ru": "Исходный код:", "en": "Source:", "el": "Πηγαίος κώδικας:"}
 CARD_LIST_SOON = {"ru": "скоро", "el": "σύντομα", "en": "coming soon"}
 
@@ -97,16 +98,27 @@ HUBS = {
     "odyssey": {
         "tsv": "ancient_greek/odyssey/index.tsv", "parent_tsv": "ancient_greek/index.tsv",
         "out": "ancient_greek/odyssey",
-        "titles": {"ru": "Одиссея с Гомером"}, "parent_titles": {"ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek"},
-        "hero": None, "default_lang": "ru", "footer_lang": "ru",
+        "titles": {"ru": "Одиссея с Гомером", "en": "Odyssey with Homer", "el": "Οδύσσεια με τον Όμηρο"},
+        "parent_titles": {"ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek"},
+        "hero": {
+            "ru": ("Одиссея с Гомером", "Αρχαία Ελληνικά"),
+            "el": ("Οδύσσεια με τον Όμηρο", "Αρχαία Ελληνικά"),
+            "en": ("Odyssey with Homer", "Ancient Greek"),
+        },
+        "default_lang": "en", "footer_lang": None, "lang_order": ["en", "ru", "el"],
     },
     "palaestra": {
         "tsv": "ancient_greek/palaestra/ancient_greek.2026.summer/index.tsv",
         "parent_tsv": "ancient_greek/index.tsv",
         "out": "ancient_greek/palaestra/ancient_greek.2026.summer",
-        "titles": {"ru": "Palaestra"}, "parent_titles": {"ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek"},
-        "hero": {"ru": ("Древнегреческий язык, начальный уровень", "Palaestra · Лето 2026")},
-        "default_lang": "ru", "footer_lang": "ru",
+        "titles": {"ru": "Палестра", "en": "Palaestra", "el": "Παλαίστρα"},
+        "parent_titles": {"ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek"},
+        "hero": {
+            "ru": ("Древнегреческий язык, начальный уровень", "Palaestra · Лето 2026"),
+            "en": ("Ancient Greek, Beginner Level", "Palaestra · Summer 2026"),
+            "el": ("Αρχαία Ελληνικά, Επίπεδο Αρχαρίων", "Παλαίστρα · Καλοκαίρι 2026"),
+        },
+        "default_lang": "en", "footer_lang": None, "lang_order": ["en", "ru", "el"],
     },
     "ellinika_b": {
         "tsv": "modern_greek/ellinika_b/index.tsv", "parent_tsv": "modern_greek/index.tsv",
@@ -376,10 +388,11 @@ def render_footer(langs: "list[str]") -> str:
     return "\n".join(parts)
 
 
-def render_lang_picker(default_lang: str) -> str:
+def render_lang_picker(default_lang: str, lang_order: "list[str] | None" = None) -> str:
+    codes = lang_order or list(LANG_OPTIONS.values())
     opts = "\n".join(
-        f'<option value="{code}"{" selected" if code == default_lang else ""}>{esc(name)}</option>'
-        for name, code in LANG_OPTIONS.items()
+        f'<option value="{code}"{" selected" if code == default_lang else ""}>{esc(LANG_NAMES[code])}</option>'
+        for code in codes
     )
     return f"""<div id="lang-picker">🌐 <select onchange="setLang(this.value)">{opts}</select></div>
 <script>
@@ -419,7 +432,7 @@ def gen_hub(key: str, cfg: dict, out_root: Path) -> None:
     body = [
         PAGE_CSS,
         render_topbar(cfg, langs, back_url),
-        render_lang_picker(default_lang) if is_multilingual else "",
+        render_lang_picker(default_lang, cfg.get("lang_order")) if is_multilingual else "",
         '<div class="eee-page">',
         hero_html,
         render_cards(rows, langs),

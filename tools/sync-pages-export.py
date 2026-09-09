@@ -86,12 +86,28 @@ def split_destination(rel_dir: pathlib.PurePosixPath) -> "tuple[str, pathlib.Pur
 
 
 def replace_dir(src: pathlib.Path, dest: pathlib.Path) -> None:
-    """Clean-replace dest with src's contents, so files removed/renamed in
-    src don't linger as stale ghosts at dest."""
+    """Clean-replace dest's contents with src's, so files removed/renamed in
+    src don't linger as stale ghosts at dest -- without touching a .git
+    directly inside dest. A split project's own content sits at its repo
+    root (empty dest-prefix), so dest can BE a git checkout's top level;
+    a blanket rmtree(dest) would delete its .git along with everything
+    else. Only clear dest's own children, skipping .git specifically."""
     if dest.exists():
-        shutil.rmtree(dest)
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(src, dest)
+        for child in dest.iterdir():
+            if child.name == ".git":
+                continue
+            if child.is_dir() and not child.is_symlink():
+                shutil.rmtree(child)
+            else:
+                child.unlink()
+    else:
+        dest.mkdir(parents=True)
+    for child in src.iterdir():
+        target = dest / child.name
+        if child.is_dir() and not child.is_symlink():
+            shutil.copytree(child, target)
+        else:
+            shutil.copy2(child, target)
 
 
 def main() -> None:
