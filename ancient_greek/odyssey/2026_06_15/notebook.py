@@ -21,7 +21,7 @@ app = marimo.App(
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
     eee_topbar(mo, back_url=cfg.index_url(), lang=lang_sel.value, titles={
         "ru": "Одиссея с Гомером",
@@ -59,14 +59,14 @@ def _(eee, lang_sel, mo):
         mo.md(_h1),
         mo.md(_h2),
     ])
-    _img = eee.magnify_image(mo, _Ph(__file__).parent / "map_ithaca.jpg", raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=280)
+    _img = eee.magnify_image(mo, _Ph(__file__).parent / "map_ithaca.jpg", raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_15", width=280)
     mo.hstack([_left, _img], align="start")
     return
 
 
 @app.cell(hide_code=True)
 def _(gu, lang_sel, mo):
-    _base = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15"
+    _base = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_15"
     mo.md(
         f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
         f"[Одиссея 1.pdf]({_base}/Одиссея%201.pdf) · "
@@ -80,7 +80,7 @@ def _(gu, lang_sel, mo):
 def _(eee, lang_sel, mo):
     from pathlib import Path as _Pe
     _etm = _Pe(__file__).parent / "etymologicum_magnum_odysseus.jpg"
-    _etimg = eee.magnify_image(mo, _etm, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=460)
+    _etimg = eee.magnify_image(mo, _etm, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_15", width=460)
     _TXT = {
         "ru": r"""
     ---
@@ -175,7 +175,7 @@ def _(eee, lang_sel, mo):
 def _(eee, lang_sel, mo):
     from pathlib import Path as _Pg
     _gen = _Pg(__file__).parent / "genealogy.jpg"
-    _gimg = eee.magnify_image(mo, _gen, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=560)
+    _gimg = eee.magnify_image(mo, _gen, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_15", width=560)
     _TXT = {
         "ru": r"""
     ---
@@ -226,7 +226,7 @@ def _(eee, lang_sel, mo):
 def _(eee, lang_sel, mo):
     from pathlib import Path as _Pn
     _ner = _Pn(__file__).parent / "neriton_epithet.jpg"
-    _nimg = eee.magnify_image(mo, _ner, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=560)
+    _nimg = eee.magnify_image(mo, _ner, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_15", width=560)
     _TXT = {
         "ru": r"""
     ---
@@ -285,7 +285,7 @@ def _(eee, lang_sel, mo):
 def _(eee, lang_sel, mo):
     from pathlib import Path as _Pi
     _ith = _Pi(__file__).parent / "ithaca_kefalonia.jpg"
-    _iimg = eee.magnify_image(mo, _ith, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=460)
+    _iimg = eee.magnify_image(mo, _ith, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_15", width=460)
     _TXT = {
         "ru": r"""
     ---
