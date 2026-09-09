@@ -1149,8 +1149,8 @@ def _(cfg, gu):
 @app.cell(hide_code=True)
 def _(mo):
     lang_sel = mo.ui.dropdown(
-        options={"Русский": "ru", "English": "en", "Ελληνικά": "el"},
-        value="Русский",
+        options={"English": "en", "Русский": "ru", "Ελληνικά": "el"},
+        value="English",
         label="🌐",
     )
     mo.Html(f"""
