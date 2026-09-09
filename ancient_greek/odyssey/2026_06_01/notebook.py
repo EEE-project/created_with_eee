@@ -79,13 +79,6 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    _MURRAY = "<b>Homer.</b> <a href='https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3atext%3a1999.01.0135'><i>The Odyssey</i></a> with an English Translation by A.T. Murray, PH.D. in two volumes. Cambridge, MA., Harvard University Press; London, William Heinemann, Ltd. 1919."
-    mo.md(_MURRAY)
-    return
-
-
-@app.cell(hide_code=True)
 def _(TRANS_DESC, mo, trans_selector):
     _PODSTROCHNIK_DESC = "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала"
     _desc_map = {"подстрочник": _PODSTROCHNIK_DESC, **TRANS_DESC}
@@ -547,9 +540,12 @@ def _(STANZAS, mo):
 def _(mo):
     trans_selector = mo.ui.dropdown(
         options={
-            "подстрочник":             "подстрочник",
-            "Жуковский (1849) · рус.": "Жуковский",
-            "Вересаев (1953) · рус.":  "Вересаев",
+            "подстрочник":                      "подстрочник",
+            "Жуковский (1849) · рус.":          "Жуковский",
+            "Вересаев (1953) · рус.":           "Вересаев",
+            "Pope (1725) · англ.":              "Pope",
+            "Murray (1919) · англ.":            "Murray",
+            "Πολυλάς (1875/1877) · новогреч.":  "Πολυλάς",
         },
         value="подстрочник",
         label="Перевод",
@@ -565,25 +561,39 @@ async def _(cfg, eee):
     _root = _P(__file__).parent
     _session_remote = cfg.nb_remote("2026_06_01")
     _fetched = await _GU.ensure_files(
-        "greek.md", "translations_ru.md", "ictus.html",
+        "greek.md", "ictus.html",
         nb_dir=_root, remote_base=_session_remote,
     )
     _greek_md = _fetched["greek.md"]
-    _trans_md = _fetched["translations_ru.md"]
     _ictus_html = _fetched["ictus.html"]
-    if _greek_md is None or _trans_md is None or _ictus_html is None:
+
+    _gke_remote = "https://codeberg.org/EEE-project/greek-knowledge-eee/raw/branch/main/texts/odyssey"
+    _trans_fetched = await _GU.ensure_files(
+        "translations_ru.md", "translations_en.md", "translations_el.md",
+        nb_dir=_root, remote_base=_gke_remote,
+    )
+    if _greek_md is None or _ictus_html is None or any(v is None for v in _trans_fetched.values()):
         raise FileNotFoundError(
-            "greek.md / translations_ru.md / ictus.html: one or more required "
-            "session files could not be fetched (see ensure_file diagnostics above)"
+            "greek.md/ictus.html/translations_{ru,en,el}.md: one or more "
+            "required session files could not be fetched (see ensure_file "
+            "diagnostics above)"
         )
     _greek = eee.parse_stanza_text(_greek_md.read_text(encoding="utf-8"), ref_prefix="### Odyss. ")
-    _trans_ru, _desc_ru = eee.parse_stanza_translations(_trans_md.read_text(encoding="utf-8"), ref_prefix="### Odyss. ")
-    TRANS_DESC = _desc_ru
+
+    _translations: dict = {}
+    TRANS_DESC: dict = {}
+    for _fname in ("translations_ru.md", "translations_en.md", "translations_el.md"):
+        _tr, _desc = eee.parse_stanza_translations(
+            _trans_fetched[_fname].read_text(encoding="utf-8"), ref_prefix="### Odyss. "
+        )
+        _translations.update(_tr)
+        TRANS_DESC.update(_desc)
+
     STANZAS = [
         {
             "ref": ref,
             "lines": lines,
-            "translations": {tr: d.get(ref, "—") for tr, d in _trans_ru.items()},
+            "translations": {tr: d.get(ref, "—") for tr, d in _translations.items()},
         }
         for ref, lines in _greek.items()
     ]
