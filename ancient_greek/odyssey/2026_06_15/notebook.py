@@ -11,17 +11,22 @@
 
 import marimo
 
-__generated_with = "0.23.14"
-app = marimo.App(width="medium", app_title="Одиссея с Гомером — День 1: Одиссея IX.19–38")
+__generated_with = "0.23.13"
+app = marimo.App(
+    width="medium",
+    app_title="Одиссея с Гомером — День 1: Одиссея IX.19–38",
+)
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(lang_sel, mo):
     from eee_project import ConfigStore, eee_topbar
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
-    eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles={
+    eee_topbar(mo, back_url=cfg.index_url(), lang=lang_sel.value, titles={
         "ru": "Одиссея с Гомером",
+        "en": "Odyssey with Homer",
+        "el": "Οδύσσεια με τον Όμηρο",
     }, ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
@@ -42,11 +47,17 @@ def _(cfg):
 
 
 @app.cell(hide_code=True)
-def _(eee, mo):
+def _(eee, lang_sel, mo):
     from pathlib import Path as _Ph
+    _TITLES = {
+        "ru": ("# Одиссея с Гомером", "## День 1 · Odyss. IX.19–38"),
+        "en": ("# Odyssey with Homer", "## Day 1 · Odyss. IX.19–38"),
+        "el": ("# Οδύσσεια με τον Όμηρο", "## Ημέρα 1 · Odyss. IX.19–38"),
+    }
+    _h1, _h2 = _TITLES.get(lang_sel.value, _TITLES["ru"])
     _left = mo.vstack([
-        mo.md("# Одиссея с Гомером"),
-        mo.md("## День 1 · Odyss. IX.19–38"),
+        mo.md(_h1),
+        mo.md(_h2),
     ])
     _img = eee.magnify_image(mo, _Ph(__file__).parent / "map_ithaca.jpg", raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=280)
     mo.hstack([_left, _img], align="start")
@@ -54,10 +65,10 @@ def _(eee, mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(gu, lang_sel, mo):
     _base = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15"
     mo.md(
-        f"**Материалы занятия:** "
+        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
         f"[Одиссея 1.pdf]({_base}/Одиссея%201.pdf) · "
         f"[слова день 1.pdf]({_base}/слова%20день%201.pdf) · "
         "[odysseus-unbound.org ↗](https://www.odysseus-unbound.org/mystery/)"
@@ -66,12 +77,12 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(eee, mo):
+def _(eee, lang_sel, mo):
     from pathlib import Path as _Pe
     _etm = _Pe(__file__).parent / "etymologicum_magnum_odysseus.jpg"
     _etimg = eee.magnify_image(mo, _etm, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=460)
-    mo.vstack([
-        mo.md(r"""
+    _TXT = {
+        "ru": r"""
     ---
     ## Имя героя
 
@@ -97,19 +108,76 @@ def _(eee, mo):
     пролил сильный дождь, и она от муки и страха упала наземь и родила
     сына — так он получил имя, потому что в пути (ὁδός) Зевс пролил дождь
     (ὗσεν).
-    """),
+    """,
+        "en": r"""
+    ---
+    ## Name of the Hero
+
+    **Ὀδυσσεύς** ← **ὀδύσσομαι** — to be angry, to hate; to cause suffering
+
+    > *πολλοῖσιν γὰρ ἐγώ γε ὀδυσσάμενος* (Od. XIX.407)
+    > "for I have caused suffering to many"
+
+    The name means "the one who causes / endures suffering." Homer uses it as an etymological symbol of the hero's fate.
+
+    [«Μέγα Ἐτυμολογικόν»](https://el.wikipedia.org/wiki/Μέγα_Ετυμολογικόν)
+    ("The Great Etymological Dictionary") — the largest Byzantine lexicon,
+    compiled by an unknown author in the first half of the 12th century from
+    earlier dictionaries; alongside not always accurate etymologies, it preserved
+    many fragments of ancient texts otherwise lost
+    ([F. Sylburg's 1816 edition ↗](https://archive.org/details/etymologikontome00etymuoft)),
+    explains the name differently — linking it to **ὁδός** "way, road":
+
+    > **κατὰ τὴν ὁδὸν ὗσεν ὁ Ζεύς**
+    > "on the road Zeus rained down"
+
+    Anticleia, Odysseus's mother, was pregnant and walking across Mount Neriton on
+    Ithaca; Zeus sent down a heavy rain, and she, from pain and fear, fell to the
+    ground and gave birth to her son — so he received his name, because on the
+    road (ὁδός) Zeus rained (ὗσεν).
+    """,
+        "el": r"""
+    ---
+    ## Το όνομα του ήρωα
+
+    **Ὀδυσσεύς** ← **ὀδύσσομαι** — οργίζομαι, μισώ· προκαλώ πόνο
+
+    > *πολλοῖσιν γὰρ ἐγώ γε ὀδυσσάμενος* (Οδ. XIX.407)
+    > «γιατί σε πολλούς προκάλεσα πόνο»
+
+    Το όνομα σημαίνει «αυτός που προκαλεί / υφίσταται πόνο». Ο Όμηρος το χρησιμοποιεί ως ετυμολογικό σύμβολο της μοίρας του ήρωα.
+
+    Το [«Μέγα Ἐτυμολογικόν»](https://el.wikipedia.org/wiki/Μέγα_Ετυμολογικόν)
+    — το μεγαλύτερο βυζαντινό λεξικό, συνταγμένο από άγνωστο συγγραφέα στο
+    πρώτο μισό του 12ου αιώνα με βάση παλαιότερα λεξικά· εκτός από ετυμολογίες
+    όχι πάντα ακριβείς, διέσωσε πολλά αποσπάσματα αρχαίων κειμένων που
+    διαφορετικά θα είχαν χαθεί
+    ([έκδοση F. Sylburg, 1816 ↗](https://archive.org/details/etymologikontome00etymuoft)),
+    εξηγεί το όνομα διαφορετικά — συνδέοντάς το με το **ὁδός** «δρόμος»:
+
+    > **κατὰ τὴν ὁδὸν ὗσεν ὁ Ζεύς**
+    > «στον δρόμο έβρεξε ο Δίας»
+
+    Η έγκυος Αντίκλεια, η μητέρα του Οδυσσέα, περπατούσε στο όρος Νήριτον της
+    Ιθάκης· ο Δίας έριξε δυνατή βροχή, κι εκείνη από τον πόνο και τον φόβο
+    έπεσε καταγής και γέννησε τον γιο της — έτσι πήρε το όνομά του, επειδή
+    στον δρόμο (ὁδός) ο Δίας έβρεξε (ὗσεν).
+    """,
+    }
+    mo.vstack([
+        mo.md(_TXT.get(lang_sel.value, _TXT["ru"])),
         _etimg,
     ])
     return
 
 
 @app.cell(hide_code=True)
-def _(eee, mo):
+def _(eee, lang_sel, mo):
     from pathlib import Path as _Pg
     _gen = _Pg(__file__).parent / "genealogy.jpg"
     _gimg = eee.magnify_image(mo, _gen, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=560)
-    mo.vstack([
-        mo.md(r"""
+    _TXT = {
+        "ru": r"""
     ---
     ## Родословная Одиссея
 
@@ -119,19 +187,48 @@ def _(eee, mo):
     героев. По отцовской линии Одиссей восходит через Аркесия к самому Эолу
     (Айолу). Отец — **Лаэрт**, мать — **Антиклея**, дочь Автолика. Жена —
     **Пенелопа**, дочь Икария; сын — **Телемах**.
-    """),
+    """,
+        "en": r"""
+    ---
+    ## The Genealogy of Odysseus
+
+    Odysseus is no mere self-taught trickster: cunning runs in his blood. On his
+    mother's side, his grandfather is **Autolycus**, son of Hermes, famed for his
+    skill in thievery and his knack for evading oaths; it is from him that his
+    grandson inherited his reputation as the most cunning of heroes. On his
+    father's side, Odysseus traces his line through Arcesius back to Aeolus
+    himself. His father is **Laertes**, his mother **Anticleia**, daughter of
+    Autolycus. His wife is **Penelope**, daughter of Icarius; his son,
+    **Telemachus**.
+    """,
+        "el": r"""
+    ---
+    ## Η γενεαλογία του Οδυσσέα
+
+    Ο Οδυσσέας δεν είναι απλώς ένας αυτοδίδακτος πονηρός: η πονηριά είναι στο αίμα
+    του. Από τη μητρική γραμμή, παππούς του είναι ο **Αυτόλυκος**, γιος του Ερμή,
+    φημισμένος για την κλεπτική του δεινότητα και την ικανότητά του να ξεφεύγει
+    από όρκους· από εκείνον κληρονόμησε ο εγγονός του τη φήμη του πιο πονηρού
+    από τους ήρωες. Από την πατρική γραμμή, ο Οδυσσέας ανάγεται μέσω του Αρκεισίου
+    στον ίδιο τον Αίολο. Πατέρας του είναι ο **Λαέρτης**, μητέρα του η
+    **Αντίκλεια**, κόρη του Αυτόλυκου. Σύζυγός του η **Πηνελόπη**, κόρη του
+    Ικάριου· γιος του, ο **Τηλέμαχος**.
+    """,
+    }
+    mo.vstack([
+        mo.md(_TXT.get(lang_sel.value, _TXT["ru"])),
         _gimg,
     ])
     return
 
 
 @app.cell(hide_code=True)
-def _(eee, mo):
+def _(eee, lang_sel, mo):
     from pathlib import Path as _Pn
     _ner = _Pn(__file__).parent / "neriton_epithet.jpg"
     _nimg = eee.magnify_image(mo, _ner, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=560)
-    mo.vstack([
-        mo.md(r"""
+    _TXT = {
+        "ru": r"""
     ---
     ## ἐνοσίχθων и εἰνοσίφυλλος
 
@@ -145,19 +242,52 @@ def _(eee, mo):
     > **Νήριτον εἰνοσίφυλλον, ἀριπρεπές** — «Нерит, колышущий листвой, заметный издалека»
 
     и в «Илиаде» (Β.631–632), где гора Нерит названа тем же словом.
-    """),
+    """,
+        "en": r"""
+    ---
+    ## ἐνοσίχθων and εἰνοσίφυλλος
+
+    **ἐνοσίχθων** ("earth-shaker") — a standing epithet of Poseidon:
+    *ἐνοσι-* "shaking" + *χθών* "earth".
+
+    The same root forms the epithet of Mount Neriton on Ithaca —
+    **εἰνοσίφυλλος** ("leaf-shaking", *ἐνοσι-* + *φύλλον* "leaf"). It appears
+    in our text too (IX.21–22):
+
+    > **Νήριτον εἰνοσίφυλλον, ἀριπρεπές** — "Neriton, leaf-shaking, conspicuous from afar"
+
+    and in the *Iliad* (Β.631–632), where Mount Neriton is called by the same word.
+    """,
+        "el": r"""
+    ---
+    ## ἐνοσίχθων και εἰνοσίφυλλος
+
+    **ἐνοσίχθων** («αυτός που σείει τη γη») — πάγιο επίθετο του Ποσειδώνα:
+    *ἐνοσι-* «σεισμός» + *χθών* «γη».
+
+    Από την ίδια ρίζα σχηματίζεται και το επίθετο του όρους Νήριτον στην
+    Ιθάκη — **εἰνοσίφυλλος** («αυτό που σείει τα φύλλα», *ἐνοσι-* + *φύλλον*
+    «φύλλο»). Απαντά και στο κείμενό μας (IX.21–22):
+
+    > **Νήριτον εἰνοσίφυλλον, ἀριπρεπές** — «το Νήριτον, που σείει τα φύλλα του, ξεχωριστό από μακριά»
+
+    καθώς και στην *Ιλιάδα* (Β.631–632), όπου το όρος Νήριτον ονομάζεται με την ίδια λέξη.
+    """,
+    }
+    mo.vstack([
+        mo.md(_TXT.get(lang_sel.value, _TXT["ru"])),
         _nimg,
     ])
     return
 
 
 @app.cell(hide_code=True)
-def _(eee, mo):
+def _(eee, lang_sel, mo):
     from pathlib import Path as _Pi
     _ith = _Pi(__file__).parent / "ithaca_kefalonia.jpg"
     _iimg = eee.magnify_image(mo, _ith, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_15", width=460)
-    mo.vstack([
-        mo.md(r"""
+    _TXT = {
+        "ru": r"""
     ---
     ## Итака и соседние острова
 
@@ -170,15 +300,47 @@ def _(eee, mo):
 
     На фотографии — закат над Ионическим морем; на горизонте подписаны
     Кефалония и, чуть дальше, сама Итака.
-    """),
+    """,
+        "en": r"""
+    ---
+    ## Ithaca and the Neighboring Islands
+
+    Odysseus himself describes his surroundings (IX.22–24):
+
+    > **ἀμφὶ δὲ νῆσοι πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι,
+    > Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος.**
+    > "and around it lie many islands close to one another:
+    > Dulichium, Same, and wooded Zacynthus"
+
+    The photograph shows a sunset over the Ionian Sea; on the horizon,
+    Cephalonia is labeled and, a little farther, Ithaca itself.
+    """,
+        "el": r"""
+    ---
+    ## Η Ιθάκη και τα γειτονικά νησιά
+
+    Ο ίδιος ο Οδυσσέας περιγράφει το περιβάλλον του (IX.22–24):
+
+    > **ἀμφὶ δὲ νῆσοι πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι,
+    > Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος.**
+    > «κι ολόγυρα κατοικούνται πολλά νησιά, πολύ κοντά το ένα στο άλλο:
+    > το Δουλίχιο, η Σάμη και η δασωμένη Ζάκυνθος»
+
+    Στη φωτογραφία, ένα ηλιοβασίλεμα πάνω από το Ιόνιο Πέλαγος· στον ορίζοντα
+    σημειώνονται η Κεφαλονιά και, λίγο πιο πέρα, η ίδια η Ιθάκη.
+    """,
+    }
+    mo.vstack([
+        mo.md(_TXT.get(lang_sel.value, _TXT["ru"])),
         _iimg,
     ])
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
+def _(lang_sel, mo):
+    _TXT = {
+        "ru": r"""
     ---
     ## Загадка гомеровской Итаки
 
@@ -197,13 +359,57 @@ def _(mo):
     могла изменить очертания архипелага со времён Гомера - и что описанная им
     Итака лежала не там, где сегодняшняя. Подробнее:
     [odysseus-unbound.org ↗](https://www.odysseus-unbound.org/mystery/).
-    """)
+    """,
+        "en": r"""
+    ---
+    ## The Riddle of Homeric Ithaca
+
+    Odysseus himself describes his island further on in the poem (IX.25-28):
+
+    > **αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται
+    > πρὸς ζόφον, αἱ δέ τ᾽ ἄνευθε πρὸς ἠῶ τ᾽ ἠέλιόν τε**
+    > "it itself, low-lying, lies furthest out to sea
+    > toward the west, while the others lie apart, toward the dawn and the sun"
+
+    But modern Ithaca is mountainous and not the westernmost among its
+    neighboring islands — this doesn't match Homer's description. The Ionian
+    Islands sit on an active tectonic boundary between the African and Eurasian
+    plates and often suffer earthquakes (a catastrophic one in 1953; in 2014 the
+    land near Livadi bay rose by 20 cm). The hypothesis is that seismic activity
+    could have changed the shape of the archipelago since Homer's time — and
+    that the Ithaca he described did not lie where today's Ithaca does. More at:
+    [odysseus-unbound.org ↗](https://www.odysseus-unbound.org/mystery/).
+    """,
+        "el": r"""
+    ---
+    ## Το αίνιγμα της ομηρικής Ιθάκης
+
+    Ο ίδιος ο Οδυσσέας περιγράφει το νησί του παρακάτω στο ποίημα (IX.25-28):
+
+    > **αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται
+    > πρὸς ζόφον, αἱ δέ τ᾽ ἄνευθε πρὸς ἠῶ τ᾽ ἠέλιόν τε**
+    > «αυτή, χαμηλή, βρίσκεται η πιο ακρινή μέσα στη θάλασσα
+    > προς τη δύση, ενώ τα άλλα βρίσκονται πιο πέρα, προς την αυγή και τον ήλιο»
+
+    Όμως η σημερινή Ιθάκη είναι ορεινή και όχι η πιο δυτική ανάμεσα στα γειτονικά
+    νησιά — αυτό δεν ταιριάζει με την περιγραφή του Ομήρου. Τα Ιόνια Νησιά
+    βρίσκονται πάνω σε ενεργό τεκτονικό όριο μεταξύ της αφρικανικής και της
+    ευρασιατικής πλάκας και συχνά πλήττονται από σεισμούς (καταστροφικός το
+    1953· το 2014 η ξηρά κοντά στον κόλπο Λιβάδι ανυψώθηκε κατά 20 εκ.). Η
+    υπόθεση είναι ότι η σεισμική δραστηριότητα μπορεί να άλλαξε το σχήμα του
+    αρχιπελάγους από την εποχή του Ομήρου — και ότι η Ιθάκη που περιέγραψε δεν
+    βρισκόταν εκεί όπου βρίσκεται η σημερινή. Περισσότερα:
+    [odysseus-unbound.org ↗](https://www.odysseus-unbound.org/mystery/).
+    """,
+    }
+    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
+def _(lang_sel, mo):
+    _TXT = {
+        "ru": r"""
     ---
     ## Грамматическая памятка для начинающих моряков
 
@@ -213,29 +419,52 @@ def _(mo):
     - **νῆσος** – **νῆσοι** — остров-острова, именительный падеж ед. и мн. числа
     - **αὐτός** – **αὐτή** — сам-сама, мужской и женский род (часто обозначаются
       окончаниями **-ος** и **-η**)
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
+    """,
+        "en": r"""
     ---
-    ## Текст поэмы с параллельными переводами.
+    ## Grammar Notes for Beginning Sailors
+
+    - **ἐνίσπω** — aorist subjunctive, 1st person singular, of ἐνέπω (not
+      present tense, despite the **-ω** ending)
+    - **οὐρανὸν** — the **-ν** ending is typical of the accusative singular
+    - **νῆσος** – **νῆσοι** — island–islands, nominative singular and plural
+    - **αὐτός** – **αὐτή** — himself–herself, masculine and feminine (often
+      marked by the endings **-ος** and **-η**)
+    """,
+        "el": r"""
+    ---
+    ## Γραμματική υπενθύμιση για αρχάριους ναυτικούς
+
+    - **ἐνίσπω** — τύπος υποτακτικής αορίστου, 1ο πρόσωπο ενικού, του ἐνέπω
+      (όχι ενεστώτας, παρά την κατάληξη **-ω**)
+    - **οὐρανὸν** — η κατάληξη **-ν** είναι χαρακτηριστική της αιτιατικής ενικού
+    - **νῆσος** – **νῆσοι** — νησί–νησιά, ονομαστική ενικού και πληθυντικού
+    - **αὐτός** – **αὐτή** — ο ίδιος–η ίδια, αρσενικό και θηλυκό γένος (συχνά
+      δηλώνονται με τις καταλήξεις **-ος** και **-η**)
+    """,
+    }
+    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
+    return
+
+
+@app.cell(hide_code=True)
+def _(gu, lang_sel, mo):
+    mo.md(f"""
+    ---
+    {gu.ui_label('poem_section_heading', lang_sel.value)}
     """)
     return
 
 
 @app.cell(hide_code=True)
-def _(TRANS_DESC, mo, trans_selector):
-    _PODSTROCHNIK_DESC = "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала"
-    _desc_map = {"подстрочник": _PODSTROCHNIK_DESC, **TRANS_DESC}
+def _(TRANS_DESC: dict, gu, lang_sel, mo, trans_selector):
+    _desc_map = {"подстрочник": gu.ui_label('interlinear_description', lang_sel.value), **TRANS_DESC}
     mo.md(_desc_map.get(trans_selector.value, ""))
     return
 
 
 @app.cell(hide_code=True)
-def _(cfg, gu, mo):
+def _(cfg, gu, lang_sel, mo):
     from pathlib import Path as _P
     SHOW_ICTUS = mo.ui.switch(value=True)
     SHOW_HOMER = mo.ui.switch(value=True)
@@ -248,11 +477,14 @@ def _(cfg, gu, mo):
         "eee_note.md", nb_dir=_P(__file__).parent.parent, remote_base=cfg.raw_base,
     )
     EEE_NOTE = _eee_note_path.read_text(encoding="utf-8") if _eee_note_path else (
-        "*(не удалось загрузить описание движка EEE)*"
+        gu.ui_label('eee_note_load_error', lang_sel.value)
     )
 
+    _ICTUS_COLOR_NAME = {"ru": "красным", "en": "red", "el": "κόκκινο"}
     gu.ictus_toggle_panel(SHOW_ICTUS, SHOW_HOMER, EEE_NOTE,
-                           ictus_color="#980000", ictus_color_name="красным")
+                           ictus_color="#980000",
+                           ictus_color_name=_ICTUS_COLOR_NAME.get(lang_sel.value, "красным"),
+                           lang=lang_sel.value)
     return EEE_NOTE, SHOW_HOMER, SHOW_ICTUS
 
 
@@ -301,22 +533,22 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, build_lexicon_tabs, gu, text_widget):
-    gu.render_gloss_panel(QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_lexicon_tabs)
+def _(QUIZ_WORDS_RAW, build_lexicon_tabs, gu, lang_sel, text_widget):
+    gu.render_gloss_panel(QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_lexicon_tabs, lang=lang_sel.value)
     return
 
 
 @app.cell(hide_code=True)
-def _(EEE_NOTE, mo):
-    mo.accordion({"О проверке форм (EEE)": EEE_NOTE})
+def _(EEE_NOTE, gu, lang_sel, mo):
+    mo.accordion({gu.ui_label('form_check_accordion_label', lang_sel.value): EEE_NOTE})
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
+def _(gu, lang_sel, mo):
+    mo.md(f"""
     ---
-    ## Упражнения
+    {gu.ui_label('exercises_section_heading', lang_sel.value)}
     """)
     return
 
@@ -331,13 +563,13 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(gu):
-    quiz_renew_btn = gu.make_renew_button()
+def _(gu, lang_sel):
+    quiz_renew_btn = gu.make_renew_button(lang=lang_sel.value)
     return (quiz_renew_btn,)
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, gu, history, remaining, restore_entry):
+def _(QUIZ_WORDS, cv, gu, history, lang_sel, remaining, restore_entry):
     _ = cv()
     answer_radio, next_btn, prev_btn = gu.word_quiz_widgets(
         cv=cv(),
@@ -345,6 +577,7 @@ def _(QUIZ_WORDS, cv, gu, history, remaining, restore_entry):
         vocab=QUIZ_WORDS,
         restore_entry=restore_entry(),
         history_len=len(history()),
+        lang=lang_sel.value,
     )
     return answer_radio, next_btn, prev_btn
 
@@ -357,6 +590,7 @@ def _(
     future,
     gu,
     history,
+    lang_sel,
     next_btn,
     prev_btn,
     quiz_renew_btn,
@@ -376,31 +610,31 @@ def _(
         history, set_history, future, set_future,
         answer_radio, next_btn, prev_btn,
         vocab=QUIZ_WORDS,
-        title='### Упражнение: найди слово',
+        title=gu.ui_label('word_find_exercise_heading', lang_sel.value),
         meaning_key='_label',
         form_key='form',
+        lang=lang_sel.value,
         renew_btn=quiz_renew_btn,
     )
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ### Упражнение: сопоставь строфу и перевод
-    """)
+def _(gu, lang_sel, mo):
+    mo.md(gu.ui_label('stanza_match_section_heading', lang_sel.value))
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(gu, lang_sel, mo):
+    _DIRECTION_OPTS = {
+        gu.ui_label('stanza_match_toggle_grc_to_tr', lang_sel.value): "grc_to_tr",
+        gu.ui_label('stanza_match_toggle_tr_to_grc', lang_sel.value): "tr_to_grc",
+    }
     sm_direction = mo.ui.radio(
-        options={
-            "Строфа → перевод": "grc_to_tr",
-            "Перевод → строфа": "tr_to_grc",
-        },
-        value="Строфа → перевод",
-        label="**Направление:**",
+        options=_DIRECTION_OPTS,
+        value=list(_DIRECTION_OPTS.keys())[0],
+        label=gu.ui_label('stanza_match_direction_label', lang_sel.value),
         inline=True,
     )
     sm_direction
@@ -459,8 +693,8 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(gu):
-    sm_renew_btn = gu.make_renew_button()
+def _(gu, lang_sel):
+    sm_renew_btn = gu.make_renew_button(lang=lang_sel.value)
     return (sm_renew_btn,)
 
 
@@ -468,6 +702,7 @@ def _(gu):
 def _(
     SM_STANZAS,
     gu,
+    lang_sel,
     sm_cv,
     sm_direction,
     sm_history,
@@ -482,6 +717,7 @@ def _(
         direction=sm_direction.value,
         restore_entry=sm_restore_entry(),
         history_len=len(sm_history()),
+        lang=lang_sel.value,
     )
     return sm_choice_radio, sm_next_btn, sm_prev_btn
 
@@ -490,6 +726,7 @@ def _(
 def _(
     SM_STANZAS,
     gu,
+    lang_sel,
     sm_choice_radio,
     sm_cv,
     sm_direction,
@@ -515,16 +752,15 @@ def _(
         sm_choice_radio, sm_next_btn, sm_prev_btn,
         stanzas=SM_STANZAS,
         direction=sm_direction.value,
+        lang=lang_sel.value,
         renew_btn=sm_renew_btn,
     )
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ### Упражнение: слово в переводе
-    """)
+def _(gu, lang_sel, mo):
+    mo.md(gu.ui_label('presence_exercise_heading', lang_sel.value))
     return
 
 
@@ -582,13 +818,21 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(gu):
-    tp_renew_btn = gu.make_renew_button()
+def _(gu, lang_sel):
+    tp_renew_btn = gu.make_renew_button(lang=lang_sel.value)
     return (tp_renew_btn,)
 
 
 @app.cell(hide_code=True)
-def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
+def _(
+    TP_ITEMS,
+    gu,
+    lang_sel,
+    tp_cv,
+    tp_history,
+    tp_remaining,
+    tp_restore_entry,
+):
     _ = tp_cv()
     tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch = gu.translation_presence_widgets(
         cv=tp_cv(),
@@ -596,6 +840,7 @@ def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
         items=TP_ITEMS,
         restore_entry=tp_restore_entry(),
         history_len=len(tp_history()),
+        lang=lang_sel.value,
     )
     return tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch
 
@@ -604,6 +849,7 @@ def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
 def _(
     TP_ITEMS,
     gu,
+    lang_sel,
     tp_choice_radio,
     tp_cv,
     tp_future,
@@ -628,6 +874,7 @@ def _(
         tp_history, tp_set_history, tp_future, tp_set_future,
         tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch,
         items=TP_ITEMS,
+        lang=lang_sel.value,
         renew_btn=tp_renew_btn,
     )
     return
@@ -658,28 +905,39 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(STANZAS, mo):
+def _(STANZAS, gu, lang_sel, mo):
     stanza_selector = mo.ui.dropdown(
         options=[s["ref"] for s in STANZAS],
         value=STANZAS[0]["ref"],
-        label="Строфа",
+        label=gu.ui_label('stanza_label', lang_sel.value),
     )
     return (stanza_selector,)
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(gu, lang_sel, mo):
+    _TRANS_BY_LANG = {
+        "ru": ["подстрочник", "Жуковский", "Вересаев"],
+        "en": ["подстрочник", "Pope", "Murray"],
+        "el": ["подстрочник", "Πολυλάς"],
+    }
+    _DEFAULT_BY_LANG = {"ru": "Жуковский", "en": "Pope", "el": "Πολυλάς"}
+    _ALL_OPTIONS = {
+        gu.ui_label('interlinear_label', lang_sel.value): "подстрочник",
+        "Жуковский (1849)":    "Жуковский",
+        "Вересаев (1953)":     "Вересаев",
+        "Pope (1725)":          "Pope",
+        "Murray (1919)":        "Murray",
+        "Πολυλάς (1875/1877)":  "Πολυλάς",
+    }
+    _valid = _TRANS_BY_LANG.get(lang_sel.value, _TRANS_BY_LANG["ru"])
+    _opts = {k: v for k, v in _ALL_OPTIONS.items() if v in _valid}
+    _default_v = _DEFAULT_BY_LANG.get(lang_sel.value, "Жуковский")
+    _default_k = next((k for k, v in _opts.items() if v == _default_v), list(_opts.keys())[0])
     trans_selector = mo.ui.dropdown(
-        options={
-            "подстрочник":                      "подстрочник",
-            "Жуковский (1849) · рус.":          "Жуковский",
-            "Вересаев (1953) · рус.":           "Вересаев",
-            "Pope (1725) · англ.":              "Pope",
-            "Murray (1919) · англ.":            "Murray",
-            "Πολυλάς (1875/1877) · новогреч.":  "Πολυλάς",
-        },
-        value="подстрочник",
-        label="Перевод",
+        options=_opts,
+        value=_default_k,
+        label=gu.ui_label('trans_selector_label', lang_sel.value),
     )
     return (trans_selector,)
 
@@ -739,18 +997,12 @@ async def _(cfg, eee):
 
 
 @app.cell(hide_code=True)
-def _(
-    ag_backend,
-    cfg,
-    eee,
-    grc_lexicons,
-    gu,
-):
+def _(ag_backend, cfg, eee, grc_lexicons, gu, lang_sel):
     from pathlib import Path
 
     QUIZ_WORDS_RAW = gu.resolve_word_grammar(
         gu.load_inflected_vocab_tsv("vocab_IX_19-38.tsv", nb_dir=Path(__file__).parent, remote_base=cfg.nb_remote("2026_06_15")),
-        ag_backend, "ru"
+        ag_backend, lang_sel.value
     )
 
     def _lexicon_tag(w):
@@ -813,13 +1065,14 @@ def _(QUIZ_WORDS_RAW, build_paradigm_table, eee, grc_lexicons):
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, eee, grc_lexicons, mg, um_backend):
-    build_paradigm_table = eee.build_grc_paradigm_table(ag_backend, um_backend)
+def _(ag_backend, eee, grc_lexicons, lang_sel, mg, um_backend):
+    build_paradigm_table = eee.build_grc_paradigm_table(ag_backend, um_backend, lang=lang_sel.value)
     build_lexicon_tabs = eee.build_grc_lexicon_tabs(
         ag_backend, um_backend,
         lexicons=grc_lexicons,
         el_backend=mg,
         require_lexicon="homer",
+        lang=lang_sel.value,
     )
     return build_lexicon_tabs, build_paradigm_table
 
@@ -827,6 +1080,7 @@ def _(ag_backend, eee, grc_lexicons, mg, um_backend):
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -864,19 +1118,7 @@ def _(ODYSSEY_EXTRA_LEXICONS, mo):
     eee.register_backend("grc", um_backend, backend="unimorph")
     eee.set_chain("grc", ["ancient-greek", "unimorph"])
     gu = eee.GreekUtils(mo_module=mo)
-    return (
-        ag_backend,
-        ag_byzantine,
-        ag_homer,
-        ag_lsj,
-        ag_lxx,
-        ag_morphgnt,
-        eee,
-        grc_lexicons,
-        gu,
-        mg,
-        um_backend,
-    )
+    return ag_backend, eee, grc_lexicons, gu, mg, um_backend
 
 
 @app.cell(hide_code=True)
@@ -902,6 +1144,23 @@ def _(cfg, gu):
     ):
         gu.ensure_file(_f, nb_dir=NB_DIR, remote_base=NB_REMOTE)
     return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    lang_sel = mo.ui.dropdown(
+        options={"Русский": "ru", "English": "en", "Ελληνικά": "el"},
+        value="Русский",
+        label="🌐",
+    )
+    mo.Html(f"""
+    <div style="position:fixed;top:56px;right:12px;z-index:1000;
+                background:white;padding:6px 10px;border-radius:8px;
+                box-shadow:0 2px 8px rgba(0,0,0,.12);">
+      {lang_sel}
+    </div>
+    """)
+    return (lang_sel,)
 
 
 if __name__ == "__main__":

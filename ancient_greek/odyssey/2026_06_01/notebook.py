@@ -11,17 +11,22 @@
 
 import marimo
 
-__generated_with = "0.23.14"
-app = marimo.App(width="medium", app_title="Одиссея с Гомером — Пробный урок: Одиссея I.1–21")
+__generated_with = "0.23.13"
+app = marimo.App(
+    width="medium",
+    app_title="Одиссея с Гомером — Пробный урок: Одиссея I.1–21",
+)
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(lang_sel, mo):
     from eee_project import ConfigStore, eee_topbar
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
-    eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles={
+    eee_topbar(mo, back_url=cfg.index_url(), lang=lang_sel.value, titles={
         "ru": "Одиссея с Гомером",
+        "en": "Odyssey with Homer",
+        "el": "Οδύσσεια με τον Όμηρο",
     }, ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
@@ -42,11 +47,17 @@ def _(cfg):
 
 
 @app.cell(hide_code=True)
-def _(eee, mo):
+def _(eee, lang_sel, mo):
     from pathlib import Path as _Ph
+    _TITLES = {
+        "ru": ("# Одиссея с Гомером", "## Пилотное занятие · Odyss. I.1–21"),
+        "en": ("# Odyssey with Homer", "## Pilot Lesson · Odyss. I.1–21"),
+        "el": ("# Οδύσσεια με τον Όμηρο", "## Πιλοτικό μάθημα · Odyss. I.1–21"),
+    }
+    _h1, _h2 = _TITLES.get(lang_sel.value, _TITLES["ru"])
     _left = mo.vstack([
-        mo.md("# Одиссея с Гомером"),
-        mo.md("## Пилотное занятие · Odyss. I.1–21"),
+        mo.md(_h1),
+        mo.md(_h2),
     ])
     _img = eee.magnify_image(
         mo, _Ph(__file__).parent / "Odysseus_Sirens_BM_E440_n2.jpg",
@@ -58,10 +69,10 @@ def _(eee, mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(gu, lang_sel, mo):
     _base = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_01"
     mo.md(
-        f"**Материалы занятия:** "
+        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
         f"[Одиссея. Зачин.pdf]({_base}/Одиссея.%20Зачин.pdf) · "
         rf"[Одиссея\_1-21\_словарь.pdf]({_base}/Одиссея_1-21_словарь.pdf) · "
         f"[Греческий алфавит.pdf]({_base}/Греческий%20алфавит.pdf)"
@@ -70,24 +81,23 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
+def _(gu, lang_sel, mo):
+    mo.md(f"""
     ---
-    ## Текст поэмы с параллельными переводами.
+    {gu.ui_label('poem_section_heading', lang_sel.value)}
     """)
     return
 
 
 @app.cell(hide_code=True)
-def _(TRANS_DESC, mo, trans_selector):
-    _PODSTROCHNIK_DESC = "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала"
-    _desc_map = {"подстрочник": _PODSTROCHNIK_DESC, **TRANS_DESC}
+def _(TRANS_DESC: dict, gu, lang_sel, mo, trans_selector):
+    _desc_map = {"подстрочник": gu.ui_label('interlinear_description', lang_sel.value), **TRANS_DESC}
     mo.md(_desc_map.get(trans_selector.value, ""))
     return
 
 
 @app.cell(hide_code=True)
-def _(cfg, gu, mo):
+def _(cfg, gu, lang_sel, mo):
     from pathlib import Path as _P
     SHOW_ICTUS = mo.ui.switch(value=True)
     SHOW_HOMER = mo.ui.switch(value=True)
@@ -100,11 +110,14 @@ def _(cfg, gu, mo):
         "eee_note.md", nb_dir=_P(__file__).parent.parent, remote_base=cfg.raw_base,
     )
     EEE_NOTE = _eee_note_path.read_text(encoding="utf-8") if _eee_note_path else (
-        "*(не удалось загрузить описание движка EEE)*"
+        gu.ui_label('eee_note_load_error', lang_sel.value)
     )
 
+    _ICTUS_COLOR_NAME = {"ru": "красным", "en": "red", "el": "κόκκινο"}
     gu.ictus_toggle_panel(SHOW_ICTUS, SHOW_HOMER, EEE_NOTE,
-                           ictus_color="#980000", ictus_color_name="красным")
+                           ictus_color="#980000",
+                           ictus_color_name=_ICTUS_COLOR_NAME.get(lang_sel.value, "красным"),
+                           lang=lang_sel.value)
     return EEE_NOTE, SHOW_HOMER, SHOW_ICTUS
 
 
@@ -153,22 +166,22 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, build_lexicon_tabs, gu, text_widget):
-    gu.render_gloss_panel(QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_lexicon_tabs)
+def _(QUIZ_WORDS_RAW, build_lexicon_tabs, gu, lang_sel, text_widget):
+    gu.render_gloss_panel(QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_lexicon_tabs, lang=lang_sel.value)
     return
 
 
 @app.cell(hide_code=True)
-def _(EEE_NOTE, mo):
-    mo.accordion({"О проверке форм (EEE)": EEE_NOTE})
+def _(EEE_NOTE, gu, lang_sel, mo):
+    mo.accordion({gu.ui_label('form_check_accordion_label', lang_sel.value): EEE_NOTE})
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
+def _(gu, lang_sel, mo):
+    mo.md(f"""
     ---
-    ## Упражнения
+    {gu.ui_label('exercises_section_heading', lang_sel.value)}
     """)
     return
 
@@ -183,13 +196,13 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(gu):
-    quiz_renew_btn = gu.make_renew_button()
+def _(gu, lang_sel):
+    quiz_renew_btn = gu.make_renew_button(lang=lang_sel.value)
     return (quiz_renew_btn,)
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, gu, history, remaining, restore_entry):
+def _(QUIZ_WORDS, cv, gu, history, lang_sel, remaining, restore_entry):
     _ = cv()
     answer_radio, next_btn, prev_btn = gu.word_quiz_widgets(
         cv=cv(),
@@ -197,6 +210,7 @@ def _(QUIZ_WORDS, cv, gu, history, remaining, restore_entry):
         vocab=QUIZ_WORDS,
         restore_entry=restore_entry(),
         history_len=len(history()),
+        lang=lang_sel.value,
     )
     return answer_radio, next_btn, prev_btn
 
@@ -209,6 +223,7 @@ def _(
     future,
     gu,
     history,
+    lang_sel,
     next_btn,
     prev_btn,
     quiz_renew_btn,
@@ -228,31 +243,31 @@ def _(
         history, set_history, future, set_future,
         answer_radio, next_btn, prev_btn,
         vocab=QUIZ_WORDS,
-        title='### Упражнение: найди слово',
+        title=gu.ui_label('word_find_exercise_heading', lang_sel.value),
         meaning_key='_label',
         form_key='form',
+        lang=lang_sel.value,
         renew_btn=quiz_renew_btn,
     )
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ### Упражнение: сопоставь строфу и перевод
-    """)
+def _(gu, lang_sel, mo):
+    mo.md(gu.ui_label('stanza_match_section_heading', lang_sel.value))
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(gu, lang_sel, mo):
+    _DIRECTION_OPTS = {
+        gu.ui_label('stanza_match_toggle_grc_to_tr', lang_sel.value): "grc_to_tr",
+        gu.ui_label('stanza_match_toggle_tr_to_grc', lang_sel.value): "tr_to_grc",
+    }
     sm_direction = mo.ui.radio(
-        options={
-            "Строфа → перевод": "grc_to_tr",
-            "Перевод → строфа": "tr_to_grc",
-        },
-        value="Строфа → перевод",
-        label="**Направление:**",
+        options=_DIRECTION_OPTS,
+        value=list(_DIRECTION_OPTS.keys())[0],
+        label=gu.ui_label('stanza_match_direction_label', lang_sel.value),
         inline=True,
     )
     sm_direction
@@ -311,8 +326,8 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(gu):
-    sm_renew_btn = gu.make_renew_button()
+def _(gu, lang_sel):
+    sm_renew_btn = gu.make_renew_button(lang=lang_sel.value)
     return (sm_renew_btn,)
 
 
@@ -320,6 +335,7 @@ def _(gu):
 def _(
     SM_STANZAS,
     gu,
+    lang_sel,
     sm_cv,
     sm_direction,
     sm_history,
@@ -334,6 +350,7 @@ def _(
         direction=sm_direction.value,
         restore_entry=sm_restore_entry(),
         history_len=len(sm_history()),
+        lang=lang_sel.value,
     )
     return sm_choice_radio, sm_next_btn, sm_prev_btn
 
@@ -342,6 +359,7 @@ def _(
 def _(
     SM_STANZAS,
     gu,
+    lang_sel,
     sm_choice_radio,
     sm_cv,
     sm_direction,
@@ -367,16 +385,15 @@ def _(
         sm_choice_radio, sm_next_btn, sm_prev_btn,
         stanzas=SM_STANZAS,
         direction=sm_direction.value,
+        lang=lang_sel.value,
         renew_btn=sm_renew_btn,
     )
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ### Упражнение: слово в переводе
-    """)
+def _(gu, lang_sel, mo):
+    mo.md(gu.ui_label('presence_exercise_heading', lang_sel.value))
     return
 
 
@@ -434,13 +451,21 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(gu):
-    tp_renew_btn = gu.make_renew_button()
+def _(gu, lang_sel):
+    tp_renew_btn = gu.make_renew_button(lang=lang_sel.value)
     return (tp_renew_btn,)
 
 
 @app.cell(hide_code=True)
-def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
+def _(
+    TP_ITEMS,
+    gu,
+    lang_sel,
+    tp_cv,
+    tp_history,
+    tp_remaining,
+    tp_restore_entry,
+):
     _ = tp_cv()
     tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch = gu.translation_presence_widgets(
         cv=tp_cv(),
@@ -448,6 +473,7 @@ def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
         items=TP_ITEMS,
         restore_entry=tp_restore_entry(),
         history_len=len(tp_history()),
+        lang=lang_sel.value,
     )
     return tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch
 
@@ -456,6 +482,7 @@ def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
 def _(
     TP_ITEMS,
     gu,
+    lang_sel,
     tp_choice_radio,
     tp_cv,
     tp_future,
@@ -480,6 +507,7 @@ def _(
         tp_history, tp_set_history, tp_future, tp_set_future,
         tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch,
         items=TP_ITEMS,
+        lang=lang_sel.value,
         renew_btn=tp_renew_btn,
     )
     return
@@ -527,28 +555,39 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(STANZAS, mo):
+def _(STANZAS, gu, lang_sel, mo):
     stanza_selector = mo.ui.dropdown(
         options=[st["ref"] for st in STANZAS],
         value=STANZAS[0]["ref"],
-        label="Строфа",
+        label=gu.ui_label('stanza_label', lang_sel.value),
     )
     return (stanza_selector,)
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(gu, lang_sel, mo):
+    _TRANS_BY_LANG = {
+        "ru": ["подстрочник", "Жуковский", "Вересаев"],
+        "en": ["подстрочник", "Pope", "Murray"],
+        "el": ["подстрочник", "Πολυλάς"],
+    }
+    _DEFAULT_BY_LANG = {"ru": "Жуковский", "en": "Pope", "el": "Πολυλάς"}
+    _ALL_OPTIONS = {
+        gu.ui_label('interlinear_label', lang_sel.value): "подстрочник",
+        "Жуковский (1849)":    "Жуковский",
+        "Вересаев (1953)":     "Вересаев",
+        "Pope (1725)":          "Pope",
+        "Murray (1919)":        "Murray",
+        "Πολυλάς (1875/1877)":  "Πολυλάς",
+    }
+    _valid = _TRANS_BY_LANG.get(lang_sel.value, _TRANS_BY_LANG["ru"])
+    _opts = {k: v for k, v in _ALL_OPTIONS.items() if v in _valid}
+    _default_v = _DEFAULT_BY_LANG.get(lang_sel.value, "Жуковский")
+    _default_k = next((k for k, v in _opts.items() if v == _default_v), list(_opts.keys())[0])
     trans_selector = mo.ui.dropdown(
-        options={
-            "подстрочник":                      "подстрочник",
-            "Жуковский (1849) · рус.":          "Жуковский",
-            "Вересаев (1953) · рус.":           "Вересаев",
-            "Pope (1725) · англ.":              "Pope",
-            "Murray (1919) · англ.":            "Murray",
-            "Πολυλάς (1875/1877) · новогреч.":  "Πολυλάς",
-        },
-        value="подстрочник",
-        label="Перевод",
+        options=_opts,
+        value=_default_k,
+        label=gu.ui_label('trans_selector_label', lang_sel.value),
     )
     return (trans_selector,)
 
@@ -608,20 +647,14 @@ async def _(cfg, eee):
 
 
 @app.cell(hide_code=True)
-def _(
-    ag_backend,
-    cfg,
-    eee,
-    grc_lexicons,
-    gu,
-):
+def _(ag_backend, cfg, eee, grc_lexicons, gu, lang_sel):
     from pathlib import Path
 
     QUIZ_WORDS_RAW = gu.resolve_word_grammar(
         gu.load_inflected_vocab_tsv(
             "vocab_I_1-21.tsv", nb_dir=Path(__file__).parent, remote_base=cfg.nb_remote("2026_06_01"),
         ),
-        ag_backend, "ru"
+        ag_backend, lang_sel.value
     )
 
     def _lexicon_tag(w):
@@ -667,13 +700,14 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, eee, grc_lexicons, mg, um_backend):
-    build_paradigm_table = eee.build_grc_paradigm_table(ag_backend, um_backend)
+def _(ag_backend, eee, grc_lexicons, lang_sel, mg, um_backend):
+    build_paradigm_table = eee.build_grc_paradigm_table(ag_backend, um_backend, lang=lang_sel.value)
     build_lexicon_tabs = eee.build_grc_lexicon_tabs(
         ag_backend, um_backend,
         lexicons=grc_lexicons,
         el_backend=mg,
         require_lexicon="homer",
+        lang=lang_sel.value,
     )
     return build_lexicon_tabs, build_paradigm_table
 
@@ -681,6 +715,7 @@ def _(ag_backend, eee, grc_lexicons, mg, um_backend):
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -718,19 +753,7 @@ def _(ODYSSEY_EXTRA_LEXICONS, mo):
     eee.register_backend("grc", um_backend, backend="unimorph")
     eee.set_chain("grc", ["ancient-greek", "unimorph"])
     gu = eee.GreekUtils(mo_module=mo)
-    return (
-        ag_backend,
-        ag_byzantine,
-        ag_homer,
-        ag_lsj,
-        ag_lxx,
-        ag_morphgnt,
-        eee,
-        grc_lexicons,
-        gu,
-        mg,
-        um_backend,
-    )
+    return ag_backend, eee, grc_lexicons, gu, mg, um_backend
 
 
 @app.cell(hide_code=True)
@@ -755,6 +778,23 @@ def _(cfg, gu):
 
     # Set True to underline words known to eee in the poem text (coverage view)
     return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    lang_sel = mo.ui.dropdown(
+        options={"Русский": "ru", "English": "en", "Ελληνικά": "el"},
+        value="Русский",
+        label="🌐",
+    )
+    mo.Html(f"""
+    <div style="position:fixed;top:56px;right:12px;z-index:1000;
+                background:white;padding:6px 10px;border-radius:8px;
+                box-shadow:0 2px 8px rgba(0,0,0,.12);">
+      {lang_sel}
+    </div>
+    """)
+    return (lang_sel,)
 
 
 if __name__ == "__main__":
