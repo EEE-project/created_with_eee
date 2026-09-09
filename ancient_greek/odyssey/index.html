@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Одиссея с Гомером</title>
+<title>Odyssey with Homer</title>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-D9SLECHKZL"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -48,12 +48,50 @@ body { margin: 0; font-family: Syne, sans-serif; }
 }
 </style>
 <div id="eee-topbar">
-<a class="tb-back" data-lang="ru"  href="/created_with_eee/ancient_greek/">◀ Αρχαία Ελληνικά</a>
+<a class="tb-back" data-lang="en"  href="/created_with_eee/ancient_greek/">◀ Ancient Greek</a>
+<a class="tb-back" data-lang="el" style="display:none" href="/created_with_eee/ancient_greek/">◀ Αρχαία Ελληνικά</a>
+<a class="tb-back" data-lang="ru" style="display:none" href="/created_with_eee/ancient_greek/">◀ Αρχαία Ελληνικά</a>
 <a class="tb-badge" href="https://telegram.me/+VuocC5la3ZwyNDky" target="_blank">EEE Community</a>
 </div>
-
+<div id="lang-picker">🌐 <select onchange="setLang(this.value)"><option value="en" selected>English</option>
+<option value="ru">Русский</option>
+<option value="el">Ελληνικά</option></select></div>
+<script>
+function setLang(lang) {
+  document.querySelectorAll('[data-lang]').forEach(el => {
+    el.style.display = (el.getAttribute('data-lang') === lang) ? '' : 'none';
+  });
+  localStorage.setItem('eee_lang', lang);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var stored = localStorage.getItem('eee_lang');
+  if (stored) {
+    var sel = document.querySelector('#lang-picker select');
+    if (sel) sel.value = stored;
+    setLang(stored);
+  }
+});
+</script>
 <div class="eee-page">
-
+<style>
+.eee-hero { text-align: center; padding: 32px 16px 24px; font-family: Syne, sans-serif; }
+.eee-series {
+  font-family: "DM Mono", monospace; font-size: 11px; color: #003d82;
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px;
+}
+.eee-title {
+  font-size: 26px; font-weight: 800; letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #003d82, #5f27cd);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+.eee-subtitle { font-size: 14px; color: #666; }
+</style>
+<div class="eee-hero">
+<div data-lang="en" style=""><div class="eee-title">Odyssey with Homer</div><div class="eee-series">Ancient Greek</div></div>
+<div data-lang="el" style="display:none"><div class="eee-title">Οδύσσεια με τον Όμηρο</div><div class="eee-series">Αρχαία Ελληνικά</div></div>
+<div data-lang="ru" style="display:none"><div class="eee-title">Одиссея с Гомером</div><div class="eee-series">Αρχαία Ελληνικά</div></div>
+</div>
 <style>
 .eee-card, .eee-card-disabled {
   display: block; text-decoration: none; color: #1a1a1a;
@@ -83,28 +121,28 @@ body { margin: 0; font-family: Syne, sans-serif; }
 }
 </style><a class="eee-card" href="2026_06_01/"><div class="eee-card-header">
           <div class="eee-card-icon">🏺</div>
-          <div><div data-lang="ru" style=""><div class="eee-card-label">Пробный урок</div><div class="eee-card-title">Одиссея I.1–21</div></div><div class="eee-card-greek">Οδ. Α.1–21</div></div></div><div class="eee-card-desc" data-lang="ru" style="">Зачин поэмы: Муза, скитания Одиссея, гнев богов.</div><div class="eee-card-arrow" data-lang="ru" style="">◀</div></a>
+          <div><div data-lang="en" style=""><div class="eee-card-label">Pilot lesson</div><div class="eee-card-title">Odyssey I.1–21</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Πιλοτικό μάθημα</div><div class="eee-card-title">Οδύσσεια I.1–21</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">Пробный урок</div><div class="eee-card-title">Одиссея I.1–21</div></div><div class="eee-card-greek">Οδ. Α.1–21</div></div></div><div class="eee-card-desc" data-lang="en" style="">Opening of the poem: the Muse, Odysseus's wanderings, the wrath of the gods.</div><div class="eee-card-desc" data-lang="el" style="display:none">Προοίμιο του ποιήματος: η Μούσα, οι περιπλανήσεις του Οδυσσέα, η οργή των θεών.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Зачин поэмы: Муза, скитания Одиссея, гнев богов.</div><div class="eee-card-arrow" data-lang="en" style="">◀</div><div class="eee-card-arrow" data-lang="el" style="display:none">◀</div><div class="eee-card-arrow" data-lang="ru" style="display:none">◀</div></a>
 <a class="eee-card" href="2026_06_15/"><div class="eee-card-header">
           <div class="eee-card-icon">🗺️</div>
-          <div><div data-lang="ru" style=""><div class="eee-card-label">День 1</div><div class="eee-card-title">Одиссея IX.19–38</div></div><div class="eee-card-greek">Οδ. Θ.19–38</div></div></div><div class="eee-card-desc" data-lang="ru" style="">Одиссей называет своё имя. Описание Итаки.</div><div class="eee-card-arrow" data-lang="ru" style="">◀</div></a>
+          <div><div data-lang="en" style=""><div class="eee-card-label">Day 1</div><div class="eee-card-title">Odyssey IX.19–38</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Ημέρα 1</div><div class="eee-card-title">Οδύσσεια IX.19–38</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">День 1</div><div class="eee-card-title">Одиссея IX.19–38</div></div><div class="eee-card-greek">Οδ. Θ.19–38</div></div></div><div class="eee-card-desc" data-lang="en" style="">Odysseus names himself. A description of Ithaca.</div><div class="eee-card-desc" data-lang="el" style="display:none">Ο Οδυσσέας λέει το όνομά του. Περιγραφή της Ιθάκης.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Одиссей называет своё имя. Описание Итаки.</div><div class="eee-card-arrow" data-lang="en" style="">◀</div><div class="eee-card-arrow" data-lang="el" style="display:none">◀</div><div class="eee-card-arrow" data-lang="ru" style="display:none">◀</div></a>
 <a class="eee-card" href="2026_06_22/"><div class="eee-card-header">
           <div class="eee-card-icon">⛵</div>
-          <div><div data-lang="ru" style=""><div class="eee-card-label">День 2</div><div class="eee-card-title">Одиссея IX.39–61</div></div><div class="eee-card-greek">Οδ. Θ.39–61</div></div></div><div class="eee-card-desc" data-lang="ru" style="">Киконы.</div><div class="eee-card-arrow" data-lang="ru" style="">◀</div></a>
+          <div><div data-lang="en" style=""><div class="eee-card-label">Day 2</div><div class="eee-card-title">Odyssey IX.39–61</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Ημέρα 2</div><div class="eee-card-title">Οδύσσεια IX.39–61</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">День 2</div><div class="eee-card-title">Одиссея IX.39–61</div></div><div class="eee-card-greek">Οδ. Θ.39–61</div></div></div><div class="eee-card-desc" data-lang="en" style="">The Cicones.</div><div class="eee-card-desc" data-lang="el" style="display:none">Οι Κίκονες.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Киконы.</div><div class="eee-card-arrow" data-lang="en" style="">◀</div><div class="eee-card-arrow" data-lang="el" style="display:none">◀</div><div class="eee-card-arrow" data-lang="ru" style="display:none">◀</div></a>
 <a class="eee-card" href="2026_06_29/"><div class="eee-card-header">
           <div class="eee-card-icon">🌀</div>
-          <div><div data-lang="ru" style=""><div class="eee-card-label">День 3</div><div class="eee-card-title">Одиссея IX.62–81</div></div><div class="eee-card-greek">Οδ. Θ.62–81</div></div></div><div class="eee-card-desc" data-lang="ru" style="">Буря у мыса Малея.</div><div class="eee-card-arrow" data-lang="ru" style="">◀</div></a>
+          <div><div data-lang="en" style=""><div class="eee-card-label">Day 3</div><div class="eee-card-title">Odyssey IX.62–81</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Ημέρα 3</div><div class="eee-card-title">Οδύσσεια IX.62–81</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">День 3</div><div class="eee-card-title">Одиссея IX.62–81</div></div><div class="eee-card-greek">Οδ. Θ.62–81</div></div></div><div class="eee-card-desc" data-lang="en" style="">A storm off Cape Malea.</div><div class="eee-card-desc" data-lang="el" style="display:none">Καταιγίδα στο ακρωτήριο Μαλέα.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Буря у мыса Малея.</div><div class="eee-card-arrow" data-lang="en" style="">◀</div><div class="eee-card-arrow" data-lang="el" style="display:none">◀</div><div class="eee-card-arrow" data-lang="ru" style="display:none">◀</div></a>
 <a class="eee-card" href="2026_07_06/"><div class="eee-card-header">
           <div class="eee-card-icon">🪷</div>
-          <div><div data-lang="ru" style=""><div class="eee-card-label">День 4</div><div class="eee-card-title">Одиссея IX.82–104</div></div><div class="eee-card-greek">Οδ. Θ.82–104</div></div></div><div class="eee-card-desc" data-lang="ru" style="">Лотофаги.</div><div class="eee-card-arrow" data-lang="ru" style="">◀</div></a>
+          <div><div data-lang="en" style=""><div class="eee-card-label">Day 4</div><div class="eee-card-title">Odyssey IX.82–104</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Ημέρα 4</div><div class="eee-card-title">Οδύσσεια IX.82–104</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">День 4</div><div class="eee-card-title">Одиссея IX.82–104</div></div><div class="eee-card-greek">Οδ. Θ.82–104</div></div></div><div class="eee-card-desc" data-lang="en" style="">The Lotus-Eaters.</div><div class="eee-card-desc" data-lang="el" style="display:none">Οι Λωτοφάγοι.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Лотофаги.</div><div class="eee-card-arrow" data-lang="en" style="">◀</div><div class="eee-card-arrow" data-lang="el" style="display:none">◀</div><div class="eee-card-arrow" data-lang="ru" style="display:none">◀</div></a>
 <a class="eee-card" href="2026_07_13/"><div class="eee-card-header">
           <div class="eee-card-icon">👁️</div>
-          <div><div data-lang="ru" style=""><div class="eee-card-label">День 5</div><div class="eee-card-title">Одиссея IX.105–129</div></div><div class="eee-card-greek">Οδ. Θ.105–129</div></div></div><div class="eee-card-desc" data-lang="ru" style="">Циклопы.</div><div class="eee-card-arrow" data-lang="ru" style="">◀</div></a>
+          <div><div data-lang="en" style=""><div class="eee-card-label">Day 5</div><div class="eee-card-title">Odyssey IX.105–129</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Ημέρα 5</div><div class="eee-card-title">Οδύσσεια IX.105–129</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">День 5</div><div class="eee-card-title">Одиссея IX.105–129</div></div><div class="eee-card-greek">Οδ. Θ.105–129</div></div></div><div class="eee-card-desc" data-lang="en" style="">The Cyclopes.</div><div class="eee-card-desc" data-lang="el" style="display:none">Οι Κύκλωπες.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Циклопы.</div><div class="eee-card-arrow" data-lang="en" style="">◀</div><div class="eee-card-arrow" data-lang="el" style="display:none">◀</div><div class="eee-card-arrow" data-lang="ru" style="display:none">◀</div></a>
 <a class="eee-card" href="2026_07_20/"><div class="eee-card-header">
           <div class="eee-card-icon">🏝️</div>
-          <div><div data-lang="ru" style=""><div class="eee-card-label">День 6</div><div class="eee-card-title">Одиссея IX.130–151</div></div><div class="eee-card-greek">Οδ. Θ.130–151</div></div></div><div class="eee-card-desc" data-lang="ru" style="">Плодородный остров. Ночная высадка.</div><div class="eee-card-arrow" data-lang="ru" style="">◀</div></a>
+          <div><div data-lang="en" style=""><div class="eee-card-label">Day 6</div><div class="eee-card-title">Odyssey IX.130–151</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Ημέρα 6</div><div class="eee-card-title">Οδύσσεια IX.130–151</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">День 6</div><div class="eee-card-title">Одиссея IX.130–151</div></div><div class="eee-card-greek">Οδ. Θ.130–151</div></div></div><div class="eee-card-desc" data-lang="en" style="">A fertile island. A night landing.</div><div class="eee-card-desc" data-lang="el" style="display:none">Εύφορο νησί. Νυχτερινή απόβαση.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Плодородный остров. Ночная высадка.</div><div class="eee-card-arrow" data-lang="en" style="">◀</div><div class="eee-card-arrow" data-lang="el" style="display:none">◀</div><div class="eee-card-arrow" data-lang="ru" style="display:none">◀</div></a>
 <a class="eee-card" href="2026_07_27/"><div class="eee-card-header">
           <div class="eee-card-icon">🐐</div>
-          <div><div data-lang="ru" style=""><div class="eee-card-label">День 7</div><div class="eee-card-title">Одиссея IX.152–180</div></div><div class="eee-card-greek">Οδ. Θ.152–180</div></div></div><div class="eee-card-desc" data-lang="ru" style="">Охота на коз. Первый взгляд на землю циклопов.</div><div class="eee-card-arrow" data-lang="ru" style="">◀</div></a>
+          <div><div data-lang="en" style=""><div class="eee-card-label">Day 7</div><div class="eee-card-title">Odyssey IX.152–180</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Ημέρα 7</div><div class="eee-card-title">Οδύσσεια IX.152–180</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">День 7</div><div class="eee-card-title">Одиссея IX.152–180</div></div><div class="eee-card-greek">Οδ. Θ.152–180</div></div></div><div class="eee-card-desc" data-lang="en" style="">A goat hunt. A first sight of the Cyclopes' land.</div><div class="eee-card-desc" data-lang="el" style="display:none">Κυνήγι κατσικιών. Πρώτη ματιά στη γη των Κυκλώπων.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Охота на коз. Первый взгляд на землю циклопов.</div><div class="eee-card-arrow" data-lang="en" style="">◀</div><div class="eee-card-arrow" data-lang="el" style="display:none">◀</div><div class="eee-card-arrow" data-lang="ru" style="display:none">◀</div></a>
 <style>
 #eee-footer {
   height: 40px; background: #f5f5f5; border-top: 1px solid #e0e0e0;
@@ -115,8 +153,10 @@ body { margin: 0; font-family: Syne, sans-serif; }
 #eee-footer a { font-size: 11px; color: #003d82; text-decoration: none; }
 </style>
 <div id="eee-footer">
-<span class="footer-label" data-lang="ru" style="">Исходный код:</span>
-<a href="https://github.com/EEE-project" target="_blank">github.com/EEE-project</a>
+<span class="footer-label" data-lang="en" style="">Source:</span>
+<span class="footer-label" data-lang="el" style="display:none">Πηγαίος κώδικας:</span>
+<span class="footer-label" data-lang="ru" style="display:none">Исходный код:</span>
+<a href="https://codeberg.org/EEE-project" target="_blank">codeberg.org/EEE-project</a>
 </div>
 </div>
 </body>
