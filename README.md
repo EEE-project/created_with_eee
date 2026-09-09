@@ -59,16 +59,18 @@ directory has its own README (description + live links) and `AGENTS.md`
 `make help` lists what's automated for syncing content across hosts —
 currently: syncing `main` (`make sync-main`, wraps `~/work/greek/git/push`),
 re-exporting notebooks to the `pages` branch (`make export-notebooks`, see
-`tools/export-notebooks.py`), re-applying the split-course session-page fix
-(`make fix-split-roots`), re-applying the static-hub footer-host fix
-(`make fix-static-footer`), re-applying the split-project hub card-link fix
-(`make fix-split-hub-links`, see `tools/fix-split-hub-card-links.py`), and
-checking whether Pages deployments are actually live rather than just
-pushed (`make verify-pages-deploy`, see `tools/verify-pages-deploy.py`).
-The first five only stage local changes or run already-established
-scripts; `verify-pages-deploy` is read-only and makes no local changes at
-all. Committing and pushing stays a manual, Trezor-confirmed step per host
-— no target signs or pushes on its own. All maintainer scripts live under
+`tools/export-notebooks.py`), copying that export into every other host's
+checkout (`make sync-pages-export`, see `tools/sync-pages-export.py`),
+re-applying the split-course session-page fix (`make fix-split-roots`),
+re-applying the static-hub footer-host fix (`make fix-static-footer`),
+re-applying the split-project hub card-link fix (`make fix-split-hub-links`,
+see `tools/fix-split-hub-card-links.py`), and checking whether Pages
+deployments are actually live rather than just pushed (`make
+verify-pages-deploy`, see `tools/verify-pages-deploy.py`). All but the last
+only stage local changes or run already-established scripts;
+`verify-pages-deploy` is read-only and makes no local changes at all.
+Committing and pushing stays a manual, Trezor-confirmed step per host — no
+target signs or pushes on its own. All maintainer scripts live under
 `tools/`.
 
 **Not yet automated**: hub regeneration (card-list index pages) and
@@ -127,19 +129,27 @@ course is hosted. Full procedure:
 
 6. **Commit + push the Codeberg pages branch** (Trezor-confirmed).
 
-7. **Copy the same exported directories into every other checkout that
-   hosts the affected course(s), then commit + push each** (Trezor-confirmed,
-   one host at a time):
+7. **Copy the same export into every other checkout that hosts the
+   affected course(s)**, then review and commit + push each
+   (Trezor-confirmed, one host at a time):
+   ```bash
+   make sync-pages-export NOTEBOOKS="modern_greek/ellinika_b/chapter_01/chapter_01_notebook.py ..."
+   ```
+   Destination layout differs per host (see `tools/sync-pages-export.py`):
    - **GitHub** — full mirror, same content as Codeberg.
-   - **GitLab unified project** (`created_with_eee`) — trimmed to
-     `modern_greek/ellinika_b/` only (GitLab's 1GB Pages-per-project cap
-     drove the split below; this is what's left un-split).
-   - **GitLab split projects** — copy only the matching course's
-     directories, flattened to each project's root (no `ancient_greek/`
-     or `modern_greek/...` prefix):
+   - **GitLab unified project** (`created_with_eee`) — mirrored too, except
+     a split-off course is skipped there (GitLab's 1GB Pages-per-project cap
+     drove the split below) — `modern_greek/ellinika_b/` is what's left
+     un-split.
+   - **GitLab split projects** — the matching course's directories only,
+     flattened to each project's root (no `ancient_greek/` or
+     `modern_greek/...` prefix):
      - `created-with-eee-odyssey` ← `ancient_greek/odyssey/`
      - `created-with-eee-palaestra` ← `ancient_greek/palaestra/ancient_greek.2026.summer/`
      - `created-with-eee-b1glc` ← `modern_greek/b1greeklanguageandculture/{kapodistrias,kavafis_ithaki,zorba}/`
+
+   Run `make fix-split-roots` afterward for any split-project destination
+   touched.
 
 8. **Wait for GitLab Pages' CI pipeline** on every GitLab target (a push
    alone doesn't deploy there) — poll until it succeeds:
