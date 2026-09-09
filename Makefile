@@ -13,7 +13,7 @@ PAGES_DIR ?= $(CURDIR)/../created_with_eee-pages-worktree
 
 EEE_PYTHON ?= $(HOME)/.venv/eee/bin/python3
 
-.PHONY: help sync-main fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export verify-pages-deploy check-vocab
+.PHONY: help sync-main fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-vocab
 
 help:
 	@echo "Targets:"
@@ -68,6 +68,20 @@ help:
 	@echo "                      writes local files -- review, run 'make fix-split-roots' for"
 	@echo "                      any split-project destination touched, then commit + push by"
 	@echo "                      hand per host (Trezor-confirmed, one at a time)."
+	@echo "  gen-hub             Regenerate HUBS (space-separated gen_hub.py HUBS dict keys,"
+	@echo "                      default: all 10) into PAGES_DIR. Example:"
+	@echo "                      make gen-hub HUBS=\"odyssey palaestra\""
+	@echo "                      Only writes local files -- review, then commit + push by"
+	@echo "                      hand (Trezor-confirmed). Only touches Codeberg's pages"
+	@echo "                      worktree -- run 'make sync-hub-pages' with the same HUBS"
+	@echo "                      to copy it everywhere else."
+	@echo "  sync-hub-pages      Copy HUBS' index.html from PAGES_DIR into GITHUB_PAGES_DIR /"
+	@echo "                      GITLAB_UNIFIED_PAGES_DIR / SPLIT_PROJECTS_DIR checkouts (see"
+	@echo "                      tools/sync-hub-pages.py for the per-host layout rules -- a"
+	@echo "                      split-off course's hub lands in its own GitLab project"
+	@echo "                      instead of GitLab-unified). Run 'make gen-hub' first. Only"
+	@echo "                      writes local files -- review, then commit + push by hand"
+	@echo "                      per host (Trezor-confirmed, one at a time)."
 	@echo "  verify-pages-deploy Check whether Pages deployments are actually serving"
 	@echo "                      current content (not just pushed) across all 6 known"
 	@echo "                      sites -- host deploy-status APIs (gh/glab) plus a live"
@@ -80,8 +94,7 @@ help:
 	@echo "                      make check-vocab SCOPE=modern_greek/ellinika_b"
 	@echo ""
 	@echo "NOT automated here (still manual -- see README's Maintainer tooling"
-	@echo "section): hub regeneration and splitting a new course off into its own"
-	@echo "GitLab project."
+	@echo "section): splitting a new course off into its own GitLab project."
 
 sync-main:
 	$(HOME)/work/greek/git/push
@@ -135,6 +148,26 @@ sync-pages-export:
 	@echo "review with 'git status'/'git diff' in each checkout. Run 'make fix-split-roots'"
 	@echo "for any split-project destination touched, then commit + push by hand per host"
 	@echo "(Trezor-confirmed, one at a time). This target never commits or pushes."
+
+gen-hub:
+	$(EEE_PYTHON) tools/gen_hub.py --out-dir $(PAGES_DIR) $(HUBS)
+	@echo ""
+	@echo "Regenerated into $(PAGES_DIR) -- review with 'git status'/'git diff' there,"
+	@echo "then commit + push by hand (Trezor-confirmed). This target never commits or"
+	@echo "pushes, and only touches Codeberg's pages worktree -- run 'make"
+	@echo "sync-hub-pages' with the same HUBS to copy it everywhere else."
+
+sync-hub-pages:
+	$(EEE_PYTHON) tools/sync-hub-pages.py --source-dir $(PAGES_DIR) \
+		--github-dir $(GITHUB_PAGES_DIR) \
+		--gitlab-unified-dir $(GITLAB_UNIFIED_PAGES_DIR) \
+		--split-projects-dir $(SPLIT_PROJECTS_DIR) \
+		$(HUBS)
+	@echo ""
+	@echo "Copied into GITHUB_PAGES_DIR / GITLAB_UNIFIED_PAGES_DIR / SPLIT_PROJECTS_DIR --"
+	@echo "review with 'git status'/'git diff' in each checkout, then commit + push by"
+	@echo "hand per host (Trezor-confirmed, one at a time). This target never commits or"
+	@echo "pushes."
 
 verify-pages-deploy:
 	SPLIT_PROJECTS="$(SPLIT_PROJECTS)" python3 tools/verify-pages-deploy.py $(SITE)

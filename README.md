@@ -61,10 +61,13 @@ currently: syncing `main` (`make sync-main`, wraps `~/work/greek/git/push`),
 re-exporting notebooks to the `pages` branch (`make export-notebooks`, see
 `tools/export-notebooks.py`), copying that export into every other host's
 checkout (`make sync-pages-export`, see `tools/sync-pages-export.py`),
-re-applying the split-course session-page fix (`make fix-split-roots`),
-re-applying the static-hub footer-host fix (`make fix-static-footer`),
-re-applying the split-project hub card-link fix (`make fix-split-hub-links`,
-see `tools/fix-split-hub-card-links.py`), and checking whether Pages
+regenerating a hub's static index page (`make gen-hub`, see
+`tools/gen_hub.py`), copying that into every other host's checkout (`make
+sync-hub-pages`, see `tools/sync-hub-pages.py`), re-applying the
+split-course session-page fix (`make fix-split-roots`), re-applying the
+static-hub footer-host fix (`make fix-static-footer`), re-applying the
+split-project hub card-link fix (`make fix-split-hub-links`, see
+`tools/fix-split-hub-card-links.py`), and checking whether Pages
 deployments are actually live rather than just pushed (`make
 verify-pages-deploy`, see `tools/verify-pages-deploy.py`). All but the last
 only stage local changes or run already-established scripts;
@@ -73,10 +76,10 @@ Committing and pushing stays a manual, Trezor-confirmed step per host — no
 target signs or pushes on its own. All maintainer scripts live under
 `tools/`.
 
-**Not yet automated**: hub regeneration (card-list index pages) and
-splitting a new course off into its own GitLab project (see each split
-course's own README for GitLab's 1GB Pages-per-project limit that drove the
-split) — both are still manual, multi-step processes.
+**Not yet automated**: splitting a new course off into its own GitLab
+project (see each split course's own README for GitLab's 1GB
+Pages-per-project limit that drove the split) — still a manual, multi-step
+process.
 
 ### Course deployment (notebook source change → live pages)
 
@@ -160,6 +163,31 @@ course is hosted. Full procedure:
 9. **Verify live**, per host, with a real browser check (not just an HTTP
    200) — the exported bundle needs Pyodide to actually boot before the
    page is meaningfully "up".
+
+### Hub deployment (title/hero/switcher/index.tsv change → live pages)
+
+A hub page (root, category, or course card-list index) is static HTML from
+`tools/gen_hub.py`, not a WASM export — see `tools/gen_hub.py`'s own module
+comment before touching any of the 10 hubs' config. The cycle is shorter
+than a notebook's, since there's no Pyodide boot to wait for:
+
+1. Ship the source change (`tools/gen_hub.py`'s `HUBS` dict, or the
+   affected course's `index.tsv`) to `main` via the normal branch+PR
+   workflow, then `make sync-main`.
+2. `make gen-hub HUBS="<hub keys>"` (default: all 10) into the Codeberg
+   pages worktree — review with `git status`/`git diff`, commit + push
+   (Trezor-confirmed).
+3. `make sync-hub-pages HUBS="<hub keys>"` to copy the regenerated
+   `index.html` files into GitHub / GitLab-unified / each affected GitLab
+   split project's checkout — review, commit + push each by hand
+   (Trezor-confirmed, one host at a time). Destination layout follows the
+   same split-course rules as `sync-pages-export` (see
+   `tools/sync-hub-pages.py`).
+4. Wait for GitLab Pages' CI pipeline on every GitLab target touched (step
+   8 above).
+5. Verify live — `make verify-pages-deploy` confirms each host's deployed
+   commit matches what was pushed; a quick `curl`/browser check confirms
+   the actual rendered content.
 
 ## EEE (Ελληνικά Εκπαιδευτικά Εργαλεία — Greek Language Educational Tools)
 
