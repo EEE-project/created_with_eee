@@ -17,8 +17,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).parent.parent
 
-LANG_OPTIONS = {"Ελληνικά": "el", "Русский": "ru", "English": "en"}
+LANG_OPTIONS = {"English": "en", "Русский": "ru", "Ελληνικά": "el"}
 LANG_NAMES = {code: name for name, code in LANG_OPTIONS.items()}
+DEFAULT_LANG = "en"
 FOOTER_LABEL = {"ru": "Исходный код:", "en": "Source:", "el": "Πηγαίος κώδικας:"}
 CARD_LIST_SOON = {"ru": "скоро", "el": "σύντομα", "en": "coming soon"}
 
@@ -46,9 +47,9 @@ document.addEventListener('DOMContentLoaded', function() {
 # Each hub: tsv (its own card-list source), parent_tsv (None for root --
 # back_url is a fixed self-badge, not a link), out (destination dir),
 # titles/parent_titles (topbar), hero (None to reuse palaestra's hand-rolled
-# single-language hero instead), default_lang (initial dropdown selection),
-# footer_lang (fixed language for RU-only hubs; None for trilingual ones,
-# where it tracks the selector).
+# single-language hero instead), footer_lang (fixed language for RU-only
+# hubs; None for trilingual ones, where it tracks the selector). Initial
+# dropdown selection is DEFAULT_LANG (module-level, same for every hub).
 HUBS = {
     "root": {
         "tsv": "index.tsv", "parent_tsv": None, "out": ".",
@@ -58,7 +59,7 @@ HUBS = {
             "el": ("Μαθήματα ελληνικής γλώσσας", "Διαδραστικά Τετράδια"),
             "en": ("Greek Language Courses", "Interactive Notebooks"),
         },
-        "default_lang": "en", "footer_lang": None,
+        "footer_lang": None,
     },
     "ancient_greek": {
         "tsv": "ancient_greek/index.tsv", "parent_tsv": "index.tsv", "out": "ancient_greek",
@@ -69,7 +70,7 @@ HUBS = {
             "el": ("Αρχαία Ελληνικά", "Μαθήματα αρχαίας ελληνικής γλώσσας"),
             "en": ("Ancient Greek", "Ancient Greek language courses"),
         },
-        "default_lang": "el", "footer_lang": None,
+        "footer_lang": None,
     },
     "modern_greek": {
         "tsv": "modern_greek/index.tsv", "parent_tsv": "index.tsv", "out": "modern_greek",
@@ -80,7 +81,7 @@ HUBS = {
             "el": ("Νέα Ελληνικά", "Μαθήματα σύγχρονης ελληνικής γλώσσας"),
             "en": ("Modern Greek", "Modern Greek language courses"),
         },
-        "default_lang": "el", "footer_lang": None,
+        "footer_lang": None,
     },
     "b1greeklanguageandculture": {
         "tsv": "modern_greek/b1greeklanguageandculture/index.tsv",
@@ -93,7 +94,7 @@ HUBS = {
             "el": ("B1: Ελληνική Γλώσσα και Πολιτισμός", "Μάθημα ιστορίας και πολιτισμού της Ελλάδας"),
             "en": ("B1: Greek Language and Culture", "Course on Greek history and culture"),
         },
-        "default_lang": "el", "footer_lang": None,
+        "footer_lang": None,
     },
     "odyssey": {
         "tsv": "ancient_greek/odyssey/index.tsv", "parent_tsv": "ancient_greek/index.tsv",
@@ -105,7 +106,7 @@ HUBS = {
             "el": ("Οδύσσεια με τον Όμηρο", "Αρχαία Ελληνικά"),
             "en": ("Odyssey with Homer", "Ancient Greek"),
         },
-        "default_lang": "en", "footer_lang": None, "lang_order": ["en", "ru", "el"],
+        "footer_lang": None,
     },
     "palaestra": {
         "tsv": "ancient_greek/palaestra/ancient_greek.2026.summer/index.tsv",
@@ -118,7 +119,7 @@ HUBS = {
             "en": ("Ancient Greek, Beginner Level", "Palaestra · Summer 2026"),
             "el": ("Αρχαία Ελληνικά, Επίπεδο Αρχαρίων", "Παλαίστρα · Καλοκαίρι 2026"),
         },
-        "default_lang": "en", "footer_lang": None, "lang_order": ["en", "ru", "el"],
+        "footer_lang": None,
     },
     "ellinika_b": {
         "tsv": "modern_greek/ellinika_b/index.tsv", "parent_tsv": "modern_greek/index.tsv",
@@ -130,7 +131,7 @@ HUBS = {
             "el": ("Ελληνικά Β1 — Διαδραστικά Τετράδια", "Μαθήματα σύγχρονων ελληνικών"),
             "en": ("Ελληνικά Β1 — Interactive Notebooks", "Modern Greek language lessons"),
         },
-        "default_lang": "en", "footer_lang": None,
+        "footer_lang": None,
     },
     "kapodistrias": {
         "tsv": "modern_greek/b1greeklanguageandculture/kapodistrias/index.tsv",
@@ -143,7 +144,7 @@ HUBS = {
             "el": ("Καποδίστριας", "B1: Ελληνική Γλώσσα και Πολιτισμός"),
             "en": ("Kapodistrias", "B1: Greek Language and Culture"),
         },
-        "default_lang": "el", "footer_lang": None,
+        "footer_lang": None,
     },
     "kavafis_ithaki": {
         "tsv": "modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv",
@@ -156,7 +157,7 @@ HUBS = {
             "el": ("Καβάφης — Ιθάκη", "B1: Ελληνική Γλώσσα και Πολιτισμός"),
             "en": ("Kavafis — Ithaki", "B1: Greek Language and Culture"),
         },
-        "default_lang": "el", "footer_lang": None,
+        "footer_lang": None,
     },
     "zorba": {
         "tsv": "modern_greek/b1greeklanguageandculture/zorba/index.tsv",
@@ -169,7 +170,7 @@ HUBS = {
             "el": ("Αλέξης Ζορμπάς", "B1: Ελληνική Γλώσσα και Πολιτισμός"),
             "en": ("Alexis Zorbas", "B1: Greek Language and Culture"),
         },
-        "default_lang": "el", "footer_lang": None,
+        "footer_lang": None,
     },
 }
 
@@ -388,8 +389,8 @@ def render_footer(langs: "list[str]") -> str:
     return "\n".join(parts)
 
 
-def render_lang_picker(default_lang: str, lang_order: "list[str] | None" = None) -> str:
-    codes = lang_order or list(LANG_OPTIONS.values())
+def render_lang_picker(default_lang: str) -> str:
+    codes = list(LANG_OPTIONS.values())
     opts = "\n".join(
         f'<option value="{code}"{" selected" if code == default_lang else ""}>{esc(LANG_NAMES[code])}</option>'
         for code in codes
@@ -420,9 +421,8 @@ def gen_hub(key: str, cfg: dict, out_root: Path) -> None:
 
     is_multilingual = len(cfg["titles"]) > 1
     langs = ["el", "ru", "en"] if is_multilingual else ["ru"]
-    default_lang = cfg["default_lang"]
-    if default_lang in langs:
-        langs = [default_lang] + [lang for lang in langs if lang != default_lang]
+    if DEFAULT_LANG in langs:
+        langs = [DEFAULT_LANG] + [lang for lang in langs if lang != DEFAULT_LANG]
 
     if cfg["hero"] is not None:
         hero_html = render_hero(cfg["hero"], langs)
@@ -432,7 +432,7 @@ def gen_hub(key: str, cfg: dict, out_root: Path) -> None:
     body = [
         PAGE_CSS,
         render_topbar(cfg, langs, back_url),
-        render_lang_picker(default_lang, cfg.get("lang_order")) if is_multilingual else "",
+        render_lang_picker(DEFAULT_LANG) if is_multilingual else "",
         '<div class="eee-page">',
         hero_html,
         render_cards(rows, langs),
@@ -442,7 +442,7 @@ def gen_hub(key: str, cfg: dict, out_root: Path) -> None:
 
     title_text = cfg["titles"].get("en", next(iter(cfg["titles"].values())))
     html = f"""<!doctype html>
-<html lang="{default_lang}">
+<html lang="{DEFAULT_LANG}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
