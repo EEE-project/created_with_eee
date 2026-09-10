@@ -92,7 +92,8 @@ Identify cells by content, not by ID — IDs change after each save.
 | `_PODSTROCHNIK_DESC = ...` / `_desc_map` | translation-picker description text |
 | `SHOW_ICTUS = mo.ui.switch(...)` | ictus + homer-highlight toggles, `EEE_NOTE` accordion |
 | `text_widget = eee.interactive_text(...)` | clickable poem display + translation panel |
-| `_sel = text_widget.widget.selected_word` | click-to-gloss panel (meaning + lexicon-tab table) |
+| `period_tables, period_selector, gloss_panel = gu.render_gloss_selector(...)` | click-to-gloss panel (meaning + real period `mo.ui.dropdown`, see `eee_project.build_grc_period_tables` — the `bridge`/`lang_sel` convention below: a plain assignment displays nothing, `gloss_panel` needs its own bare-expression line) |
+| `gu.render_gloss_table(period_tables, period_selector)` | own cell, taking `period_selector` as a parameter so it (and only it) reruns on a pick — renders the selected period's table |
 | `mo.accordion({"О проверке форм (EEE)": EEE_NOTE})` | EEE system explanation (reads `EEE_NOTE`) |
 | `## Упражнения` | section separator |
 | `gu.word_quiz_form(...)` (title `### Упражнение: найди слово`) | word-form quiz |
@@ -249,10 +250,10 @@ for _pth in _pl.Path(_sys.prefix).glob("lib/python*/site-packages/_editable_impl
         _sys.path.insert(0, _src)
 ```
 
-Without this, `build_paradigm_table`/`build_lexicon_tabs` silently fail with
-`ModuleNotFoundError` — the click-to-gloss panel's lexicon-tab table and the
-word-quiz's paradigm table both come up empty. Do not narrow the glob — it
-must cover all `_editable_impl_*.pth` files.
+Without this, `build_paradigm_table`/`build_lexicon_tabs`/`build_period_tables`
+silently fail with `ModuleNotFoundError` — the click-to-gloss panel's period
+table and the word-quiz's paradigm table both come up empty. Do not narrow
+the glob — it must cover all `_editable_impl_*.pth` files.
 
 ---
 
