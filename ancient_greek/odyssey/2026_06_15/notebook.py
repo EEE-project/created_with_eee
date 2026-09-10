@@ -533,8 +533,17 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, build_lexicon_tabs, gu, lang_sel, text_widget):
-    gu.render_gloss_panel(QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_lexicon_tabs, lang=lang_sel.value)
+def _(QUIZ_WORDS_RAW, build_period_tables, gu, lang_sel, text_widget):
+    period_tables, period_selector, gloss_panel = gu.render_gloss_selector(
+        QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_period_tables, lang=lang_sel.value,
+    )
+    gloss_panel
+    return period_selector, period_tables
+
+
+@app.cell(hide_code=True)
+def _(gu, period_selector, period_tables):
+    gu.render_gloss_table(period_tables, period_selector)
     return
 
 
@@ -1067,14 +1076,14 @@ def _(QUIZ_WORDS_RAW, build_paradigm_table, eee, grc_lexicons):
 @app.cell(hide_code=True)
 def _(ag_backend, eee, grc_lexicons, lang_sel, mg, um_backend):
     build_paradigm_table = eee.build_grc_paradigm_table(ag_backend, um_backend, lang=lang_sel.value)
-    build_lexicon_tabs = eee.build_grc_lexicon_tabs(
+    build_period_tables = eee.build_grc_period_tables(
         ag_backend, um_backend,
         lexicons=grc_lexicons,
         el_backend=mg,
         require_lexicon="homer",
         lang=lang_sel.value,
     )
-    return build_lexicon_tabs, build_paradigm_table
+    return build_period_tables, build_paradigm_table
 
 
 @app.cell(hide_code=True)

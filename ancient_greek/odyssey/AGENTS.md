@@ -250,10 +250,10 @@ for _pth in _pl.Path(_sys.prefix).glob("lib/python*/site-packages/_editable_impl
         _sys.path.insert(0, _src)
 ```
 
-Without this, `build_paradigm_table`/`build_lexicon_tabs`/`build_period_tables`
-silently fail with `ModuleNotFoundError` — the click-to-gloss panel's period
-table and the word-quiz's paradigm table both come up empty. Do not narrow
-the glob — it must cover all `_editable_impl_*.pth` files.
+Without this, `build_paradigm_table`/`build_period_tables` silently fail
+with `ModuleNotFoundError` — the click-to-gloss panel's period table and
+the word-quiz's paradigm table both come up empty. Do not narrow the glob
+— it must cover all `_editable_impl_*.pth` files.
 
 ---
 
