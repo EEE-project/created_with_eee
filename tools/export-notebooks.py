@@ -4,8 +4,13 @@
 Wraps `marimo export html-wasm`, writing each notebook's export into the
 same relative directory it already occupies on the pages branch (mirroring
 its position under the source tree on main). Safe to re-run -- each export
-overwrites its own target directory (`-f`) and leaves every other directory
-untouched.
+clears its own target directory first, then writes fresh output (`-f`),
+leaving every other directory untouched. The target directory holds only
+generated output (index.html, favicons, manifest, content-hashed assets/) --
+clearing it first matters because Vite/Rollup hashes asset filenames, so
+`-f` alone overwrites files it's about to rewrite but never deletes files
+from a previous export that the new build simply doesn't reference anymore;
+without the clear, stale content-hashed bundles accumulate forever.
 
 Usage:
     python3 tools/export-notebooks.py --pages-dir <path-to-pages-worktree> \\
@@ -18,6 +23,7 @@ the same Python environment the notebooks declare in their PEP 723 header
 """
 import argparse
 import pathlib
+import shutil
 import subprocess
 import sys
 
@@ -25,6 +31,8 @@ import sys
 def export_one(notebook: pathlib.Path, pages_dir: pathlib.Path) -> "tuple[bool, str]":
     """Export one notebook. Returns (success, stderr-or-empty) -- no printing."""
     out_dir = pages_dir / notebook.parent
+    if out_dir.is_dir() and not (out_dir / ".git").exists():
+        shutil.rmtree(out_dir)
     result = subprocess.run(
         [sys.executable, "-m", "marimo", "export", "html-wasm",
          str(notebook), "-o", str(out_dir), "-f", "--mode", "run"],
