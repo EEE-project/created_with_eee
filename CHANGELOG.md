@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-15
+- **`2026_06_01`/`2026_06_15`: fixed the translation-presence exercise
+  (`Άσκηση: η λέξη στη μετάφραση`) showing "no reviewed pairs yet" for
+  every language on the deployed site.** `translation_presence.tsv` was
+  read from a bare local path instead of `ensure_file()`, so it was
+  simply missing in the WASM-exported deployment (unlike `greek.md`/
+  `ictus.html`/the vocab TSVs, which already fetch remotely) — the
+  exercise silently scaffolded an empty, all-unreviewed answer key
+  instead of using the real reviewed data.
+
 ## 2026-09-14
 - **Localized `2026_06_01` and `2026_06_15` (the only 2 Odyssey lessons with
   a language switcher) end to end — every exercise now actually respects

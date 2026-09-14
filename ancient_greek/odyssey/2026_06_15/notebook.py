@@ -783,6 +783,7 @@ def _(
     SESSION_SIZE,
     STANZAS,
     TRANS_BY_LANG,
+    cfg,
     eee,
     gu,
     lang_sel,
@@ -801,7 +802,10 @@ def _(
         if t not in ("подстрочник", "interlinear_en", "interlinear_el")
     ]
     _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in eee.TRANSLATION_PRESENCE_CONTENT_POS]
-    _tp_path = _P(__file__).parent / "translation_presence.tsv"
+    # Same-directory file, but the WASM export doesn't bundle it -- needs ensure_file like greek.md above.
+    _tp_path = gu.ensure_file(
+        "translation_presence.tsv", nb_dir=_P(__file__).parent, remote_base=cfg.nb_remote("2026_06_15"),
+    )
     gu.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
     TP_ITEMS = gu.balance_presence_items(gu.build_translation_presence_items(
         gu.read_translation_presence_tsv(_tp_path), QUIZ_WORDS_RAW, STANZAS,
