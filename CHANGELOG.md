@@ -9,6 +9,11 @@
   `ictus.html`/the vocab TSVs, which already fetch remotely) — the
   exercise silently scaffolded an empty, all-unreviewed answer key
   instead of using the real reviewed data.
+- **Same fix applied to the other 6 Odyssey lessons** (`2026_06_22`,
+  `2026_06_29`, `2026_07_06`, `2026_07_13`, `2026_07_20`, `2026_07_27`),
+  which had the identical bare-path bug — found via an audit of every
+  other course's notebooks prompted by the fix above; no other course
+  had this pattern.
 
 ## 2026-09-14
 - **Localized `2026_06_01` and `2026_06_15` (the only 2 Odyssey lessons with
