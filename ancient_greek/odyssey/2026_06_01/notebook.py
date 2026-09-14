@@ -347,6 +347,7 @@ def _(gu, lang_sel):
 @app.cell(hide_code=True)
 def _(
     SM_STANZAS,
+    TRANS_BY_LANG,
     gu,
     lang_sel,
     sm_cv,
@@ -364,6 +365,7 @@ def _(
         restore_entry=sm_restore_entry(),
         history_len=len(sm_history()),
         lang=lang_sel.value,
+        valid_translators=TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"]),
     )
     return sm_choice_radio, sm_next_btn, sm_prev_btn
 
@@ -371,6 +373,7 @@ def _(
 @app.cell(hide_code=True)
 def _(
     SM_STANZAS,
+    TRANS_BY_LANG,
     gu,
     lang_sel,
     sm_choice_radio,
@@ -400,6 +403,7 @@ def _(
         direction=sm_direction.value,
         lang=lang_sel.value,
         renew_btn=sm_renew_btn,
+        valid_translators=TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"]),
     )
     return
 
@@ -415,8 +419,10 @@ def _(
     QUIZ_WORDS_RAW,
     SESSION_SIZE,
     STANZAS,
+    TRANS_BY_LANG,
     eee,
     gu,
+    lang_sel,
     tp_renew_btn,
     tp_set_cv,
     tp_set_future,
@@ -427,12 +433,16 @@ def _(
 ):
     from pathlib import Path as _P
 
-    LITERARY_TRANSLATORS = ["Жуковский", "Вересаев"]
+    LITERARY_TRANSLATORS = [
+        t for t in TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"])
+        if t not in ("подстрочник", "interlinear_en", "interlinear_el")
+    ]
     _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in eee.TRANSLATION_PRESENCE_CONTENT_POS]
     _tp_path = _P(__file__).parent / "translation_presence.tsv"
     gu.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
     TP_ITEMS = gu.balance_presence_items(gu.build_translation_presence_items(
-        gu.read_translation_presence_tsv(_tp_path), QUIZ_WORDS_RAW, STANZAS
+        gu.read_translation_presence_tsv(_tp_path), QUIZ_WORDS_RAW, STANZAS,
+        valid_translators=LITERARY_TRANSLATORS,
     ), n=SESSION_SIZE)
     gu.reset_quiz_state(tp_renew_btn, tp_set_cv, tp_set_remaining, tp_set_score,
                          tp_set_history, tp_set_future, tp_set_restore_entry)
@@ -579,21 +589,30 @@ def _(STANZAS, gu, lang_sel, mo):
 
 @app.cell(hide_code=True)
 def _(gu, lang_sel, mo):
-    _TRANS_BY_LANG = {
+    TRANS_BY_LANG = {
+        # Each language's own interlinear crib -- "подстрочник" (ru) from
+        # translations_ru.md, "interlinear_en"/"interlinear_el" from
+        # interlinear_{en,el}.md. Distinct per-language keys, not one shared
+        # "interlinear" -- see the STANZAS-building cell.
         "ru": ["подстрочник", "Жуковский", "Вересаев"],
-        "en": ["подстрочник", "Pope", "Murray"],
-        "el": ["подстрочник", "Πολυλάς"],
+        "en": ["Pope", "Murray", "interlinear_en"],
+        "el": ["Πολυλάς", "interlinear_el"],
     }
     _DEFAULT_BY_LANG = {"ru": "Жуковский", "en": "Pope", "el": "Πολυλάς"}
+    # Only one interlinear variant is ever relevant for the current language,
+    # so it's looked up dynamically rather than listed as three static
+    # entries -- all three would render the same gu.ui_label(...) text for
+    # a given lang_sel.value and silently collide as dict keys otherwise.
+    _INTERLINEAR_KEY_BY_LANG = {"ru": "подстрочник", "en": "interlinear_en", "el": "interlinear_el"}
     _ALL_OPTIONS = {
-        gu.ui_label('interlinear_label', lang_sel.value): "подстрочник",
+        gu.ui_label('interlinear_label', lang_sel.value): _INTERLINEAR_KEY_BY_LANG.get(lang_sel.value, "подстрочник"),
         "Жуковский (1849)":    "Жуковский",
         "Вересаев (1953)":     "Вересаев",
         "Pope (1725)":          "Pope",
         "Murray (1919)":        "Murray",
         "Πολυλάς (1875/1877)":  "Πολυλάς",
     }
-    _valid = _TRANS_BY_LANG.get(lang_sel.value, _TRANS_BY_LANG["ru"])
+    _valid = TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"])
     _opts = {k: v for k, v in _ALL_OPTIONS.items() if v in _valid}
     _default_v = _DEFAULT_BY_LANG.get(lang_sel.value, "Жуковский")
     _default_k = next((k for k, v in _opts.items() if v == _default_v), list(_opts.keys())[0])
@@ -602,7 +621,7 @@ def _(gu, lang_sel, mo):
         value=_default_k,
         label=gu.ui_label('trans_selector_label', lang_sel.value),
     )
-    return (trans_selector,)
+    return TRANS_BY_LANG, trans_selector
 
 
 @app.cell(hide_code=True)
@@ -641,6 +660,14 @@ async def _(cfg, eee):
         _translations.update(_tr)
         TRANS_DESC.update(_desc)
 
+    # Strip any <!-- ... --> annotation (e.g. an interlinear translator's
+    # own echoed Greek source line) from every translator's stanza text --
+    # a no-op for translators without one.
+    _translations = {
+        tr: {ref: eee.strip_comment_lines(txt) for ref, txt in d.items()}
+        for tr, d in _translations.items()
+    }
+
     STANZAS = [
         {
             "ref": ref,
@@ -663,9 +690,12 @@ async def _(cfg, eee):
 def _(ag_backend, cfg, eee, grc_lexicons, gu, lang_sel):
     from pathlib import Path
 
+    _vocab_filename = (
+        "vocab_I_1-21.tsv" if lang_sel.value == "ru" else f"vocab_I_1-21_{lang_sel.value}.tsv"
+    )
     QUIZ_WORDS_RAW = gu.resolve_word_grammar(
         gu.load_inflected_vocab_tsv(
-            "vocab_I_1-21.tsv", nb_dir=Path(__file__).parent, remote_base=cfg.nb_remote("2026_06_01"),
+            _vocab_filename, nb_dir=Path(__file__).parent, remote_base=cfg.nb_remote("2026_06_01"),
         ),
         ag_backend, lang_sel.value
     )
@@ -722,7 +752,7 @@ def _(ag_backend, eee, grc_lexicons, lang_sel, mg, um_backend):
         require_lexicon="homer",
         lang=lang_sel.value,
     )
-    return build_period_tables, build_paradigm_table
+    return build_paradigm_table, build_period_tables
 
 
 @app.cell(hide_code=True)
