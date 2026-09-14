@@ -1,5 +1,40 @@
 # Changelog
 
+## 2026-09-14
+- **Localized `2026_06_01` and `2026_06_15` (the only 2 Odyssey lessons with
+  a language switcher) end to end — every exercise now actually respects
+  `lang_sel`, not just the surrounding UI labels.**
+  - `LITERARY_TRANSLATORS` was hardcoded to Russian (Жуковский/Вересаев)
+    regardless of `lang_sel.value`; now derived per-language from a
+    `TRANS_BY_LANG` dict. Extended into a full manual translation-presence
+    review: 495 `(lemma, form, translator)` rows across both lessons'
+    `translation_presence.tsv` reviewed and given real `yes`/`no` judgments
+    for Pope/Murray/Πολυλάς (previously unreviewed, silently excluded).
+  - The stanza-match exercise (`stanza_match_widgets`/`.stanza_match_form`)
+    picked a translator randomly across every language, not filtered by
+    `lang_sel` — fixed via `eee-project` 1.14.0's new `valid_translators`
+    parameter, threaded through from each lesson's own `TRANS_BY_LANG`.
+  - The translation-presence exercise had the identical gap one level up
+    (`build_translation_presence_items` had no translator filter at all,
+    masked only by unreviewed rows being silently skipped) — fixed via
+    `eee-project` 1.15.0's matching `valid_translators` parameter there.
+  - Vocab word-gloss `meaning` columns (`vocab_I_1-21.tsv`/
+    `vocab_IX_19-38.tsv`) were Russian-only free text, leaking into
+    English/Greek UI (e.g. "Ἠελίοιο (Гелиоса...)"). Translated all 236
+    words into English and Greek (`vocab_*_{en,el}.tsv`, new files); the
+    notebook now picks the file matching `lang_sel.value`.
+  - `подстрочник` (RU's own interlinear crib) was listed as valid for
+    en/el too despite having no EN/EL content, so a random stanza-match
+    pick could still surface raw Russian text in either language. Fixed
+    in two parts: `TRANS_BY_LANG` no longer lists `подстрочник` for
+    en/el, and `2026_06_15` (the lesson with real interlinear source
+    text) now wires in genuine `interlinear_en`/`interlinear_el` content
+    from `greek-knowledge-eee`, restoring proper multi-option
+    stanza-match rounds instead of leaving en/el with only one candidate.
+    `2026_06_01`'s `I.1-21` interlinear content didn't exist anywhere
+    (an old attempt on an abandoned branch was judged unfit and never
+    ported) — authored fresh and wired in the same way.
+
 ## 2026-08-28 (2)
 - Added `kavafis_ithaki/3-4/`, the course's 3rd lesson (στ. 13-23, continuing
   directly after lesson 2's στ. 4-12), built from the `Kavafis_Ithaki/3-4/`
