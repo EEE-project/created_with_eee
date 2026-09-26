@@ -31,7 +31,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Δίδαγμα ς'
+    # Δίδαγμα 6
     **Palaestra — Древнегреческий язык, начальный уровень — Лето 2026**
     """)
     return

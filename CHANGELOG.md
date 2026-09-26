@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-09-26
+- **3 Palaestra homework-review links (`2026_06_23`, `2026_07_07`×2,
+  `2026_07_10`) pointed at PDFs in their own session directory instead of
+  the directory that actually has the file.** `2026_06_23`'s answer key
+  (`κεφ.I, (3)_ἀσκήματα_τέλος.pdf`) is only in `2026_06_26`'s directory;
+  `2026_07_07`/`2026_07_10`'s translation exercise
+  (`Κεφ.II(2)_μετάφρασις.pdf`) is only in `2026_07_03`'s. Both are cases
+  where the material was handed out the following session but linked from
+  the session it was homework for. Fixed by routing each link through a
+  `NB_REMOTE.replace(...)` cross-directory reference, the same pattern
+  already used elsewhere for material shared across sessions.
+- **Palaestra's Greek-ordinal lesson titles ("Δίδαγμα α'" through "ι'")
+  were never verified against source — replaced with plain Arabic
+  numerals 1-10, matching the Russian "Занятие N" labels already used
+  everywhere else.** Only 2 of the 10 sessions carry an explicit ordinal
+  anywhere in their own lecture materials, and one of them contradicts
+  the sequential guess (`2026_07_07`'s own vocabulary deck is
+  self-labeled "the 6th lesson," not the 9th). Updated every copy:
+  notebook titles, `index.tsv`'s `icon`/`greek` columns, `README.md` and
+  `AGENTS.md`'s course-layout diagrams, and `AGENTS.md`'s own
+  explanation of the old scheme.
+
 ## 2026-09-15
 - **`2026_06_01`/`2026_06_15`: fixed the translation-presence exercise
   (`Άσκηση: η λέξη στη μετάφραση`) showing "no reviewed pairs yet" for

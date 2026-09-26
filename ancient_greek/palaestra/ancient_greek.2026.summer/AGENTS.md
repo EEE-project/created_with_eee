@@ -18,18 +18,26 @@ ancient_greek.2026.summer/
   2026_06_19/          # Занятие 4 · Средний залог и II склонение
   2026_06_23/          # Занятие 5 · Спряжение и падежи
   2026_06_26/          # Занятие 6 · II склонение и падежи
-  2026_07_01/          # Δίδαγμα ζ' · Κεφάλαιον II (verbs)
-  2026_07_03/          # Δίδαγμα η' · Κεφάλαιον II (nouns)
-  2026_07_07/          # Δίδαγμα θ' · Κεφάλαιον II (imperative, cases)
-  2026_07_10/          # Δίδαγμα ι' · Κεφάλαιον II (syntax)
+  2026_07_01/          # Занятие 7 · Κεφάλαιον II (verbs)
+  2026_07_03/          # Занятие 8 · Κεφάλαιον II (nouns)
+  2026_07_07/          # Занятие 9 · Κεφάλαιον II (imperative, cases)
+  2026_07_10/          # Занятие 10 · Κεφάλαιον II (syntax)
 ```
 
-**Naming shift (from `2026_07_01` on):** the first 6 sessions are numbered
-"Занятие N · <topic>" (sequential, Russian). Starting with `2026_07_01`, new
-sessions instead follow the Athenaze textbook's own scheme — Greek ordinal
-letters tied to its chapter number, e.g. "Δίδαγμα ζ' · Κεφάλαιον II" — and
-draw on textbook-specific materials (`Athenaze_2_vocabula.*`,
-`CONSPECTVS GRAMMATICVS II_graecus.*`) alongside the usual lecture notes.
+**Numbering (2026-09-26):** all 10 sessions use one sequential Arabic-numeral
+count, by date order — "Занятие N" / "Δίδαγμα N", not the Athenaze textbook's
+own internal lesson-numbering. An earlier version of this file used Greek
+ordinal letters (α'...ι') for sessions from `2026_07_01` on, framed as
+"following the textbook's own scheme" — that framing turned out to be
+unfounded: across the whole course's lecture materials, only 2 sessions
+(`2026_06_09`=α', `2026_07_07`=Ϛ') carry an explicit textbook-native ordinal
+anywhere, and they contradict a straightforward per-session count (Ϛ'=6th
+lands on what would be the 9th session). Don't reintroduce Greek-letter
+lesson-ordinals without first confirming a full, consistent count from the
+lecture materials for every intervening session, not just the endpoints.
+From `2026_07_01` on, sessions also draw on Chapter-II-specific materials
+(`Athenaze_2_vocabula.*`, `CONSPECTVS GRAMMATICVS II_graecus.*`) alongside
+the usual lecture notes.
 
 Each lesson directory:
 
