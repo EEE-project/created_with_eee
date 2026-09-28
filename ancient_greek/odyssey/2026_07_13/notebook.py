@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.14",
-#     "eee-project>=1.1.0",
+#     "eee-project>=1.19.0",
 #     "ancient-greek-backend-eee>=2.0.0",
 #     "unimorph-backend-eee>=1.0.3",
 #     "modern-greek-backend-eee>=1.0.0",
@@ -16,12 +16,14 @@ app = marimo.App(width="medium", app_title="Одиссея с Гомером —
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(lang_sel, mo):
     from eee_project import ConfigStore, eee_topbar
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
-    eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles={
+    eee_topbar(mo, back_url=cfg.index_url(), lang=lang_sel.value, titles={
         "ru": "Одиссея с Гомером",
+        "en": "Odyssey with Homer",
+        "el": "Οδύσσεια με τον Όμηρο",
     }, ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
@@ -42,21 +44,47 @@ def _(cfg):
 
 
 @app.cell(hide_code=True)
-def _(eee, mo):
+def _(eee, lang_sel, mo):
     from pathlib import Path as _Path
+    _TITLES = {
+        "ru": ("# Одиссея с Гомером", "## День 5 · Odyss. IX.105–129"),
+        "en": ("# Odyssey with Homer", "## Day 5 · Odyss. IX.105–129"),
+        "el": ("# Οδύσσεια με τον Όμηρο", "## Ημέρα 5 · Odyss. IX.105–129"),
+    }
+    _h1, _h2 = _TITLES.get(lang_sel.value, _TITLES["ru"])
     _thumb_path = _Path(__file__).parent / "cyclope_and_elephants_skull.jpg"
     _left = mo.vstack([
-        mo.md("# Одиссея с Гомером"),
-        mo.md("## День 5 · Odyss. IX.105–129"),
+        mo.md(_h1),
+        mo.md(_h2),
     ])
     _img = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_07_13", width=280)
-    _cap = mo.md(
-            "<div style='font-size:.8em;color:#9ca3af;text-align:center'>"
+    _CAP = {
+        "ru": (
             "Одна из гипотез геомифологии: крупная носовая полость в центре черепа "
             "карликового слона (<i>Palaeoloxodon falconeri</i>, плейстоцен) могла "
             "восприниматься древними как единственная гигантская глазница. Его "
             "ископаемые находили в пещерах Сицилии и Мальты — там же, где античные "
-            "авторы селили циклопов.</div>"
+            "авторы селили циклопов."
+        ),
+        "en": (
+            "One geomythology hypothesis: the large nasal cavity in the center of a "
+            "dwarf elephant's skull (<i>Palaeoloxodon falconeri</i>, Pleistocene) may "
+            "have looked to ancient observers like a single giant eye socket. Its "
+            "fossils were found in caves on Sicily and Malta -- the same places where "
+            "ancient authors placed the Cyclopes."
+        ),
+        "el": (
+            "Μία υπόθεση γεωμυθολογίας: η μεγάλη ρινική κοιλότητα στο κέντρο του "
+            "κρανίου ενός νάνου ελέφαντα (<i>Palaeoloxodon falconeri</i>, "
+            "Πλειστόκαινο) μπορεί να φαινόταν στους αρχαίους σαν μια μοναδική "
+            "γιγάντια κόγχη ματιού. Τα απολιθώματά του βρέθηκαν σε σπηλιές της "
+            "Σικελίας και της Μάλτας -- τα ίδια μέρη όπου οι αρχαίοι συγγραφείς "
+            "τοποθετούσαν τους Κύκλωπες."
+        ),
+    }
+    _cap = mo.md(
+            "<div style='font-size:.8em;color:#9ca3af;text-align:center'>"
+            + _CAP.get(lang_sel.value, _CAP["ru"]) + "</div>"
         )
 
     _right = mo.vstack([_img, _cap], align="center")
@@ -65,15 +93,20 @@ def _(eee, mo):
 
 
 @app.cell(hide_code=True)
-def _(NB_REMOTE, mo):
-    _txt = f"**Материалы занятия:** [Od_IX_105-129.pdf]({NB_REMOTE}/Od_IX_105-129.pdf) · [Od_IX_105-129_vocabula.pdf]({NB_REMOTE}/Od_IX_105-129_vocabula.pdf)"
+def _(NB_REMOTE, gu, lang_sel, mo):
+    _txt = (
+        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
+        f"[Od_IX_105-129.pdf]({NB_REMOTE}/Od_IX_105-129.pdf) · "
+        f"[Od_IX_105-129_vocabula.pdf]({NB_REMOTE}/Od_IX_105-129_vocabula.pdf)"
+    )
     mo.md(_txt)
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
+def _(lang_sel, mo):
+    _TXT = {
+        "ru": r"""
     ---
     ## Золотой век
 
@@ -129,16 +162,136 @@ def _(mo):
     без общины: ни собраний, ни законов, ни судов, ни кораблей; каждый правит
     один, «друг до друга им дела нет» (IX.112–115). Тот же образ
     доцивилизационного изобилия — но с разным знаком: не идиллия, а дикость.
-    """)
+    """,
+        "en": r"""
+    ---
+    ## The Golden Age
+
+    ### χρύσεον γένος — Hesiod (8th–7th c. BC)
+
+    The oldest known description is in Hesiod's *Works and Days* (109–119). He
+    calls these people, contemporaries of Cronus, **χρύσεον γένος** — the
+    "golden race/generation" (*γένος* — "race, generation, tribe," not time as
+    such: for Hesiod this is specifically a succession of *generations* of
+    people, not "ages" in the strict sense). They know neither toil nor old
+    age; the earth feeds them on its own (literal rendering):
+
+    > **Χρύσεον μὲν πρώτιστα γένος μερόπων ἀνθρώπων
+    > ἀθάνατοι ποίησαν...**
+    > First of all the immortals made a golden race
+    > of mortal people...
+
+    > **ὥστε θεοὶ δ᾽ ἔζωον ἀκηδέα θυμὸν ἔχοντες
+    > νόσφιν ἄτερ τε πόνων καὶ ὀιζύος·**
+    > They lived like gods, with a carefree heart,
+    > far removed from toil and misery.
+
+    > **καρπὸν δ᾽ ἔφερε ζείδωρος ἄρουρα
+    > αὐτομάτη πολλόν τε καὶ ἄφθονον·**
+    > And the grain-giving earth bore fruit
+    > of its own accord, abundant and unstinted.
+
+    ### aurea aetas — Ovid (1st c. BC – 1st c. AD)
+
+    Some seven centuries later, Ovid in the *Metamorphoses* (I.89–112) is the
+    first to call that same era specifically **aurea aetas** — "the golden
+    age" in the sense we now use (*aetas* — "age, era, lifetime"). The phrase
+    "golden age" itself traces back to Ovid's Latin formulation rather than to
+    Hesiod's Greek *γένος*, even though the story is Hesiod's. Literal
+    rendering:
+
+    > **Aurea prima sata est aetas, quae vindice nullo,
+    > sponte sua, sine lege fidem rectumque colebat.**
+    > First came the golden age, which, with no one to avenge it
+    > and no law, of its own accord kept faith and did what was right.
+
+    > **nullaque mortales praeter sua litora norant;**
+    > And mortals knew no coastlines but their own.
+
+    > **ipsa quoque inmunis rastroque intacta nec ullis
+    > saucia vomeribus per se dabat omnia tellus,**
+    > The earth itself, too, untaxed and untouched by the hoe,
+    > unwounded by any plowshare, gave everything of its own accord,
+
+    ### In Homer
+
+    Homer's Cyclopes live by that same spontaneous bounty of the earth
+    (IX.109: *τά γ᾽ ἄσπαρτα καὶ ἀνήροτα πάντα φύονται* — "everything grows
+    unsown and unplowed, of itself"), with no sowing or plowing (IX.106–111)
+    — but with no gods nearby and no community: no assemblies, no laws, no
+    courts, no ships; each one rules alone, "each cares nothing for the
+    others" (IX.112–115). The same image of pre-civilized abundance — but
+    with the opposite sign: not an idyll, but savagery.
+    """,
+        "el": r"""
+    ---
+    ## Η Χρυσή Εποχή
+
+    ### χρύσεον γένος — Ησίοδος (8ος–7ος αι. π.Χ.)
+
+    Η παλαιότερη γνωστή περιγραφή βρίσκεται στον Ησίοδο, «Έργα και Ημέραι»
+    (109–119). Ονομάζει αυτούς τους ανθρώπους, συγχρόνους του Κρόνου,
+    **χρύσεον γένος** — «χρυσό γένος/γενιά» (*γένος* — «γένος, γενιά, φυλή»,
+    όχι χρόνος καθαυτός: για τον Ησίοδο πρόκειται ακριβώς για διαδοχή
+    *γενών* ανθρώπων, όχι «εποχών» με την αυστηρή έννοια). Δεν γνωρίζουν
+    ούτε κόπο ούτε γήρας· η γη τους τρέφει μόνη της (κατά λέξη απόδοση):
+
+    > **Χρύσεον μὲν πρώτιστα γένος μερόπων ἀνθρώπων
+    > ἀθάνατοι ποίησαν...**
+    > Πρώτα-πρώτα οι αθάνατοι δημιούργησαν χρυσό γένος
+    > θνητών ανθρώπων...
+
+    > **ὥστε θεοὶ δ᾽ ἔζωον ἀκηδέα θυμὸν ἔχοντες
+    > νόσφιν ἄτερ τε πόνων καὶ ὀιζύος·**
+    > Ζούσαν σαν θεοί, με ανέμελη ψυχή,
+    > μακριά και απαλλαγμένοι από κόπους και δυστυχία.
+
+    > **καρπὸν δ᾽ ἔφερε ζείδωρος ἄρουρα
+    > αὐτομάτη πολλόν τε καὶ ἄφθονον·**
+    > Και η καρποφόρα γη έδινε καρπό
+    > από μόνη της, άφθονο και απλόχερο.
+
+    ### aurea aetas — Οβίδιος (1ος αι. π.Χ. — 1ος αι. μ.Χ.)
+
+    Περίπου επτά αιώνες αργότερα, ο Οβίδιος στις «Μεταμορφώσεις» (I.89–112)
+    είναι ο πρώτος που ονομάζει την ίδια εποχή ακριβώς **aurea aetas** —
+    «χρυσή εποχή» με την έννοια που τη χρησιμοποιούμε σήμερα (*aetas* —
+    «εποχή, ηλικία, διάρκεια ζωής»). Η ίδια η έκφραση «χρυσή εποχή»
+    ανάγεται μάλλον στη λατινική διατύπωση του Οβιδίου παρά στο ελληνικό
+    *γένος* του Ησιόδου, αν και η αφήγηση είναι ησιόδεια. Κατά λέξη απόδοση:
+
+    > **Aurea prima sata est aetas, quae vindice nullo,
+    > sponte sua, sine lege fidem rectumque colebat.**
+    > Πρώτη γεννήθηκε η χρυσή εποχή, που χωρίς τιμωρό,
+    > από μόνη της, χωρίς νόμο, τηρούσε την πίστη και το δίκαιο.
+
+    > **nullaque mortales praeter sua litora norant;**
+    > Και οι θνητοί δεν γνώριζαν άλλες ακτές εκτός από τις δικές τους.
+
+    > **ipsa quoque inmunis rastroque intacta nec ullis
+    > saucia vomeribus per se dabat omnia tellus,**
+    > Η ίδια η γη, ανέγγιχτη από τσάπα, χωρίς φόρους,
+    > απλήγωτη από κανένα υνί, τα έδινε όλα μόνη της,
+
+    ### Στον Όμηρο
+
+    Οι κύκλωπες του Ομήρου ζουν με την ίδια αυθόρμητη γενναιοδωρία της γης
+    (IX.109: *τά γ᾽ ἄσπαρτα καὶ ἀνήροτα πάντα φύονται* — «όλα φυτρώνουν
+    ασπόρευτα και ανόργωτα μόνα τους»), χωρίς σπορά και όργωμα (IX.106–111)
+    — αλλά χωρίς θεούς κοντά τους και χωρίς κοινότητα: ούτε συνελεύσεις,
+    ούτε νόμους, ούτε δικαστήρια, ούτε πλοία· ο καθένας κυβερνά μόνος του,
+    «ο ένας δεν νοιάζεται καθόλου για τον άλλον» (IX.112–115). Η ίδια
+    εικόνα προπολιτισμικής αφθονίας — αλλά με αντίθετο πρόσημο: όχι
+    ειδύλλιο, αλλά αγριότητα.
+    """,
+    }
+    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ---
-    ## Текст поэмы с параллельными переводами.
-    """)
+def _(gu, lang_sel, mo):
+    mo.md(gu.ui_label('poem_section_heading', lang_sel.value))
     return
 
 
@@ -153,32 +306,37 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(TRANS_DESC, mo, trans_selector):
-    _PODSTROCHNIK_DESC = "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала"
-    _desc_map = {"подстрочник": _PODSTROCHNIK_DESC, **TRANS_DESC}
+def _(TRANS_DESC, eee, gu, lang_sel, mo, trans_selector):
+    _desc_map = {eee.interlinear_translator_key(lang_sel.value): gu.ui_label('interlinear_description', lang_sel.value), **TRANS_DESC}
     mo.md(_desc_map.get(trans_selector.value, ""))
     return
 
 
 @app.cell(hide_code=True)
-def _(cfg, gu, mo):
+def _(cfg, gu, lang_sel, mo):
     from pathlib import Path as _P
     SHOW_ICTUS = mo.ui.switch(value=True)
     SHOW_HOMER = mo.ui.switch(value=True)
 
-    # Shared across all 6 lessons. Fetched via ensure_file, not a bare local
+    # Shared across all lessons. Fetched via ensure_file, not a bare local
     # read: molab only bundles files that live in the notebook's own directory,
     # so a parent-directory file like this one is missing there unless we
     # download it ourselves (matches the pattern already used for materials PDFs).
+    _eee_note_filename = (
+        "eee_note.md" if lang_sel.value == "ru" else f"eee_note_{lang_sel.value}.md"
+    )
     _eee_note_path = gu.ensure_file(
-        "eee_note.md", nb_dir=_P(__file__).parent.parent, remote_base=cfg.raw_base,
+        _eee_note_filename, nb_dir=_P(__file__).parent.parent, remote_base=cfg.raw_base,
     )
     EEE_NOTE = _eee_note_path.read_text(encoding="utf-8") if _eee_note_path else (
-        "*(не удалось загрузить описание движка EEE)*"
+        gu.ui_label('eee_note_load_error', lang_sel.value)
     )
 
+    _ICTUS_COLOR_NAME = {"ru": "красным", "en": "red", "el": "κόκκινο"}
     gu.ictus_toggle_panel(SHOW_ICTUS, SHOW_HOMER, EEE_NOTE,
-                           ictus_color="#980000", ictus_color_name="красным")
+                           ictus_color="#980000",
+                           ictus_color_name=_ICTUS_COLOR_NAME.get(lang_sel.value, "красным"),
+                           lang=lang_sel.value)
     return EEE_NOTE, SHOW_HOMER, SHOW_ICTUS
 
 
@@ -227,9 +385,9 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, build_period_tables, gu, text_widget):
+def _(QUIZ_WORDS_RAW, build_period_tables, gu, lang_sel, text_widget):
     period_tables, period_selector, gloss_panel = gu.render_gloss_selector(
-        QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_period_tables,
+        QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_period_tables, lang=lang_sel.value,
     )
     gloss_panel
     return period_selector, period_tables
@@ -242,16 +400,16 @@ def _(gu, period_selector, period_tables):
 
 
 @app.cell(hide_code=True)
-def _(EEE_NOTE, mo):
-    mo.accordion({"О проверке форм (EEE)": EEE_NOTE})
+def _(EEE_NOTE, gu, lang_sel, mo):
+    mo.accordion({gu.ui_label('form_check_accordion_label', lang_sel.value): EEE_NOTE})
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
+def _(gu, lang_sel, mo):
+    mo.md(f"""
     ---
-    ## Упражнения
+    {gu.ui_label('exercises_section_heading', lang_sel.value)}
     """)
     return
 
@@ -266,13 +424,13 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(gu):
-    quiz_renew_btn = gu.make_renew_button()
+def _(gu, lang_sel):
+    quiz_renew_btn = gu.make_renew_button(lang=lang_sel.value)
     return (quiz_renew_btn,)
 
 
 @app.cell(hide_code=True)
-def _(QUIZ_WORDS, cv, gu, history, remaining, restore_entry):
+def _(QUIZ_WORDS, cv, gu, history, lang_sel, remaining, restore_entry):
     _ = cv()
     answer_radio, next_btn, prev_btn = gu.word_quiz_widgets(
         cv=cv(),
@@ -280,6 +438,7 @@ def _(QUIZ_WORDS, cv, gu, history, remaining, restore_entry):
         vocab=QUIZ_WORDS,
         restore_entry=restore_entry(),
         history_len=len(history()),
+        lang=lang_sel.value,
     )
     return answer_radio, next_btn, prev_btn
 
@@ -292,6 +451,7 @@ def _(
     future,
     gu,
     history,
+    lang_sel,
     next_btn,
     prev_btn,
     quiz_renew_btn,
@@ -311,31 +471,31 @@ def _(
         history, set_history, future, set_future,
         answer_radio, next_btn, prev_btn,
         vocab=QUIZ_WORDS,
-        title='### Упражнение: найди слово',
+        title=gu.ui_label('word_find_exercise_heading', lang_sel.value),
         meaning_key='_label',
         form_key='form',
+        lang=lang_sel.value,
         renew_btn=quiz_renew_btn,
     )
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ### Упражнение: сопоставь строфу и перевод
-    """)
+def _(gu, lang_sel, mo):
+    mo.md(gu.ui_label('stanza_match_section_heading', lang_sel.value))
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(gu, lang_sel, mo):
+    _DIRECTION_OPTS = {
+        gu.ui_label('stanza_match_toggle_grc_to_tr', lang_sel.value): "grc_to_tr",
+        gu.ui_label('stanza_match_toggle_tr_to_grc', lang_sel.value): "tr_to_grc",
+    }
     sm_direction = mo.ui.radio(
-        options={
-            "Строфа → перевод": "grc_to_tr",
-            "Перевод → строфа": "tr_to_grc",
-        },
-        value="Строфа → перевод",
-        label="**Направление:**",
+        options=_DIRECTION_OPTS,
+        value=list(_DIRECTION_OPTS.keys())[0],
+        label=gu.ui_label('stanza_match_direction_label', lang_sel.value),
         inline=True,
     )
     sm_direction
@@ -394,15 +554,17 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(gu):
-    sm_renew_btn = gu.make_renew_button()
+def _(gu, lang_sel):
+    sm_renew_btn = gu.make_renew_button(lang=lang_sel.value)
     return (sm_renew_btn,)
 
 
 @app.cell(hide_code=True)
 def _(
     SM_STANZAS,
+    TRANS_BY_LANG,
     gu,
+    lang_sel,
     sm_cv,
     sm_direction,
     sm_history,
@@ -417,6 +579,8 @@ def _(
         direction=sm_direction.value,
         restore_entry=sm_restore_entry(),
         history_len=len(sm_history()),
+        lang=lang_sel.value,
+        valid_translators=TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"]),
     )
     return sm_choice_radio, sm_next_btn, sm_prev_btn
 
@@ -425,6 +589,7 @@ def _(
 def _(
     SM_STANZAS,
     gu,
+    lang_sel,
     sm_choice_radio,
     sm_cv,
     sm_direction,
@@ -450,16 +615,15 @@ def _(
         sm_choice_radio, sm_next_btn, sm_prev_btn,
         stanzas=SM_STANZAS,
         direction=sm_direction.value,
+        lang=lang_sel.value,
         renew_btn=sm_renew_btn,
     )
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ### Упражнение: слово в переводе
-    """)
+def _(gu, lang_sel, mo):
+    mo.md(gu.ui_label('presence_exercise_heading', lang_sel.value))
     return
 
 
@@ -468,9 +632,11 @@ def _(
     QUIZ_WORDS_RAW,
     SESSION_SIZE,
     STANZAS,
+    TRANS_BY_LANG,
     cfg,
     eee,
     gu,
+    lang_sel,
     tp_renew_btn,
     tp_set_cv,
     tp_set_future,
@@ -481,7 +647,11 @@ def _(
 ):
     from pathlib import Path as _P
 
-    LITERARY_TRANSLATORS = ["Жуковский", "Вересаев"]
+    _interlinear_keys = {eee.interlinear_translator_key(_l) for _l in ("ru", "en", "el")}
+    LITERARY_TRANSLATORS = [
+        t for t in TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"])
+        if t not in _interlinear_keys
+    ]
     _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in eee.TRANSLATION_PRESENCE_CONTENT_POS]
     # Same-directory file, but the WASM export doesn't bundle it -- needs ensure_file like the vocab TSV above.
     _tp_path = gu.ensure_file(
@@ -489,7 +659,8 @@ def _(
     )
     gu.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
     TP_ITEMS = gu.balance_presence_items(gu.build_translation_presence_items(
-        gu.read_translation_presence_tsv(_tp_path), QUIZ_WORDS_RAW, STANZAS
+        gu.read_translation_presence_tsv(_tp_path), QUIZ_WORDS_RAW, STANZAS,
+        valid_translators=LITERARY_TRANSLATORS,
     ), n=SESSION_SIZE)
     gu.reset_quiz_state(tp_renew_btn, tp_set_cv, tp_set_remaining, tp_set_score,
                          tp_set_history, tp_set_future, tp_set_restore_entry)
@@ -521,13 +692,13 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(gu):
-    tp_renew_btn = gu.make_renew_button()
+def _(gu, lang_sel):
+    tp_renew_btn = gu.make_renew_button(lang=lang_sel.value)
     return (tp_renew_btn,)
 
 
 @app.cell(hide_code=True)
-def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
+def _(TP_ITEMS, gu, lang_sel, tp_cv, tp_history, tp_remaining, tp_restore_entry):
     _ = tp_cv()
     tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch = gu.translation_presence_widgets(
         cv=tp_cv(),
@@ -535,6 +706,7 @@ def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
         items=TP_ITEMS,
         restore_entry=tp_restore_entry(),
         history_len=len(tp_history()),
+        lang=lang_sel.value,
     )
     return tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch
 
@@ -543,6 +715,7 @@ def _(TP_ITEMS, gu, tp_cv, tp_history, tp_remaining, tp_restore_entry):
 def _(
     TP_ITEMS,
     gu,
+    lang_sel,
     tp_choice_radio,
     tp_cv,
     tp_future,
@@ -567,6 +740,7 @@ def _(
         tp_history, tp_set_history, tp_future, tp_set_future,
         tp_choice_radio, tp_next_btn, tp_prev_btn, tp_source_switch,
         items=TP_ITEMS,
+        lang=lang_sel.value,
         renew_btn=tp_renew_btn,
     )
     return
@@ -597,27 +771,52 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(STANZAS, mo):
+def _(STANZAS, gu, lang_sel, mo):
     stanza_selector = mo.ui.dropdown(
         options=[s["ref"] for s in STANZAS],
         value=STANZAS[0]["ref"],
-        label="Строфа",
+        label=gu.ui_label('stanza_label', lang_sel.value),
     )
     return (stanza_selector,)
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(eee, gu, lang_sel, mo):
+    TRANS_BY_LANG = {
+        # Each language's own interlinear crib is a "## interlinear_{lang}"
+        # section inside that language's translations_{lang}.md (KB naming
+        # convention -- confirmed against greek-knowledge-eee's actual file
+        # headers, not the old pre-port local translations_ru.md, which used
+        # "подстрочник" instead). eee.interlinear_translator_key derives the
+        # per-language key from this same convention -- see the
+        # STANZAS-building cell.
+        "ru": [eee.interlinear_translator_key("ru"), "Жуковский", "Вересаев"],
+        "en": ["Pope", "Murray", eee.interlinear_translator_key("en")],
+        "el": ["Πολυλάς", eee.interlinear_translator_key("el")],
+    }
+    _DEFAULT_BY_LANG = {"ru": "Жуковский", "en": "Pope", "el": "Πολυλάς"}
+    # Only one interlinear variant is ever relevant for the current language,
+    # so it's looked up dynamically rather than listed as three static
+    # entries -- all three would render the same gu.ui_label(...) text for
+    # a given lang_sel.value and silently collide as dict keys otherwise.
+    _ALL_OPTIONS = {
+        gu.ui_label('interlinear_label', lang_sel.value): eee.interlinear_translator_key(lang_sel.value),
+        "Жуковский (1849)":    "Жуковский",
+        "Вересаев (1953)":     "Вересаев",
+        "Pope (1725)":          "Pope",
+        "Murray (1919)":        "Murray",
+        "Πολυλάς (1875/1877)":  "Πολυλάς",
+    }
+    _valid = TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"])
+    _opts = {k: v for k, v in _ALL_OPTIONS.items() if v in _valid}
+    _default_v = _DEFAULT_BY_LANG.get(lang_sel.value, "Жуковский")
+    _default_k = next((k for k, v in _opts.items() if v == _default_v), list(_opts.keys())[0])
     trans_selector = mo.ui.dropdown(
-        options={
-            "подстрочник":             "подстрочник",
-            "Жуковский (1849) · рус.": "Жуковский",
-            "Вересаев (1953) · рус.":  "Вересаев",
-        },
-        value="подстрочник",
-        label="Перевод",
+        options=_opts,
+        value=_default_k,
+        label=gu.ui_label('trans_selector_label', lang_sel.value),
     )
-    return (trans_selector,)
+    return TRANS_BY_LANG, trans_selector
 
 
 @app.cell(hide_code=True)
@@ -628,25 +827,61 @@ async def _(cfg, eee):
     _root = _P(__file__).parent
     _session_remote = cfg.nb_remote("2026_07_13")
     _fetched = await _GU.ensure_files(
-        "greek.md", "translations_ru.md", "ictus.html",
+        "greek.md", "ictus.html",
         nb_dir=_root, remote_base=_session_remote,
     )
     _greek_md = _fetched["greek.md"]
-    _trans_md = _fetched["translations_ru.md"]
     _ictus_html = _fetched["ictus.html"]
-    if _greek_md is None or _trans_md is None or _ictus_html is None:
+
+    _gke_remote = "https://codeberg.org/EEE-project/greek-knowledge-eee/raw/branch/main/texts/odyssey"
+    _trans_fetched = await _GU.ensure_files(
+        "translations_ru.md", "translations_en.md", "translations_el.md",
+        nb_dir=_root, remote_base=_gke_remote,
+    )
+    if _greek_md is None or _ictus_html is None or any(v is None for v in _trans_fetched.values()):
         raise FileNotFoundError(
-            "greek.md / translations_ru.md / ictus.html: one or more required "
-            "session files could not be fetched (see ensure_file diagnostics above)"
+            "greek.md/ictus.html/translations_{ru,en,el}.md: one or more "
+            "required session files could not be fetched (see ensure_file "
+            "diagnostics above)"
         )
     _greek = eee.parse_stanza_text(_greek_md.read_text(encoding="utf-8"), ref_prefix="### Odyss. ")
-    _trans_ru, _desc_ru = eee.parse_stanza_translations(_trans_md.read_text(encoding="utf-8"), ref_prefix="### Odyss. ")
-    TRANS_DESC = _desc_ru
+
+    _translations: dict = {}
+    TRANS_DESC: dict = {}
+    for _fname in ("translations_ru.md", "translations_en.md", "translations_el.md"):
+        _tr, _desc = eee.parse_stanza_translations(
+            _trans_fetched[_fname].read_text(encoding="utf-8"), ref_prefix="### Odyss. "
+        )
+        _translations.update(_tr)
+        TRANS_DESC.update(_desc)
+
+    # Strip any <!-- ... --> annotation (e.g. an interlinear translator's
+    # own echoed Greek source line) from every translator's stanza text --
+    # a no-op for translators without one.
+    _translations = {
+        tr: {ref: eee.strip_comment_lines(txt) for ref, txt in d.items()}
+        for tr, d in _translations.items()
+    }
+
     STANZAS = [
         {
             "ref": ref,
             "lines": lines,
-            "translations": {tr: d.get(ref, "—") for tr, d in _trans_ru.items()},
+            # find_stanza_translation, not a bare d.get(ref, "—"): Pope is
+            # transcribed against coarser "equivalent passage" spans than
+            # this course's own per-lesson stanza split (Murray/Πολυλάς/
+            # interlinear_{ru,en,el} all stay fine-grained here, matching
+            # every lesson's own greek.md, since greek-knowledge-eee's KB
+            # was re-split 2026-09-28 to fix exactly this mismatch for the
+            # interlinear cribs) -- allow_coarse_fallback=False for
+            # interlinear keys is kept as a safety net regardless: a coarse
+            # match there would mean extra lines from a neighboring stanza,
+            # not a genuine equivalent passage -- see eee-project's own
+            # find_stanza_translation docstring.
+            "translations": {
+                tr: eee.find_stanza_translation(ref, d, allow_coarse_fallback=not tr.startswith("interlinear_"))
+                for tr, d in _translations.items()
+            },
         }
         for ref, lines in _greek.items()
     ]
@@ -667,12 +902,16 @@ def _(
     eee,
     grc_lexicons,
     gu,
+    lang_sel,
 ):
     from pathlib import Path
 
+    _vocab_filename = (
+        "vocab_IX_105-129.tsv" if lang_sel.value == "ru" else f"vocab_IX_105-129_{lang_sel.value}.tsv"
+    )
     QUIZ_WORDS_RAW = gu.resolve_word_grammar(
-        gu.load_inflected_vocab_tsv("vocab_IX_105-129.tsv", nb_dir=Path(__file__).parent, remote_base=cfg.nb_remote("2026_07_13")),
-        ag_backend, "ru"
+        gu.load_inflected_vocab_tsv(_vocab_filename, nb_dir=Path(__file__).parent, remote_base=cfg.nb_remote("2026_07_13")),
+        ag_backend, lang_sel.value
     )
 
     def _lexicon_tag(w):
@@ -735,13 +974,14 @@ def _(QUIZ_WORDS_RAW, build_paradigm_table, eee, grc_lexicons):
 
 
 @app.cell(hide_code=True)
-def _(ag_backend, eee, grc_lexicons, mg, um_backend):
-    build_paradigm_table = eee.build_grc_paradigm_table(ag_backend, um_backend)
+def _(ag_backend, eee, grc_lexicons, lang_sel, mg, um_backend):
+    build_paradigm_table = eee.build_grc_paradigm_table(ag_backend, um_backend, lang=lang_sel.value)
     build_period_tables = eee.build_grc_period_tables(
         ag_backend, um_backend,
         lexicons=grc_lexicons,
         el_backend=mg,
         require_lexicon="homer",
+        lang=lang_sel.value,
     )
     return build_period_tables, build_paradigm_table
 
@@ -817,10 +1057,43 @@ def _(cfg, gu):
 
 
 @app.cell(hide_code=True)
-def _(cfg, mo):
+def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_footer
     _prev_url, _next_url = cfg.adjacent_urls("2026_07_13/")
-    eee_footer(mo, lang="ru", prev_url=_prev_url, next_url=_next_url, same_window=True)
+    eee_footer(mo, lang=lang_sel.value, prev_url=_prev_url, next_url=_next_url, same_window=True)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    from eee_project import language_bridge
+    # own cell, undisplayed: a cell that also displays/uses this would
+    # rerun (and reset the bridge) on every dependent re-render
+    bridge = language_bridge(mo)
+    return (bridge,)
+
+
+@app.cell(hide_code=True)
+def _(bridge, mo):
+    from eee_project import language_selector
+    # takes `bridge` as a parameter (not just via closure) so marimo
+    # reruns this cell -- rebuilding the dropdown with the persisted
+    # language -- the moment the browser's async localStorage read lands
+    lang_sel = language_selector(mo, bridge)
+    return (lang_sel,)
+
+
+@app.cell(hide_code=True)
+def _(bridge, lang_sel, mo):
+    from eee_project import save_language_selection
+    save_language_selection(bridge, lang_sel)
+    mo.Html(f"""
+    <div style="position:fixed;top:56px;right:12px;z-index:1000;
+                background:white;padding:6px 10px;border-radius:8px;
+                box-shadow:0 2px 8px rgba(0,0,0,.12);">
+      {lang_sel}{bridge}
+    </div>
+    """)
     return
 
 

@@ -1,0 +1,109 @@
+form	lemma	pos	context	meaning
+οἵ	ὅς	pronoun	IX.130: οἵ κέ σφιν καὶ νῆσον	who, which (relative pronoun, nominative plural masculine)
+κέ	κε	particle	IX.130: οἵ κέ σφιν καὶ νῆσον	epic particle of potentiality (= Attic ἄν)
+σφιν	σφεῖς	pronoun	IX.130: κέ σφιν καὶ νῆσον ἐϋκτιμένην	to them, for them (dative plural; epic form, Attic would expect αὐτοῖς)
+νῆσον	νῆσος	noun	IX.130: σφιν καὶ νῆσον ἐϋκτιμένην ἐκάμοντο	island
+ἐϋκτιμένην	ἐϋκτίμενος	adj	IX.130: νῆσον ἐϋκτιμένην ἐκάμοντο	well-settled, well-built (εὖ + κτίζω)
+ἐκάμοντο	κάμνω	verb	IX.130: ἐϋκτιμένην ἐκάμοντο	would have made (middle aorist, unreal sense with κέ)
+τι	τις	pronoun	IX.131: οὐ μὲν γάρ τι κακή γε	at all, in the least (indefinite pronoun used as a particle)
+κακή	κακός	adj	IX.131: γάρ τι κακή γε, φέροι	bad (nominative singular feminine)
+φέροι	φέρω	verb	IX.131: κακή γε, φέροι δέ κεν ὥρια	might bring (active present optative + κέ = potentiality)
+ὥρια	ὥριος	adj	IX.131: φέροι δέ κεν ὥρια πάντα	seasonal, in due season
+πάντα	πᾶς	adj	IX.131: κεν ὥρια πάντα	everything (accusative plural neuter)
+ἐν	ἐν	prep	IX.132: ἐν μὲν γὰρ λειμῶνες	there (used adverbially here)
+λειμῶνες	λειμών	noun	IX.132: ἐν μὲν γὰρ λειμῶνες ἁλὸς	meadows, water-meadows
+ἁλὸς	ἅλς	noun	IX.132: λειμῶνες ἁλὸς πολιοῖο παρ'	of the sea (genitive singular)
+πολιοῖο	πολιός	adj	IX.132: ἁλὸς πολιοῖο παρ' ὄχθας	grey, hoary (Homeric ending -οιο = Attic -ου)
+ὄχθας	ὄχθη	noun	IX.132: πολιοῖο παρ' ὄχθας	banks, shores
+ὑδρηλοὶ	ὑδρηλός	adj	IX.133: ὑδρηλοὶ μαλακοί· μάλα κ' ἄφθιτοι	moist, well-watered
+μαλακοί	μαλακός	adj	IX.133: ὑδρηλοὶ μαλακοί· μάλα κ'	soft, rich, fertile
+μάλα	μάλα	adv	IX.133: μαλακοί· μάλα κ' ἄφθιτοι ἄμπελοι	very
+κ᾽	κε	particle	IX.133: μάλα κ' ἄφθιτοι ἄμπελοι εἶεν	= κεν, would
+ἄφθιτοι	ἄφθιτος	adj	IX.133: κ' ἄφθιτοι ἄμπελοι εἶεν	unfading, unfailing
+ἄμπελοι	ἄμπελος	noun	IX.133: ἄφθιτοι ἄμπελοι εἶεν	vines, vineyards
+εἶεν	εἰμί	verb	IX.133: ἄμπελοι εἶεν	would be (active present optative + κέ = potentiality)
+ἄροσις	ἄροσις	noun	IX.134: ἐν δ' ἄροσις λείη· μάλα	plowland, arable land
+λείη	λεῖος	adj	IX.134: δ' ἄροσις λείη· μάλα κεν	level, smooth (nominative singular feminine)
+βαθὺ	βαθύς	adj	IX.134: λείη· μάλα κεν βαθὺ λήϊον	deep, thick, abundant (accusative singular neuter)
+λήϊον	λήϊον	noun	IX.134: κεν βαθὺ λήϊον αἰεί	cornfield, crop
+αἰεί	αἰεί	adv	IX.134: βαθὺ λήϊον αἰεί	always (epic form = Attic ἀεί)
+ὥρας	ὥρα	noun	IX.135: εἰς ὥρας ἀμῶιεν, ἐπεὶ	here: continually (every season, season after season)
+ἀμῶιεν	ἀμάω	verb	IX.135: εἰς ὥρας ἀμῶιεν, ἐπεὶ μάλα	would reap, would harvest (active present optative + κεν)
+ἐπεὶ	ἐπεί	conj	IX.135: ἀμῶιεν, ἐπεὶ μάλα πῖαρ	since, because
+πῖαρ	πῖαρ	noun	IX.135: ἐπεὶ μάλα πῖαρ ὑπ' οὖδας	rich, fertile (nominative singular neuter)
+ὑπ᾽	ὑπό	prep	IX.135: μάλα πῖαρ ὑπ' οὖδας	beneath (= ὑπό)
+οὖδας	οὖδας	noun	IX.135: πῖαρ ὑπ' οὖδας	soil, ground (nominative singular neuter)
+λιμὴν	λιμήν	noun	IX.136: ἐν δὲ λιμὴν εὔορμος, ἵν'	harbor (nominative singular)
+εὔορμος	εὔορμος	adj	IX.136: δὲ λιμὴν εὔορμος, ἵν' οὐ	good for anchoring ships (εὖ + ὅρμος)
+ἵν᾽	ἵνα	conj	IX.136: εὔορμος, ἵν' οὐ χρεὼ πείσματός	where (= ἵνα)
+χρεὼ	χρεώ	noun	IX.136: ἵν' οὐ χρεὼ πείσματός ἐστιν	need, necessity (οὐ χρεώ = there is no need + genitive)
+πείσματός	πεῖσμα	noun	IX.136: οὐ χρεὼ πείσματός ἐστιν	here: for a cable, mooring-rope (genitive singular)
+οὔτ᾽	οὔτε	conj	IX.137: οὔτ' εὐνὰς βαλέειν οὔτε	neither, nor (= οὔτε)
+εὐνὰς	εὐνή	noun	IX.137: οὔτ' εὐνὰς βαλέειν οὔτε πρυμνήσι'	here: anchor-stones, anchors (accusative plural)
+βαλέειν	βάλλω	verb	IX.137: εὐνὰς βαλέειν οὔτε πρυμνήσι'	to throw (active aorist infinitive, epic extended form -έειν)
+πρυμνήσι᾽	πρυμνήσιον	noun	IX.137: οὔτε πρυμνήσι' ἀνάψαι	stern-cables (accusative plural)
+ἀνάψαι	ἀνάπτω	verb	IX.137: πρυμνήσι' ἀνάψαι	to fasten, to tie (active aorist infinitive)
+ἀλλ᾽	ἀλλά	conj	IX.138: ἀλλ' ἐπικέλσαντας μεῖναι χρόνον	but (= ἀλλά)
+ἐπικέλσαντας	ἐπικέλλω	verb	IX.138: ἀλλ' ἐπικέλσαντας μεῖναι χρόνον	having beached, having landed (active aorist participle, accusative plural)
+μεῖναι	μένω	verb	IX.138: ἐπικέλσαντας μεῖναι χρόνον εἰς	to remain, to stay (active aorist infinitive)
+χρόνον	χρόνος	noun	IX.138: μεῖναι χρόνον εἰς ὅ κεν	time
+εἰς ὅ	εἰς ὅ	conj	IX.138: χρόνον εἰς ὅ κεν αὐτῶν	until (literally "into which")
+αὐτῶν	αὐτός	pronoun	IX.138: εἰς ὅ κεν αὐτῶν	their (genitive plural)
+ἐποτρύνηι	ἐποτρύνω	verb	IX.139: θυμὸς ἐποτρύνηι καὶ ἐπιπνεύσωσιν	will urge, will prompt (active present subjunctive + κεν = future sense)
+ἐπιπνεύσωσιν	ἐπιπνέω	verb	IX.139: ἐποτρύνηι καὶ ἐπιπνεύσωσιν ἀῆται	will blow (active aorist subjunctive)
+ἀῆται	ἀήτης	noun	IX.139: καὶ ἐπιπνεύσωσιν ἀῆται	winds (nominative plural; epic derivative of ἄημι "to blow")
+αὐτὰρ	αὐτάρ	conj	IX.140: αὐτὰρ ἐπὶ κρατὸς λιμένος	but, however, meanwhile
+κρατὸς	κράς	noun	IX.140: αὐτὰρ ἐπὶ κρατὸς λιμένος ῥέει	at the head, at the edge (genitive singular; epic, Attic would rather use κεφαλή)
+λιμένος	λιμήν	noun	IX.140: ἐπὶ κρατὸς λιμένος ῥέει ἀγλαὸν	of the harbor (genitive singular)
+ῥέει	ῥέω	verb	IX.140: λιμένος ῥέει ἀγλαὸν ὕδωρ	flows (active present)
+ἀγλαὸν	ἀγλαός	adj	IX.140: ῥέει ἀγλαὸν ὕδωρ	bright, beautiful, radiant (accusative singular neuter)
+ὕδωρ	ὕδωρ	noun	IX.140: ἀγλαὸν ὕδωρ	water
+κρήνη	κρήνη	noun	IX.141: κρήνη ὑπὸ σπείους· περὶ	spring, fountain
+ὑπὸ	ὑπό	prep	IX.141: κρήνη ὑπὸ σπείους· περὶ δ'	under
+σπείους	σπέος	noun	IX.141: κρήνη ὑπὸ σπείους· περὶ	of the cave (genitive singular)
+περὶ	περί	prep	IX.141: σπείους· περὶ δ' αἴγειροι	around
+αἴγειροι	αἴγειρος	noun	IX.141: περὶ δ' αἴγειροι πεφύασιν	poplars (nominative plural)
+πεφύασιν	φύω	verb	IX.141: δ' αἴγειροι πεφύασιν	have grown, grow (active perfect)
+ἔνθα	ἔνθα	adv	IX.142: ἔνθα κατεπλέομεν, καί τις	there, to that place
+κατεπλέομεν	καταπλέω	verb	IX.142: ἔνθα κατεπλέομεν, καί τις θεὸς	we would sail in, we would enter (the harbor) (active imperfect)
+τις	τις	pronoun	IX.142: κατεπλέομεν, καί τις θεὸς ἡγεμόνευεν	some, a certain (nominative singular)
+ἡγεμόνευεν	ἡγεμονεύω	verb	IX.142: καί τις θεὸς ἡγεμόνευεν	was leading, was showing the way (active imperfect)
+νύκτα	νύξ	noun	IX.143: νύκτα δι' ὀρφναίην, οὐδὲ	night (accusative singular)
+δι᾽	διά	prep	IX.143: νύκτα δι' ὀρφναίην, οὐδὲ προυφαίνετ'	through (= διά)
+ὀρφναίην	ὀρφναῖος	adj	IX.143: νύκτα δι' ὀρφναίην, οὐδὲ	dark, gloomy (accusative singular feminine)
+προυφαίνετ᾽	προφαίνομαι	verb	IX.143: οὐδὲ προυφαίνετ' ἰδέσθαι	was appearing, was becoming visible (middle imperfect, = προὐφαίνετο)
+ἰδέσθαι	ὁράω	verb	IX.143: προυφαίνετ' ἰδέσθαι	here: expressing purpose, "to be seen" (middle aorist infinitive)
+ἀήρ	ἀήρ	noun	IX.144: ἀὴρ γὰρ περὶ νηυσὶ	mist, haze, lower air (nominative singular)
+νηυσί	ναῦς	noun	IX.144: ἀὴρ γὰρ περὶ νηυσὶ βαθεῖ'	around the ships (dative plural; epic, cf. Attic ναυσί)
+βαθεῖ᾽	βαθύς	adj	IX.144: περὶ νηυσὶ βαθεῖ' ἦν, οὐδὲ	thick, dense (nominative singular feminine, = βαθεῖα)
+ἦν	εἰμί	verb	IX.144: νηυσὶ βαθεῖ' ἦν, οὐδὲ σελήνη	was (active imperfect)
+σελήνη	σελήνη	noun	IX.144: ἦν, οὐδὲ σελήνη	moon (nominative singular)
+οὐρανόθεν	οὐρανόθεν	adv	IX.145: οὐρανόθεν προύφαινε, κατείχετο δὲ	from the sky (adverb from οὐρανός with the suffix -θεν)
+προύφαινε	προφαίνω	verb	IX.145: οὐρανόθεν προύφαινε, κατείχετο δὲ	was shining forth, was showing (active imperfect)
+κατείχετο	κατέχω	verb	IX.145: προύφαινε, κατείχετο δὲ νεφέεσσιν	was held back, was hidden (passive imperfect)
+νεφέεσσιν	νέφος	noun	IX.145: κατείχετο δὲ νεφέεσσιν	by clouds (dative plural; ending -εσσι(ν) = Homeric dative plural)
+ἔνθ᾽	ἔνθα	adv	IX.146: ἔνθ' οὔ τις τὴν νῆσον	there (= ἔνθα)
+οὔ τις	τις	pronoun	IX.146: ἔνθ' οὔ τις τὴν νῆσον	no one (οὔ + τις together)
+ἐσέδρακεν	δέρκομαι	verb	IX.146: τὴν νῆσον ἐσέδρακεν ὀφθαλμοῖσιν	saw, discerned (active perfect)
+ὀφθαλμοῖσιν	ὀφθαλμός	noun	IX.146: ἐσέδρακεν ὀφθαλμοῖσιν	with eyes (dative plural; ending -οισι(ν) = epic dative plural)
+κύματα	κῦμα	noun	IX.147: οὔτ' οὖν κύματα μακρὰ	waves (accusative plural)
+μακρὰ	μακρός	adj	IX.147: κύματα μακρὰ κυλινδόμενα προτὶ	long (accusative plural neuter)
+κυλινδόμενα	κυλίνδω	verb	IX.147: μακρὰ κυλινδόμενα προτὶ χέρσον	rolling (middle present participle, accusative plural neuter)
+προτὶ	προτί	prep	IX.147: κυλινδόμενα προτὶ χέρσον	toward
+χέρσον	χέρσος	noun	IX.147: προτὶ χέρσον εἰσίδομεν	land, shore (accusative singular)
+εἰσίδομεν	εἰσοράω	verb	IX.148: χέρσον εἰσίδομεν, πρὶν νῆας	we saw (active aorist)
+πρὶν	πρίν	conj	IX.148: εἰσίδομεν, πρὶν νῆας ἐϋσσέλμους	before (+ infinitive)
+νῆας	ναῦς	noun	IX.148: πρὶν νῆας ἐϋσσέλμους ἐπικέλσαι	ships (accusative plural)
+ἐϋσσέλμους	ἐΰσσελμος	adj	IX.148: νῆας ἐϋσσέλμους ἐπικέλσαι	well-decked (accusative plural feminine; εὖ + σέλμα "deck, rower's bench")
+ἐπικέλσαι	ἐπικέλλω	verb	IX.148: ἐϋσσέλμους ἐπικέλσαι	to beach, to land (active aorist infinitive)
+κελσάσηισι	κέλλω	verb	IX.149: κελσάσηισι δὲ νηυσὶ καθείλομεν	to those that had beached (dative plural, active aorist participle)
+καθείλομεν	καθαιρέω	verb	IX.149: δὲ νηυσὶ καθείλομεν ἱστία	we lowered, we took down (active aorist)
+ἱστία	ἱστίον	noun	IX.149: καθείλομεν ἱστία πάντα	sails (accusative plural)
+ἐκ	ἐκ	prep	IX.150: ἐκ δὲ καὶ αὐτοὶ βῆμεν	out (tmesis — a prefix detached from βῆμεν)
+αὐτοὶ	αὐτός	pronoun	IX.150: ἐκ δὲ καὶ αὐτοὶ βῆμεν	ourselves (nominative plural)
+βῆμεν	βαίνω	verb	IX.150: καὶ αὐτοὶ βῆμεν ἐπὶ ῥηγμῖνι	we stepped out, we went (active aorist)
+ῥηγμῖνι	ῥηγμίν	noun	IX.150: βῆμεν ἐπὶ ῥηγμῖνι θαλάσσης	onto the shore, the surf-line (dative singular; derived from ῥήγνυμι "to break": the place where waves break on the shore)
+θαλάσσης	θάλασσα	noun	IX.150: ἐπὶ ῥηγμῖνι θαλάσσης	of the sea (genitive singular)
+ἀποβρίξαντες	ἀποβρίζω	verb	IX.151: ἔνθα δ' ἀποβρίξαντες ἐμείναμεν	having fallen asleep (active aorist participle, nominative plural masculine)
+ἐμείναμεν	μένω	verb	IX.151: ἀποβρίξαντες ἐμείναμεν Ἠῶ δῖαν	we waited for (active aorist)
+δῖαν	δῖος	adj	IX.151: ἐμείναμεν Ἠῶ δῖαν	divine, wondrous (accusative singular feminine)

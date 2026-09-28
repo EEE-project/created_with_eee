@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.14",
-#     "eee-project>=1.18.0",
+#     "eee-project>=1.19.0",
 #     "ancient-greek-backend-eee>=2.0.0",
 #     "unimorph-backend-eee>=1.0.3",
 #     "modern-greek-backend-eee>=1.0.0",
@@ -839,13 +839,21 @@ async def _(cfg, eee):
         {
             "ref": ref,
             "lines": lines,
-            # find_stanza_translation, not a bare d.get(ref, "—"): Pope is
-            # transcribed against coarser "equivalent passage" spans than
-            # this course's own per-lesson stanza split from IX.39 onward
-            # (Murray/Πολυλάς/interlinear_{ru,en,el} stay fine-grained
-            # throughout) -- see eee-project's own find_stanza_translation
+            # find_stanza_translation, not a bare d.get(ref, "—"): Pope and
+            # Murray are transcribed against coarser "equivalent passage"
+            # spans than this course's own per-lesson stanza split from
+            # IX.39 onward (Πολυλάς stays fine-grained). interlinear_{en,el}
+            # were ALSO coarser here until greek-knowledge-eee's KB was
+            # re-split to match every lesson (like interlinear_ru already
+            # did) -- allow_coarse_fallback=False is kept for interlinear
+            # keys as a safety net: a coarse match there would mean extra
+            # lines from a neighboring stanza, not a genuine equivalent
+            # passage -- see eee-project's own find_stanza_translation
             # docstring.
-            "translations": {tr: eee.find_stanza_translation(ref, d) for tr, d in _translations.items()},
+            "translations": {
+                tr: eee.find_stanza_translation(ref, d, allow_coarse_fallback=not tr.startswith("interlinear_"))
+                for tr, d in _translations.items()
+            },
         }
         for ref, lines in _greek.items()
     ]
