@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-09-28
+- **`2026_07_27` (Day 7, Odyss. IX.152-180) ported to the language switcher**,
+  matching `2026_06_01`/`2026_06_15`: full English and Modern Greek
+  translations for its 112-word vocabulary and both grammar-note sections
+  (Τμῆσις, the imperfect/ναῦς-declension/Accusativus-cum-Infinitivo note),
+  plus a coarse-to-fine stanza-range fallback (`find_stanza_translation`)
+  so Pope's translation — transcribed against wider "equivalent passage"
+  spans than this course's own stanza splits — resolves correctly instead
+  of showing nothing for an exact-stanza lookup.
+- **Fixed the Russian interlinear translator ("подстрочник") showing no
+  text when selected, in `2026_06_01`, `2026_06_15`, and `2026_07_27`.**
+  The notebooks hardcoded the old pre-port local file's section name; the
+  shared `greek-knowledge-eee` translations file actually names that
+  section `interlinear_ru` (matching `interlinear_en`/`interlinear_el`'s
+  own convention), so the mismatch silently returned nothing.
+- **Fixed the "About form-checking (EEE)" accordion body and the page
+  footer staying in Russian after switching to English or Greek, in the
+  same 3 lessons.** The accordion's body text (`eee_note.md`) was a single
+  Russian-only file with no per-language variant — added
+  `eee_note_en.md`/`eee_note_el.md`. The footer's "Source:" label was
+  hardcoded to Russian regardless of the language switcher.
+
 ## 2026-09-26
 - **3 Palaestra homework-review links (`2026_06_23`, `2026_07_07`×2,
   `2026_07_10`) pointed at PDFs in their own session directory instead of

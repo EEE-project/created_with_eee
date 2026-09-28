@@ -458,7 +458,7 @@ def _(gu, lang_sel, mo):
 
 @app.cell(hide_code=True)
 def _(TRANS_DESC: dict, gu, lang_sel, mo, trans_selector):
-    _desc_map = {"подстрочник": gu.ui_label('interlinear_description', lang_sel.value), **TRANS_DESC}
+    _desc_map = {f"interlinear_{lang_sel.value}": gu.ui_label('interlinear_description', lang_sel.value), **TRANS_DESC}
     mo.md(_desc_map.get(trans_selector.value, ""))
     return
 
@@ -473,8 +473,11 @@ def _(cfg, gu, lang_sel, mo):
     # read: molab only bundles files that live in the notebook's own directory,
     # so a parent-directory file like this one is missing there unless we
     # download it ourselves (matches the pattern already used for materials PDFs).
+    _eee_note_filename = (
+        "eee_note.md" if lang_sel.value == "ru" else f"eee_note_{lang_sel.value}.md"
+    )
     _eee_note_path = gu.ensure_file(
-        "eee_note.md", nb_dir=_P(__file__).parent.parent, remote_base=cfg.raw_base,
+        _eee_note_filename, nb_dir=_P(__file__).parent.parent, remote_base=cfg.raw_base,
     )
     EEE_NOTE = _eee_note_path.read_text(encoding="utf-8") if _eee_note_path else (
         gu.ui_label('eee_note_load_error', lang_sel.value)
@@ -799,7 +802,7 @@ def _(
 
     LITERARY_TRANSLATORS = [
         t for t in TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"])
-        if t not in ("подстрочник", "interlinear_en", "interlinear_el")
+        if t not in ("interlinear_ru", "interlinear_en", "interlinear_el")
     ]
     _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in eee.TRANSLATION_PRESENCE_CONTENT_POS]
     # Same-directory file, but the WASM export doesn't bundle it -- needs ensure_file like greek.md above.
@@ -940,11 +943,14 @@ def _(STANZAS, gu, lang_sel, mo):
 @app.cell(hide_code=True)
 def _(gu, lang_sel, mo):
     TRANS_BY_LANG = {
-        # Each language's own interlinear crib -- "подстрочник" (ru) from
-        # translations_ru.md, "interlinear_en"/"interlinear_el" (this lesson
-        # only, IX.19-38) from interlinear_{en,el}.md. Distinct per-language
-        # keys, not one shared "interlinear" -- see the STANZAS-building cell.
-        "ru": ["подстрочник", "Жуковский", "Вересаев"],
+        # Each language's own interlinear crib is a "## interlinear_{lang}"
+        # section inside that language's translations_{lang}.md (KB naming
+        # convention -- confirmed against greek-knowledge-eee's actual file
+        # headers, not the old pre-port local translations_ru.md, which used
+        # "подстрочник" instead; this lesson only, IX.19-38). Distinct
+        # per-language keys, not one shared "interlinear" -- see the
+        # STANZAS-building cell.
+        "ru": ["interlinear_ru", "Жуковский", "Вересаев"],
         "en": ["Pope", "Murray", "interlinear_en"],
         "el": ["Πολυλάς", "interlinear_el"],
     }
@@ -953,9 +959,9 @@ def _(gu, lang_sel, mo):
     # so it's looked up dynamically rather than listed as three static
     # entries -- all three would render the same gu.ui_label(...) text for
     # a given lang_sel.value and silently collide as dict keys otherwise.
-    _INTERLINEAR_KEY_BY_LANG = {"ru": "подстрочник", "en": "interlinear_en", "el": "interlinear_el"}
+    _INTERLINEAR_KEY_BY_LANG = {"ru": "interlinear_ru", "en": "interlinear_en", "el": "interlinear_el"}
     _ALL_OPTIONS = {
-        gu.ui_label('interlinear_label', lang_sel.value): _INTERLINEAR_KEY_BY_LANG.get(lang_sel.value, "подстрочник"),
+        gu.ui_label('interlinear_label', lang_sel.value): _INTERLINEAR_KEY_BY_LANG.get(lang_sel.value, "interlinear_ru"),
         "Жуковский (1849)":    "Жуковский",
         "Вересаев (1953)":     "Вересаев",
         "Pope (1725)":          "Pope",
@@ -1165,10 +1171,10 @@ def _(ODYSSEY_EXTRA_LEXICONS, mo):
 
 
 @app.cell(hide_code=True)
-def _(cfg, mo):
+def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_footer
     _prev_url, _next_url = cfg.adjacent_urls("2026_06_15/")
-    eee_footer(mo, lang="ru", prev_url=_prev_url, next_url=_next_url, same_window=True)
+    eee_footer(mo, lang=lang_sel.value, prev_url=_prev_url, next_url=_next_url, same_window=True)
     return
 
 
