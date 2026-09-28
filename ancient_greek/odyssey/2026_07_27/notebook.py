@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.14",
-#     "eee-project>=1.17.1",
+#     "eee-project>=1.18.0",
 #     "ancient-greek-backend-eee>=2.0.0",
 #     "unimorph-backend-eee>=1.0.3",
 #     "modern-greek-backend-eee>=1.0.0",
@@ -276,8 +276,8 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(TRANS_DESC: dict, gu, lang_sel, mo, trans_selector):
-    _desc_map = {f"interlinear_{lang_sel.value}": gu.ui_label('interlinear_description', lang_sel.value), **TRANS_DESC}
+def _(TRANS_DESC: dict, eee, gu, lang_sel, mo, trans_selector):
+    _desc_map = {eee.interlinear_translator_key(lang_sel.value): gu.ui_label('interlinear_description', lang_sel.value), **TRANS_DESC}
     mo.md(_desc_map.get(trans_selector.value, ""))
     return
 
@@ -619,9 +619,10 @@ def _(
 ):
     from pathlib import Path as _P
 
+    _interlinear_keys = {eee.interlinear_translator_key(_l) for _l in ("ru", "en", "el")}
     LITERARY_TRANSLATORS = [
         t for t in TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"])
-        if t not in ("interlinear_ru", "interlinear_en", "interlinear_el")
+        if t not in _interlinear_keys
     ]
     _tp_vocab = [w for w in QUIZ_WORDS_RAW if w.get("pos") in eee.TRANSLATION_PRESENCE_CONTENT_POS]
     # Same-directory file, but the WASM export doesn't bundle it -- needs ensure_file like the vocab TSV above.
@@ -752,26 +753,26 @@ def _(STANZAS, gu, lang_sel, mo):
 
 
 @app.cell(hide_code=True)
-def _(gu, lang_sel, mo):
+def _(eee, gu, lang_sel, mo):
     TRANS_BY_LANG = {
         # Each language's own interlinear crib is a "## interlinear_{lang}"
         # section inside that language's translations_{lang}.md (KB naming
         # convention -- confirmed against greek-knowledge-eee's actual file
         # headers, not the old pre-port local translations_ru.md, which used
-        # "подстрочник" instead). Distinct per-language keys, not one shared
-        # "interlinear" -- see the STANZAS-building cell.
-        "ru": ["interlinear_ru", "Жуковский", "Вересаев"],
-        "en": ["Pope", "Murray", "interlinear_en"],
-        "el": ["Πολυλάς", "interlinear_el"],
+        # "подстрочник" instead). eee.interlinear_translator_key derives the
+        # per-language key from this same convention -- see the
+        # STANZAS-building cell.
+        "ru": [eee.interlinear_translator_key("ru"), "Жуковский", "Вересаев"],
+        "en": ["Pope", "Murray", eee.interlinear_translator_key("en")],
+        "el": ["Πολυλάς", eee.interlinear_translator_key("el")],
     }
     _DEFAULT_BY_LANG = {"ru": "Жуковский", "en": "Pope", "el": "Πολυλάς"}
     # Only one interlinear variant is ever relevant for the current language,
     # so it's looked up dynamically rather than listed as three static
     # entries -- all three would render the same gu.ui_label(...) text for
     # a given lang_sel.value and silently collide as dict keys otherwise.
-    _INTERLINEAR_KEY_BY_LANG = {"ru": "interlinear_ru", "en": "interlinear_en", "el": "interlinear_el"}
     _ALL_OPTIONS = {
-        gu.ui_label('interlinear_label', lang_sel.value): _INTERLINEAR_KEY_BY_LANG.get(lang_sel.value, "interlinear_ru"),
+        gu.ui_label('interlinear_label', lang_sel.value): eee.interlinear_translator_key(lang_sel.value),
         "Жуковский (1849)":    "Жуковский",
         "Вересаев (1953)":     "Вересаев",
         "Pope (1725)":          "Pope",
