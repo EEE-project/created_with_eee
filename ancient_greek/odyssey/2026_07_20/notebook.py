@@ -822,6 +822,7 @@ def _(
 @app.cell(hide_code=True)
 def _(
     SM_STANZAS,
+    TRANS_BY_LANG,
     gu,
     lang_sel,
     sm_choice_radio,
@@ -851,6 +852,7 @@ def _(
         direction=sm_direction.value,
         lang=lang_sel.value,
         renew_btn=sm_renew_btn,
+        valid_translators=TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"]),
     )
     return
 
