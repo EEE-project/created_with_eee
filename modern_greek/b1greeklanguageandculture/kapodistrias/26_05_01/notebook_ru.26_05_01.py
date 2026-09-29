@@ -2,14 +2,10 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.14",
-#     "eee-project @ git+https://codeberg.org/EEE-project/eee-project.git",
-#     "modern-greek-backend-eee @ git+https://codeberg.org/EEE-project/modern-greek-backend-eee.git",
+#     "eee-project>=1.0.0",
+#     "modern-greek-backend-eee>=1.0.0",
 #     "pandas==3.0.2",
 # ]
-#
-# [tool.uv.sources]
-# eee-project = { git = "https://codeberg.org/EEE-project/eee-project.git" }
-# modern-greek-backend-eee = { git = "https://codeberg.org/EEE-project/modern-greek-backend-eee.git" }
 # ///
 
 import marimo
