@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo>=0.23.14",
+#     "marimo>=0.25.1",
 #     "eee-project>=1.19.0",
 #     "ancient-greek-backend-eee>=2.0.0",
 #     "unimorph-backend-eee>=1.0.3",

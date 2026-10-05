@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "eee-project>=1.1.0",
-#     "marimo>=0.23.14",
+#     "marimo>=0.25.1",
 # ]
 # ///
 

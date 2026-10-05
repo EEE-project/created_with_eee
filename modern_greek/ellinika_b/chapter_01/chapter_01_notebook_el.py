@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo>=0.23.14",
+#     "marimo>=0.25.1",
 #     "modern-greek-eee @ git+https://github.com/EEE-project/modern-greek-eee.git",
 #     "modern-greek-inflexion-eee @ git+https://github.com/EEE-project/modern-greek-inflexion-eee.git",
 #     "pandas",
