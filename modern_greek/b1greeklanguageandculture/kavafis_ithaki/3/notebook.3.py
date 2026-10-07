@@ -11,7 +11,7 @@
 import marimo
 
 __generated_with = "0.23.16"
-app = marimo.App(width="medium", app_title="Καβάφης — Ιθάκη — Μάθημα 2: Οι Λαιστρυγόνες, οι Κύκλωπες και ο Ποσειδώνας")
+app = marimo.App(width="medium", app_title="Καβάφης — Ιθάκη — Μάθημα 3: Τα φοινικικά εμπορεύματα και η αιγυπτιακή σοφία")
 
 
 @app.cell(hide_code=True)
@@ -30,47 +30,88 @@ def _(language_selector, mo):
 
 
 @app.cell(hide_code=True)
-def _(img, language_selector, mo):
-    # Title + badge + painting
+def _(language_selector, mo):
+    # Title + subtitle (no dedicated painting for this lesson's source material)
     _lang = language_selector.value
     _heading = mo.md(f"# C. P. Cavafy — «Ithaki»") if _lang == "en" else mo.md(f"# Κ. Π. Καβάφης — «Ιθάκη»")
     if _lang == "ru":
-        _subtitle = mo.md("Второй урок из цикла о стихотворении Константиноса Кавафиса «Итака» (1911): Лестригоны, Циклопы и Посейдон.")
+        _subtitle = mo.md("Третий урок из цикла о стихотворении Константиноса Кавафиса «Итака» (1911): какие сокровища взять в путь — финикийские товары и мудрость египетских городов.")
     elif _lang == "el":
-        _subtitle = mo.md("Δεύτερο μάθημα από τον κύκλο μαθημάτων για το ποίημα του Κ. Π. Καβάφη «Ιθάκη» (1911): οι Λαιστρυγόνες, οι Κύκλωπες και ο Ποσειδώνας.")
+        _subtitle = mo.md("Τρίτο μάθημα από τον κύκλο μαθημάτων για το ποίημα του Κ. Π. Καβάφη «Ιθάκη» (1911): τι θησαυρούς να πάρουμε στο ταξίδι — τα φοινικικά εμπορεύματα και η σοφία των αιγυπτιακών πόλεων.")
     else:
-        _subtitle = mo.md("Second lesson in the series on Constantine P. Cavafy's poem «Ithaka» (1911): the Laestrygonians, the Cyclopes, and Poseidon.")
-    _title = mo.vstack([_heading, _subtitle])
-    _painting = img("painting.jpg", width=360)
-    mo.hstack([_title, _painting], justify="space-between", align="start", gap=2)
+        _subtitle = mo.md("Third lesson in the series on Constantine P. Cavafy's poem «Ithaka» (1911): what treasures to gather along the way — Phoenician goods and the wisdom of Egyptian cities.")
+    mo.vstack([_heading, _subtitle])
     return
 
 
 @app.cell(hide_code=True)
-def _(img, language_selector, mo):
-    # Recap of lesson 1
+def _(language_selector, mo):
+    # Recap of lesson 2
     _lang = language_selector.value
     _text = {
         "ru": r"""
             ## Повторение
 
-            На прошлом уроке мы разобрали первые строки «Итаки»: кто такой Кавафис,
-            что символизирует Итака, кто такой Одиссей и почему поэт желает, чтобы
-            «путь был долгим».
+            На прошлом уроке мы говорили о Лестригонах, Циклопах и Посейдоне —
+            не только мифологических персонажах, но и символах наших страхов и
+            трудностей, которые часто мы сами создаём себе.
             """,
         "el": r"""
             ## Επανάληψη
 
-            Στο προηγούμενο μάθημα αναλύσαμε τους πρώτους στίχους της «Ιθάκης»:
-            ποιος ήταν ο Καβάφης, τι συμβολίζει η Ιθάκη, ποιος ήταν ο Οδυσσέας και
-            γιατί ο ποιητής εύχεται «να είναι μακρύς ο δρόμος».
+            Στο προηγούμενο μάθημα μιλήσαμε για τους Λαιστρυγόνες, τους
+            Κύκλωπες και τον Ποσειδώνα — όχι μόνο μυθολογικά πρόσωπα, αλλά και
+            σύμβολα των φόβων και των δυσκολιών μας, που συχνά δημιουργούμε
+            μόνοι μας.
             """,
     }.get(_lang, r"""
         ## Review
 
-        In the previous lesson we looked at the opening lines of «Ithaka»: who
-        Cavafy was, what Ithaka symbolizes, who Odysseus was, and why the poet
-        wishes that «the road be long».
+        In the previous lesson we talked about the Laestrygonians, the
+        Cyclopes, and Poseidon — not just mythological figures, but symbols
+        of our fears and difficulties, which we often create for ourselves.
+        """)
+    mo.md(_text)
+    return
+
+
+@app.cell(hide_code=True)
+def _(img, language_selector, mo):
+    # Discussion warm-up: what do we take with us on life's journey?
+    _lang = language_selector.value
+    _text = {
+        "ru": r"""
+            ## Что мы берём с собой в путешествие жизни?
+
+            - опыт
+            - друзей
+            - ошибки
+            - воспоминания
+            - знания
+            - страхи
+            - любовь
+            """,
+        "el": r"""
+            ## Τι παίρνουμε μαζί μας στο ταξίδι της ζωής;
+
+            - εμπειρίες
+            - φίλους
+            - λάθη
+            - αναμνήσεις
+            - γνώσεις
+            - φόβους
+            - αγάπη
+            """,
+    }.get(_lang, r"""
+        ## What do we take with us on the journey of life?
+
+        - experiences
+        - friends
+        - mistakes
+        - memories
+        - knowledge
+        - fears
+        - love
         """)
     mo.vstack([mo.md(_text), img("slide-1.jpg")])
     return
@@ -86,7 +127,7 @@ def _(language_selector, mo, t_ui):
 @app.cell(hide_code=True)
 def _(mo):
     _CITATION = (
-        '<b>Κ. Π. Καβάφης, «Ιθάκη»</b> (1911). Δεύτερη στροφή, στίχοι 4–12. '
+        '<b>Κ. Π. Καβάφης, «Ιθάκη»</b> (1911). Δεύτερη στροφή, στίχοι 13–23. '
         '<a href="https://www.greek-language.gr/digitalResources/literature/tools/concordance/browse.html?cnd_id=9&text_id=658" target="_blank" rel="noopener">greek-language.gr — Πύλη για την ελληνική γλώσσα</a>'
     )
     mo.md(_CITATION)
@@ -121,163 +162,73 @@ def _(MIX_ROWS, STANZAS, eee, gu2, language_selector, mo, trans_selector):
 
 @app.cell(hide_code=True)
 def _(img, language_selector, mo):
-    # Who were they + metaphorical meaning + verse analysis + discussion + closing
+    # Discussion: why these objects? + geography of the journey + closing recap
     _lang = language_selector.value
     _texts = {
         "ru": (
             r"""
-            ## Кто они такие
+            ## Обсуждение
 
-            **Лестригоны** — людоеды-великаны, разрушавшие корабли чужеземцев и
-            убивавшие их людей; символ больших опасностей и разрушений.
-
-            **Циклопы** — великаны с одним глазом на лбу, обладавшие огромной силой
-            и жившие в одиночестве; символ насилия, грубой силы и отсутствия
-            культуры.
-
-            **Посейдон** — бог моря, враг Одиссея (тот ослепил его сына Полифема);
-            символ сил, которые мы не можем контролировать — природы, судьбы,
-            обстоятельств.
-
-            У Кавафиса эти образы — не просто мифологические персонажи, они имеют
-            более глубокий, символический смысл.
+            Почему, по-вашему, Кавафис выбирает именно эти предметы —
+            перламутр, кораллы, янтарь, чёрное дерево, благовония? Что
+            символизируют торговые города Финикии и мудрость Александрии?
             """,
             r"""
-            ## Переносный смысл
+            ## География путешествия
 
-            Эти образы могут символизировать: наши страхи, тревогу, неуверенность,
-            трудности, проблемы, людей, которые нас разочаровывают, препятствия,
-            которые мы создаём сами.
+            **Итака** — конечная цель путешествия. **Финикия** (Библос,
+            Сидон, Тир) — торговцы и новые культуры. **Александрия** —
+            знание и мудрость.
             """,
             r"""
-            ## Анализ стихов
+            ## Что мы берём с собой
 
-            Особое внимание — строкам «если не носишь их в своей душе, если твоя
-            душа не ставит их перед тобой». Что значит «носить с собой страх»?
-            Может ли человек сам создавать себе проблемы? Боялись ли вы когда-нибудь
-            того, что в итоге не случилось?
-
-            **Вопросы для обсуждения:**
-            - Находятся ли наши самые большие страхи внутри нас или вовне?
-            - Согласны ли вы, что мы часто сами создаём себе проблемы?
-            - Если бы Одиссей жил в 2026 году, с какими трудностями он бы
-              столкнулся?
-            """,
-            r"""
-            ## Заключение
-
-            Наши главные враги не всегда — внешние трудности. Часто это страхи,
-            сомнения и негативные мысли, которые мы носим внутри себя. Когда
-            меняется наше отношение к жизни, меняется и само путешествие.
-
-            *Подумайте до следующего урока: кто ваши собственные «Лестригоны»,
-            «Циклопы» и «Посейдон»? Это внешние препятствия, или, может быть,
-            некоторые из них находятся внутри нас?*
+            Знание, любовь, друзья, опыт, мудрость, искусство, воспоминания,
+            вдохновение — вот что наполняет чемодан странника.
             """,
         ),
         "el": (
             r"""
-            ## Ποιοι ήταν
+            ## Συζήτηση
 
-            **Οι Λαιστρυγόνες** — ανθρωποφάγοι γίγαντες, κατέστρεφαν τα πλοία των
-            ξένων και έτρωγαν τους ανθρώπους τους· σύμβολο των μεγάλων κινδύνων και
-            των καταστροφών.
-
-            **Οι Κύκλωπες** — γίγαντες με ένα μόνο μάτι στο μέτωπο, με τεράστια
-            δύναμη και απομονωμένη ζωή· σύμβολο της βίας, της ωμής δύναμης και της
-            έλλειψης πολιτισμού.
-
-            **Ο Ποσειδώνας** — θεός της θάλασσας, εχθρός του Οδυσσέα (αφού ο
-            Οδυσσέας τύφλωσε τον γιο του, τον Πολύφημο)· σύμβολο των δυνάμεων που
-            δεν μπορούμε να ελέγξουμε — η φύση, η μοίρα, οι συγκυρίες.
-
-            Στον Καβάφη οι μορφές αυτές δεν είναι μόνο μυθολογικά πρόσωπα· έχουν
-            και βαθύτερο, συμβολικό νόημα.
+            Γιατί πιστεύετε ότι ο Καβάφης επιλέγει αυτά τα αντικείμενα —
+            σεντέφια, κοράλλια, κεχριμπάρια, έβενο, μυρωδικά; Τι συμβολίζουν
+            τα εμπορεία της Φοινίκης και η σοφία της Αλεξάνδρειας;
             """,
             r"""
-            ## Μεταφορικό νόημα
+            ## Η γεωγραφία του ταξιδιού
 
-            Μπορεί να συμβολίζουν: τους φόβους μας, το άγχος, την ανασφάλεια, τις
-            δυσκολίες, τα προβλήματα, τους ανθρώπους που μας απογοητεύουν, τα
-            εμπόδια που δημιουργούμε μόνοι μας.
+            **Ιθάκη** — ο προορισμός του ταξιδιού. **Φοινίκη** (Βύβλος,
+            Σιδώνα, Τύρος) — οι έμποροι και οι νέοι πολιτισμοί.
+            **Αλεξάνδρεια** — η γνώση και η σοφία.
             """,
             r"""
-            ## Ανάλυση των στίχων
+            ## Τι παίρνουμε μαζί μας
 
-            Ιδιαίτερη προσοχή στους στίχους «αν δεν τους κουβανείς μες στην ψυχή
-            σου, αν η ψυχή σου δεν τους στήνει εμπρός σου». Τι σημαίνει «κουβαλώ
-            έναν φόβο»; Μπορεί ο άνθρωπος να δημιουργεί μόνος του τα προβλήματά
-            του; Έχετε φοβηθεί ποτέ κάτι που τελικά δεν συνέβη;
-
-            **Ερωτήσεις για συζήτηση:**
-            - Πιστεύετε ότι οι μεγαλύτεροι φόβοι μας βρίσκονται μέσα μας ή έξω από
-              εμάς;
-            - Συμφωνείτε ότι πολλές φορές δημιουργούμε μόνοι μας τα προβλήματά
-              μας;
-            - Αν ο Οδυσσέας ζούσε το 2026, ποιες δυσκολίες θα αντιμετώπιζε;
-            """,
-            r"""
-            ## Κλείσιμο
-
-            Οι μεγαλύτεροι εχθροί μας δεν είναι πάντα οι εξωτερικές δυσκολίες.
-            Συχνά είναι οι φόβοι, οι αμφιβολίες και οι αρνητικές σκέψεις που
-            κουβαλάμε μέσα μας. Όταν αλλάζει η στάση μας απέναντι στη ζωή, αλλάζει
-            και το ίδιο το ταξίδι.
-
-            *Σκεφτείτε μέχρι το επόμενο μάθημα: ποιοι είναι οι δικοί σας
-            «Λαιστρυγόνες», οι «Κύκλωπες» και ο «Ποσειδώνας»; Είναι εξωτερικά
-            εμπόδια ή μήπως κάποιοι από αυτούς βρίσκονται μέσα μας;*
+            Γνώση, αγάπη, φίλοι, εμπειρίες, σοφία, τέχνη, αναμνήσεις,
+            εμπνεύσεις — αυτά γεμίζουν τη βαλίτσα του ταξιδιώτη.
             """,
         ),
     }.get(_lang, (
         r"""
-        ## Who they were
+        ## Discussion
 
-        **The Laestrygonians** — man-eating giants who destroyed the ships of
-        strangers and killed their crews; a symbol of great dangers and
-        destruction.
-
-        **The Cyclopes** — giants with a single eye on the forehead, possessing
-        enormous strength and living in isolation; a symbol of violence, brute
-        force, and the absence of civilization.
-
-        **Poseidon** — the god of the sea, Odysseus's enemy (since Odysseus
-        blinded his son Polyphemus); a symbol of the forces we cannot control —
-        nature, fate, circumstance.
-
-        For Cavafy, these figures are not just mythological characters — they
-        carry a deeper, symbolic meaning.
+        Why do you think Cavafy chooses these particular objects —
+        mother-of-pearl, coral, amber, ebony, perfumes? What do the trading
+        posts of Phoenicia and the wisdom of Alexandria symbolize?
         """,
         r"""
-        ## Metaphorical meaning
+        ## The geography of the journey
 
-        These figures can symbolize: our fears, anxiety, insecurity,
-        difficulties, problems, people who disappoint us, obstacles we create
-        for ourselves.
+        **Ithaka** — the destination of the journey. **Phoenicia** (Byblos,
+        Sidon, Tyre) — merchants and new cultures. **Alexandria** —
+        knowledge and wisdom.
         """,
         r"""
-        ## Analysis of the verses
+        ## What we carry with us
 
-        Particular attention to the lines «if you don't carry them within your
-        soul, if your soul doesn't set them up before you». What does it mean to
-        «carry a fear»? Can a person create their own problems? Have you ever
-        feared something that, in the end, never happened?
-
-        **Discussion questions:**
-        - Are our greatest fears inside us or outside us?
-        - Do you agree that we often create our own problems?
-        - If Odysseus lived in 2026, what difficulties would he face?
-        """,
-        r"""
-        ## Closing
-
-        Our greatest enemies are not always external difficulties. Often they
-        are the fears, doubts, and negative thoughts we carry within ourselves.
-        When our attitude toward life changes, the journey itself changes too.
-
-        *Think about this before the next lesson: who are your own
-        "Laestrygonians," "Cyclopes," and "Poseidon"? Are they external
-        obstacles, or might some of them be within us?*
+        Knowledge, love, friends, experiences, wisdom, art, memories,
+        inspiration — this is what fills the traveler's suitcase.
         """,
     ))
     mo.vstack([
@@ -288,8 +239,6 @@ def _(img, language_selector, mo):
         mo.md(_texts[2]),
         img("slide-5.jpg"),
         img("slide-6.jpg"),
-        mo.md(_texts[3]),
-        img("slide-7.jpg"),
     ])
     return
 
@@ -446,25 +395,6 @@ def _(
             renew_btn=tp_renew_btn,
         )
     _output
-    return
-
-
-@app.cell(hide_code=True)
-def _(RAW_BASE, gu2, notebook_dir, vocab_name):
-    # Vocabulary data (useful expressions + literary terms)
-    df_vocab = gu2.load_vocab_table(vocab_name("vocabulary"), nb_dir=notebook_dir, remote_base=RAW_BASE)
-    return (df_vocab,)
-
-
-@app.cell(hide_code=True)
-def _(df_vocab, gu2, language_selector, mo, t_ui):
-    # Vocabulary table
-    _lang = language_selector.value
-    _tbl_vocab = gu2.vocab_table(df_vocab)
-    mo.vstack([
-        mo.md(t_ui("vocabulary_heading", _lang)),
-        _tbl_vocab,
-    ])
     return
 
 
@@ -1195,7 +1125,7 @@ def _(RAW_BASE, gu2, language_selector, notebook_dir):
 @app.cell(hide_code=True)
 def _(eee, mo, notebook_dir):
     from pathlib import Path as _Path
-    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/kavafis_ithaki/2"
+    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/kavafis_ithaki/3"
     def img(name, width=700):
         return eee.magnify_image(mo, _Path(notebook_dir) / name, raw_base=RAW_BASE, width=width, prefer_local=True)
 
@@ -1251,7 +1181,7 @@ def _(language_selector, mo):
         __file__,
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv",
     )
-    _prev_url, _next_url = _cfg.adjacent_urls("2/")
+    _prev_url, _next_url = _cfg.adjacent_urls("3/")
     eee_footer(mo, lang=language_selector.value, prev_url=_prev_url, next_url=_next_url, same_window=True)
     return
 

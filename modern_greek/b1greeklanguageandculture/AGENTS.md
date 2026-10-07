@@ -128,16 +128,22 @@ chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
   `vocabulary_heading`, plus the `test_label`/`*_test_topic` set described below) to
   the 3 `ui-{lang}.tsv` files in `eee-project` itself; if a future lesson needs another
   chrome string, add it the same way rather than starting a local dict.
-- **The poem stanza is plain text, deliberately** — an earlier draft used
-  `eee.interactive_text(...)` (clickable words + a click-to-gloss paradigm-table panel,
-  ported from Odyssey) but the user asked for it to be removed (2026-07-25): "in stanza
-  we don't need any links or highlighting on words -- it's just a common text." The poem
-  cell just renders `_stanza["lines"]` as plain `<div>` rows next to the selected
-  translation's lines — no `anywidget`, no `CLICKABLE_FORMS`, no
-  `build_modern_paradigm_table`/gloss-panel machinery at all. Don't re-add clickable
-  poem text here without checking with the user first — it was tried and explicitly
-  rejected. `POEM_WORDS_RAW` (from `poem_vocab.tsv`) still exists, but purely as the
-  translation-presence exercise's word pool, not for any click target.
+- **The poem cell lists every comment on the poem's mixed poetic language under the text and translation; selecting one highlights its words** (2026-10-06, the user's request in two
+  rounds: first the words of the text were clickable and revealed a comment; then "write all the comments below the txt/tr-n and highlight the corresp. fragments in text when we select
+  the comment. Don't hide the explanation!"). Both supersede the 2026-07-25 decision that the stanza is plain text ("in stanza we don't need any links or highlighting on words -- it's
+  just a common text"), made when clicking opened an Odyssey-style paradigm-table gloss panel. `language_notes.tsv` (columns `fragments`, `ru`, `el`, `en`) has one row per comment;
+  `fragments` are runs of the poem's own words separated by ` | ` (cut from `greek.md`; every occurrence in the lesson's text is highlighted); the card shows them in bold joined by
+  ` · `, then the note in the UI language. `eee.mixed_language_notes` (eee-project 1.22.0, 2026-10-06: the matching, layout, CSS and their tests live there, not in the notebooks, which hold only a loader cell,
+  `gu2.load_language_notes`, and a one-call cell) builds it all as plain HTML/CSS: hidden radio inputs and sibling selectors, no widget and no server round
+  trip, so the highlight is instant, works with the arrow keys, and the selection stays when another translation or language is chosen (marimo redraws the text, not the inputs;
+  `check_mix_select.py` in `plans/superpowers/plans/2026-10-06-kavafis-lesson-4/tools/` asserts it, with the highlighted words computed from `greek.md`). `make check-kavafis-english` guards the fragments by calling eee-project's
+  `language_notes_problems` -- the matcher the page itself uses (every fragment found in `greek.md`, none overlapping another), not a copy of the rule. Commented fragments carry a
+  faint dotted underline all the time. No paradigm-table/gloss panel, no `eee.interactive_text`, no `CLICKABLE_FORMS`: don't make text words clickable again, or hide the notes behind
+  a click, without checking with the user. The comments condense greek-knowledge-eee's `culture/cavafy.md`, section "A mixed poetic language" (English); the Russian and Greek notes
+  are drafts for cross-checking. The heading and hint are the `mixed_language_heading` and `mixed_language_hint` rows of eee-project's `ui-{lang}.tsv` (the repo's translation rule), passed by each lesson as
+  `heading=gu2.ui_label(...)`, `hint=gu2.ui_label(...)` (the function's own defaults are the generic `language_notes_heading`/`language_notes_hint` rows, for a lesson on another poem);
+  not literals in the notebooks. `POEM_WORDS_RAW` (from `poem_vocab.tsv`, or `poem_vocab_en.tsv` in English) is still only the
+  translation-presence exercise's word pool.
 - **Parallel translations**: a `trans_selector` dropdown (подстрочник + literary
   translations) reading `greek.md` + `translations.md` via the same shared
   `eee.parse_stanza_text`/`eee.parse_stanza_translations` functions Odyssey uses
@@ -151,13 +157,16 @@ chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
   the translations are listed in the lecture's own `notes.md`** (Шмаков/Бродский →
   Ильинская → Левитов, подстрочник always first since it's this notebook's own
   addition, not from `notes.md`) — don't alphabetize or reorder for any other reason.
-  **English (Keeley/Sherrard) was tried and removed (2026-07-31):** it's a
-  copyrighted, actively-in-print translation (1975/1992, Princeton UP) — a tool asked
-  to fetch the fuller passage verbatim for lesson 2 declined on fair-use grounds, and
-  the user asked to drop it from both lessons rather than risk over-quoting it. Only
-  подстрочник (this notebook's own literal gloss, not a third party's creative work)
-  plus the 3 Russian literary translators remain. Don't re-add an English literary
-  translation here without checking with the user first.
+  **English (added 2026-10-06, spec `plans/superpowers/specs/2026-09-30-kavafis-english-design.md`):**
+  English mode lists `literal` (a course-authored literal rendering) and
+  `Valassopoulo` (1924, public domain in the US), read from each lesson's `translations_en.md` and
+  merged into the same `STANZAS` as the Russian translators; the dropdown is filtered by
+  UI language. **Keeley/Sherrard (1975/1992, Princeton UP) was tried and removed
+  2026-07-31 and stays excluded** — it is in copyright; a description-only
+  `## Keeley/Sherrard` section only points to where to read it — since 2026-10-06 the Poetry Foundation page, which reprints it "with permission of
+  Princeton University Press" (the user's call, made when asked whether to reproduce it; before that the pointer went to OrnaVerum, whose copy carries
+  no stated permission; OrnaVerum is now only Valassopoulo's "text via" link). Don't reproduce it, and
+  don't add another English literary translation without checking with the user first.
 - **New exercise type — translation-presence ("слово в переводе")** — added to the
   common-words tests as **Test 1** (not the last test — user-requested reordering,
   2026-07-25: it's poem-specific, so it comes right after the poem section, before the
@@ -178,6 +187,18 @@ chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
   `eee_project`'s `_PRESENCE_SWITCH_LBL`, a pure wording fix with no signature change,
   safe for Odyssey's existing 7 lessons too (the passage's own attribution, shown via the
   already-generic `_PRESENCE_SOURCE_LBL`, was correct already).
+  **English (2026-10-06):** the same exercise with `Valassopoulo` as the only translator (the notebook's `LITERARY_TRANSLATORS` is per language;
+  `literal` is the crib, like подстрочник), words from `poem_vocab_en.tsv`, answer-key rows in the same `translation_presence.tsv`. A faithful
+  translation reflects almost every word, so a lesson shows the English exercise only where the key has a reviewed `no` row for Valassopoulo
+  (`PRESENCE_SHOWN`): lessons 2 (3 rows) and 4 (5 rows), not 1 and 3. `balance_presence_items` keeps the session at equal `no`/`yes`: 3+3 in lesson 2, 5+5 in lesson 4.
+  **Answer-key standard (2026-10-06, after the user found two wrong answers in lesson 2):** a row is `yes` only if the translator's passage for that stanza contains the word given as the
+  item's meaning (`poem_vocab*.tsv`) in some form of the same word, or a plain synonym from the explicit list in `audit_key.py`; a different word, even a related one («помыслы» for «мысль»,
+  «встанут» for «найдёшь»), is `no`; borderline rows stay blank. `plans/superpowers/plans/2026-10-06-kavafis-lesson-4/tools/audit_key.py` holds one regex list per meaning and fails when
+  the key disagrees with it (it is part of `final_gate.sh`): add the pattern for a new meaning there, run it after any key edit, and do not judge rows by eye.
+  **Session size (2026-10-06, the user: "in all nbs this test must show only 10 balanced questions -- do it by the same way in all nbs"):** every notebook with this test -- the eight Odyssey
+  lessons and the four Kavafis lessons -- has one `SESSION_SIZE = 10` cell and calls `balance_presence_items(..., n=SESSION_SIZE)`: 10 items, half `yes` and half `no` where the key has enough
+  `no` rows (English lesson 2 has 3, so a session of 6). There is no question-count dropdown: the 10 / 20 / All one that lessons 3-4 had since August (its «All» asked the whole pool, up to 95)
+  was removed, and the `presence_count_label` UI string is unused. `plans/superpowers/plans/2026-10-06-kavafis-lesson-4/tools/check_presence_count.py <lesson>` reads the counter in a browser.
 - **Numbered test headings don't reuse ellinika_b's `test1_heading`/`test2_heading`/
   `test3_heading` keys** — those bake a fixed topic into a fixed number ("## Тест 1:
   Существительные") and ellinika_b's own lessons already depend on that exact
@@ -205,6 +226,16 @@ chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
   parser extraction was also verified against `ancient_greek/odyssey/2026_07_20`
   (temporarily pointed at the local `eee-project` checkout) — identical `STANZAS`/
   `RHYTHM_HTML`/`QUIZ_WORDS_RAW`/`CLICKABLE_FORMS` shape before and after.
+- **English mode (2026-10-06)**: each lesson has `translations_en.md` (`literal`,
+  `Valassopoulo`, and a description-only `Keeley/Sherrard`) and `*_en.tsv` twins of
+  `vocabulary`/`nouns`/`verbs`/`adjectives` (key columns identical to the Russian files).
+  `poem_vocab_en.tsv` (English `meaning`, same key columns) is the English presence exercise's word pool; the exercise is shown only where
+  the answer key has a reviewed `no` row for Valassopoulo (`PRESENCE_SHOWN`: lessons 2 and 4) and `TEST_NUM` renumbers the remaining tests 1-3
+  where it is hidden. The vocabulary file is picked by the `vocab_name` cell. The texts'
+  source of truth is greek-knowledge-eee's `texts/kavafis_ithaki/translations_en.md`;
+  `make check-kavafis-english ARGS="--kb <that file>"` guards the data.
+  The language switcher lists English, Русский, Ελληνικά (the eee-project default and the order of the deployed hubs, Odyssey and Palaestra);
+  the default selection stays Greek.
 
 ## Known gap: bare local-file reads break on a raw pre-publish molab upload
 
@@ -224,18 +255,22 @@ nb_dir=notebook_dir, remote_base=RAW_BASE)` instead of a bare `pd.read_csv(os.pa
 (unlike lesson 2's — see that course's own build history) — the sync found nothing to correct,
 confirming its lemma/form columns were already ordered correctly.
 
-**Kavafis Ithaki lesson 3 (`3-4/`, 2026-08-28) built fresh with `ensure_file` from the start** —
+**Kavafis Ithaki lesson 3 (`3/`, renamed from `3-4/` on 2026-10-06; built 2026-08-28) built fresh with `ensure_file` from the start** —
 no retrofit needed. Source material was a single pptx (`Kavafis_Ithaki/3-4/`, no `notes.md`),
 covering στ. 13–23 (the stanza continuing directly after lesson 2's στ. 4–12). Vocabulary was
 hand-curated from the stanza + the pptx's own thematic slides rather than the master dated-notes
 file — that file's only Kavafis-dated session (24/7/2026) turned out to already be fully consumed
 by lesson 1 (verified via direct diff against lesson 1's `nouns.tsv`/`verbs.tsv`/`adjectives.tsv`,
-exact match). **Левитов dropped for this lesson only**: his stihi.ru source
-(`stihi.ru/2021/02/15/6272`, linked from lesson 1's `notes.md`) now shows "Автор закрыл свою
-страницу" — a real, deliberate takedown (confirmed via a live browser render, not just a fetch
-failure) — user decided not to substitute a reconstructed-from-memory or scraped-mirror text
-under his name; `LITERARY_TRANSLATORS`/`trans_selector` here list only Шмаков/Бродский +
-Ильинская. `vocabulary.tsv` omitted entirely (and its notebook cells skipped) — no genuine
+exact match). **Левитов was dropped from this lesson when it was built (2026-08-28)**: his stihi.ru source
+(`stihi.ru/2021/02/15/6272`) then showed "Автор закрыл свою страницу" — a deliberate takedown — and the
+user decided not to substitute a reconstructed or mirrored text. **He reopened the page and was added back
+on 2026-10-06** (user's call; the live text was checked identical to the lecture folder's `levitov.txt` and to
+his sections in lessons 1-2), so `LITERARY_TRANSLATORS`/`trans_selector` list Шмаков/Бродский + Ильинская +
+Левитов. **Same day, text fixes, each checked against a source:** the Ильинская section had dropped a
+published line and altered another and is restored to the published text (the archive copy the KB cites
+in `translations_ru.md`, whose line breaks all lessons follow); 7 подстрочник lines still had the older
+wording that greek-knowledge-eee corrected on 2026-09-22 (e.g. «за Итаку» → «на Итаку») and now equal the
+KB; lesson 1's first Greek line now reads «Σα βγεις» as in the KB's `text.md`. `vocabulary.tsv` omitted entirely (and its notebook cells skipped) — no genuine
 multi-word phrase in this stanza's material, unlike lesson 2's one entry. подстрочник is this
 notebook's own corrected literal gloss: the source pptx's own RU caption mistranslated
 `σεντέφια` (mother-of-pearl) as "шёлк" (silk) — fixed rather than propagated, since подстрочник
@@ -252,6 +287,20 @@ parsing and the translation-presence sync verified directly against the pipeline
 found nothing to add/correct against the hand-authored 46-row `translation_presence.tsv` (23
 words × 2 translators, matching lesson 1's own "sync found nothing to correct" precedent),
 18 balanced quiz items built.
+
+**Kavafis Ithaki lesson 4 (`4/`, 2026-10-06) — no source lecture.** Covers στ. 24–36, the poem's last three
+stanzas (the Greek is greek-knowledge-eee's `texts/kavafis_ithaki/text.md`, from the Ministry textbook), and is
+lesson 3's notebook with only the lesson cells replaced: title, recap, a discussion warm-up without slides, and an
+analysis cell (the poem's closing turn, why «Ithakas» is plural, how the poem is built, seven readings
+aloud and a piece of music, all linked from the KB's `culture/cavafy.md`, which the builder reads). The poem text, translation grid and mixed-language comment cells are lesson 3's own (they loop over `STANZAS`: one stanza in
+lessons 1-3, three here; 5 comments in `language_notes.tsv`) and there are no
+`slide-N.jpg`/`img()`. Translators: подстрочник (KB `interlinear_ru`), Шмаков/Бродский, Ильинская (the published
+page's line breaks, so her last stanza has 4 lines), Левитов; English as in lessons 1-3. `translation_presence.tsv`
+(136 rows: 102 for the Russian translators, 34 for Valassopoulo) was drafted with an evidence word per row and is to be cross-checked; the 7 borderline Russian rows are left
+blank, which the exercise skips. The drills hold only words not already drilled in lessons 1-3 (7 nouns, 12 verbs,
+4 adjectives); `έχω` is left out of the verb drill (the backend has no aorist forms, so a field would have no
+correct answer). The data files were sliced from their sources by scripts (`plans/superpowers/plans/2026-10-06-kavafis-lesson-4/tools/`),
+not typed.
 
 **Still not fixed: the other two courses under this umbrella (Kapodistrias, all 16 files;
 Zorba, all 3 files) still read their own local TSVs bare, zero `ensure_file` usage.** A

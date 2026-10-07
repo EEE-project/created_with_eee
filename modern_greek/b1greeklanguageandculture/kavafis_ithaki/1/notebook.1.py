@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.1.0",
+#     "eee-project>=1.22.0",
 #     "marimo>=0.25.1",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas",
@@ -125,41 +125,35 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(TRANS_DESC, mo, trans_selector):
+def _(TRANS_DESC, language_selector, mo, trans_selector):
     _PODSTROCHNIK_DESC = "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала"
     _desc_map = {"подстрочник": _PODSTROCHNIK_DESC, **TRANS_DESC}
-    mo.md(_desc_map.get(trans_selector.value, ""))
+    # English: add the pointer to the in-copyright Keeley/Sherrard version (a description-only section).
+    _note = TRANS_DESC.get("Keeley/Sherrard", "") if language_selector.value == "en" else ""
+    mo.md("\n\n".join(_d for _d in (_desc_map.get(trans_selector.value, ""), _note) if _d))
     return
 
 
 @app.cell(hide_code=True)
-def _(STANZAS, mo, trans_selector):
-    # Plain (non-clickable) poem text alongside the selected parallel translation
-    import html as _html
-    _stanza = STANZAS[0]
+def _(RAW_BASE, gu2, notebook_dir):
+    MIX_ROWS = gu2.load_language_notes(nb_dir=notebook_dir, remote_base=RAW_BASE)
+    return (MIX_ROWS,)
 
-    def _lines_html(lines, *, border=None):
-        _divs = "".join(f'<div>{_html.escape(line)}</div>' for line in lines)
-        _style = "font-size:1.0em;display:flex;flex-direction:column;justify-content:space-between;"
-        if border:
-            _style += f"border-left:3px solid {border};padding-left:0.8em"
-        else:
-            _style += "padding-right:0.8em"
-        return mo.Html(f'<div style="{_style}">{_divs}</div>')
 
-    _left = _lines_html(_stanza["lines"])
-    _right = _lines_html(_stanza["translations"].get(trans_selector.value, "—").split("\n"), border="#ccc")
-
-    mo.vstack([
-        trans_selector,
-        mo.hstack([_left, _right], justify="start", align="stretch", gap=1.5),
-    ])
+@app.cell(hide_code=True)
+def _(MIX_ROWS, STANZAS, eee, gu2, language_selector, mo, trans_selector):
+    _lang = language_selector.value
+    mo.vstack([trans_selector, eee.mixed_language_notes(
+        mo, stanzas=STANZAS, translator=trans_selector.value, notes=MIX_ROWS, lang=_lang,
+        heading=gu2.ui_label("mixed_language_heading", _lang), hint=gu2.ui_label("mixed_language_hint", _lang),
+    )])
     return
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, t_ui):
+def _(PRESENCE_SHOWN, language_selector, mo, t_ui):
     # Test 1 heading -- presence exercise leads (poem-specific, right after the poem)
+    mo.stop(not PRESENCE_SHOWN)
     _lang = language_selector.value
     mo.md(f"## {t_ui('test_label', _lang)} 1: {t_ui('presence_test_topic', _lang)}")
     return
@@ -190,18 +184,29 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(gu2):
-    tp_renew_btn = gu2.make_renew_button()
+def _(gu2, language_selector):
+    tp_renew_btn = gu2.make_renew_button(lang=language_selector.value)
     return (tp_renew_btn,)
+
+
+@app.cell(hide_code=True)
+def _():
+    # Shared per-lesson default (the same cell as in the Odyssey lessons): how many items the exercise below draws per
+    # session -- here the word-in-translation test: half "yes", half "no" where the answer key has enough "no" rows.
+    # Change this one value to change the session, or override the exercise by editing its own n=SESSION_SIZE argument.
+    SESSION_SIZE = 10
+    return (SESSION_SIZE,)
 
 
 @app.cell(hide_code=True)
 def _(
     POEM_WORDS_RAW,
     RAW_BASE,
+    SESSION_SIZE,
     STANZAS,
     eee,
     gu2,
+    language_selector,
     notebook_dir,
     tp_renew_btn,
     tp_set_cv,
@@ -211,7 +216,8 @@ def _(
     tp_set_restore_entry,
     tp_set_score,
 ):
-    LITERARY_TRANSLATORS = ["Шмаков/Бродский", "Ильинская", "Левитов"]
+    # English: Valassopoulo is the only published English translation reproduced (the literal rendering is the crib, like подстрочник)
+    LITERARY_TRANSLATORS = ["Valassopoulo"] if language_selector.value == "en" else ["Шмаков/Бродский", "Ильинская", "Левитов"]
     _tp_vocab = [w for w in POEM_WORDS_RAW if w.get("pos") in eee.TRANSLATION_PRESENCE_CONTENT_POS]
     _tp_path = gu2.ensure_file("translation_presence.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
     # An empty TP_ITEMS list on its own is indistinguishable downstream from
@@ -224,8 +230,8 @@ def _(
     if _tp_path:
         gu2.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
         TP_ITEMS = gu2.balance_presence_items(gu2.build_translation_presence_items(
-            gu2.read_translation_presence_tsv(_tp_path), POEM_WORDS_RAW, STANZAS
-        ), n=None)
+            gu2.read_translation_presence_tsv(_tp_path), POEM_WORDS_RAW, STANZAS, valid_translators=LITERARY_TRANSLATORS
+        ), n=SESSION_SIZE)
     else:
         TP_ITEMS = []
     gu2.reset_quiz_state(tp_renew_btn, tp_set_cv, tp_set_remaining, tp_set_score,
@@ -257,6 +263,7 @@ def _(
 
 @app.cell(hide_code=True)
 def _(
+    PRESENCE_SHOWN,
     TP_ITEMS,
     TP_UNAVAILABLE,
     gu2,
@@ -281,6 +288,7 @@ def _(
     tp_set_score,
     tp_source_switch,
 ):
+    mo.stop(not PRESENCE_SHOWN)
     if TP_UNAVAILABLE:
         _output = mo.md(t_ui("translation_presence_not_found", language_selector.value))
     else:
@@ -298,9 +306,9 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, gu2, notebook_dir):
+def _(RAW_BASE, gu2, notebook_dir, vocab_name):
     # Vocabulary data (useful expressions + literary terms)
-    df_vocab = gu2.load_vocab_table("vocabulary.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+    df_vocab = gu2.load_vocab_table(vocab_name("vocabulary"), nb_dir=notebook_dir, remote_base=RAW_BASE)
     return (df_vocab,)
 
 
@@ -317,17 +325,17 @@ def _(df_vocab, gu2, language_selector, mo, t_ui):
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, t_ui):
+def _(TEST_NUM, language_selector, mo, t_ui):
     # Test 2 heading
     _lang = language_selector.value
-    mo.md(f"## {t_ui('test_label', _lang)} 2: {t_ui('noun_test_topic', _lang)}")
+    mo.md(f"## {t_ui('test_label', _lang)} {TEST_NUM['noun']}: {t_ui('noun_test_topic', _lang)}")
     return
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, gu2, notebook_dir):
+def _(RAW_BASE, gu2, notebook_dir, vocab_name):
     # Load noun data
-    df_noun = gu2.load_vocab_table("nouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+    df_noun = gu2.load_vocab_table(vocab_name("nouns"), nb_dir=notebook_dir, remote_base=RAW_BASE)
     return (df_noun,)
 
 
@@ -552,17 +560,17 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, t_ui):
+def _(TEST_NUM, language_selector, mo, t_ui):
     # Test 3 heading
     _lang = language_selector.value
-    mo.md(f"## {t_ui('test_label', _lang)} 3: {t_ui('verb_test_topic', _lang)}")
+    mo.md(f"## {t_ui('test_label', _lang)} {TEST_NUM['verb']}: {t_ui('verb_test_topic', _lang)}")
     return
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, gu2, notebook_dir):
+def _(RAW_BASE, gu2, notebook_dir, vocab_name):
     # Load verb data
-    df_verb = gu2.load_vocab_table("verbs.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+    df_verb = gu2.load_vocab_table(vocab_name("verbs"), nb_dir=notebook_dir, remote_base=RAW_BASE)
     return (df_verb,)
 
 
@@ -761,17 +769,17 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, t_ui):
+def _(TEST_NUM, language_selector, mo, t_ui):
     # Test 4 heading
     _lang = language_selector.value
-    mo.md(f"## {t_ui('test_label', _lang)} 4: {t_ui('adj_test_topic', _lang)}")
+    mo.md(f"## {t_ui('test_label', _lang)} {TEST_NUM['adj']}: {t_ui('adj_test_topic', _lang)}")
     return
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, gu2, notebook_dir):
+def _(RAW_BASE, gu2, notebook_dir, vocab_name):
     # Load adjective data
-    df_adj = gu2.load_vocab_table("adjectives.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+    df_adj = gu2.load_vocab_table(vocab_name("adjectives"), nb_dir=notebook_dir, remote_base=RAW_BASE)
     return (df_adj,)
 
 
@@ -979,7 +987,7 @@ def _(lang_bridge, mo):
     # Fixed-position language selector overlay
     from eee_project import language_selector as _language_selector
     language_selector = _language_selector(
-        mo, lang_bridge, options={"Русский": "ru", "Ελληνικά": "el"}, default="el"
+        mo, lang_bridge, options={"English": "en", "Русский": "ru", "Ελληνικά": "el"}, default="el"
     )
     mo.Html(f"""
     <div style="position: fixed; top: 60px; right: 10px; z-index: 1000; background: white; padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
@@ -998,14 +1006,15 @@ def _(lang_bridge, language_selector):
 
 @app.cell(hide_code=True)
 def _(language_selector, mo, t_ui):
+    _en = language_selector.value == "en"
     trans_selector = mo.ui.dropdown(
-        options={
+        options={"literal": "literal", "Valassopoulo (1924)": "Valassopoulo"} if _en else {
             "подстрочник": "подстрочник",
             "Шмаков / Бродский · рус.": "Шмаков/Бродский",
             "Ильинская (1984) · рус.": "Ильинская",
             "Левитов · рус.": "Левитов",
         },
-        value="подстрочник",
+        value="literal" if _en else "подстрочник",
         label=t_ui("translation_label", language_selector.value).rstrip(":"),
     )
     return (trans_selector,)
@@ -1015,6 +1024,28 @@ def _(language_selector, mo, t_ui):
 def _(gu2):
     t_ui = gu2.ui_label
     return (t_ui,)
+
+
+@app.cell(hide_code=True)
+def _(language_selector):
+    # One vocabulary file per UI language: English has *_en.tsv, ru/el share the Russian files.
+    def vocab_name(stem):
+        return f"{stem}_en.tsv" if language_selector.value == "en" else f"{stem}.tsv"
+    return (vocab_name,)
+
+
+@app.cell(hide_code=True)
+def _(RAW_BASE, gu2, language_selector, notebook_dir):
+    # Russian/Greek: the word-in-translation exercise is always shown. English: only when the answer key has a reviewed "no" row for Valassopoulo --
+    # a faithful translation reflects almost every word, and an exercise whose answer is always "yes" is not worth showing.
+    PRESENCE_SHOWN = True
+    if language_selector.value == "en":
+        _tp_path = gu2.ensure_file("translation_presence.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        PRESENCE_SHOWN = bool(_tp_path) and any(
+            _r["translator"] == "Valassopoulo" and _r["reflected"] == "no" for _r in gu2.read_translation_presence_tsv(_tp_path)
+        )
+    TEST_NUM = {"noun": 2, "verb": 3, "adj": 4} if PRESENCE_SHOWN else {"noun": 1, "verb": 2, "adj": 3}
+    return PRESENCE_SHOWN, TEST_NUM
 
 
 @app.cell(hide_code=True)
@@ -1034,20 +1065,22 @@ def _(RAW_BASE, eee, gu2, notebook_dir):
     # only option before this course is committed/pushed) leaves siblings
     # like greek.md/translations.md behind, so route them through
     # ensure_file() rather than a bare local read (see created_with_eee's
-    # root CLAUDE.md, "Notebook Content Gotchas"). The two files are
-    # unrelated, so fetch them concurrently rather than paying for two
+    # root CLAUDE.md, "Notebook Content Gotchas"). The three files are
+    # unrelated, so fetch them concurrently rather than paying for three
     # sequential round-trips on a cold cache.
     from concurrent.futures import ThreadPoolExecutor as _Pool
-    with _Pool(max_workers=2) as _pool:
-        _greek_path, _trans_path = _pool.map(
+    with _Pool(max_workers=3) as _pool:
+        _greek_path, _trans_path, _trans_en_path = _pool.map(
             lambda _fn: gu2.ensure_file(_fn, nb_dir=notebook_dir, remote_base=RAW_BASE),
-            ("greek.md", "translations.md"),
+            ("greek.md", "translations.md", "translations_en.md"),
         )
-    if not _greek_path or not _trans_path:
-        raise FileNotFoundError("greek.md/translations.md: could not be found locally or fetched from remote_base")
+    if not _greek_path or not _trans_path or not _trans_en_path:
+        raise FileNotFoundError("greek.md/translations.md/translations_en.md: could not be found locally or fetched from remote_base")
     _greek = eee.parse_stanza_text(_greek_path.read_text(encoding="utf-8"))
-    _trans, _desc = eee.parse_stanza_translations(_trans_path.read_text(encoding="utf-8"))
-    TRANS_DESC = _desc
+    _trans, TRANS_DESC = eee.parse_stanza_translations(_trans_path.read_text(encoding="utf-8"))
+    _trans_en, _desc_en = eee.parse_stanza_translations(_trans_en_path.read_text(encoding="utf-8"))
+    _trans.update(_trans_en)
+    TRANS_DESC.update(_desc_en)
     STANZAS = [
         {
             "ref": ref,
@@ -1060,8 +1093,8 @@ def _(RAW_BASE, eee, gu2, notebook_dir):
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, gu2, notebook_dir):
-    POEM_WORDS_RAW = gu2.load_inflected_vocab_tsv("poem_vocab.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+def _(RAW_BASE, gu2, notebook_dir, vocab_name):
+    POEM_WORDS_RAW = gu2.load_inflected_vocab_tsv(vocab_name("poem_vocab"), nb_dir=notebook_dir, remote_base=RAW_BASE)
     return (POEM_WORDS_RAW,)
 
 

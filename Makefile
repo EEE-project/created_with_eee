@@ -13,7 +13,7 @@ PAGES_DIR ?= $(CURDIR)/../created_with_eee-pages-worktree
 
 EEE_PYTHON ?= $(HOME)/.venv/eee/bin/python3
 
-.PHONY: help sync-main fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-vocab
+.PHONY: help sync-main fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-vocab check-kavafis-english
 
 help:
 	@echo "Targets:"
@@ -92,6 +92,12 @@ help:
 	@echo "                      the same Translation value (unanswerable in a quiz)."
 	@echo "                      Read-only. Optional SCOPE= limits to one course, e.g."
 	@echo "                      make check-vocab SCOPE=modern_greek/ellinika_b"
+	@echo "  check-kavafis-english"
+	@echo "                      Check the Kavafis Ithaki lessons' English files against"
+	@echo "                      their Russian counterparts and the Greek stanza (see"
+	@echo "                      tools/check-kavafis-english.py). Read-only. Optional"
+	@echo "                      ARGS=\"--kb <greek-knowledge-eee>/texts/kavafis_ithaki/translations_en.md\""
+	@echo "                      also compares the lesson copies with the KB's text."
 	@echo ""
 	@echo "NOT automated here (still manual -- see README's Maintainer tooling"
 	@echo "section): splitting a new course off into its own GitLab project."
@@ -174,3 +180,6 @@ verify-pages-deploy:
 
 check-vocab:
 	python3 tools/check-vocab-collisions.py $(SCOPE)
+
+check-kavafis-english:
+	$(EEE_PYTHON) tools/check-kavafis-english.py $(ARGS)

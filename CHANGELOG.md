@@ -1,5 +1,45 @@
 # Changelog
 
+## 2026-10-06
+- **Kavafis «Ithaki» lessons 1, 2 and 3 can be read in English.** The language
+  switcher gains "English" (listed first, as in the other courses): the translation dropdown then lists a course-authored
+  literal rendering and G. Valassopoulo's 1924 translation (public domain in the US), the
+  vocabulary tables and drills show English glosses. The "word in translation" exercise
+  compares the passage with Valassopoulo's version and appears only in the lessons where
+  her translation leaves a word out (2 and 4); elsewhere it is hidden and the remaining
+  tests are numbered 1-3.
+  Russian and Greek modes are unchanged. Keeley/Sherrard's translation stays out (in
+  copyright); English mode only points to where it can be read. New
+  `tools/check-kavafis-english.py` (`make check-kavafis-english`) checks the English
+  files against their Russian counterparts and the Greek stanza.
+- **Kavafis «Ithaki» lessons 1-4: «A mixed poetic language» under the poem.** Short comments on the places
+  where Cavafy mixes learned (katharevousa) and everyday (demotic) forms are listed, in Russian, Greek or
+  English, under the poem and its translation; select one and its words are highlighted in the Greek text.
+- **New: Kavafis «Ithaki» lesson 4 (στ. 24–36).** The poem's last three stanzas — keep Ithaka in
+  mind, do not hurry the journey, the journey is what Ithaka gives, «Ithakas» in the plural — with
+  the Greek text beside the подстрочник, Шмаков/Бродский, Ильинская and Левитов (Russian) or the
+  literal rendering and Valassopoulo (English), comments on the poem's mixed poetic language (select
+  one to highlight its words), links to seven readings aloud and to a piece of music, the word-in-translation exercise and the
+  noun/verb/adjective drills, in Russian, Greek and English.
+- **Kavafis «Ithaki»: lesson `3-4` is now `3`.** The page moved from `kavafis_ithaki/3-4/` to
+  `kavafis_ithaki/3/`; update bookmarks.
+- **Kavafis «Ithaki» lesson 3: Левитов's translation is back** (his page is open again) and is part
+  of the word-in-translation exercise.
+- **Kavafis «Ithaki»: corrected texts.** Lesson 3's Ильинская translation had lost a line and
+  altered another — restored to the published text; seven lines of the word-for-word Russian
+  (подстрочник) in lessons 1-3 were inaccurate (e.g. «за Итаку» for «на Итаку», «торговых
+  городах» for «торговых пунктах») and are fixed; lesson 1's Greek now reads «Σα βγεις…» as in
+  the Ministry textbook.
+- **Kavafis «Ithaki» lessons 1-4: the word-in-translation test asks 10 balanced questions, as in the Odyssey lessons.**
+  Lessons 1-2 used to ask every item of their pool (dozens in lesson 2), and lessons 3-4 let you choose 20 or all (up to
+  95); every lesson now draws 10 items, half «yes» and half «no» where the answer key has enough «no» rows, with no
+  question-count choice.
+- **Kavafis «Ithaki» lessons 1-4: the word-in-translation answers were re-checked.** The exercise asks whether a word is
+  in the translation, but some answers had been judged by meaning: «βρεις» («[you] will find») counted as present in versions
+  that say «не встанут на дороге», «σκέψις» («мысль») in a version that says «помыслам». 45 answers are corrected (41 now «no»,
+  one now «yes», three set aside as borderline): a word counts as present only if the translation uses it, in any form, or a
+  plain synonym; a different word does not.
+
 ## 2026-09-28
 - **`2026_07_27` (Day 7, Odyss. IX.152-180) ported to the language switcher**,
   matching `2026_06_01`/`2026_06_15`: full English and Modern Greek

@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.1.0",
+#     "eee-project>=1.22.0",
 #     "marimo>=0.25.1",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas",
@@ -11,7 +11,7 @@
 import marimo
 
 __generated_with = "0.23.16"
-app = marimo.App(width="medium", app_title="Καβάφης — Ιθάκη — Μάθημα 3: Τα φοινικικά εμπορεύματα και η αιγυπτιακή σοφία")
+app = marimo.App(width="medium", app_title="Καβάφης — Ιθάκη — Μάθημα 4: Η Ιθάκη σ' έδωσε τ' ωραίο ταξίδι")
 
 
 @app.cell(hide_code=True)
@@ -31,89 +31,82 @@ def _(language_selector, mo):
 
 @app.cell(hide_code=True)
 def _(language_selector, mo):
-    # Title + subtitle (no dedicated painting for this lesson's source material)
+    # Title + subtitle (no dedicated painting: this lesson has no source lecture)
     _lang = language_selector.value
-    _heading = mo.md(f"# C. P. Cavafy — «Ithaki»") if _lang == "en" else mo.md(f"# Κ. Π. Καβάφης — «Ιθάκη»")
+    _heading = mo.md("# C. P. Cavafy — «Ithaki»") if _lang == "en" else mo.md("# Κ. Π. Καβάφης — «Ιθάκη»")
     if _lang == "ru":
-        _subtitle = mo.md("Третий урок из цикла о стихотворении Константиноса Кавафиса «Итака» (1911): какие сокровища взять в путь — финикийские товары и мудрость египетских городов.")
+        _subtitle = mo.md("Четвёртый урок из цикла о стихотворении Константиноса Кавафиса «Итака» (1911): заключительные строфы — Итака как цель и как путь — и общий разбор поэтического языка стихотворения.")
     elif _lang == "el":
-        _subtitle = mo.md("Τρίτο μάθημα από τον κύκλο μαθημάτων για το ποίημα του Κ. Π. Καβάφη «Ιθάκη» (1911): τι θησαυρούς να πάρουμε στο ταξίδι — τα φοινικικά εμπορεύματα και η σοφία των αιγυπτιακών πόλεων.")
+        _subtitle = mo.md("Τέταρτο μάθημα από τον κύκλο μαθημάτων για το ποίημα του Κ. Π. Καβάφη «Ιθάκη» (1911): οι τελευταίες στροφές — η Ιθάκη ως προορισμός και ως ταξίδι — και μια γενική ανάλυση της ποιητικής γλώσσας του ποιήματος.")
     else:
-        _subtitle = mo.md("Third lesson in the series on Constantine P. Cavafy's poem «Ithaka» (1911): what treasures to gather along the way — Phoenician goods and the wisdom of Egyptian cities.")
+        _subtitle = mo.md("Fourth lesson in the series on Constantine P. Cavafy's poem «Ithaka» (1911): the closing stanzas — Ithaka as destination and as journey — and a general analysis of the poem's poetic language.")
     mo.vstack([_heading, _subtitle])
     return
 
 
 @app.cell(hide_code=True)
 def _(language_selector, mo):
-    # Recap of lesson 2
+    # Recap of lesson 3
     _lang = language_selector.value
     _text = {
         "ru": r"""
             ## Повторение
 
-            На прошлом уроке мы говорили о Лестригонах, Циклопах и Посейдоне —
-            не только мифологических персонажах, но и символах наших страхов и
-            трудностей, которые часто мы сами создаём себе.
+            На прошлом уроке мы собирали сокровища для пути: финикийские товары —
+            перламутр, кораллы, янтарь, чёрное дерево, благовония — и мудрость
+            египетских городов: учиться и учиться.
             """,
         "el": r"""
             ## Επανάληψη
 
-            Στο προηγούμενο μάθημα μιλήσαμε για τους Λαιστρυγόνες, τους
-            Κύκλωπες και τον Ποσειδώνα — όχι μόνο μυθολογικά πρόσωπα, αλλά και
-            σύμβολα των φόβων και των δυσκολιών μας, που συχνά δημιουργούμε
-            μόνοι μας.
+            Στο προηγούμενο μάθημα μαζέψαμε θησαυρούς για το ταξίδι: τα φοινικικά
+            εμπορεύματα — σεντέφια, κοράλλια, κεχριμπάρια, έβενο, μυρωδικά — και τη
+            σοφία των αιγυπτιακών πόλεων: να μάθεις και να μάθεις.
             """,
     }.get(_lang, r"""
         ## Review
 
-        In the previous lesson we talked about the Laestrygonians, the
-        Cyclopes, and Poseidon — not just mythological figures, but symbols
-        of our fears and difficulties, which we often create for ourselves.
+        In the previous lesson we gathered treasures for the journey: Phoenician
+        goods — mother-of-pearl, coral, amber, ebony, perfumes — and the wisdom
+        of the Egyptian cities: to learn and to learn.
         """)
     mo.md(_text)
     return
 
 
 @app.cell(hide_code=True)
-def _(img, language_selector, mo):
-    # Discussion warm-up: what do we take with us on life's journey?
+def _(language_selector, mo):
+    # Discussion warm-up: the destination or the journey?
     _lang = language_selector.value
     _text = {
         "ru": r"""
-            ## Что мы берём с собой в путешествие жизни?
+            ## Что важнее: цель или путь?
 
-            - опыт
-            - друзей
-            - ошибки
-            - воспоминания
-            - знания
-            - страхи
-            - любовь
+            Подумайте и обсудите:
+
+            - Какую «Итаку» вы держите в уме?
+            - Что дала вам дорога такого, чего не дала бы сама цель?
+            - Как вы понимаете слова «Итака тебя не обманула»?
             """,
         "el": r"""
-            ## Τι παίρνουμε μαζί μας στο ταξίδι της ζωής;
+            ## Τι μετράει περισσότερο: ο προορισμός ή το ταξίδι;
 
-            - εμπειρίες
-            - φίλους
-            - λάθη
-            - αναμνήσεις
-            - γνώσεις
-            - φόβους
-            - αγάπη
+            Σκεφτείτε και συζητήστε:
+
+            - Ποια «Ιθάκη» έχετε στον νου σας;
+            - Τι σας έδωσε ο δρόμος που δεν θα σας έδινε ο ίδιος ο προορισμός;
+            - Πώς καταλαβαίνετε τα λόγια «δεν σε γέλασε»;
             """,
     }.get(_lang, r"""
-        ## What do we take with us on the journey of life?
+        ## What matters more: the destination or the journey?
 
-        - experiences
-        - friends
-        - mistakes
-        - memories
-        - knowledge
-        - fears
-        - love
+        Think and discuss:
+
+        - Which «Ithaka» do you keep in mind?
+        - What did the road give you that the destination itself could not?
+        - What do you make of the words «Ithaka did not deceive you»?
         """)
-    mo.vstack([mo.md(_text), img("slide-1.jpg")])
+    mo.md(_text)
     return
 
 
@@ -127,7 +120,7 @@ def _(language_selector, mo, t_ui):
 @app.cell(hide_code=True)
 def _(mo):
     _CITATION = (
-        '<b>Κ. Π. Καβάφης, «Ιθάκη»</b> (1911). Δεύτερη στροφή, στίχοι 13–23. '
+        '<b>Κ. Π. Καβάφης, «Ιθάκη»</b> (1911). Τρίτη, τέταρτη και πέμπτη στροφή, στίχοι 24–36. '
         '<a href="https://www.greek-language.gr/digitalResources/literature/tools/concordance/browse.html?cnd_id=9&text_id=658" target="_blank" rel="noopener">greek-language.gr — Πύλη για την ελληνική γλώσσα</a>'
     )
     mo.md(_CITATION)
@@ -135,124 +128,220 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(TRANS_DESC, mo, trans_selector):
+def _(TRANS_DESC, language_selector, mo, trans_selector):
     _PODSTROCHNIK_DESC = "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала"
     _desc_map = {"подстрочник": _PODSTROCHNIK_DESC, **TRANS_DESC}
-    mo.md(_desc_map.get(trans_selector.value, ""))
+    # English: add the pointer to the in-copyright Keeley/Sherrard version (a description-only section).
+    _note = TRANS_DESC.get("Keeley/Sherrard", "") if language_selector.value == "en" else ""
+    mo.md("\n\n".join(_d for _d in (_desc_map.get(trans_selector.value, ""), _note) if _d))
     return
 
 
 @app.cell(hide_code=True)
-def _(STANZAS, mo, trans_selector):
-    # Plain (non-clickable) poem text alongside the selected parallel translation
-    import html as _html
-    _stanza = STANZAS[0]
+def _(RAW_BASE, gu2, notebook_dir):
+    MIX_ROWS = gu2.load_language_notes(nb_dir=notebook_dir, remote_base=RAW_BASE)
+    return (MIX_ROWS,)
 
-    def _lines_html(lines, *, border=None):
-        _divs = "".join(f'<div>{_html.escape(line)}</div>' for line in lines)
-        _style = "font-size:1.0em;display:flex;flex-direction:column;justify-content:space-between;"
-        if border:
-            _style += f"border-left:3px solid {border};padding-left:0.8em"
-        else:
-            _style += "padding-right:0.8em"
-        return mo.Html(f'<div style="{_style}">{_divs}</div>')
 
-    _left = _lines_html(_stanza["lines"])
-    _right = _lines_html(_stanza["translations"].get(trans_selector.value, "—").split("\n"), border="#ccc")
-
-    mo.vstack([
-        trans_selector,
-        mo.hstack([_left, _right], justify="start", align="stretch", gap=1.5),
-    ])
+@app.cell(hide_code=True)
+def _(MIX_ROWS, STANZAS, eee, gu2, language_selector, mo, trans_selector):
+    _lang = language_selector.value
+    mo.vstack([trans_selector, eee.mixed_language_notes(
+        mo, stanzas=STANZAS, translator=trans_selector.value, notes=MIX_ROWS, lang=_lang,
+        heading=gu2.ui_label("mixed_language_heading", _lang), hint=gu2.ui_label("mixed_language_hint", _lang),
+    )])
     return
 
 
 @app.cell(hide_code=True)
-def _(img, language_selector, mo):
-    # Discussion: why these objects? + geography of the journey + closing recap
+def _(language_selector, mo):
+    # Analysis: what the last stanzas say, the poem read aloud
     _lang = language_selector.value
     _texts = {
         "ru": (
             r"""
-            ## Обсуждение
+            ## Что говорят последние строфы
 
-            Почему, по-вашему, Кавафис выбирает именно эти предметы —
-            перламутр, кораллы, янтарь, чёрное дерево, благовония? Что
-            символизируют торговые города Финикии и мудрость Александрии?
+            **Строфа 3 (στ. 24–30).** Держи Итаку в уме — она твоя цель. Но не торопи
+            путешествие: пусть оно длится много лет, чтобы ты пристал к острову стариком,
+            богатым тем, что приобрёл в пути, и не ждал богатств от самой Итаки.
+
+            **Строфа 4 (στ. 31–33).** Итака уже дала тебе прекрасное путешествие:
+            без неё ты не вышел бы в путь. Больше ей дать нечего.
+
+            **Строфа 5 (στ. 34–36).** Даже найдя Итаку бедной, ты не обманут: ты стал
+            мудрым, у тебя столько опыта, что ты уже понял, что значат «Итаки».
+
+            ### Почему «Итаки» во множественном числе?
+
+            Стихотворение начинается с одной Итаки — острова из «Одиссеи». В конце слово
+            стоит во множественном числе: «Итаки» — это уже не один остров, а любые цели,
+            к которым мы идём. Одно из прочтений: важно не только прийти, но и то, что мы
+            приобретаем в пути.
+
+            ### Как построено стихотворение
+
+            Страх → путешествие → опыт → мудрость → общий смысл:
+
+            - урок 1 (στ. 1–3): отправление и пожелание долгого пути;
+            - урок 2 (στ. 4–12): страхи — Лестригоны, Циклопы, Посейдон;
+            - урок 3 (στ. 13–23): само путешествие и знания;
+            - урок 4 (στ. 24–36): цель, результат и вывод.
             """,
             r"""
-            ## География путешествия
+            ## «Итака» вслух и в музыке
 
-            **Итака** — конечная цель путешествия. **Финикия** (Библос,
-            Сидон, Тир) — торговцы и новые культуры. **Александрия** —
-            знание и мудрость.
-            """,
-            r"""
-            ## Что мы берём с собой
+            Стихотворение читают актёры и поэты, а на его текст есть ещё и музыкальная пьеса.
+            Послушайте и сравните с текстом (ссылки на YouTube; записи здесь не копируются):
 
-            Знание, любовь, друзья, опыт, мудрость, искусство, воспоминания,
-            вдохновение — вот что наполняет чемодан странника.
+            **На греческом**
+            
+            - <a href="https://www.youtube.com/watch?v=r5lPCeT8Ex0" target="_blank" rel="noopener">ΙΘΑΚΗ - Κ.Π. ΚΑΒΑΦΗΣ- ΓΡΗΓΟΡΗΣ ΒΑΛΤΙΝΟΣ</a> — 1969anre, 2012
+            - <a href="https://www.youtube.com/watch?v=IgbQAGAGQc0" target="_blank" rel="noopener">Κωνσταντίνος Καβάφης - Ιθάκη 1911 - Official Audio Release</a> — Ελληνική Ποίηση &amp; Θέατρο, 2019
+            
+            **На английском**
+            
+            - <a href="https://www.youtube.com/watch?v=i8is5ZE4_CU" target="_blank" rel="noopener">Sean Connery reads ITHAKA | Powerful Life Poem by C.P.Cavafy</a> — Upgrade Your Mindset, 2021
+            - <a href="https://www.youtube.com/watch?v=U4D06vLQf5o" target="_blank" rel="noopener">"Ithaka" by C P Cavafy (read by Tom O'Bedlam)</a> — SpokenVerse, 2011
+            
+            **На русском**
+            
+            - <a href="https://www.youtube.com/watch?v=RN_SJgOu0EI" target="_blank" rel="noopener">ИТАКА. Константинос Кавафис.  Читает Ирина Ковалевская. Аудио-версия.</a> — Irina Kovalevskaja, 2023
+            - <a href="https://www.youtube.com/watch?v=SrOxrgpEDLM" target="_blank" rel="noopener">Павел Курочкин читает Константиноса Кавафиса</a> — Eugenia Kritsevskagia, 2018
+            - <a href="https://www.youtube.com/watch?v=3xUIztEwrqQ" target="_blank" rel="noopener">8 серия.  Итака.  Константинос Кавафис</a> — Херсонес Таврический в Севастополе, 2021
+            
+            **Музыка**
+            
+            - <a href="https://www.youtube.com/watch?v=4nHqjy65n6I" target="_blank" rel="noopener">Deep Pressed ft. 'Ελλη Λαμπέτη - Ιθάκη (Κ.Π.Καβάφης)</a> — Deep Pressed, 2018
             """,
         ),
         "el": (
             r"""
-            ## Συζήτηση
+            ## Τι λένε οι τελευταίες στροφές
 
-            Γιατί πιστεύετε ότι ο Καβάφης επιλέγει αυτά τα αντικείμενα —
-            σεντέφια, κοράλλια, κεχριμπάρια, έβενο, μυρωδικά; Τι συμβολίζουν
-            τα εμπορεία της Φοινίκης και η σοφία της Αλεξάνδρειας;
+            **Τρίτη στροφή (στ. 24–30).** Να έχεις πάντα την Ιθάκη στον νου σου — είναι ο
+            προορισμός σου. Μη βιάζεσαι όμως: καλύτερα το ταξίδι να κρατήσει πολλά χρόνια,
+            για να αράξεις στο νησί ως γέρος, πλούσιος με όσα κέρδισες στον δρόμο, χωρίς να
+            περιμένεις πλούτη από την Ιθάκη.
+
+            **Τέταρτη στροφή (στ. 31–33).** Η Ιθάκη σου έδωσε ήδη το όμορφο ταξίδι —
+            χωρίς αυτήν δεν θα είχες βγει στον δρόμο. Άλλο δεν έχει να σου δώσει πια.
+
+            **Πέμπτη στροφή (στ. 34–36).** Ακόμη κι αν τη βρεις φτωχική, η Ιθάκη δεν σε
+            γέλασε: έγινες σοφός, με τόση πείρα, και κατάλαβες ήδη τι σημαίνουν οι Ιθάκες.
+
+            ### Γιατί «οι Ιθάκες» στον πληθυντικό;
+
+            Το ποίημα ξεκινά με μία Ιθάκη — το νησί της «Οδύσσειας». Στο τέλος η λέξη
+            βρίσκεται στον πληθυντικό: οι Ιθάκες δεν είναι πια ένα νησί, αλλά όλοι οι στόχοι
+            προς τους οποίους ταξιδεύουμε. Μία από τις αναγνώσεις: δεν μετράει μόνο η
+            άφιξη, αλλά και όσα αποκτούμε στον δρόμο.
+
+            ### Πώς είναι χτισμένο το ποίημα
+
+            Φόβος → ταξίδι → πείρα → σοφία → γενικό νόημα:
+
+            - μάθημα 1 (στ. 1–3): η αναχώρηση και η ευχή για μακρύ δρόμο·
+            - μάθημα 2 (στ. 4–12): οι φόβοι — Λαιστρυγόνες, Κύκλωπες, Ποσειδώνας·
+            - μάθημα 3 (στ. 13–23): το ίδιο το ταξίδι και η γνώση·
+            - μάθημα 4 (στ. 24–36): ο προορισμός, το αποτέλεσμα και το συμπέρασμα.
             """,
             r"""
-            ## Η γεωγραφία του ταξιδιού
+            ## Η «Ιθάκη» φωναχτά και με μουσική
 
-            **Ιθάκη** — ο προορισμός του ταξιδιού. **Φοινίκη** (Βύβλος,
-            Σιδώνα, Τύρος) — οι έμποροι και οι νέοι πολιτισμοί.
-            **Αλεξάνδρεια** — η γνώση και η σοφία.
-            """,
-            r"""
-            ## Τι παίρνουμε μαζί μας
+            Το ποίημα το έχουν διαβάσει ηθοποιοί και ποιητές· υπάρχει και ένα μουσικό κομμάτι
+            πάνω στο κείμενό του. Ακούστε και συγκρίνετε με το κείμενο (σύνδεσμοι προς το
+            YouTube· οι ηχογραφήσεις δεν αντιγράφονται):
 
-            Γνώση, αγάπη, φίλοι, εμπειρίες, σοφία, τέχνη, αναμνήσεις,
-            εμπνεύσεις — αυτά γεμίζουν τη βαλίτσα του ταξιδιώτη.
+            **Στα ελληνικά**
+            
+            - <a href="https://www.youtube.com/watch?v=r5lPCeT8Ex0" target="_blank" rel="noopener">ΙΘΑΚΗ - Κ.Π. ΚΑΒΑΦΗΣ- ΓΡΗΓΟΡΗΣ ΒΑΛΤΙΝΟΣ</a> — 1969anre, 2012
+            - <a href="https://www.youtube.com/watch?v=IgbQAGAGQc0" target="_blank" rel="noopener">Κωνσταντίνος Καβάφης - Ιθάκη 1911 - Official Audio Release</a> — Ελληνική Ποίηση &amp; Θέατρο, 2019
+            
+            **Στα αγγλικά**
+            
+            - <a href="https://www.youtube.com/watch?v=i8is5ZE4_CU" target="_blank" rel="noopener">Sean Connery reads ITHAKA | Powerful Life Poem by C.P.Cavafy</a> — Upgrade Your Mindset, 2021
+            - <a href="https://www.youtube.com/watch?v=U4D06vLQf5o" target="_blank" rel="noopener">"Ithaka" by C P Cavafy (read by Tom O'Bedlam)</a> — SpokenVerse, 2011
+            
+            **Στα ρωσικά**
+            
+            - <a href="https://www.youtube.com/watch?v=RN_SJgOu0EI" target="_blank" rel="noopener">Irina Kovalevskaya — audio reading</a> — Irina Kovalevskaja, 2023
+            - <a href="https://www.youtube.com/watch?v=SrOxrgpEDLM" target="_blank" rel="noopener">Pavel Kurochkin — reading</a> — Eugenia Kritsevskagia, 2018
+            - <a href="https://www.youtube.com/watch?v=3xUIztEwrqQ" target="_blank" rel="noopener">«My Chersonesos» poetry series, episode 8</a> — Chersonesos Taurica, Sevastopol, 2021
+            
+            **Μουσική**
+            
+            - <a href="https://www.youtube.com/watch?v=4nHqjy65n6I" target="_blank" rel="noopener">Deep Pressed ft. 'Ελλη Λαμπέτη - Ιθάκη (Κ.Π.Καβάφης)</a> — Deep Pressed, 2018
             """,
         ),
     }.get(_lang, (
         r"""
-        ## Discussion
+        ## What the last stanzas say
 
-        Why do you think Cavafy chooses these particular objects —
-        mother-of-pearl, coral, amber, ebony, perfumes? What do the trading
-        posts of Phoenicia and the wisdom of Alexandria symbolize?
+        **Stanza 3 (στ. 24–30).** Always keep Ithaka in mind — it is your destination.
+        But do not hurry the journey: better that it lasts many years, so that you moor at
+        the island as an old man, rich with all you gained on the way, not expecting
+        Ithaka to give you riches.
+
+        **Stanza 4 (στ. 31–33).** Ithaka has already given you the beautiful journey:
+        without her you would not have set out. She has nothing more to give.
+
+        **Stanza 5 (στ. 34–36).** Even if you find her poor, Ithaka has not deceived you:
+        you have become wise, with so much experience, that you will already have
+        understood what the Ithakas mean.
+
+        ### Why «Ithakas» in the plural?
+
+        The poem begins with one Ithaka — the island of the «Odyssey». At the end the word
+        is plural: «Ithakas» are no longer one island but all the goals we travel towards.
+        One reading: it is not only the arrival that counts, but also what we gain on the
+        way.
+
+        ### How the poem is built
+
+        Fear → journey → experience → wisdom → general meaning:
+
+        - lesson 1 (στ. 1–3): setting out, and the wish for a long road;
+        - lesson 2 (στ. 4–12): the fears — Laestrygonians, Cyclopes, Poseidon;
+        - lesson 3 (στ. 13–23): the journey itself and learning;
+        - lesson 4 (στ. 24–36): the destination, the result and the conclusion.
         """,
         r"""
-        ## The geography of the journey
+        ## «Ithaka» read aloud and in music
 
-        **Ithaka** — the destination of the journey. **Phoenicia** (Byblos,
-        Sidon, Tyre) — merchants and new cultures. **Alexandria** —
-        knowledge and wisdom.
-        """,
-        r"""
-        ## What we carry with us
+        Actors and poets have recorded the poem, and there is also a piece of music on its
+        text. Listen and compare with the text (links to YouTube; the recordings are not
+        copied here):
 
-        Knowledge, love, friends, experiences, wisdom, art, memories,
-        inspiration — this is what fills the traveler's suitcase.
+        **In Greek**
+        
+        - <a href="https://www.youtube.com/watch?v=r5lPCeT8Ex0" target="_blank" rel="noopener">ΙΘΑΚΗ - Κ.Π. ΚΑΒΑΦΗΣ- ΓΡΗΓΟΡΗΣ ΒΑΛΤΙΝΟΣ</a> — 1969anre, 2012
+        - <a href="https://www.youtube.com/watch?v=IgbQAGAGQc0" target="_blank" rel="noopener">Κωνσταντίνος Καβάφης - Ιθάκη 1911 - Official Audio Release</a> — Ελληνική Ποίηση &amp; Θέατρο, 2019
+        
+        **In English**
+        
+        - <a href="https://www.youtube.com/watch?v=i8is5ZE4_CU" target="_blank" rel="noopener">Sean Connery reads ITHAKA | Powerful Life Poem by C.P.Cavafy</a> — Upgrade Your Mindset, 2021
+        - <a href="https://www.youtube.com/watch?v=U4D06vLQf5o" target="_blank" rel="noopener">"Ithaka" by C P Cavafy (read by Tom O'Bedlam)</a> — SpokenVerse, 2011
+        
+        **In Russian**
+        
+        - <a href="https://www.youtube.com/watch?v=RN_SJgOu0EI" target="_blank" rel="noopener">Irina Kovalevskaya — audio reading</a> — Irina Kovalevskaja, 2023
+        - <a href="https://www.youtube.com/watch?v=SrOxrgpEDLM" target="_blank" rel="noopener">Pavel Kurochkin — reading</a> — Eugenia Kritsevskagia, 2018
+        - <a href="https://www.youtube.com/watch?v=3xUIztEwrqQ" target="_blank" rel="noopener">«My Chersonesos» poetry series, episode 8</a> — Chersonesos Taurica, Sevastopol, 2021
+        
+        **In music**
+        
+        - <a href="https://www.youtube.com/watch?v=4nHqjy65n6I" target="_blank" rel="noopener">Deep Pressed ft. 'Ελλη Λαμπέτη - Ιθάκη (Κ.Π.Καβάφης)</a> — Deep Pressed, 2018
         """,
     ))
-    mo.vstack([
-        mo.md(_texts[0]),
-        img("slide-3.jpg"),
-        mo.md(_texts[1]),
-        img("slide-4.jpg"),
-        mo.md(_texts[2]),
-        img("slide-5.jpg"),
-        img("slide-6.jpg"),
-    ])
+    mo.vstack([mo.md(_t) for _t in _texts])
     return
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, t_ui):
+def _(PRESENCE_SHOWN, language_selector, mo, t_ui):
     # Test 1 heading -- presence exercise leads (poem-specific, right after the poem)
+    mo.stop(not PRESENCE_SHOWN)
     _lang = language_selector.value
     mo.md(f"## {t_ui('test_label', _lang)} 1: {t_ui('presence_test_topic', _lang)}")
     return
@@ -283,35 +372,30 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(gu2):
-    tp_renew_btn = gu2.make_renew_button()
+def _(gu2, language_selector):
+    tp_renew_btn = gu2.make_renew_button(lang=language_selector.value)
     return (tp_renew_btn,)
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, t_ui):
-    # Translation-presence question-count selector
-    _lang = language_selector.value
-    if _lang == 'ru':
-        _opts_tp = {"10": 10, "20": 20, "Все": None}
-    elif _lang == 'el':
-        _opts_tp = {"10": 10, "20": 20, "Όλα": None}
-    else:
-        _opts_tp = {"10": 10, "20": 20, "All": None}
-    presence_count_selector = mo.ui.dropdown(options=_opts_tp, value="10", label=t_ui("presence_count_label", _lang))
-    presence_count_selector
-    return (presence_count_selector,)
+def _():
+    # Shared per-lesson default (the same cell as in the Odyssey lessons): how many items the exercise below draws per
+    # session -- here the word-in-translation test: half "yes", half "no" where the answer key has enough "no" rows.
+    # Change this one value to change the session, or override the exercise by editing its own n=SESSION_SIZE argument.
+    SESSION_SIZE = 10
+    return (SESSION_SIZE,)
 
 
 @app.cell(hide_code=True)
 def _(
     POEM_WORDS_RAW,
     RAW_BASE,
+    SESSION_SIZE,
     STANZAS,
     eee,
     gu2,
+    language_selector,
     notebook_dir,
-    presence_count_selector,
     tp_renew_btn,
     tp_set_cv,
     tp_set_future,
@@ -320,7 +404,8 @@ def _(
     tp_set_restore_entry,
     tp_set_score,
 ):
-    LITERARY_TRANSLATORS = ["Шмаков/Бродский", "Ильинская"]
+    # English: Valassopoulo is the only published English translation reproduced (the literal rendering is the crib, like подстрочник)
+    LITERARY_TRANSLATORS = ["Valassopoulo"] if language_selector.value == "en" else ["Шмаков/Бродский", "Ильинская", "Левитов"]
     _tp_vocab = [w for w in POEM_WORDS_RAW if w.get("pos") in eee.TRANSLATION_PRESENCE_CONTENT_POS]
     _tp_path = gu2.ensure_file("translation_presence.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
     # An empty TP_ITEMS list on its own is indistinguishable downstream from
@@ -333,8 +418,8 @@ def _(
     if _tp_path:
         gu2.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
         TP_ITEMS = gu2.balance_presence_items(gu2.build_translation_presence_items(
-            gu2.read_translation_presence_tsv(_tp_path), POEM_WORDS_RAW, STANZAS
-        ), n=presence_count_selector.value)
+            gu2.read_translation_presence_tsv(_tp_path), POEM_WORDS_RAW, STANZAS, valid_translators=LITERARY_TRANSLATORS
+        ), n=SESSION_SIZE)
     else:
         TP_ITEMS = []
     gu2.reset_quiz_state(tp_renew_btn, tp_set_cv, tp_set_remaining, tp_set_score,
@@ -366,6 +451,7 @@ def _(
 
 @app.cell(hide_code=True)
 def _(
+    PRESENCE_SHOWN,
     TP_ITEMS,
     TP_UNAVAILABLE,
     gu2,
@@ -390,6 +476,7 @@ def _(
     tp_set_score,
     tp_source_switch,
 ):
+    mo.stop(not PRESENCE_SHOWN)
     if TP_UNAVAILABLE:
         _output = mo.md(t_ui("translation_presence_not_found", language_selector.value))
     else:
@@ -407,17 +494,17 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, t_ui):
+def _(TEST_NUM, language_selector, mo, t_ui):
     # Test 2 heading
     _lang = language_selector.value
-    mo.md(f"## {t_ui('test_label', _lang)} 2: {t_ui('noun_test_topic', _lang)}")
+    mo.md(f"## {t_ui('test_label', _lang)} {TEST_NUM['noun']}: {t_ui('noun_test_topic', _lang)}")
     return
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, gu2, notebook_dir):
+def _(RAW_BASE, gu2, notebook_dir, vocab_name):
     # Load noun data
-    df_noun = gu2.load_vocab_table("nouns.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+    df_noun = gu2.load_vocab_table(vocab_name("nouns"), nb_dir=notebook_dir, remote_base=RAW_BASE)
     return (df_noun,)
 
 
@@ -642,17 +729,17 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, t_ui):
+def _(TEST_NUM, language_selector, mo, t_ui):
     # Test 3 heading
     _lang = language_selector.value
-    mo.md(f"## {t_ui('test_label', _lang)} 3: {t_ui('verb_test_topic', _lang)}")
+    mo.md(f"## {t_ui('test_label', _lang)} {TEST_NUM['verb']}: {t_ui('verb_test_topic', _lang)}")
     return
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, gu2, notebook_dir):
+def _(RAW_BASE, gu2, notebook_dir, vocab_name):
     # Load verb data
-    df_verb = gu2.load_vocab_table("verbs.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+    df_verb = gu2.load_vocab_table(vocab_name("verbs"), nb_dir=notebook_dir, remote_base=RAW_BASE)
     return (df_verb,)
 
 
@@ -851,17 +938,17 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(language_selector, mo, t_ui):
+def _(TEST_NUM, language_selector, mo, t_ui):
     # Test 4 heading
     _lang = language_selector.value
-    mo.md(f"## {t_ui('test_label', _lang)} 4: {t_ui('adj_test_topic', _lang)}")
+    mo.md(f"## {t_ui('test_label', _lang)} {TEST_NUM['adj']}: {t_ui('adj_test_topic', _lang)}")
     return
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, gu2, notebook_dir):
+def _(RAW_BASE, gu2, notebook_dir, vocab_name):
     # Load adjective data
-    df_adj = gu2.load_vocab_table("adjectives.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+    df_adj = gu2.load_vocab_table(vocab_name("adjectives"), nb_dir=notebook_dir, remote_base=RAW_BASE)
     return (df_adj,)
 
 
@@ -1069,7 +1156,7 @@ def _(lang_bridge, mo):
     # Fixed-position language selector overlay
     from eee_project import language_selector as _language_selector
     language_selector = _language_selector(
-        mo, lang_bridge, options={"Русский": "ru", "Ελληνικά": "el"}, default="el"
+        mo, lang_bridge, options={"English": "en", "Русский": "ru", "Ελληνικά": "el"}, default="el"
     )
     mo.Html(f"""
     <div style="position: fixed; top: 60px; right: 10px; z-index: 1000; background: white; padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
@@ -1088,13 +1175,15 @@ def _(lang_bridge, language_selector):
 
 @app.cell(hide_code=True)
 def _(language_selector, mo, t_ui):
+    _en = language_selector.value == "en"
     trans_selector = mo.ui.dropdown(
-        options={
+        options={"literal": "literal", "Valassopoulo (1924)": "Valassopoulo"} if _en else {
             "подстрочник": "подстрочник",
             "Шмаков / Бродский · рус.": "Шмаков/Бродский",
             "Ильинская (1984) · рус.": "Ильинская",
+            "Левитов · рус.": "Левитов",
         },
-        value="подстрочник",
+        value="literal" if _en else "подстрочник",
         label=t_ui("translation_label", language_selector.value).rstrip(":"),
     )
     return (trans_selector,)
@@ -1107,13 +1196,31 @@ def _(gu2):
 
 
 @app.cell(hide_code=True)
-def _(eee, mo, notebook_dir):
-    from pathlib import Path as _Path
-    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/kavafis_ithaki/3-4"
-    def img(name, width=700):
-        return eee.magnify_image(mo, _Path(notebook_dir) / name, raw_base=RAW_BASE, width=width, prefer_local=True)
+def _(language_selector):
+    # One vocabulary file per UI language: English has *_en.tsv, ru/el share the Russian files.
+    def vocab_name(stem):
+        return f"{stem}_en.tsv" if language_selector.value == "en" else f"{stem}.tsv"
+    return (vocab_name,)
 
-    return RAW_BASE, img
+
+@app.cell(hide_code=True)
+def _(RAW_BASE, gu2, language_selector, notebook_dir):
+    # Russian/Greek: the word-in-translation exercise is always shown. English: only when the answer key has a reviewed "no" row for Valassopoulo --
+    # a faithful translation reflects almost every word, and an exercise whose answer is always "yes" is not worth showing.
+    PRESENCE_SHOWN = True
+    if language_selector.value == "en":
+        _tp_path = gu2.ensure_file("translation_presence.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+        PRESENCE_SHOWN = bool(_tp_path) and any(
+            _r["translator"] == "Valassopoulo" and _r["reflected"] == "no" for _r in gu2.read_translation_presence_tsv(_tp_path)
+        )
+    TEST_NUM = {"noun": 2, "verb": 3, "adj": 4} if PRESENCE_SHOWN else {"noun": 1, "verb": 2, "adj": 3}
+    return PRESENCE_SHOWN, TEST_NUM
+
+
+@app.cell(hide_code=True)
+def _():
+    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/kavafis_ithaki/4"
+    return (RAW_BASE,)
 
 
 @app.cell(hide_code=True)
@@ -1123,20 +1230,22 @@ def _(RAW_BASE, eee, gu2, notebook_dir):
     # only option before this course is committed/pushed) leaves siblings
     # like greek.md/translations.md behind, so route them through
     # ensure_file() rather than a bare local read (see created_with_eee's
-    # root CLAUDE.md, "Notebook Content Gotchas"). The two files are
-    # unrelated, so fetch them concurrently rather than paying for two
+    # root CLAUDE.md, "Notebook Content Gotchas"). The three files are
+    # unrelated, so fetch them concurrently rather than paying for three
     # sequential round-trips on a cold cache.
     from concurrent.futures import ThreadPoolExecutor as _Pool
-    with _Pool(max_workers=2) as _pool:
-        _greek_path, _trans_path = _pool.map(
+    with _Pool(max_workers=3) as _pool:
+        _greek_path, _trans_path, _trans_en_path = _pool.map(
             lambda _fn: gu2.ensure_file(_fn, nb_dir=notebook_dir, remote_base=RAW_BASE),
-            ("greek.md", "translations.md"),
+            ("greek.md", "translations.md", "translations_en.md"),
         )
-    if not _greek_path or not _trans_path:
-        raise FileNotFoundError("greek.md/translations.md: could not be found locally or fetched from remote_base")
+    if not _greek_path or not _trans_path or not _trans_en_path:
+        raise FileNotFoundError("greek.md/translations.md/translations_en.md: could not be found locally or fetched from remote_base")
     _greek = eee.parse_stanza_text(_greek_path.read_text(encoding="utf-8"))
-    _trans, _desc = eee.parse_stanza_translations(_trans_path.read_text(encoding="utf-8"))
-    TRANS_DESC = _desc
+    _trans, TRANS_DESC = eee.parse_stanza_translations(_trans_path.read_text(encoding="utf-8"))
+    _trans_en, _desc_en = eee.parse_stanza_translations(_trans_en_path.read_text(encoding="utf-8"))
+    _trans.update(_trans_en)
+    TRANS_DESC.update(_desc_en)
     STANZAS = [
         {
             "ref": ref,
@@ -1149,8 +1258,8 @@ def _(RAW_BASE, eee, gu2, notebook_dir):
 
 
 @app.cell(hide_code=True)
-def _(RAW_BASE, gu2, notebook_dir):
-    POEM_WORDS_RAW = gu2.load_inflected_vocab_tsv("poem_vocab.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
+def _(RAW_BASE, gu2, notebook_dir, vocab_name):
+    POEM_WORDS_RAW = gu2.load_inflected_vocab_tsv(vocab_name("poem_vocab"), nb_dir=notebook_dir, remote_base=RAW_BASE)
     return (POEM_WORDS_RAW,)
 
 
@@ -1163,14 +1272,18 @@ def _(language_selector, mo):
         __file__,
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv",
     )
-    _prev_url, _next_url = _cfg.adjacent_urls("3-4/")
+    _prev_url, _next_url = _cfg.adjacent_urls("4/")
     eee_footer(mo, lang=language_selector.value, prev_url=_prev_url, next_url=_next_url, same_window=True)
     return
 
 
 @app.cell(hide_code=True)
 def _():
-    import os, random, pandas as pd, marimo as mo
+    import os
+    import random
+
+    import marimo as mo
+    import pandas as pd
     import eee_project as eee
     from eee_project import GreekUtils, MODERN_GREEK
     from modern_greek_backend_eee import ModernGreekBackend

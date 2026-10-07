@@ -65,7 +65,7 @@ def _(lang_sel, mo):
 @app.cell(hide_code=True)
 def _(mo):
     lang_sel = mo.ui.dropdown(
-        options={"Ελληνικά": "el", "Русский": "ru", "English": "en"},
+        options={"English": "en", "Русский": "ru", "Ελληνικά": "el"},
         value="Ελληνικά",
         label="🌐",
     )
