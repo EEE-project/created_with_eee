@@ -13,7 +13,7 @@ PAGES_DIR ?= $(CURDIR)/../created_with_eee-pages-worktree
 
 EEE_PYTHON ?= $(HOME)/.venv/eee/bin/python3
 
-.PHONY: help sync-main fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-vocab check-kavafis-english
+.PHONY: help sync-main fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-hub-links check-vocab check-kavafis-english
 
 help:
 	@echo "Targets:"
@@ -31,8 +31,10 @@ help:
 	@echo "                      'git reset --hard codeberg/pages' on"
 	@echo "                      GITLAB_UNIFIED_PAGES_DIR: removes the split-off"
 	@echo "                      odyssey/palaestra/kapodistrias/kavafis_ithaki/zorba"
-	@echo "                      content and restores .gitlab-ci.yml, neither of which"
-	@echo "                      exists on Codeberg's pages branch to reset 'back' to."
+	@echo "                      content, points the hub cards of those courses at their"
+	@echo "                      own GitLab projects (the generated links 404 here) and"
+	@echo "                      restores .gitlab-ci.yml; none of these exists on"
+	@echo "                      Codeberg's pages branch to reset 'back' to."
 	@echo "                      MANDATORY after every such reset -- has silently"
 	@echo "                      regressed live Pages twice without it. Idempotent,"
 	@echo "                      only edits files locally -- review, then commit + push"
@@ -88,6 +90,11 @@ help:
 	@echo "                      fetch everywhere. Read-only, no Trezor step. Optional"
 	@echo "                      SITE= filters to sites whose name matches, e.g."
 	@echo "                      make verify-pages-deploy SITE=odyssey"
+	@echo "  check-hub-links     Crawl the hub pages of every host (Codeberg, GitHub,"
+	@echo "                      GitLab) and list each dead card, back link or asset (see"
+	@echo "                      tools/check-hub-links.py). Read-only, no Trezor step."
+	@echo "                      Optional URL= crawls from one start URL instead, e.g."
+	@echo "                      make check-hub-links URL=https://eee-project.gitlab.io/created_with_eee/"
 	@echo "  check-vocab         Find vocab TSVs where 2 different Greek words share"
 	@echo "                      the same Translation value (unanswerable in a quiz)."
 	@echo "                      Read-only. Optional SCOPE= limits to one course, e.g."
@@ -177,6 +184,9 @@ sync-hub-pages:
 
 verify-pages-deploy:
 	SPLIT_PROJECTS="$(SPLIT_PROJECTS)" python3 tools/verify-pages-deploy.py $(SITE)
+
+check-hub-links:
+	python3 tools/check-hub-links.py $(URL)
 
 check-vocab:
 	python3 tools/check-vocab-collisions.py $(SCOPE)

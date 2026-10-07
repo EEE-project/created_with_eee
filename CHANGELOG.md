@@ -6,6 +6,10 @@
   tables and drills show English glosses, and the "word in translation" exercise follows the English rules (compared with
   Valassopoulo's version, shown only in the lessons where her translation leaves a word out). The headings, text and
   comments stay Greek; Russian mode is unchanged.
+- **GitLab mirror: the course cards on the Ancient Greek and B1 hubs are plain links to the courses.** The three B1 cards
+  (Kapodistrias, Kavafis, Zorba) led to "page not found" because those courses live in their own GitLab projects, and the
+  Odyssey and Palaestra cards only worked with JavaScript on; all five now open the courses directly. `make check-hub-links`
+  crawls the hubs of every host and lists any dead link.
 
 ## 2026-10-06
 - **Kavafis «Ithaki» lessons 1, 2 and 3 can be read in English.** The language

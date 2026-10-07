@@ -67,11 +67,17 @@ sync-hub-pages`, see `tools/sync-hub-pages.py`), re-applying the
 split-course session-page fix (`make fix-split-roots`), re-applying the
 static-hub footer-host fix (`make fix-static-footer`), re-applying the
 split-project hub card-link fix (`make fix-split-hub-links`, see
-`tools/fix-split-hub-card-links.py`), and checking whether Pages
-deployments are actually live rather than just pushed (`make
-verify-pages-deploy`, see `tools/verify-pages-deploy.py`). All but the last
+`tools/fix-split-hub-card-links.py`), re-applying GitLab's unified-project
+scope after a reset of its `pages` branch (`make fix-gitlab-unified-scope`,
+see `tools/fix-gitlab-unified-pages-scope.py`: removes the split-off courses,
+points their hub cards at their own GitLab projects, restores the CI file),
+checking whether Pages deployments are actually live rather than just pushed
+(`make verify-pages-deploy`, see `tools/verify-pages-deploy.py`), and
+checking that no hub card, back link or asset is dead on any host (`make
+check-hub-links`, see `tools/check-hub-links.py`). All but the last two
 only stage local changes or run already-established scripts;
-`verify-pages-deploy` is read-only and makes no local changes at all.
+`verify-pages-deploy` and `check-hub-links` are read-only and make no local
+changes at all.
 Committing and pushing stays a manual, Trezor-confirmed step per host — no
 target signs or pushes on its own. All maintainer scripts live under
 `tools/`.
@@ -182,12 +188,16 @@ than a notebook's, since there's no Pyodide boot to wait for:
    split project's checkout — review, commit + push each by hand
    (Trezor-confirmed, one host at a time). Destination layout follows the
    same split-course rules as `sync-pages-export` (see
-   `tools/sync-hub-pages.py`).
+   `tools/sync-hub-pages.py`). On GitLab-unified, run `make
+   fix-gitlab-unified-scope` first: the copied hubs link the split courses
+   (Odyssey, Palaestra, B1's three courses) by paths that don't exist there,
+   and it points those cards at the courses' own GitLab projects.
 4. Wait for GitLab Pages' CI pipeline on every GitLab target touched (step
    8 above).
 5. Verify live — `make verify-pages-deploy` confirms each host's deployed
-   commit matches what was pushed; a quick `curl`/browser check confirms
-   the actual rendered content.
+   commit matches what was pushed; `make check-hub-links` crawls every
+   host's hubs and fails on any dead card, back link or asset; a quick
+   `curl`/browser check confirms the actual rendered content.
 
 ## EEE (Ελληνικά Εκπαιδευτικά Εργαλεία — Greek Language Educational Tools)
 
