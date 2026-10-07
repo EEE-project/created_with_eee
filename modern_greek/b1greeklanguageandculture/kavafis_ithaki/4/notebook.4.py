@@ -17,7 +17,7 @@ app = marimo.App(width="medium", app_title="Καβάφης — Ιθάκη — Μ
 @app.cell(hide_code=True)
 def _(language_selector, mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv",
@@ -1220,7 +1220,7 @@ def _(RAW_BASE, gu2, language_selector, notebook_dir):
 
 @app.cell(hide_code=True)
 def _():
-    RAW_BASE = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/modern_greek/b1greeklanguageandculture/kavafis_ithaki/4"
+    RAW_BASE = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main/modern_greek/b1greeklanguageandculture/kavafis_ithaki/4"
     return (RAW_BASE,)
 
 
@@ -1268,7 +1268,7 @@ def _(RAW_BASE, gu2, notebook_dir, vocab_name):
 def _(language_selector, mo):
     from eee_project import ConfigStore as _ConfigStore
     from eee_project.notebook_utils import eee_footer
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     _cfg = _ConfigStore.from_file_or_url(
         __file__,
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv",

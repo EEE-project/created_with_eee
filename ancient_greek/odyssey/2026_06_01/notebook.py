@@ -21,7 +21,7 @@ app = marimo.App(
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
     eee_topbar(mo, back_url=cfg.index_url(), lang=lang_sel.value, titles={
         "ru": "Одиссея с Гомером",
@@ -61,7 +61,7 @@ def _(eee, lang_sel, mo):
     ])
     _img = eee.magnify_image(
         mo, _Ph(__file__).parent / "Odysseus_Sirens_BM_E440_n2.jpg",
-        raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_01",
+        raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_01",
         width=340,
     )
     mo.hstack([_left, _img], align="start")
@@ -70,7 +70,7 @@ def _(eee, lang_sel, mo):
 
 @app.cell(hide_code=True)
 def _(gu, lang_sel, mo):
-    _base = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_01"
+    _base = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_01"
     mo.md(
         f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
         f"[Одиссея. Зачин.pdf]({_base}/Одиссея.%20Зачин.pdf) · "
