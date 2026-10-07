@@ -142,7 +142,7 @@ chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
   a click, without checking with the user. The comments condense greek-knowledge-eee's `culture/cavafy.md`, section "A mixed poetic language" (English); the Russian and Greek notes
   are drafts for cross-checking. The heading and hint are the `mixed_language_heading` and `mixed_language_hint` rows of eee-project's `ui-{lang}.tsv` (the repo's translation rule), passed by each lesson as
   `heading=gu2.ui_label(...)`, `hint=gu2.ui_label(...)` (the function's own defaults are the generic `language_notes_heading`/`language_notes_hint` rows, for a lesson on another poem);
-  not literals in the notebooks. `POEM_WORDS_RAW` (from `poem_vocab.tsv`, or `poem_vocab_en.tsv` in English) is still only the
+  not literals in the notebooks. `POEM_WORDS_RAW` (from `poem_vocab.tsv`, or `poem_vocab_en.tsv` in English and Greek modes) is still only the
   translation-presence exercise's word pool.
 - **Parallel translations**: a `trans_selector` dropdown (подстрочник + literary
   translations) reading `greek.md` + `translations.md` via the same shared
@@ -158,10 +158,10 @@ chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
   Ильинская → Левитов, подстрочник always first since it's this notebook's own
   addition, not from `notes.md`) — don't alphabetize or reorder for any other reason.
   **English (added 2026-10-06, spec `plans/superpowers/specs/2026-09-30-kavafis-english-design.md`):**
-  English mode lists `literal` (a course-authored literal rendering) and
+  English mode (and, since 2026-10-07, Greek mode) lists `literal` (a course-authored literal rendering) and
   `Valassopoulo` (1924, public domain in the US), read from each lesson's `translations_en.md` and
   merged into the same `STANZAS` as the Russian translators; the dropdown is filtered by
-  UI language. **Keeley/Sherrard (1975/1992, Princeton UP) was tried and removed
+  translation language (English for `en` and `el`, Russian for `ru`; Greek mode keeps its Greek UI text, prose and comments). **Keeley/Sherrard (1975/1992, Princeton UP) was tried and removed
   2026-07-31 and stays excluded** — it is in copyright; a description-only
   `## Keeley/Sherrard` section only points to where to read it — since 2026-10-06 the Poetry Foundation page, which reprints it "with permission of
   Princeton University Press" (the user's call, made when asked whether to reproduce it; before that the pointer went to OrnaVerum, whose copy carries
@@ -187,7 +187,7 @@ chapter 1's newer architecture instead (user-confirmed decision, 2026-07-25):
   `eee_project`'s `_PRESENCE_SWITCH_LBL`, a pure wording fix with no signature change,
   safe for Odyssey's existing 7 lessons too (the passage's own attribution, shown via the
   already-generic `_PRESENCE_SOURCE_LBL`, was correct already).
-  **English (2026-10-06):** the same exercise with `Valassopoulo` as the only translator (the notebook's `LITERARY_TRANSLATORS` is per language;
+  **English (2026-10-06; Greek mode too since 2026-10-07):** the same exercise with `Valassopoulo` as the only translator (the notebook's `LITERARY_TRANSLATORS` is per language;
   `literal` is the crib, like подстрочник), words from `poem_vocab_en.tsv`, answer-key rows in the same `translation_presence.tsv`. A faithful
   translation reflects almost every word, so a lesson shows the English exercise only where the key has a reviewed `no` row for Valassopoulo
   (`PRESENCE_SHOWN`): lessons 2 (3 rows) and 4 (5 rows), not 1 and 3. `balance_presence_items` keeps the session at equal `no`/`yes`: 3+3 in lesson 2, 5+5 in lesson 4.

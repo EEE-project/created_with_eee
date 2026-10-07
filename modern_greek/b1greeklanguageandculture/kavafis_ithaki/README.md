@@ -14,10 +14,10 @@ and discussion material, and vocabulary drills. Part of the B1: Ελληνική
 4 lessons, numbered (not dated). Lessons 1-3 follow the numbering of the source lectures; lesson 4 (στ. 24–36, the poem's last three
 stanzas) has no source lecture and is built from the poem's text, its translations and the greek-knowledge-eee analysis of the poem's language.
 Russian mode lists the подстрочник and the translations of Шмаков/Бродский, Ильинская and Левитов.
-English mode lists two English translators (a course-authored literal rendering and
-G. Valassopoulo, 1924) and has its own vocabulary glosses; its "word in translation"
-exercise compares the passage with Valassopoulo's version and appears only in the lessons
-where her translation leaves a word out (2 and 4).
+English and Greek modes list two English translators (a course-authored literal rendering and
+G. Valassopoulo, 1924) and use the English vocabulary glosses (Greek mode keeps its Greek
+headings, text and comments); the "word in translation" exercise compares the passage with
+Valassopoulo's version and appears only in the lessons where her translation leaves a word out (2 and 4).
 
 Under the Greek text and its translation, every comment on the places where Cavafy mixes learned (katharevousa)
 and everyday (demotic) forms is listed, "A mixed poetic language" (`language_notes.tsv`, in Russian, Greek and

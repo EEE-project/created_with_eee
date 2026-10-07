@@ -132,7 +132,7 @@ def _(TRANS_DESC, language_selector, mo, trans_selector):
     _PODSTROCHNIK_DESC = "**подстрочник** · буквальный перевод слово-в-слово с сохранением порядка оригинала"
     _desc_map = {"подстрочник": _PODSTROCHNIK_DESC, **TRANS_DESC}
     # English: add the pointer to the in-copyright Keeley/Sherrard version (a description-only section).
-    _note = TRANS_DESC.get("Keeley/Sherrard", "") if language_selector.value == "en" else ""
+    _note = TRANS_DESC.get("Keeley/Sherrard", "") if language_selector.value in ("en", "el") else ""
     mo.md("\n\n".join(_d for _d in (_desc_map.get(trans_selector.value, ""), _note) if _d))
     return
 
@@ -405,7 +405,7 @@ def _(
     tp_set_score,
 ):
     # English: Valassopoulo is the only published English translation reproduced (the literal rendering is the crib, like подстрочник)
-    LITERARY_TRANSLATORS = ["Valassopoulo"] if language_selector.value == "en" else ["Шмаков/Бродский", "Ильинская", "Левитов"]
+    LITERARY_TRANSLATORS = ["Valassopoulo"] if language_selector.value in ("en", "el") else ["Шмаков/Бродский", "Ильинская", "Левитов"]
     _tp_vocab = [w for w in POEM_WORDS_RAW if w.get("pos") in eee.TRANSLATION_PRESENCE_CONTENT_POS]
     _tp_path = gu2.ensure_file("translation_presence.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
     # An empty TP_ITEMS list on its own is indistinguishable downstream from
@@ -1175,7 +1175,8 @@ def _(lang_bridge, language_selector):
 
 @app.cell(hide_code=True)
 def _(language_selector, mo, t_ui):
-    _en = language_selector.value == "en"
+    # Greek mode lists the English translations too; the Russian ones are Russian mode only.
+    _en = language_selector.value in ("en", "el")
     trans_selector = mo.ui.dropdown(
         options={"literal": "literal", "Valassopoulo (1924)": "Valassopoulo"} if _en else {
             "подстрочник": "подстрочник",
@@ -1197,18 +1198,18 @@ def _(gu2):
 
 @app.cell(hide_code=True)
 def _(language_selector):
-    # One vocabulary file per UI language: English has *_en.tsv, ru/el share the Russian files.
+    # One vocabulary file per translation language: English and Greek modes use *_en.tsv, Russian mode the Russian files.
     def vocab_name(stem):
-        return f"{stem}_en.tsv" if language_selector.value == "en" else f"{stem}.tsv"
+        return f"{stem}_en.tsv" if language_selector.value in ("en", "el") else f"{stem}.tsv"
     return (vocab_name,)
 
 
 @app.cell(hide_code=True)
 def _(RAW_BASE, gu2, language_selector, notebook_dir):
-    # Russian/Greek: the word-in-translation exercise is always shown. English: only when the answer key has a reviewed "no" row for Valassopoulo --
+    # Russian: the word-in-translation exercise is always shown. English and Greek: only when the answer key has a reviewed "no" row for Valassopoulo --
     # a faithful translation reflects almost every word, and an exercise whose answer is always "yes" is not worth showing.
     PRESENCE_SHOWN = True
-    if language_selector.value == "en":
+    if language_selector.value in ("en", "el"):
         _tp_path = gu2.ensure_file("translation_presence.tsv", nb_dir=notebook_dir, remote_base=RAW_BASE)
         PRESENCE_SHOWN = bool(_tp_path) and any(
             _r["translator"] == "Valassopoulo" and _r["reflected"] == "no" for _r in gu2.read_translation_presence_tsv(_tp_path)

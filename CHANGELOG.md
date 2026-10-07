@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-07
+- **Kavafis «Ithaki» lessons 1-4: in Greek mode the translations are English.** The translation dropdown lists the
+  course-authored literal rendering and G. Valassopoulo's 1924 translation instead of the Russian ones, the vocabulary
+  tables and drills show English glosses, and the "word in translation" exercise follows the English rules (compared with
+  Valassopoulo's version, shown only in the lessons where her translation leaves a word out). The headings, text and
+  comments stay Greek; Russian mode is unchanged.
+
 ## 2026-10-06
 - **Kavafis «Ithaki» lessons 1, 2 and 3 can be read in English.** The language
   switcher gains "English" (listed first, as in the other courses): the translation dropdown then lists a course-authored
