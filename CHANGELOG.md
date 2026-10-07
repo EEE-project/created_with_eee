@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-08
+- **Odyssey lesson `2026_07_06` (Day 4, IX.82–104): the note on the Russian word «хурма» appears only in Russian mode.**
+  The paragraph on the Persian origin of the word (*khormâlu*, "date-plum") was also shown under «Λωτός — a word-trap»
+  in the English and Greek versions of the page; it is now removed there, and the Russian page is unchanged.
+
 ## 2026-10-07
 - **Kavafis «Ithaki» lessons 1-4: in Greek mode the translations are English.** The translation dropdown lists the
   course-authored literal rendering and G. Valassopoulo's 1924 translation instead of the Russian ones, the vocabulary

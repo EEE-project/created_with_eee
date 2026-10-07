@@ -208,8 +208,6 @@ def _(lang_sel, mo):
     In Modern Greek, the same word *[λωτός](https://el.wiktionary.org/wiki/%CE%BB%CF%89%CF%84%CF%8C%CF%82)* is used for both the **water lotus** and **persimmon** (from *Diospyros lotus* — the wild "date-plum" persimmon) — the two are told apart from context.
 
     The date, meanwhile, is *[χουρμάς](https://el.wiktionary.org/wiki/%CF%87%CE%BF%CF%85%CF%81%CE%BC%CE%AC%CF%82)*, and the date palm is *[φοίνικας](https://el.wiktionary.org/wiki/%CF%86%CE%BF%CE%AF%CE%BD%CE%B9%CE%BA%CE%B1%CF%82)*.
-
-    The Russian word for persimmon, *khurma*, entered Russian from Persian, where the original word is خرمالو khormâlu — literally "date-plum." The word خرما khormâ itself means "date," and آلو âlu means "plum." The name khormâlu originally referred to the Caucasian persimmon; dried Caucasian persimmon tastes very much like dates, which is where the Persian name comes from. The name later spread to other kinds of persimmon, including the Oriental (Japanese) persimmon. [Wikipedia](https://ru.wikipedia.org/wiki/%D0%A5%D1%83%D1%80%D0%BC%D0%B0#%D0%9D%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5)
     """,
         "el": r"""
     ## Λωτός — παγίδα λέξης
@@ -217,8 +215,6 @@ def _(lang_sel, mo):
     Στα νέα ελληνικά, η ίδια λέξη *[λωτός](https://el.wiktionary.org/wiki/%CE%BB%CF%89%CF%84%CF%8C%CF%82)* χρησιμοποιείται και για τον **υδρόβιο λωτό**, και για το **κάκι** (από το *Diospyros lotus* — το άγριο κάκι) — ξεχωρίζουν από τα συμφραζόμενα.
 
     Ο χουρμάς πάλι είναι *[χουρμάς](https://el.wiktionary.org/wiki/%CF%87%CE%BF%CF%85%CF%81%CE%BC%CE%AC%CF%82)*, και ο φοίνικας (το δέντρο) είναι *[φοίνικας](https://el.wiktionary.org/wiki/%CF%86%CE%BF%CE%AF%CE%BD%CE%B9%CE%BA%CE%B1%CF%82)*.
-
-    Η ρωσική λέξη για το κάκι, *khurma*, μπήκε στα ρωσικά από τα περσικά, όπου η αρχική λέξη είναι خرمالو khormâlu — κυριολεκτικά «δαμάσκηνο-χουρμάς». Η ίδια η λέξη خرما khormâ σημαίνει «χουρμάς», και η λέξη آلو âlu σημαίνει «δαμάσκηνο». Το όνομα khormâlu αναφερόταν αρχικά στο καυκάσιο κάκι· το αποξηραμένο καυκάσιο κάκι θυμίζει πολύ στη γεύση χουρμάδες, από εκεί προήλθε το περσικό όνομα. Αργότερα το όνομα επεκτάθηκε και σε άλλα είδη κακιού, μεταξύ αυτών και στο ανατολικό (ιαπωνικό) κάκι. [Wikipedia](https://ru.wikipedia.org/wiki/%D0%A5%D1%83%D1%80%D0%BC%D0%B0#%D0%9D%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5)
     """,
     }
     mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
