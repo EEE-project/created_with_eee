@@ -6,3 +6,7 @@ __marimo__/
 .venv/
 venv/
 .codegraph/
+# knowledge-base translation files the Odyssey notebooks download next to themselves (ensure_files)
+ancient_greek/odyssey/*/translations_ru.md
+ancient_greek/odyssey/*/translations_en.md
+ancient_greek/odyssey/*/translations_el.md
