@@ -13,13 +13,17 @@ PAGES_DIR ?= $(CURDIR)/../created_with_eee-pages-worktree
 
 EEE_PYTHON ?= $(HOME)/.venv/eee/bin/python3
 
-.PHONY: help sync-main fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-hub-links check-vocab check-kavafis-english
+.PHONY: help sync-main propagate-pages fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-hub-links check-vocab check-kavafis-english
 
 help:
 	@echo "Targets:"
 	@echo "  sync-main           Sync this repo's main branch to Codeberg, GitHub, and"
-	@echo "                      GitLab (wraps ~/work/greek/git/push). Trezor-confirmed"
-	@echo "                      per host as you run it."
+	@echo "                      GitLab (tools/push.sh). Trezor-confirmed per host as"
+	@echo "                      you run it. ARGS=github (or codeberg, gitlab): one host."
+	@echo "  propagate-pages     Propagate Codeberg's complete pages branch to GitHub's"
+	@echo "                      unified Pages repo, GitLab's unified repo, and all 3"
+	@echo "                      GitLab split Pages repos (default: all). Use"
+	@echo "                      ARGS=github, ARGS=gitlab, or ARGS=--push to push all."
 	@echo "  fix-split-roots     Re-apply the session-page _ROOT fix (see"
 	@echo "                      tools/fix-split-session-root.py) to local checkouts of the 3"
 	@echo "                      split GitLab projects. Only edits files locally --"
@@ -110,7 +114,10 @@ help:
 	@echo "section): splitting a new course off into its own GitLab project."
 
 sync-main:
-	$(HOME)/work/greek/git/push
+	tools/push.sh $(ARGS)
+
+propagate-pages:
+	tools/propagate-pages.sh $(ARGS)
 
 fix-split-roots:
 	python3 tools/fix-split-session-root.py $(foreach p,$(SPLIT_PROJECTS),$(SPLIT_PROJECTS_DIR)/$(p))

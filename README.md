@@ -56,8 +56,43 @@ directory has its own README (description + live links) and `AGENTS.md`
 
 ## Maintainer tooling
 
+### Quick start: from a notebook change to every host
+
+1. **Ship the source change to `main`** (branch → PR → merge), as usual.
+2. **Export** the changed notebook(s) into the Codeberg `pages` worktree
+   (`../created_with_eee-pages-worktree`) — one `notebook.py` per course
+   directory, never its `_el`/`_en`/`_ru` variants:
+   ```bash
+   make export-notebooks NOTEBOOKS="ancient_greek/odyssey/2026_07_06/notebook.py"
+   ```
+3. **Commit and push Codeberg's `pages`** from that worktree (Trezor-confirmed),
+   then open the live Codeberg page and check it (hard-reload with Ctrl+Shift+R).
+4. **Propagate to GitHub and GitLab**, including the three GitLab split
+   projects. It copies the Codeberg worktree's *local* `pages`, so finish
+   step 3 first:
+   ```bash
+   make propagate-pages ARGS="--verbose"          # fetch Codeberg, prepare + commit locally, push nothing
+   make propagate-pages ARGS="--verbose --push"   # same preparation, then force-push every destination whose commit the remote lacks
+   ```
+   `github` or `gitlab` in `ARGS` limits the run to one host; after a failed
+   push (a dropped Trezor tap) run the `--push` command again; a GitHub or
+   GitLab repository that already serves the prepared tree is not pushed again.
+   Git runs through the `GIT_CMD_*` wrappers from `.env` or the environment
+   (see below; the default is plain `git`), and every destination worktree
+   must be clean, on `pages`, with its *own* git directory — the script
+   refuses a destination that shares Codeberg's. Before the first tap it also
+   reads each GitLab course project's remote `pages` tip over HTTPS and stops
+   if its checkout does not contain it (those branches refuse force-pushes).
+5. **Verify** — `make verify-pages-deploy SITE=odyssey` (GitLab Pages needs its
+   CI pipeline to finish first); after hub changes also `make check-hub-links`.
+
+A hub change (`tools/gen_hub.py`, an `index.tsv`) follows the same steps with
+`make gen-hub HUBS="<hub keys>"` instead of the export.
+
+### What's automated (reference)
+
 `make help` lists what's automated for syncing content across hosts —
-currently: syncing `main` (`make sync-main`, wraps `~/work/greek/git/push`),
+currently: syncing `main` (`make sync-main`, see `tools/push.sh`),
 re-exporting notebooks to the `pages` branch (`make export-notebooks`, see
 `tools/export-notebooks.py`), copying that export into every other host's
 checkout (`make sync-pages-export`, see `tools/sync-pages-export.py`),
@@ -78,9 +113,55 @@ check-hub-links`, see `tools/check-hub-links.py`). All but the last two
 only stage local changes or run already-established scripts;
 `verify-pages-deploy` and `check-hub-links` are read-only and make no local
 changes at all.
-Committing and pushing stays a manual, Trezor-confirmed step per host — no
-target signs or pushes on its own. All maintainer scripts live under
-`tools/`.
+
+For a complete propagation of an already-correct Codeberg `pages` branch,
+including all GitLab split projects, use:
+
+```bash
+tools/propagate-pages.sh           # prepare and commit every destination locally
+tools/propagate-pages.sh --push    # additionally push each changed destination
+tools/propagate-pages.sh -v --push # show every command while pushing
+```
+
+Through Make, pass script options with `ARGS` (use `--verbose` or `-v`;
+`make -v` means Make's own version option):
+
+```bash
+make propagate-pages ARGS="--verbose --push"
+make propagate-pages ARGS="github --verbose --push" # GitHub only
+make propagate-pages ARGS="gitlab --verbose --push"  # GitLab unified + split repos
+```
+
+With no host argument, `propagate-pages` defaults to `all`. The explicit
+`all` selector is also accepted.
+
+Remote fetches and pushes (in `tools/propagate-pages.sh` and in `tools/push.sh`,
+which `make sync-main` runs) use separate commands for each host:
+`GIT_CMD_CODEBERG`, `GIT_CMD_GITHUB`, and `GIT_CMD_GITLAB` (each defaults to
+`git`). Authentication wrappers remain personal environment settings rather
+than being embedded in the repository script. You can export them in the
+environment or put them in the repository-root `.env` file, which is ignored
+by Git. A `trezor-agent` wrapper should carry `--cache-expiry-seconds 0`,
+otherwise every push after the first in a session silently reuses the first
+device tap. For example:
+
+```bash
+GIT_CMD_CODEBERG="codeberg-git" \
+GIT_CMD_GITHUB="github-git" \
+GIT_CMD_GITLAB="gitlab-git" \
+make propagate-pages ARGS="--verbose --push"
+```
+
+This covers GitHub's unified Pages project, GitLab's unified Pages project,
+and the Odyssey, Palaestra, and b1glc split GitLab Pages projects. It runs
+the export, hub, GitLab scope, split-root/link, and host URL/footer tools.
+Destination worktrees must be clean and checked out on `pages`.
+The script automatically removes the exact canonical untracked `.gitlab-ci.yml`
+left by the GitLab unified-scope repair; any other uncommitted or untracked
+content still stops the run.
+
+The propagation script commits locally; `--push` is the only mode that pushes,
+and each push is Trezor-confirmed. All maintainer scripts live under `tools/`.
 
 **Not yet automated**: splitting a new course off into its own GitLab
 project (see each split course's own README for GitLab's 1GB
@@ -93,7 +174,9 @@ A change to a notebook's own source (new/edited cells) is frozen at
 `marimo export html-wasm` time — unlike a pure `eee-project` library fix,
 which every already-deployed page picks up live from PyPI on next load, a
 source change needs re-exporting and redeploying everywhere the affected
-course is hosted. Full procedure:
+course is hosted. Full procedure (step 7 is automated by `make
+propagate-pages` — see the Quick start above; the manual route stays for
+single-host work):
 
 1. **Ship the source change to `main`** via the normal branch+PR workflow
    (see the repo's own `CLAUDE.md`/global Claude conventions) — commit,

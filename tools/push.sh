@@ -1,0 +1,183 @@
+#!/bin/bash
+set -e
+
+for a in "$@"; do
+    case "$a" in
+        -h|--help)
+            cat <<'EOF'
+Usage: tools/push.sh [HOST...]
+
+Sync this repo's current branch, tags, and other real branches to Codeberg
+and its GitHub/GitLab mirrors. Git runs through GIT_CMD_CODEBERG,
+GIT_CMD_GITHUB and GIT_CMD_GITLAB (exported, or set in the repository-root
+.env; default: git).
+
+Arguments:
+  HOST    One or more of: codeberg, github, gitlab.
+          Only the given hosts are synced.
+          Default (no args): all three.
+
+Examples:
+  tools/push.sh                    # sync all three hosts
+  tools/push.sh github             # GitHub only
+  tools/push.sh codeberg gitlab    # Codeberg and GitLab, skip GitHub
+EOF
+            exit 0
+            ;;
+    esac
+done
+
+# Which hosts to sync -- optional positional args (codeberg/github/gitlab),
+# default to all three when none are given.
+valid_hosts=(codeberg github gitlab)
+hosts=("$@")
+if [ ${#hosts[@]} -eq 0 ]; then
+    hosts=("${valid_hosts[@]}")
+else
+    for h in "${hosts[@]}"; do
+        [[ " ${valid_hosts[*]} " == *" $h "* ]] || { echo "Unknown host: $h (expected: codeberg, github, gitlab)" >&2; exit 1; }
+    done
+fi
+wants() { [[ " ${hosts[*]} " == *" $1 "* ]]; }
+
+# Git command per host: an exported GIT_CMD_* wins, then the repository-root .env, else plain git.
+tool_dir="$(dirname "${BASH_SOURCE[0]}")"
+env_file="$tool_dir/../.env"
+source "$tool_dir/_dotenv.sh"
+for env_name in GIT_CMD_CODEBERG GIT_CMD_GITHUB GIT_CMD_GITLAB; do
+    load_dotenv_value "$env_name"
+done
+git_cdb=${GIT_CMD_CODEBERG:-git}
+git_hub=${GIT_CMD_GITHUB:-git}
+git_lab=${GIT_CMD_GITLAB:-git}
+
+codeberg_root=$(git rev-parse --show-toplevel)
+# basename of the remote URL, not of $codeberg_root -- a worktree's own
+# directory can be named anything (e.g. "eee-project-pages-worktree"),
+# but `git remote get-url origin` resolves correctly from any worktree
+# (they share the parent repo's remote config), so this is robust where
+# basename-of-checkout-dir isn't.
+repo=$(basename "$(git remote get-url origin)" .git)
+default_branch=$(git branch --show-current)
+
+# GitLab repo name, when it differs from Codeberg's/GitHub's (rare -- one
+# known case so far: an underscore-vs-hyphen mismatch). Everywhere else in
+# this script that talks to GitLab uses this instead of $repo.
+gitlab_repo="${repo}"
+case "$repo" in
+    modern_greek_accentuation_eee) gitlab_repo="modern-greek-accentuation-eee" ;;
+esac
+
+if wants codeberg; then
+    # --tags (not --follow-tags): our tags are lightweight, and
+    # --follow-tags only follows annotated tags reachable from what's
+    # pushed. Combined into this one push so a new/moved tag doesn't cost
+    # a second Trezor tap.
+    $git_cdb push --set-upstream origin "$default_branch" --tags || exit 1
+fi
+
+# --- GitHub ---
+if wants github; then
+    if gh repo view "EEE-project/${repo}" > /dev/null 2>&1; then
+        conv_script="codeberg2github.sh"
+        mirror_dir="$HOME/work/greek/git/github/EEE-project/${repo}"
+        if [ ! -f "${codeberg_root}/${conv_script}" ]; then
+            # No repo-specific conversion needed: mirror is a passive copy of Codeberg.
+            # Explicit refspecs (not --mirror) so only real branches/tags sync --
+            # --mirror also copies this checkout's own refs/remotes/* bookkeeping
+            # (tracking refs for origin/github/gitlab/etc.), which is meaningless
+            # clutter on a host that isn't literally that remote. --prune removes
+            # a branch/tag here once it's gone locally, matching --mirror's own
+            # cleanup behavior but scoped to refs/heads and refs/tags only.
+            $git_hub push --prune --force git@github.com:EEE-project/${repo}.git 'refs/heads/*:refs/heads/*' 'refs/tags/*:refs/tags/*'
+        elif [ ! -d "$mirror_dir" ]; then
+            echo "⚠️  ${conv_script} exists but ${mirror_dir} is missing — skipping GitHub sync, set up the checkout first"
+        else
+            (
+                cd "$mirror_dir"
+                if [ -n "$(git status --short)" ]; then
+                    echo "⚠️  ${mirror_dir} has uncommitted changes — skipping GitHub sync, resolve manually first"
+                    exit 0
+                fi
+                git fetch codeberg
+                git checkout main
+                git reset --hard codeberg/main
+                bash "./${conv_script}"
+                if [ -z "$(git status --short)" ]; then
+                    echo "ℹ️  GitHub conversion produced no changes for ${repo} — nothing to push"
+                    exit 0
+                fi
+                git add -A
+                git commit -m "Switch raw asset URLs and EEE deps from Codeberg to GitHub mirror"
+                $git_hub push --force git@github.com:EEE-project/${repo}.git main:main
+            )
+        fi
+    else
+        echo "ℹ️  No GitHub mirror for ${repo} — skipping"
+    fi
+fi
+
+# --- GitLab ---
+if wants gitlab; then
+    if git ls-remote "https://gitlab.com/EEE-project/${gitlab_repo}.git" > /dev/null 2>&1; then
+        conv_script="codeberg2gitlab.sh"
+        mirror_dir="$HOME/work/greek/git/gitlab/EEE-project/${repo}"
+        if [ ! -f "${codeberg_root}/${conv_script}" ]; then
+            # main is a protected branch (no force-push) by default -- only
+            # bites when history was rewritten (a fast-forward update never
+            # trips it), but toggle it off unconditionally since we can't tell
+            # in advance. Always restore after, even if the push reports
+            # failure, so a real error never leaves protection off.
+            #
+            # Explicit refspecs (not --mirror) so only real branches/tags sync --
+            # --mirror also copies this checkout's own refs/remotes/* bookkeeping
+            # (tracking refs for origin/github/gitlab/etc.), which is meaningless
+            # clutter on a host that isn't literally that remote (GitLab used to
+            # reject it outright as "hidden ref", which is what --mirror's own
+            # nonzero exit here used to be from). --prune removes a branch/tag
+            # here once it's gone locally, matching --mirror's own cleanup
+            # behavior but scoped to refs/heads and refs/tags only.
+            protected_branch_api="projects/EEE-project%2F${gitlab_repo}/protected_branches/main"
+            unprotected=false
+            if glab api --method PATCH "$protected_branch_api" -f allow_force_push=true > /dev/null 2>&1; then
+                unprotected=true
+            fi
+            $git_lab push --prune --force git@gitlab.com:EEE-project/${gitlab_repo}.git 'refs/heads/*:refs/heads/*' 'refs/tags/*:refs/tags/*' || true
+            if [ "$unprotected" = true ]; then
+                glab api --method PATCH "$protected_branch_api" -f allow_force_push=false > /dev/null
+            fi
+        elif [ ! -d "$mirror_dir" ]; then
+            echo "⚠️  ${conv_script} exists but ${mirror_dir} is missing — skipping GitLab sync, set up the checkout first"
+        else
+            (
+                cd "$mirror_dir"
+                if [ -n "$(git status --short)" ]; then
+                    echo "⚠️  ${mirror_dir} has uncommitted changes — skipping GitLab sync, resolve manually first"
+                    exit 0
+                fi
+                git fetch codeberg
+                git checkout main
+                git reset --hard codeberg/main
+                bash "./${conv_script}"
+                if [ -z "$(git status --short)" ]; then
+                    echo "ℹ️  GitLab conversion produced no changes for ${repo} — nothing to push"
+                    exit 0
+                fi
+                git add -A
+                git commit -m "Switch raw asset URLs and EEE deps from Codeberg to GitLab mirror"
+                # main is a protected branch (no force-push) by default — toggle it off just for this push.
+                protected_branch_api="projects/EEE-project%2F${gitlab_repo}/protected_branches/main"
+                unprotected=false
+                if glab api --method PATCH "$protected_branch_api" -f allow_force_push=true > /dev/null 2>&1; then
+                    unprotected=true
+                fi
+                $git_lab push --force git@gitlab.com:EEE-project/${gitlab_repo}.git main:main
+                if [ "$unprotected" = true ]; then
+                    glab api --method PATCH "$protected_branch_api" -f allow_force_push=false > /dev/null
+                fi
+            )
+        fi
+    else
+        echo "ℹ️  No GitLab mirror for ${repo} — skipping"
+    fi
+fi

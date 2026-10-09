@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-10-12
+- **New: `make propagate-pages` publishes Codeberg's `pages` branch to GitHub and GitLab in one run.** It copies every
+  notebook export and hub into GitHub's Pages repository, GitLab's unified one and the three GitLab course projects,
+  applies each host's link fixes, and force-pushes the repositories that need it (`ARGS=--push`; without it the commits
+  are only prepared, and `github` or `gitlab` limits the run to one host). Before it signs anything it reads the `pages`
+  tip of each GitLab course project over HTTPS and stops if the local checkout lacks it (those branches refuse a
+  force-push). A GitHub or GitLab repository that already serves the prepared tree is not committed or pushed again, so
+  repeating the run after a dropped tap signs only what is missing. The Git command used for each host is read from
+  `.env` or the environment. The maintainer section of the README now starts with a quick start from a notebook change
+  to every host.
+- **`make sync-pages-export` keeps each destination's `.gitignore` and `.gitlab-ci.yml` and no longer copies marimo's
+  generated `CLAUDE.md` files.**
+- **`make sync-main` runs the repository's own `tools/push.sh`**, a copy of the maintainer's `push` script that takes
+  its Git command for each host from `.env` (or the environment) instead of a hardcoded `trezor-agent` call;
+  `ARGS=github` (or `codeberg`, `gitlab`) limits it to one host.
+
 ## 2026-10-08
 - **Odyssey lesson `2026_07_06` (Day 4, IX.82–104): the note on the Russian word «хурма» appears only in Russian mode.**
   The paragraph on the Persian origin of the word (*khormâlu*, "date-plum") was also shown under «Λωτός — a word-trap»

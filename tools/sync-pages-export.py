@@ -62,6 +62,11 @@ SPLIT_COURSE_MAP = {
     "modern_greek/b1greeklanguageandculture/zorba": ("created-with-eee-b1glc", "zorba"),
 }
 
+# These belong to the destination checkout, not to generated page exports.
+# In particular, split GitLab projects need their CI and ignore files, while
+# marimo's generated CLAUDE.md files are local-only and must not be copied.
+CHECKOUT_FILES = {".git", ".gitignore", ".gitlab-ci.yml", "CLAUDE.md"}
+
 
 def _prefix_parts(rel_dir: pathlib.PurePosixPath, prefix: str) -> "tuple[str, ...] | None":
     prefix_parts = pathlib.PurePosixPath(prefix).parts
@@ -90,11 +95,11 @@ def replace_dir(src: pathlib.Path, dest: pathlib.Path) -> None:
     src don't linger as stale ghosts at dest -- without touching a .git
     directly inside dest. A split project's own content sits at its repo
     root (empty dest-prefix), so dest can BE a git checkout's top level;
-    a blanket rmtree(dest) would delete its .git along with everything
-    else. Only clear dest's own children, skipping .git specifically."""
+    a blanket rmtree(dest) would delete checkout-owned files along with
+    everything else. Preserve checkout files and skip generated CLAUDE.md."""
     if dest.exists():
         for child in dest.iterdir():
-            if child.name == ".git":
+            if child.name in CHECKOUT_FILES:
                 continue
             if child.is_dir() and not child.is_symlink():
                 shutil.rmtree(child)
@@ -103,6 +108,8 @@ def replace_dir(src: pathlib.Path, dest: pathlib.Path) -> None:
     else:
         dest.mkdir(parents=True)
     for child in src.iterdir():
+        if child.name in CHECKOUT_FILES:
+            continue
         target = dest / child.name
         if child.is_dir() and not child.is_symlink():
             shutil.copytree(child, target)
