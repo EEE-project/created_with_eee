@@ -1,6 +1,12 @@
 # Changelog
 
 ## 2026-10-13
+- **The browser-tab title follows the language dropdown on every multilingual lesson and on every hub page.** A lesson's
+  tab used to keep the title of its course's default language whatever the dropdown said (Russian for the Odyssey lessons,
+  Greek for Kapodistrias, Kavafis and Zorba). A lesson now starts with its English title (`app_title`, which link previews
+  and the page before its scripts run also show) and switches the tab to the chosen language's title once the page is up;
+  a hub does the same through its language picker. The lessons now ask for eee-project 1.23.0, which provides it
+  (`page_titles`), and the titles are the course name plus the lesson's label and title from its `index.tsv` row.
 - **The courses served from their own GitLab projects are listed once, in `tools/_split_courses.py`.** The sync, hub and
   GitLab-scope tools, `make`, `propagate-pages` and `codeberg2gitlab.sh` read that table (the hub-card link fix still
   names the B1 project), and the GitLab CI file the scope fix and `propagate-pages` share is `tools/gitlab-ci-pages.yml`.

@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.25.1",
-#     "eee-project>=1.1.0",
+#     "eee-project>=1.23.0",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas==3.0.2",
 # ]
@@ -12,7 +12,7 @@ import marimo
 
 __generated_with = "0.23.16"
 app = marimo.App(
-    app_title="Αλέξης Ζορμπάς — Μάθημα 4 · 17/07/2026: Τι μας δίδαξε τελικά ο Ζορμπάς;",
+    app_title="Alexis Zorbas — Lesson 4 · 17/07/2026: What Did Zorbas Ultimately Teach Us?",
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
     html_head_file="head.html",
@@ -29,9 +29,11 @@ def _(language_selector, mo):
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/zorba/index.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    eee_topbar(mo, back_url=_cfg.index_url(), lang=language_selector.value, titles={
+    _TITLES = {
         "ru": "Алексис Зорбас", "el": "Αλέξης Ζορμπάς", "en": "Alexis Zorbas",
-    }, ga_config=_cfg.ga_config(), same_window=True)
+    }
+    eee_topbar(mo, back_url=_cfg.index_url(), lang=language_selector.value, titles=_TITLES,
+               page_titles=_cfg.page_titles(_TITLES, "26_07_17/"), ga_config=_cfg.ga_config(), same_window=True)
     return
 
 

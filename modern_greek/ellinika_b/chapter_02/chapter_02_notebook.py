@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.10.0",
+#     "eee-project>=1.23.0",
 #     "marimo>=0.25.1",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas",
@@ -23,9 +23,11 @@ def _(language_selector, mo):
         f"{_ROOT}/modern_greek/ellinika_b/index.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    eee_topbar(mo, back_url=_cfg.index_url(), lang=language_selector.value, titles={
+    _TITLES = {
         "ru": "Ελληνικά Β1", "el": "Ελληνικά Β1", "en": "Ελληνικά Β1",
-    }, ga_config=_cfg.ga_config(), same_window=True)
+    }
+    eee_topbar(mo, back_url=_cfg.index_url(), lang=language_selector.value, titles=_TITLES,
+               page_titles=_cfg.page_titles(_TITLES, "chapter_02/"), ga_config=_cfg.ga_config(), same_window=True)
     return
 
 

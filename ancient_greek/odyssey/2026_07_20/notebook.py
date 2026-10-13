@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.25.1",
-#     "eee-project>=1.19.0",
+#     "eee-project>=1.23.0",
 #     "ancient-greek-backend-eee>=2.0.0",
 #     "unimorph-backend-eee>=1.0.3",
 #     "modern-greek-backend-eee>=1.0.0",
@@ -12,7 +12,7 @@
 import marimo
 
 __generated_with = "0.23.14"
-app = marimo.App(width="medium", app_title="Одиссея с Гомером — День 6: Одиссея IX.130–151")
+app = marimo.App(width="medium", app_title="Odyssey with Homer — Day 6: Odyssey IX.130–151")
 
 
 @app.cell(hide_code=True)
@@ -20,11 +20,13 @@ def _(lang_sel, mo):
     from eee_project import ConfigStore, eee_topbar
     _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
-    eee_topbar(mo, back_url=cfg.index_url(), lang=lang_sel.value, titles={
+    _TITLES = {
         "ru": "Одиссея с Гомером",
         "en": "Odyssey with Homer",
         "el": "Οδύσσεια με τον Όμηρο",
-    }, ga_config=cfg.ga_config(), same_window=True)
+    }
+    eee_topbar(mo, back_url=cfg.index_url(), lang=lang_sel.value, titles=_TITLES,
+               page_titles=cfg.page_titles(_TITLES, "2026_07_20/"), ga_config=cfg.ga_config(), same_window=True)
     return (cfg,)
 
 

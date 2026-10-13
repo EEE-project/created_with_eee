@@ -387,7 +387,11 @@ def render_footer(langs: "list[str]") -> str:
     return "\n".join(parts)
 
 
-def render_lang_picker(default_lang: str) -> str:
+def js_obj(d: "dict[str, str]") -> str:
+    return ("{" + ", ".join(f"{js_str(k)}: {js_str(v)}" for k, v in d.items()) + "}").replace("</", "<\\/")
+
+
+def render_lang_picker(default_lang: str, titles: "dict[str, str]") -> str:
     codes = list(LANG_OPTIONS.values())
     opts = "\n".join(
         f'<option value="{code}"{" selected" if code == default_lang else ""}>{esc(LANG_NAMES[code])}</option>'
@@ -395,10 +399,12 @@ def render_lang_picker(default_lang: str) -> str:
     )
     return f"""<div id="lang-picker">🌐 <select onchange="setLang(this.value)">{opts}</select></div>
 <script>
+var TITLES = {js_obj(titles)};
 function setLang(lang) {{
   document.querySelectorAll('[data-lang]').forEach(el => {{
     el.style.display = (el.getAttribute('data-lang') === lang) ? '' : 'none';
   }});
+  if (TITLES[lang]) document.title = TITLES[lang];
   localStorage.setItem('eee_lang', lang);
 }}
 document.addEventListener('DOMContentLoaded', function() {{
@@ -430,7 +436,7 @@ def gen_hub(key: str, cfg: dict, out_root: Path) -> None:
     body = [
         PAGE_CSS,
         render_topbar(cfg, langs, back_url),
-        render_lang_picker(DEFAULT_LANG) if is_multilingual else "",
+        render_lang_picker(DEFAULT_LANG, cfg["titles"]) if is_multilingual else "",
         '<div class="eee-page">',
         hero_html,
         render_cards(rows, langs),

@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.22.0",
+#     "eee-project>=1.23.0",
 #     "marimo>=0.25.1",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas",
@@ -11,7 +11,7 @@
 import marimo
 
 __generated_with = "0.23.16"
-app = marimo.App(width="medium", app_title="Καβάφης — Ιθάκη — Μάθημα 4: Η Ιθάκη σ' έδωσε τ' ωραίο ταξίδι")
+app = marimo.App(width="medium", app_title="Kavafis — Ithaki — Lesson 4: Ithaka Gave You the Beautiful Journey")
 
 
 @app.cell(hide_code=True)
@@ -23,9 +23,11 @@ def _(language_selector, mo):
         f"{_ROOT}/modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv",
         ga=f"{_ROOT}/ga.json",
     )
-    eee_topbar(mo, back_url=cfg.index_url(), lang=language_selector.value, titles={
+    _TITLES = {
         "ru": "Καβάφης — Ιθάκη", "el": "Καβάφης — Ιθάκη", "en": "Kavafis — Ithaki",
-    }, ga_config=cfg.ga_config(), same_window=True)
+    }
+    eee_topbar(mo, back_url=cfg.index_url(), lang=language_selector.value, titles=_TITLES,
+               page_titles=cfg.page_titles(_TITLES, "4/"), ga_config=cfg.ga_config(), same_window=True)
     return
 
 
