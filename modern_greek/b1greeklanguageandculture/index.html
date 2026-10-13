@@ -57,10 +57,12 @@ body { margin: 0; font-family: Syne, sans-serif; }
 <option value="ru">Русский</option>
 <option value="el">Ελληνικά</option></select></div>
 <script>
+var TITLES = {"ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture"};
 function setLang(lang) {
   document.querySelectorAll('[data-lang]').forEach(el => {
     el.style.display = (el.getAttribute('data-lang') === lang) ? '' : 'none';
   });
+  if (TITLES[lang]) document.title = TITLES[lang];
   localStorage.setItem('eee_lang', lang);
 }
 document.addEventListener('DOMContentLoaded', function() {
