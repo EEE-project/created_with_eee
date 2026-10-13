@@ -14,14 +14,11 @@ repo-hosting changes instead of ad-hoc commands.
 Destination layout differs by host (see README's "Course deployment" step 7):
 - GitHub mirrors Codeberg's own relative path exactly.
 - GitLab-unified also mirrors it, EXCEPT a split-off course's directory is
-  skipped there entirely -- it lives in its own GitLab project instead (see
-  fix-gitlab-unified-pages-scope.py's SPLIT_COURSE_DIRS, which this list is
-  kept in sync with by hand).
+  skipped there entirely -- it lives in its own GitLab project instead (the
+  split-off courses are listed once, in _split_courses.py).
 - A split-off course's session goes into its own GitLab project, at a
-  shorter, flattened path (see SPLIT_COURSE_MAP below, kept in sync by hand
-  with codeberg2gitlab.sh's index.tsv rewrite -- both already duplicate this
-  mapping independently, so this is a third, deliberately parallel copy
-  rather than a new shared dependency).
+  shorter, flattened path (SPLIT_COURSE_MAP below, derived from the same
+  table).
 
 Only copies files -- never commits, pushes, or runs fix-split-session-root.py
 (run that separately afterward for any split-project destination touched).
@@ -42,25 +39,13 @@ import pathlib
 import shutil
 import sys
 
-# Coarse membership check: is this course split off at all? Kept in sync by
-# hand with fix-gitlab-unified-pages-scope.py's own SPLIT_COURSE_DIRS.
-SPLIT_COURSE_DIRS = [
-    "ancient_greek/odyssey",
-    "ancient_greek/palaestra",
-    "modern_greek/b1greeklanguageandculture/kapodistrias",
-    "modern_greek/b1greeklanguageandculture/kavafis_ithaki",
-    "modern_greek/b1greeklanguageandculture/zorba",
-]
+from _split_courses import COURSE_DIRS, course_map
 
-# Precise mapping: source prefix -> (split project name, dest prefix inside
-# it). Kept in sync by hand with codeberg2gitlab.sh's index.tsv rewrite.
-SPLIT_COURSE_MAP = {
-    "ancient_greek/odyssey": ("created-with-eee-odyssey", ""),
-    "ancient_greek/palaestra/ancient_greek.2026.summer": ("created-with-eee-palaestra", ""),
-    "modern_greek/b1greeklanguageandculture/kapodistrias": ("created-with-eee-b1glc", "kapodistrias"),
-    "modern_greek/b1greeklanguageandculture/kavafis_ithaki": ("created-with-eee-b1glc", "kavafis_ithaki"),
-    "modern_greek/b1greeklanguageandculture/zorba": ("created-with-eee-b1glc", "zorba"),
-}
+# Coarse membership check: is this course split off at all?
+SPLIT_COURSE_DIRS = list(COURSE_DIRS)
+
+# Precise mapping: source prefix -> (split project name, dest prefix inside it).
+SPLIT_COURSE_MAP = course_map()
 
 # These belong to the destination checkout, not to generated page exports.
 # In particular, split GitLab projects need their CI and ignore files, while

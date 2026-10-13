@@ -33,7 +33,7 @@ def _(language_selector, mo):
 def _(language_selector, mo):
     # Title + subtitle (no dedicated painting for this lesson's source material)
     _lang = language_selector.value
-    _heading = mo.md(f"# C. P. Cavafy — «Ithaki»") if _lang == "en" else mo.md(f"# Κ. Π. Καβάφης — «Ιθάκη»")
+    _heading = mo.md("# C. P. Cavafy — «Ithaki»") if _lang == "en" else mo.md("# Κ. Π. Καβάφης — «Ιθάκη»")
     if _lang == "ru":
         _subtitle = mo.md("Третий урок из цикла о стихотворении Константиноса Кавафиса «Итака» (1911): какие сокровища взять в путь — финикийские товары и мудрость египетских городов.")
     elif _lang == "el":
@@ -1189,7 +1189,11 @@ def _(language_selector, mo):
 
 @app.cell(hide_code=True)
 def _():
-    import os, random, pandas as pd, marimo as mo
+    import os
+    import random
+
+    import marimo as mo
+    import pandas as pd
     import eee_project as eee
     from eee_project import GreekUtils, MODERN_GREEK
     from modern_greek_backend_eee import ModernGreekBackend

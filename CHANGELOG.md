@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-13
+- **The courses served from their own GitLab projects are listed once, in `tools/_split_courses.py`.** The sync, hub and
+  GitLab-scope tools, `make`, `propagate-pages` and `codeberg2gitlab.sh` read that table (the hub-card link fix still
+  names the B1 project), and the GitLab CI file the scope fix and `propagate-pages` share is `tools/gitlab-ci-pages.yml`.
+
 ## 2026-10-12
 - **New: `make propagate-pages` publishes Codeberg's `pages` branch to GitHub and GitLab in one run.** It copies every
   notebook export and hub into GitHub's Pages repository, GitLab's unified one and the three GitLab course projects,

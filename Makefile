@@ -5,7 +5,8 @@
 # no target here invokes trezor-agent on its own.
 
 SPLIT_PROJECTS_DIR ?= $(HOME)/work/greek/git/gitlab/EEE-project
-SPLIT_PROJECTS := created-with-eee-odyssey created-with-eee-palaestra created-with-eee-b1glc
+SPLIT_PROJECTS := $(shell python3 tools/_split_courses.py projects)
+$(if $(SPLIT_PROJECTS),,$(error cannot read the split-course table: python3 tools/_split_courses.py projects))
 
 GITHUB_PAGES_DIR ?= $(HOME)/work/greek/git/github/EEE-project/created_with_eee-pages-worktree
 GITLAB_UNIFIED_PAGES_DIR ?= $(HOME)/work/greek/git/gitlab/EEE-project/created_with_eee-pages-worktree
@@ -142,7 +143,7 @@ fix-static-footer:
 	@echo "target never commits or pushes. Codeberg needs no fix -- it's the default."
 
 fix-split-hub-links:
-	python3 tools/fix-split-hub-card-links.py --prefix /created_with_eee/modern_greek/b1greeklanguageandculture/ $(SPLIT_PROJECTS_DIR)/created-with-eee-b1glc
+	python3 tools/fix-split-hub-card-links.py --prefix $(shell python3 tools/_split_courses.py prefix created-with-eee-b1glc) $(SPLIT_PROJECTS_DIR)/created-with-eee-b1glc
 	@echo ""
 	@echo "Local files only -- review with 'git status'/'git diff' in the project"
 	@echo "directory above, then commit + push by hand (Trezor-confirmed). This"

@@ -166,7 +166,12 @@ and each push is Trezor-confirmed. All maintainer scripts live under `tools/`.
 **Not yet automated**: splitting a new course off into its own GitLab
 project (see each split course's own README for GitLab's 1GB
 Pages-per-project limit that drove the split) — still a manual, multi-step
-process.
+process. The split-off courses are listed once, in `tools/_split_courses.py`:
+add a row there and the sync, hub, GitLab-scope and link tools, `make`,
+`propagate-pages.sh` and `codeberg2gitlab.sh` pick it up (the hub-card link fix
+in the Makefile and `propagate-pages.sh` still names the B1 project). The
+GitLab project itself, its Pages settings and its `.gitlab-ci.yml` (a copy of
+`tools/gitlab-ci-pages.yml`) are still set up by hand.
 
 ### Course deployment (notebook source change → live pages)
 

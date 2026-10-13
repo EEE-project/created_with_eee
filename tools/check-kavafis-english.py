@@ -23,6 +23,7 @@ Exit status 1 on any problem.
 """
 import argparse
 import csv
+import functools
 import re
 import sys
 from pathlib import Path
@@ -49,6 +50,11 @@ def read_rows(path):
     with path.open(encoding="utf-8", newline="") as fh:
         reader = csv.DictReader(fh, delimiter="\t")
         return reader.fieldnames, list(reader)
+
+
+@functools.cache
+def read_greek(lesson_dir):  # the notes check and the translations check both need the poem: parse it once per lesson
+    return parse_stanza_text((lesson_dir / "greek.md").read_text(encoding="utf-8"))
 
 
 def check_tsvs(lesson_dir, problems):
@@ -84,7 +90,7 @@ def check_language_notes(lesson_dir, problems):
     if header != NOTES_COLUMNS:
         problems.append(f"{path.name}: header {header} != {NOTES_COLUMNS}")
         return
-    greek = parse_stanza_text((lesson_dir / "greek.md").read_text(encoding="utf-8"))
+    greek = read_greek(lesson_dir)
     for n, row in enumerate(rows, start=2):
         for column in NOTES_COLUMNS:
             if not (row[column] or "").strip():
@@ -113,7 +119,7 @@ def check_translations(lesson_dir, kb_trans, problems):
         problems.append(f"{path}: missing")
         return
     text = path.read_text(encoding="utf-8")
-    greek = parse_stanza_text((lesson_dir / "greek.md").read_text(encoding="utf-8"))
+    greek = read_greek(lesson_dir)
     trans, desc = parse_stanza_translations(text)
     if sorted(trans) != sorted(ENGLISH_TRANSLATORS):
         problems.append(f"{path.name}: translators {sorted(trans)} != {sorted(ENGLISH_TRANSLATORS)}")

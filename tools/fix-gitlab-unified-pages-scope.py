@@ -48,40 +48,19 @@ import re
 import shutil
 import sys
 
-# Course directories that must never exist on GitLab's unified `pages`
-# branch -- each has its own separate GitLab project instead. Paths are
-# relative to the checkout root; the value is that project and the directory
-# it serves at its own root.
-SPLIT_COURSE_PROJECTS = {
-    "ancient_greek/odyssey": ("created-with-eee-odyssey", "ancient_greek/odyssey"),
-    "ancient_greek/palaestra": ("created-with-eee-palaestra", "ancient_greek/palaestra/ancient_greek.2026.summer"),
-    "modern_greek/b1greeklanguageandculture/kapodistrias": ("created-with-eee-b1glc", "modern_greek/b1greeklanguageandculture"),
-    "modern_greek/b1greeklanguageandculture/kavafis_ithaki": ("created-with-eee-b1glc", "modern_greek/b1greeklanguageandculture"),
-    "modern_greek/b1greeklanguageandculture/zorba": ("created-with-eee-b1glc", "modern_greek/b1greeklanguageandculture"),
-}
-SPLIT_COURSE_DIRS = list(SPLIT_COURSE_PROJECTS)
+from _split_courses import COURSE_DIRS, PAGES_BASE, UNIFIED_ROOT, scope_map
 
-PAGES_BASE = "https://eee-project.gitlab.io"
-UNIFIED_ROOT = "/created_with_eee/"  # this project's own path prefix on gitlab.io, as the hub generator writes it
+# Course directories that must never exist on GitLab's unified `pages`
+# branch -- each has its own separate GitLab project instead (see
+# _split_courses.py). Paths are relative to the checkout root; the value is
+# that project and the directory it serves at its own root.
+SPLIT_COURSE_PROJECTS = scope_map()
+SPLIT_COURSE_DIRS = list(COURSE_DIRS)
+
 HREF = re.compile(r'href="([^"]*)"')
 
-# Recovered from the project's own history (commit bfa30c4e) the last time
-# this regressed -- Codeberg's `pages` branch has no equivalent file to
-# source this from, so it's hardcoded here rather than fetched.
-GITLAB_CI_YML = """\
-pages:
-  stage: deploy
-  image: alpine:latest
-  script:
-    - mkdir .public
-    - cp -r * .public/
-    - mv .public public
-  artifacts:
-    paths:
-      - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == "pages"
-"""
+# The CI config GitLab needs on the `pages` branch (shared with propagate-pages.sh; recovered from commit bfa30c4e).
+GITLAB_CI_YML = pathlib.Path(__file__).with_name("gitlab-ci-pages.yml").read_text(encoding="utf-8")
 
 
 def split_course_url(href: str, file_dir: str) -> str | None:

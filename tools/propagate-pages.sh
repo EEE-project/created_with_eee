@@ -83,15 +83,18 @@ git_cmd_gitlab=(git)
 [[ -z "${GIT_CMD_GITLAB:-}" ]] || read -r -a git_cmd_gitlab <<< "$GIT_CMD_GITLAB"
 source_pages_dir="${CODEBERG_PAGES_DIR:-$repo_root/../created_with_eee-pages-worktree}"
 
-split_repos=(
-    "$split_parent/created-with-eee-odyssey"
-    "$split_parent/created-with-eee-palaestra"
-    "$split_parent/created-with-eee-b1glc"
-)
 github_url=git@github.com:EEE-project/created_with_eee.git
 gitlab_url=git@gitlab.com:EEE-project/created_with_eee.git
 
 die() { echo "error: $*" >&2; exit 1; }
+
+# The GitLab split projects come from the one table of split-off courses.
+mapfile -t split_projects < <(python3 "$tool_dir/_split_courses.py" projects)
+((${#split_projects[@]} > 0)) || die "cannot read the split-course table (tools/_split_courses.py)"
+split_repos=()
+for project in "${split_projects[@]}"; do
+    split_repos+=("$split_parent/$project")
+done
 
 run_git() {
     local host=$1
@@ -107,21 +110,7 @@ run_git() {
 is_canonical_gitlab_ci() {
     local file=$1
     [[ -f "$file" ]] || return 1
-    cmp -s "$file" <(cat <<'EOF'
-pages:
-  stage: deploy
-  image: alpine:latest
-  script:
-    - mkdir .public
-    - cp -r * .public/
-    - mv .public public
-  artifacts:
-    paths:
-      - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == "pages"
-EOF
-    )
+    cmp -s "$file" "$tool_dir/gitlab-ci-pages.yml"
 }
 
 remove_known_generated_files() {
@@ -308,9 +297,11 @@ if wants gitlab; then
 
     echo "applying GitLab split-project fixes"
     python3 "$tool_dir/fix-split-session-root.py" "${split_repos[@]}"
+    b1glc=created-with-eee-b1glc   # the one split project whose hub links to several courses
+    b1glc_prefix=$(python3 "$tool_dir/_split_courses.py" prefix "$b1glc")
     python3 "$tool_dir/fix-split-hub-card-links.py" \
-        --prefix /created_with_eee/modern_greek/b1greeklanguageandculture/ \
-        "${split_repos[2]}"
+        --prefix "$b1glc_prefix" \
+        "$split_parent/$b1glc"
     python3 "$tool_dir/fix-static-footer-host.py" \
         --host https://gitlab.com/EEE-project "${split_repos[@]}"
 fi

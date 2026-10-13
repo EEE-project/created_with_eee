@@ -24,20 +24,16 @@ find . -name "*.py" -not -path "./.git/*" \
         -e '/^#$/d' \
         {} +
 
-# GitLab-only: 3 courses (odyssey, palaestra, b1greeklanguageandculture) are
-# split into their own GitLab Pages projects (1GB Pages limit). Their session
+# GitLab-only: the courses listed in tools/_split_courses.py (odyssey, palaestra
+# and the b1greeklanguageandculture ones) are split into their own GitLab Pages
+# projects (1GB Pages limit). Their session
 # notebooks are marimo WASM exports that don't bundle index.tsv -- they fetch
 # it live from this repo's raw main branch on page load, and eee_topbar()
 # uses its index_url column verbatim as the back-link href. Codeberg/GitHub
 # keep the unified structure, so the root-relative value stays correct there
 # -- only GitLab needs it rewritten to the split project's absolute URL.
-sed -i 's|/created_with_eee/ancient_greek/odyssey/|https://eee-project.gitlab.io/created-with-eee-odyssey/|g' \
-    ancient_greek/odyssey/index.tsv
-sed -i 's|/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/|https://eee-project.gitlab.io/created-with-eee-palaestra/|g' \
-    ancient_greek/palaestra/ancient_greek.2026.summer/index.tsv
-sed -i 's|/created_with_eee/modern_greek/b1greeklanguageandculture/kapodistrias/|https://eee-project.gitlab.io/created-with-eee-b1glc/kapodistrias/|g' \
-    modern_greek/b1greeklanguageandculture/kapodistrias/index.tsv
-sed -i 's|/created_with_eee/modern_greek/b1greeklanguageandculture/kavafis_ithaki/|https://eee-project.gitlab.io/created-with-eee-b1glc/kavafis_ithaki/|g' \
-    modern_greek/b1greeklanguageandculture/kavafis_ithaki/index.tsv
-sed -i 's|/created_with_eee/modern_greek/b1greeklanguageandculture/zorba/|https://eee-project.gitlab.io/created-with-eee-b1glc/zorba/|g' \
-    modern_greek/b1greeklanguageandculture/zorba/index.tsv
+rewrites=$(python3 tools/_split_courses.py index-rewrites) || exit 1
+[[ -n "$rewrites" ]] || { echo "no split-course index rewrites (tools/_split_courses.py)" >&2; exit 1; }
+while IFS=$'\t' read -r file old new; do
+    sed -i "s|${old}|${new}|g" "$file"
+done <<< "$rewrites"

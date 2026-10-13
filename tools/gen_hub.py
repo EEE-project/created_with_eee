@@ -15,6 +15,8 @@ import csv
 import json
 from pathlib import Path
 
+from _split_courses import gitlab_overrides
+
 REPO_ROOT = Path(__file__).parent.parent
 
 LANG_OPTIONS = {"English": "en", "Русский": "ru", "Ελληνικά": "el"}
@@ -29,11 +31,7 @@ CARD_LIST_SOON = {"ru": "скоро", "el": "σύντομα", "en": "coming soon
 # these courses are NOT split out) 404s when this same generated page is
 # deployed to the unified GitLab project. Resolved client-side, matching how
 # eee_footer()'s own "Source" link already detects its host at runtime.
-GITLAB_SPLIT_OVERRIDES = {
-    "/created_with_eee/ancient_greek/odyssey/": "https://eee-project.gitlab.io/created-with-eee-odyssey/",
-    "/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/": "https://eee-project.gitlab.io/created-with-eee-palaestra/",
-    "/created_with_eee/modern_greek/b1greeklanguageandculture/": "https://eee-project.gitlab.io/created-with-eee-b1glc/",
-}
+GITLAB_SPLIT_OVERRIDES = gitlab_overrides()
 
 GITLAB_SPLIT_SCRIPT = """<script>
 document.addEventListener('DOMContentLoaded', function() {

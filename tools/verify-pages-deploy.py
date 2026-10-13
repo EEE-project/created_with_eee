@@ -18,7 +18,8 @@ Usage:
 The GitLab split-project list is read from the SPLIT_PROJECTS env var
 (space-separated bare repo names, same as the Makefile's own SPLIT_PROJECTS)
 when set, so `make verify-pages-deploy` stays in sync with the other targets
-that already derive from it; falls back to today's 3 known split projects.
+that already derive from it; falls back to the projects listed in
+_split_courses.py.
 """
 import argparse
 import json
@@ -28,6 +29,8 @@ import sys
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
+
+from _split_courses import PROJECTS
 
 
 @dataclass
@@ -52,7 +55,7 @@ def _split_site(project: str) -> Site:
                 api_repo=f"EEE-project/{project}")
 
 
-_DEFAULT_SPLIT_PROJECTS = "created-with-eee-odyssey created-with-eee-palaestra created-with-eee-b1glc"
+_DEFAULT_SPLIT_PROJECTS = " ".join(PROJECTS)
 
 SITES = [
     Site("created_with_eee (Codeberg, dev)", "codeberg",

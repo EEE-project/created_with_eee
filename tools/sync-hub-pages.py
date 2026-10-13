@@ -13,9 +13,9 @@ Destination layout mirrors sync-pages-export.py's own rules (see that
 script's docstring): GitHub mirrors Codeberg's relative path exactly;
 GitLab-unified does too, except a split-off course is skipped there and
 copied into its own GitLab project's checkout instead, at a shorter,
-flattened path. SPLIT_HUB_MAP below is kept in sync by hand with
-sync-pages-export.py's SPLIT_COURSE_MAP -- not shared code, matching that
-script's own stated reasoning for a deliberately parallel copy.
+flattened path. SPLIT_HUB_MAP below comes from the same table as
+sync-pages-export.py's SPLIT_COURSE_MAP (_split_courses.py), plus each split
+project's root hub.
 
 Only copies files -- never commits or pushes.
 
@@ -33,19 +33,12 @@ import shutil
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from _split_courses import hub_map  # noqa: E402
 from gen_hub import HUBS  # noqa: E402
 
-# Kept in sync by hand with sync-pages-export.py's own SPLIT_COURSE_MAP.
 # dest_prefix is where the hub's index.html lands *inside* the split
 # project -- "" for a course whose own hub sits at that project's root.
-SPLIT_HUB_MAP = {
-    "ancient_greek/odyssey": ("created-with-eee-odyssey", ""),
-    "ancient_greek/palaestra/ancient_greek.2026.summer": ("created-with-eee-palaestra", ""),
-    "modern_greek/b1greeklanguageandculture": ("created-with-eee-b1glc", ""),
-    "modern_greek/b1greeklanguageandculture/kapodistrias": ("created-with-eee-b1glc", "kapodistrias"),
-    "modern_greek/b1greeklanguageandculture/kavafis_ithaki": ("created-with-eee-b1glc", "kavafis_ithaki"),
-    "modern_greek/b1greeklanguageandculture/zorba": ("created-with-eee-b1glc", "zorba"),
-}
+SPLIT_HUB_MAP = hub_map()
 
 
 def copy_file(src: pathlib.Path, dest: pathlib.Path) -> None:
