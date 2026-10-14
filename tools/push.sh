@@ -95,7 +95,7 @@ if wants codeberg; then
     # --tags (not --follow-tags): our tags are lightweight, and
     # --follow-tags only follows annotated tags reachable from what's
     # pushed. Combined into this one push so a new/moved tag doesn't cost
-    # a second Trezor tap.
+    # a second push.
     $git_cdb push --set-upstream origin "$default_branch" --tags || exit 1
 fi
 
@@ -194,10 +194,13 @@ if wants gitlab; then
                 if glab api --method PATCH "$protected_branch_api" -f allow_force_push=true > /dev/null 2>&1; then
                     unprotected=true
                 fi
-                $git_lab push --force git@gitlab.com:EEE-project/${gitlab_repo}.git main:main
+                # set -e would end this subshell at a failed push, before the restore below: keep the status, restore, then exit with it.
+                push_status=0
+                $git_lab push --force git@gitlab.com:EEE-project/${gitlab_repo}.git main:main || push_status=$?
                 if [ "$unprotected" = true ]; then
                     glab api --method PATCH "$protected_branch_api" -f allow_force_push=false > /dev/null
                 fi
+                exit "$push_status"
             )
         fi
     else

@@ -71,29 +71,145 @@ directory has its own README (description + live links) and `AGENTS.md`
    snapshot: after a data file changes, export again the lessons that embed it;
    `python3 tools/check-embedded-data.py --who <file>` lists them. More in
    "Export one lesson with and without the embedded data" below.
-3. **Commit and push Codeberg's `pages`** from that worktree (Trezor-confirmed),
+3. **Commit and push Codeberg's `pages`** from that worktree,
    then open the live Codeberg page and check it (hard-reload with Ctrl+Shift+R).
 4. **Propagate to GitHub and GitLab**, including the three GitLab split
    projects. It copies the Codeberg worktree's *local* `pages`, so finish
    step 3 first:
    ```bash
-   make propagate-pages ARGS="--verbose"          # fetch Codeberg, prepare + commit locally, push nothing
-   make propagate-pages ARGS="--verbose --push"   # same preparation, then force-push every destination whose commit the remote lacks
+   make propagate-pages                           # fetch Codeberg, prepare + commit locally, push nothing
+   make propagate-pages ARGS="--push"             # prepare again, then force-push every destination whose tree the remote does not serve
    ```
    `github` or `gitlab` in `ARGS` limits the run to one host; after a failed
-   push (a dropped Trezor tap) run the `--push` command again; a GitHub or
+   push (for example a missed confirmation of your key) run the `--push` command again; a GitHub or
    GitLab repository that already serves the prepared tree is not pushed again.
    Git runs through the `GIT_CMD_*` wrappers from `.env` or the environment
-   (see below; the default is plain `git`), and every destination worktree
-   must be clean, on `pages`, with its *own* git directory — the script
-   refuses a destination that shares Codeberg's. Before the first tap it also
-   reads each GitLab course project's remote `pages` tip over HTTPS and stops
-   if its checkout does not contain it (those branches refuse force-pushes).
+   (see "What each command needs" below; the default is plain `git`), and
+   every destination worktree must be clean, on `pages`, with its *own* git
+   directory — the script refuses a destination that shares Codeberg's.
+   Before it fetches or pushes anything, it also reads each GitLab course
+   project's remote `pages` tip over HTTPS and stops if its checkout does not
+   contain it (those branches refuse force-pushes).
 5. **Verify** — `make verify-pages-deploy SITE=odyssey` (GitLab Pages needs its
    CI pipeline to finish first); after hub changes also `make check-hub-links`.
 
 A hub change (`tools/gen_hub.py`, an `index.tsv`) follows the same steps with
 `make gen-hub HUBS="<hub keys>"` instead of the export.
+
+### What each command needs before you run it
+
+Read this before the first push. Run every command from the root of this
+repository (the folder with the `Makefile`).
+
+**Tools and logins**
+
+| You need | Used by | How to check |
+| :-- | :-- | :-- |
+| An SSH key with push rights on `codeberg.org`, `github.com` and `gitlab.com` | every fetch of Codeberg and every push | `git ls-remote git@codeberg.org:EEE-project/created_with_eee.git HEAD` answers (the same for the other two hosts) |
+| `git` set up to sign commits (`commit.gpgsign=true` and a signing key) | `propagate-pages`, `sync-main` (they make commits) | `git log -1 --format=%G?` prints `G` after a commit |
+| `gh`, logged in | `sync-main` (mirror check), `verify-pages-deploy`, the manual Pages rebuild below | `gh auth status` |
+| `glab`, logged in | `sync-main` (mirror check and the `main` protection switch), `verify-pages-deploy` | `glab auth status` |
+| `~/.venv/eee/bin/python3` with `marimo` (another Python: `EEE_PYTHON=...`) | `export-notebooks`, `check-embedded-data`, `gen-hub`, `sync-pages-export`, `sync-hub-pages` | `~/.venv/eee/bin/python3 -m marimo --version` |
+
+`tools/propagate-pages.sh` itself calls neither `gh` nor `glab`.
+
+**The git command of each host.** `GIT_CMD_CODEBERG`, `GIT_CMD_GITHUB` and
+`GIT_CMD_GITLAB` name the command that runs `git` for each host. Export them, or
+put them in the file `.env` in the repository root (git ignores it). Without a
+value the scripts use plain `git`. There is an example under "What's automated
+(reference)" below.
+
+**Folders.** Each folder must exist before the first run. The pages folders
+must be clean, on `pages`, have an `origin` remote, and not share their git
+directory with the Codeberg folder; `propagate-pages` stops at once if one
+of them does not. The make targets and `tools/propagate-pages.sh` use
+different variable names for some of the same folders:
+
+| Folder | Default path | Branch | Another path with |
+| :-- | :-- | :-- | :-- |
+| Codeberg pages worktree | `../created_with_eee-pages-worktree` (next to this repository) | `pages` | `PAGES_DIR` (make targets), `CODEBERG_PAGES_DIR` (`propagate-pages`) |
+| GitHub pages worktree | `~/work/greek/git/github/EEE-project/created_with_eee-pages-worktree` | `pages` | `GITHUB_PAGES_DIR` |
+| GitLab unified pages worktree | `~/work/greek/git/gitlab/EEE-project/created_with_eee-pages-worktree` | `pages` | `GITLAB_UNIFIED_PAGES_DIR` (make targets), `GITLAB_PAGES_DIR` (`propagate-pages`) |
+| GitLab split projects, one clone each (`python3 tools/_split_courses.py projects` lists them) | `~/work/greek/git/gitlab/EEE-project/<project>` | `pages` | `SPLIT_PROJECTS_DIR` (make targets), `GITLAB_SPLIT_DIR` (`propagate-pages`) |
+| GitHub mirror checkout, for `sync-main` | `~/work/greek/git/github/EEE-project/created_with_eee` | `main`, remote `codeberg` | none (fixed in `tools/push.sh`) |
+| GitLab mirror checkout, for `sync-main` | `~/work/greek/git/gitlab/EEE-project/created_with_eee` | `main`, remote `codeberg` | none (fixed in `tools/push.sh`) |
+
+**Set up the folders once.** Clone over HTTPS (no key is needed to read), then
+make `origin` the SSH address: the scripts push through `origin`. The `codeberg`
+remote of a mirror checkout stays on HTTPS, so `sync-main` fetches Codeberg
+without your key.
+
+```bash
+# Codeberg pages worktree, next to this repository
+git worktree add ../created_with_eee-pages-worktree pages
+
+# GitHub: the mirror checkout (for sync-main) and the pages worktree next to it
+git clone https://github.com/EEE-project/created_with_eee.git ~/work/greek/git/github/EEE-project/created_with_eee
+git -C ~/work/greek/git/github/EEE-project/created_with_eee remote set-url origin git@github.com:EEE-project/created_with_eee.git
+git -C ~/work/greek/git/github/EEE-project/created_with_eee remote add codeberg https://codeberg.org/EEE-project/created_with_eee.git
+git -C ~/work/greek/git/github/EEE-project/created_with_eee worktree add ../created_with_eee-pages-worktree pages
+
+# GitLab: the same steps with gitlab.com and ~/work/greek/git/gitlab/EEE-project/,
+# then one clone per split project, on `pages`
+git clone https://gitlab.com/EEE-project/created-with-eee-odyssey.git ~/work/greek/git/gitlab/EEE-project/created-with-eee-odyssey
+git -C ~/work/greek/git/gitlab/EEE-project/created-with-eee-odyssey remote set-url origin git@gitlab.com:EEE-project/created-with-eee-odyssey.git
+git -C ~/work/greek/git/gitlab/EEE-project/created-with-eee-odyssey checkout pages
+```
+
+**Commands.** A *key use* is one SSH fetch or push, or one signed commit. If
+your key asks for a confirmation on each use, you confirm that many times. The
+times are what a run took on 2026-10-15, key uses included.
+
+| Command | What it changes | Key uses | Takes about | Check afterwards |
+| :-- | :-- | :-- | :-- | :-- |
+| `make export-notebooks NOTEBOOKS="..."` | the lesson folders in the Codeberg pages worktree (each is cleared, then written again); commits nothing | 0 | one marimo export per lesson | `make check-embedded-data`; `git status` in the worktree |
+| `make propagate-pages` | one signed commit in each of the GitHub, GitLab unified and three split folders that changes; pushes nothing | 1 (fetch of Codeberg `pages`) + 1 per commit, 6 at most | 3 minutes | `git log -1 --format='%h %G?'` in each folder |
+| `make propagate-pages ARGS="github --push"` | repeats the preparation for GitHub (the folder is reset to Codeberg `pages`, the signed commit is made again), then force-pushes `pages:pages` to GitHub | 3: fetch, signature, push | 1 minute | `git ls-remote https://github.com/EEE-project/created_with_eee.git refs/heads/pages`; wait for the Pages build (2 minutes), then `make verify-pages-deploy SITE=GitHub` (see the rebuild rule below) |
+| `make propagate-pages ARGS="gitlab --push"` | repeats the preparation for the GitLab unified project and force-pushes it; pushes the three split projects (a commit that an earlier dry run made is pushed as it is) | 6 after a dry run: fetch, 1 signature, 4 pushes; 9 without one | 3 minutes | `git ls-remote` of the four projects; wait for their Pages pipelines (1 minute), then `make verify-pages-deploy` |
+| `make sync-main ARGS=github` | resets the GitHub mirror checkout to Codeberg `main`, converts it with `codeberg2github.sh`, makes one signed commit and force-pushes it to GitHub `main` | 2: signature, push | 1 minute | `git ls-remote https://github.com/EEE-project/created_with_eee.git refs/heads/main` shows a new commit whose parent is Codeberg `main` |
+| `make sync-main ARGS=gitlab` | the same with `codeberg2gitlab.sh`; the script allows a force-push to GitLab `main` only while it pushes | 2 | 1 minute | the same check on `gitlab.com`; `glab api projects/EEE-project%2Fcreated_with_eee/protected_branches/main` must show `"allow_force_push":false` |
+| `make sync-pages-export`, `sync-hub-pages`, `fix-split-roots`, `fix-gitlab-unified-scope`, `fix-static-footer`, `fix-split-hub-links` (the steps `propagate-pages` runs for you), and `make gen-hub` | files in the folders above only; they never commit or push | 0 | seconds | `git status` and `git diff` in each folder |
+| `make verify-pages-deploy [SITE=...]`, `make check-hub-links [URL=...]`, `make check-embedded-data [SCOPE=...]` | nothing (read-only) | 0 | seconds | exit status 0 |
+
+`make sync-main` without `ARGS` first pushes this repository's current branch
+and its tags to Codeberg (one more key use), then does GitHub and GitLab.
+The three mirror `main` branches differ on purpose: each mirror is Codeberg's
+`main` plus one conversion commit.
+
+**Rules that save time**
+
+- If git fails while it waits for your key (a missed confirmation, a locked
+  key), that command pushes nothing. Run the same command again.
+  `gpg: signing failed: End of file` means the signing key did not answer:
+  unlock it and run the command again. Nothing was committed.
+- Do one host at a time and check it before the next one: `github`, check,
+  `gitlab`, check. Push and check Codeberg `pages` before any mirror (step 3
+  above).
+- `--push` repeats the whole preparation. A dry run lets you review the
+  commits, but it does not save key uses: the GitHub and GitLab unified
+  commits are made again.
+- The output is long: about 14,500 lines for `gitlab`, about 42,000 for all
+  hosts with `--verbose`. If your terminal or tool keeps only part of it, send
+  it to a file (`make propagate-pages ARGS="gitlab --push" > /tmp/propagate.log 2>&1`).
+- A force-push to GitHub's `pages` branch usually starts a Pages build, but
+  sometimes it starts none: the site then stays on the old commit with the
+  status `built`. `make verify-pages-deploy SITE=GitHub` prints the commit of
+  the latest build. If it is not the pushed commit after 3 minutes, queue a
+  build and check again:
+  `gh api --method POST repos/EEE-project/created_with_eee/pages/builds`.
+- After `sync-main`, compare the tips with `git ls-remote`. When the mirror
+  checkout is missing or has uncommitted changes, the script prints `⚠️ ...
+  skipping GitHub sync` (or GitLab) and still exits 0.
+- `sync-main ARGS=gitlab` allows the force-push to GitLab `main` only for the
+  push, and switches it off again even when the push fails. After a sync, still
+  check it with the `glab api` command in the table. If it shows `true`, set
+  it back:
+  `glab api --method PATCH projects/EEE-project%2Fcreated_with_eee/protected_branches/main -f allow_force_push=false`.
+- To undo a pages push for GitHub or for the GitLab unified project, force-push
+  the previous tip (`git -C <folder> push --force <ssh-url> <previous-sha>:pages`;
+  `git reflog` in the folder shows the SHA), then check the site as above. The
+  three GitLab split projects refuse force pushes: commit a revert in the
+  project folder and push it normally.
 
 ### Export one lesson with and without the embedded data
 
@@ -157,10 +273,13 @@ Through Make, pass script options with `ARGS` (use `--verbose` or `-v`;
 `make -v` means Make's own version option):
 
 ```bash
-make propagate-pages ARGS="--verbose --push"
-make propagate-pages ARGS="github --verbose --push" # GitHub only
-make propagate-pages ARGS="gitlab --verbose --push"  # GitLab unified + split repos
+make propagate-pages ARGS="--push"
+make propagate-pages ARGS="github --push" # GitHub only
+make propagate-pages ARGS="gitlab --push"  # GitLab unified + split repos
 ```
+
+`--verbose` prints every shell command, about 42,000 lines for a full run;
+leave it off unless you need the trace.
 
 With no host argument, `propagate-pages` defaults to `all`. The explicit
 `all` selector is also accepted.
@@ -171,15 +290,13 @@ which `make sync-main` runs) use separate commands for each host:
 `git`). Authentication wrappers remain personal environment settings rather
 than being embedded in the repository script. You can export them in the
 environment or put them in the repository-root `.env` file, which is ignored
-by Git. A `trezor-agent` wrapper should carry `--cache-expiry-seconds 0`,
-otherwise every push after the first in a session silently reuses the first
-device tap. For example:
+by Git. For example:
 
 ```bash
 GIT_CMD_CODEBERG="codeberg-git" \
 GIT_CMD_GITHUB="github-git" \
 GIT_CMD_GITLAB="gitlab-git" \
-make propagate-pages ARGS="--verbose --push"
+make propagate-pages ARGS="--push"
 ```
 
 This covers GitHub's unified Pages project, GitLab's unified Pages project,
@@ -190,8 +307,8 @@ The script automatically removes the exact canonical untracked `.gitlab-ci.yml`
 left by the GitLab unified-scope repair; any other uncommitted or untracked
 content still stops the run.
 
-The propagation script commits locally; `--push` is the only mode that pushes,
-and each push is Trezor-confirmed. All maintainer scripts live under `tools/`.
+The propagation script commits locally; `--push` is the only mode that pushes.
+All maintainer scripts live under `tools/`.
 
 **Not yet automated**: splitting a new course off into its own GitLab
 project (see each split course's own README for GitLab's 1GB
@@ -254,11 +371,11 @@ single-host work):
    GitLab unified/split-project checkouts should already have it; verify
    before adding a brand-new checkout).
 
-6. **Commit + push the Codeberg pages branch** (Trezor-confirmed).
+6. **Commit + push the Codeberg pages branch**.
 
 7. **Copy the same export into every other checkout that hosts the
    affected course(s)**, then review and commit + push each
-   (Trezor-confirmed, one host at a time):
+   (one host at a time):
    ```bash
    make sync-pages-export NOTEBOOKS="modern_greek/ellinika_b/chapter_01/chapter_01_notebook.py ..."
    ```
@@ -299,12 +416,11 @@ than a notebook's, since there's no Pyodide boot to wait for:
    affected course's `index.tsv`) to `main` via the normal branch+PR
    workflow, then `make sync-main`.
 2. `make gen-hub HUBS="<hub keys>"` (default: all 10) into the Codeberg
-   pages worktree — review with `git status`/`git diff`, commit + push
-   (Trezor-confirmed).
+   pages worktree — review with `git status`/`git diff`, commit + push.
 3. `make sync-hub-pages HUBS="<hub keys>"` to copy the regenerated
    `index.html` files into GitHub / GitLab-unified / each affected GitLab
    split project's checkout — review, commit + push each by hand
-   (Trezor-confirmed, one host at a time). Destination layout follows the
+   (one host at a time). Destination layout follows the
    same split-course rules as `sync-pages-export` (see
    `tools/sync-hub-pages.py`). On GitLab-unified, run `make
    fix-gitlab-unified-scope` first: the copied hubs link the split courses

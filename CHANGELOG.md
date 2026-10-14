@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-15
+- **The README lists what each maintainer command needs.** A new part of "Maintainer tooling", "What each command needs before you run it",
+  names the tools and logins, the `.env` file with its three `GIT_CMD_*` lines, the folders with their default paths and the two sets of
+  variable names (make targets and `propagate-pages.sh` call some of the same folders by different names), and a table of what each
+  command changes, how many key uses (fetches, pushes, signed commits) it needs, how long it took and how to check it. It also warns about the length of the
+  output and about a mirror that `sync-main` skips with exit status 0, and it says how to undo a pages push. The quick-start examples no
+  longer use `--verbose`.
+- **`make sync-main ARGS=gitlab` switches GitLab's force-push permission for `main` off again when the push fails.** The script allows the
+  force-push for the push and switches it off afterwards. A failed push (for example a missed confirmation of the key) used to end the script
+  before the second step, so the permission stayed on. The script now restores it first and then exits with the status of the push.
+
 ## 2026-10-14
 - **Exported lesson pages carry their text data files.** `make export-notebooks` now puts the lesson's TSV, Markdown, YAML, JSON and HTML
   files into the page: the tracked files of the lesson's folder, and the ones it names in the folder above. A page used to download each
@@ -39,13 +50,13 @@
   are only prepared, and `github` or `gitlab` limits the run to one host). Before it signs anything it reads the `pages`
   tip of each GitLab course project over HTTPS and stops if the local checkout lacks it (those branches refuse a
   force-push). A GitHub or GitLab repository that already serves the prepared tree is not committed or pushed again, so
-  repeating the run after a dropped tap signs only what is missing. The Git command used for each host is read from
+  repeating the run after a failed signature signs only what is missing. The Git command used for each host is read from
   `.env` or the environment. The maintainer section of the README now starts with a quick start from a notebook change
   to every host.
 - **`make sync-pages-export` keeps each destination's `.gitignore` and `.gitlab-ci.yml` and no longer copies marimo's
   generated `CLAUDE.md` files.**
 - **`make sync-main` runs the repository's own `tools/push.sh`**, a copy of the maintainer's `push` script that takes
-  its Git command for each host from `.env` (or the environment) instead of a hardcoded `trezor-agent` call;
+  its Git command for each host from `.env` (or the environment) instead of a hardcoded wrapper call;
   `ARGS=github` (or `codeberg`, `gitlab`) limits it to one host.
 
 ## 2026-10-08
