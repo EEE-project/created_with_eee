@@ -12,6 +12,12 @@ clearing it first matters because Vite/Rollup hashes asset filenames, so
 from a previous export that the new build simply doesn't reference anymore;
 without the clear, stale content-hashed bundles accumulate forever.
 
+Each page also carries the lesson's text data files (tools/_embed_data.py), so
+it makes no request for them while it starts. The page is then a snapshot: a
+data file changed on main shows up after the next export, not at once.
+`--no-embed` exports the lesson as it is, and the page fetches its data files
+from Codeberg while it starts.
+
 Usage:
     python3 tools/export-notebooks.py --pages-dir <path-to-pages-worktree> \\
         modern_greek/ellinika_b/chapter_01/chapter_01_notebook.py \\
@@ -26,34 +32,48 @@ import pathlib
 import shutil
 import subprocess
 import sys
+import tempfile
+
+import _embed_data
+
+REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 
-def export_one(notebook: pathlib.Path, pages_dir: pathlib.Path) -> "tuple[bool, str]":
-    """Export one notebook. Returns (success, stderr-or-empty) -- no printing."""
+def export_one(notebook: pathlib.Path, pages_dir: pathlib.Path, embed: bool = True) -> "tuple[bool, str, str]":
+    """Export one notebook. Returns (success, stderr-or-empty, note about the embedded data files) -- no printing."""
     out_dir = pages_dir / notebook.parent
     if out_dir.is_dir() and not (out_dir / ".git").exists():
         shutil.rmtree(out_dir)
-    result = subprocess.run(
-        [sys.executable, "-m", "marimo", "export", "html-wasm",
-         str(notebook), "-o", str(out_dir), "-f", "--mode", "run"],
-        capture_output=True, text=True,
-    )
-    return result.returncode == 0, result.stderr
+    source, note = notebook, ""
+    with tempfile.TemporaryDirectory() as tmp:
+        files = _embed_data.discover(notebook, REPO_ROOT) if embed else {}
+        if files:
+            source = _embed_data.embedded_copy(notebook, files, pathlib.Path(tmp))
+            remark = _embed_data.provenance(REPO_ROOT, files)
+            note = f"{len(files)} data files embedded, {sum(p.stat().st_size for p in files.values()) / 1024:.0f} KB" + (f"; {remark}" if remark else "")
+        result = subprocess.run(
+            [sys.executable, "-m", "marimo", "export", "html-wasm",
+             str(source), "-o", str(out_dir), "-f", "--mode", "run"],
+            capture_output=True, text=True,
+        )
+    return result.returncode == 0, result.stderr, note
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--pages-dir", required=True, type=pathlib.Path,
                          help="Pages-branch checkout/worktree root to export into")
+    parser.add_argument("--no-embed", action="store_true",
+                         help="Do not embed the lesson's text data files in the page")
     parser.add_argument("notebooks", nargs="+", type=pathlib.Path,
                          help="Notebook source paths, relative to this repo's root")
     args = parser.parse_args()
 
     failed = []
     for notebook in args.notebooks:
-        ok, stderr = export_one(notebook, args.pages_dir)
+        ok, stderr, note = export_one(notebook, args.pages_dir, embed=not args.no_embed)
         if ok:
-            print(f"OK: {notebook} -> {args.pages_dir / notebook.parent}")
+            print(f"OK: {notebook} -> {args.pages_dir / notebook.parent}" + (f" ({note})" if note else ""))
         else:
             print(f"FAILED: {notebook}\n{stderr}", file=sys.stderr)
             failed.append(notebook)

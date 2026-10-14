@@ -65,6 +65,12 @@ directory has its own README (description + live links) and `AGENTS.md`
    ```bash
    make export-notebooks NOTEBOOKS="ancient_greek/odyssey/2026_07_06/notebook.py"
    ```
+   The page carries the lesson's text data files as they are on disk, so export
+   from a clean `main` checkout (the export line names the branch when it is not
+   `main`, and the embedded files that differ from `HEAD`). The page is a
+   snapshot: after a data file changes, export again the lessons that embed it;
+   `python3 tools/check-embedded-data.py --who <file>` lists them. More in
+   "Export one lesson with and without the embedded data" below.
 3. **Commit and push Codeberg's `pages`** from that worktree (Trezor-confirmed),
    then open the live Codeberg page and check it (hard-reload with Ctrl+Shift+R).
 4. **Propagate to GitHub and GitLab**, including the three GitLab split
@@ -89,6 +95,28 @@ directory has its own README (description + live links) and `AGENTS.md`
 A hub change (`tools/gen_hub.py`, an `index.tsv`) follows the same steps with
 `make gen-hub HUBS="<hub keys>"` instead of the export.
 
+### Export one lesson with and without the embedded data
+
+The export embeds a lesson's text data files (TSV, Markdown, YAML) by default
+(step 2 above), so the page makes no request for them while it starts. PDFs,
+images, `index.tsv`, `ga.json` and files of other repositories stay run-time
+fetches. `ARGS=--no-embed` gives the plain export: the page then downloads the
+text files while it starts, as before. To compare the two, export the lesson
+twice into scratch folders, not into the pages worktree:
+
+```bash
+make export-notebooks PAGES_DIR=/tmp/wasm-with    NOTEBOOKS="ancient_greek/odyssey/2026_07_06/notebook.py"
+make export-notebooks PAGES_DIR=/tmp/wasm-without NOTEBOOKS="ancient_greek/odyssey/2026_07_06/notebook.py" ARGS=--no-embed
+```
+
+Each export lands in `<PAGES_DIR>/<the lesson's folder>/`. Serve that folder
+(`python3 -m http.server --directory /tmp/wasm-with/ancient_greek/odyssey/2026_07_06`),
+open it, and filter the browser's Network tab by `raw`. The page without the
+embedded data downloads the lesson's data files; the page with it downloads
+`index.tsv` and `ga.json`, and the PDFs, images and files of other repositories
+that the lesson asks for. `make check-embedded-data` checks the embedding rules
+and the data cell of every lesson.
+
 ### What's automated (reference)
 
 `make help` lists what's automated for syncing content across hosts —
@@ -109,10 +137,12 @@ points their hub cards at their own GitLab projects, restores the CI file),
 checking whether Pages deployments are actually live rather than just pushed
 (`make verify-pages-deploy`, see `tools/verify-pages-deploy.py`), and
 checking that no hub card, back link or asset is dead on any host (`make
-check-hub-links`, see `tools/check-hub-links.py`). All but the last two
+check-hub-links`, see `tools/check-hub-links.py`), and checking the data files
+that each export embeds (`make check-embedded-data`, see
+`tools/check-embedded-data.py`). All but the last three
 only stage local changes or run already-established scripts;
-`verify-pages-deploy` and `check-hub-links` are read-only and make no local
-changes at all.
+`verify-pages-deploy`, `check-hub-links` and `check-embedded-data` are
+read-only and make no local changes at all.
 
 For a complete propagation of an already-correct Codeberg `pages` branch,
 including all GitLab split projects, use:

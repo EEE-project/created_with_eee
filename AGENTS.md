@@ -199,3 +199,15 @@ URL). Fix: route local file reads through `gu.ensure_file(filename,
 nb_dir=..., remote_base=...)` — a no-op when the file's already local, a
 download when it isn't. Each course's own `AGENTS.md` tracks which of its
 files have/haven't been converted yet.
+
+## Data files in WASM exports
+
+`make export-notebooks` embeds the text data files a lesson can ask for (TSV, Markdown, YAML, JSON, HTML up to 250 KB) in
+the exported page: every such file in the lesson's own folder, and the files in the folder directly above it that the
+lesson names (as a string or an f-string). A lesson needs no list and no code for this. A file in a subfolder, two or more
+folders up, in another repository, a PDF or an image is not embedded; the page fetches it while it starts. `index.tsv` and
+`ga.json` are never embedded, and only git-tracked files are (see `tools/_embed_data.py`). A page is a snapshot: after a change
+to a data file, export the lessons that read it again (`python3 tools/check-embedded-data.py --who <file>` lists them).
+`make check-embedded-data` lists a lesson whose requested file is not embedded. `make export-notebooks ARGS=--no-embed`
+exports a lesson without the embedded data; the README section "Export one lesson with and without the embedded data"
+shows how to compare the two.

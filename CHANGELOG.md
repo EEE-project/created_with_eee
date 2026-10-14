@@ -1,6 +1,15 @@
 # Changelog
 
 ## 2026-10-14
+- **Exported lesson pages carry their text data files.** `make export-notebooks` now puts the lesson's TSV, Markdown, YAML, JSON and HTML
+  files into the page: the tracked files of the lesson's folder, and the ones it names in the folder above. A page used to download each
+  of them from Codeberg while it started, one blocking request after the other. For these files it now makes no request, and they no
+  longer change or vanish under a deployed page when `main` moves on. The page starts 1 to 3 seconds sooner (4 to 7 percent; median of three
+  alternating runs each: Kavafis Ithaki 1 28.7 s to 27.5 s, Palaestra 2026_07_03 27.4 s to 25.7 s, and 37.3 s to 34.6 s with 200 ms added to
+  every request, Odyssey 2026_06_01 50.3 s to 48.4 s). Pyodide and the Python packages still take most of the start. The page is a snapshot:
+  after you change such a file, export the lessons that read it again (`tools/check-embedded-data.py --who FILE` lists them). PDFs, images,
+  `index.tsv`, `ga.json` and files from other repositories (the Odyssey translations of `greek-knowledge-eee`) are still fetched while the
+  page starts. `ARGS=--no-embed` turns the embedding off; the new `make check-embedded-data` checks what each export embeds.
 - **`make sync-main` (`tools/push.sh`) stops with an error when it cannot tell whether GitHub or GitLab has a mirror.** A failed
   check (no connection, timeout, login problem, server error) used to be read as "no mirror": the script printed `No … mirror
   … — skipping`, pushed nothing and exited 0. It now asks each host's API (`gh api`, `glab api`): "not found" still skips the
