@@ -1,9 +1,5 @@
-# Athenaze Chapter II — noun stems (working "easy" set only).
+# Athenaze Chapter II — noun stems.
 # APM override preserves the accent of non-oxytone nouns in acc pl (see cap1 note).
-# Deferred (don't resolve cleanly with a bare `noun:` stem — see plans/TODO.md):
-#   σκιά   — 1st-decl fem (long-α), yields 3rd-decl-like garbage (σκίαος)
-#   δεσπότης — 1st-decl masc, yields broken δεσπότς
-#   σπέρμα — 3rd-decl (-ματ-);  βοῦς — irregular 3rd-decl
 
 # 2nd declension neuter (o-stem) — recessive accent, acc pl = nom pl
 ἄροτρον:
@@ -40,3 +36,43 @@
         noun: ῥαβδο
     forms:
         APM: ῥάβδους
+
+# 1st declension feminine, long alpha after iota — the stem rules give 6 of 8 cells, so only GSF and DSF are given
+σκιά:
+    stems:
+        noun: σκια
+    forms:
+        GSF: σκιᾶς
+        DSF: σκιᾷ
+
+# 1st declension masculine, paroxytone -ης — the stem rules force an oxytone accent, so every cell is given
+δεσπότης:
+    forms:
+        NSM: δεσπότης
+        GSM: δεσπότου
+        DSM: δεσπότῃ
+        ASM: δεσπότην
+        NPM: δεσπόται
+        GPM: δεσποτῶν
+        DPM: δεσπόταις
+        APM: δεσπότας
+
+# 3rd declension neuter, stem in -ματ- — the stem gives 6 of 8 cells, so only NSN and ASN are given (as for σῶμα in the Pratt lexicon)
+σπέρμα:
+    stems:
+        noun: σπερματ
+    forms:
+        NSN: σπέρμα
+        ASN: σπέρμα
+
+# 3rd declension, irregular stem — every cell is given (all eight confirmed against Perseids Morpheus)
+βοῦς:
+    forms:
+        NSM: βοῦς
+        GSM: βοός
+        DSM: βοΐ
+        ASM: βοῦν
+        NPM: βόες
+        GPM: βοῶν
+        DPM: βουσί(ν)
+        APM: βοῦς

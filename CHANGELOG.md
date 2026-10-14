@@ -7,6 +7,10 @@
   host, any other answer, or none, prints what went wrong, exits 1 before that host is pushed and names the host argument to run
   again (`make sync-main ARGS=github`). The GitLab check now uses `glab` (logged in, like the force-push switch that follows it)
   instead of an anonymous `git ls-remote`.
+- **Athenaze chapter 2: the four nouns that `athenaze_cap2_nouns.yaml` had left out now have full paradigms.** They are σκιά, δεσπότης, σπέρμα
+  and βοῦς: a bare noun stem gives them wrong accents or vowel lengths, so each now has a stem plus only the forms the rules
+  cannot give, or all eight forms, every one checked against Perseids Morpheus. Lessons 2026_07_03, 2026_07_07 and 2026_07_10
+  load that file.
 
 ## 2026-10-13
 - **The browser-tab title follows the language dropdown on every multilingual lesson and on every hub page.** A lesson's
