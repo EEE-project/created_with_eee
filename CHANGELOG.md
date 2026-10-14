@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-14
+- **`make sync-main` (`tools/push.sh`) stops with an error when it cannot tell whether GitHub or GitLab has a mirror.** A failed
+  check (no connection, timeout, login problem, server error) used to be read as "no mirror": the script printed `No … mirror
+  … — skipping`, pushed nothing and exited 0. It now asks each host's API (`gh api`, `glab api`): "not found" still skips the
+  host, any other answer, or none, prints what went wrong, exits 1 before that host is pushed and names the host argument to run
+  again (`make sync-main ARGS=github`). The GitLab check now uses `glab` (logged in, like the force-push switch that follows it)
+  instead of an anonymous `git ls-remote`.
+
 ## 2026-10-13
 - **The browser-tab title follows the language dropdown on every multilingual lesson and on every hub page.** A lesson's
   tab used to keep the title of its course's default language whatever the dropdown said (Russian for the Odyssey lessons,

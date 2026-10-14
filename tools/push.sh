@@ -68,6 +68,29 @@ case "$repo" in
     modern_greek_accentuation_eee) gitlab_repo="modern-greek-accentuation-eee" ;;
 esac
 
+# Does the host have a mirror of this repo? Ask its API (gh/glab api -i print the
+# HTTP status line first): 200 = yes, 404 = no. Anything else -- no connection,
+# timeout, login, rate limit, server error -- is NOT "no mirror": say so and stop,
+# so a failed check can never pass for a repo without a mirror and push nothing.
+mirror_exists() {
+    local host=$1 out status detail
+    shift
+    out=$("$@" 2>&1) || true
+    status=$(printf '%s\n' "$out" | sed -n '1s#^HTTP/[0-9.]* \([0-9]*\).*#\1#p')
+    case "$status" in
+        200) return 0 ;;
+        404) return 1 ;;
+    esac
+    if [ -n "$status" ]; then
+        detail="HTTP ${status}"
+    else
+        detail=$(printf '%s' "$out" | tr -s '[:space:]' ' ' | cut -c1-160)
+        detail=${detail# }
+    fi
+    echo "❌ Could not check whether ${host} has a mirror of ${repo} (${detail:-no answer}) — nothing was pushed to ${host}. Run it again with the host argument ${host,,} once that works." >&2
+    exit 1
+}
+
 if wants codeberg; then
     # --tags (not --follow-tags): our tags are lightweight, and
     # --follow-tags only follows annotated tags reachable from what's
@@ -78,7 +101,7 @@ fi
 
 # --- GitHub ---
 if wants github; then
-    if gh repo view "EEE-project/${repo}" > /dev/null 2>&1; then
+    if mirror_exists GitHub gh api -i "repos/EEE-project/${repo}"; then
         conv_script="codeberg2github.sh"
         mirror_dir="$HOME/work/greek/git/github/EEE-project/${repo}"
         if [ ! -f "${codeberg_root}/${conv_script}" ]; then
@@ -119,7 +142,7 @@ fi
 
 # --- GitLab ---
 if wants gitlab; then
-    if git ls-remote "https://gitlab.com/EEE-project/${gitlab_repo}.git" > /dev/null 2>&1; then
+    if mirror_exists GitLab glab api -i "projects/EEE-project%2F${gitlab_repo}"; then
         conv_script="codeberg2gitlab.sh"
         mirror_dir="$HOME/work/greek/git/gitlab/EEE-project/${repo}"
         if [ ! -f "${codeberg_root}/${conv_script}" ]; then
