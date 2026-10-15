@@ -1,6 +1,13 @@
 # Changelog
 
 ## 2026-10-15
+- **Ancient Greek lesson pages start with their paradigms already built.** `make export-notebooks` runs an ancient Greek lesson once on this
+  machine, with `uv`, in an environment resolved from the lesson's own script header. It puts the paradigms that the lesson built into the page as an extra
+  first cell, and the page builds none of them while it starts, so the page loads faster. An Odyssey lesson builds 400 to 500 paradigms (a 60 to 160 KB
+  pack). The page pins
+  the four library versions that made the pack (`ARGS=--no-pin` leaves them free; a later release then switches the pack off and the page builds
+  the paradigms itself); `ARGS=--no-pack` builds no pack. A lesson that needs fewer than 20 paradigms (the Palaestra lessons) gets none, and a
+  failed pack never fails the export. The export needs `uv` and a network connection for an ancient Greek lesson; the README names it in the table of tools.
 - **The README lists what each maintainer command needs.** A new part of "Maintainer tooling", "What each command needs before you run it",
   names the tools and logins, the `.env` file with its three `GIT_CMD_*` lines, the folders with their default paths and the two sets of
   variable names (make targets and `propagate-pages.sh` call some of the same folders by different names), and a table of what each

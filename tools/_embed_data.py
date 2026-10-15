@@ -123,23 +123,35 @@ def cell_source(files: "dict[tuple[int, str], bytes]") -> str:
     return _CELL.format(entries=entries)
 
 
-def inject(source: str, files: "dict[tuple[int, str], bytes]") -> str:
-    """The notebook source with the data cell right after the `app = marimo.App(...)` statement (marimo runs the first registered of several free cells first)."""
+def insert_cell(source: str, cell: str) -> str:
+    """The notebook source with one more cell right after the `app = marimo.App(...)` statement (marimo runs the first registered of several free cells first)."""
     app_stmt = next((n for n in ast.parse(source).body
                      if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "app" for t in n.targets)
                      and isinstance(n.value, ast.Call) and getattr(n.value.func, "attr", "") == "App"), None)
     if app_stmt is None:
         raise ValueError("no `app = marimo.App(...)` statement found")
     lines = source.split("\n")
-    return "\n".join(lines[:app_stmt.end_lineno] + ["", ""] + cell_source(files).rstrip("\n").split("\n") + ["", ""] + lines[app_stmt.end_lineno:])
+    return "\n".join(lines[:app_stmt.end_lineno] + ["", ""] + cell.rstrip("\n").split("\n") + ["", ""] + lines[app_stmt.end_lineno:])
 
 
-def embedded_copy(notebook: pathlib.Path, files: "dict[tuple[int, str], pathlib.Path]", tmp_dir: pathlib.Path) -> pathlib.Path:
-    """Write the lesson with its data cell into tmp_dir and return that path; the other entries of the lesson's folder are linked in, so marimo finds head files as before."""
+def inject(source: str, files: "dict[tuple[int, str], bytes]") -> str:
+    """The notebook source with the data cell right after the `app = marimo.App(...)` statement."""
+    return insert_cell(source, cell_source(files))
+
+
+def linked_copy(notebook: pathlib.Path, tmp_dir: pathlib.Path) -> pathlib.Path:
+    """Copy the lesson into tmp_dir and return that path; the other entries of the lesson's folder are linked in, so marimo finds head files as before."""
     notebook = pathlib.Path(notebook).resolve()
     for entry in notebook.parent.iterdir():
         if entry.name != notebook.name:
             (tmp_dir / entry.name).symlink_to(entry)
     target = tmp_dir / notebook.name
-    target.write_text(inject(notebook.read_text(encoding="utf-8"), {k: p.read_bytes() for k, p in files.items()}), encoding="utf-8")
+    target.write_text(notebook.read_text(encoding="utf-8"), encoding="utf-8")
+    return target
+
+
+def embedded_copy(notebook: pathlib.Path, files: "dict[tuple[int, str], pathlib.Path]", tmp_dir: pathlib.Path) -> pathlib.Path:
+    """Write the lesson with its data cell into tmp_dir and return that path (see linked_copy)."""
+    target = linked_copy(notebook, tmp_dir)
+    target.write_text(inject(target.read_text(encoding="utf-8"), {k: p.read_bytes() for k, p in files.items()}), encoding="utf-8")
     return target

@@ -110,6 +110,7 @@ repository (the folder with the `Makefile`).
 | `gh`, logged in | `sync-main` (mirror check), `verify-pages-deploy`, the manual Pages rebuild below | `gh auth status` |
 | `glab`, logged in | `sync-main` (mirror check and the `main` protection switch), `verify-pages-deploy` | `glab auth status` |
 | `~/.venv/eee/bin/python3` with `marimo` (another Python: `EEE_PYTHON=...`) | `export-notebooks`, `check-embedded-data`, `gen-hub`, `sync-pages-export`, `sync-hub-pages` | `~/.venv/eee/bin/python3 -m marimo --version` |
+| `uv` and a network connection to PyPI | `export-notebooks` for an ancient Greek lesson (it builds the paradigm pack; `ARGS=--no-pack` needs neither) | `uv --version` |
 
 `tools/propagate-pages.sh` itself calls neither `gh` nor `glab`.
 
@@ -162,14 +163,14 @@ times are what a run took on 2026-10-15, key uses included.
 
 | Command | What it changes | Key uses | Takes about | Check afterwards |
 | :-- | :-- | :-- | :-- | :-- |
-| `make export-notebooks NOTEBOOKS="..."` | the lesson folders in the Codeberg pages worktree (each is cleared, then written again); commits nothing | 0 | one marimo export per lesson | `make check-embedded-data`; `git status` in the worktree |
+| `make export-notebooks NOTEBOOKS="..."` | the lesson folders in the Codeberg pages worktree (each is cleared, then written again); commits nothing | 0 | one marimo export per lesson; an ancient Greek lesson adds 10 to 60 seconds for its paradigm pack (the first run also builds an environment) | `make check-embedded-data`; `git status` in the worktree |
 | `make propagate-pages` | one signed commit in each of the GitHub, GitLab unified and three split folders that changes; pushes nothing | 1 (fetch of Codeberg `pages`) + 1 per commit, 6 at most | 3 minutes | `git log -1 --format='%h %G?'` in each folder |
 | `make propagate-pages ARGS="github --push"` | repeats the preparation for GitHub (the folder is reset to Codeberg `pages`, the signed commit is made again), then force-pushes `pages:pages` to GitHub | 3: fetch, signature, push | 1 minute | `git ls-remote https://github.com/EEE-project/created_with_eee.git refs/heads/pages`; wait for the Pages build (2 minutes), then `make verify-pages-deploy SITE=GitHub` (see the rebuild rule below) |
 | `make propagate-pages ARGS="gitlab --push"` | repeats the preparation for the GitLab unified project and force-pushes it; pushes the three split projects (a commit that an earlier dry run made is pushed as it is) | 6 after a dry run: fetch, 1 signature, 4 pushes; 9 without one | 3 minutes | `git ls-remote` of the four projects; wait for their Pages pipelines (1 minute), then `make verify-pages-deploy` |
 | `make sync-main ARGS=github` | resets the GitHub mirror checkout to Codeberg `main`, converts it with `codeberg2github.sh`, makes one signed commit and force-pushes it to GitHub `main` | 2: signature, push | 1 minute | `git ls-remote https://github.com/EEE-project/created_with_eee.git refs/heads/main` shows a new commit whose parent is Codeberg `main` |
 | `make sync-main ARGS=gitlab` | the same with `codeberg2gitlab.sh`; the script allows a force-push to GitLab `main` only while it pushes | 2 | 1 minute | the same check on `gitlab.com`; `glab api projects/EEE-project%2Fcreated_with_eee/protected_branches/main` must show `"allow_force_push":false` |
 | `make sync-pages-export`, `sync-hub-pages`, `fix-split-roots`, `fix-gitlab-unified-scope`, `fix-static-footer`, `fix-split-hub-links` (the steps `propagate-pages` runs for you), and `make gen-hub` | files in the folders above only; they never commit or push | 0 | seconds | `git status` and `git diff` in each folder |
-| `make verify-pages-deploy [SITE=...]`, `make check-hub-links [URL=...]`, `make check-embedded-data [SCOPE=...]` | nothing (read-only) | 0 | seconds | exit status 0 |
+| `make verify-pages-deploy [SITE=...]`, `make check-hub-links [URL=...]`, `make check-embedded-data [SCOPE=...]`, `make check-paradigm-pack [SCOPE=...]` | nothing (read-only) | 0 | seconds | exit status 0 |
 
 `make sync-main` without `ARGS` first pushes this repository's current branch
 and its tags to Codeberg (one more key use), then does GitHub and GitLab.
@@ -233,6 +234,34 @@ embedded data downloads the lesson's data files; the page with it downloads
 that the lesson asks for. `make check-embedded-data` checks the embedding rules
 and the data cell of every lesson.
 
+### The paradigm pack of an ancient Greek lesson
+
+An ancient Greek lesson page builds paradigms while it starts: an Odyssey lesson
+builds 400 to 500 of them, and a browser needs much longer for that than a
+desktop Python. The export runs the lesson once on this machine and puts the
+paradigms into the page, so the page starts with them built and loads faster. It needs `ancient-greek-backend-eee` 2.1.0 or newer
+on PyPI, `uv` and a network connection.
+
+- The lesson runs in an environment that `uv` builds from the lesson's own script
+  header, not in `~/.venv/eee`. A pack is valid only for the versions of
+  `ancient-greek-backend-eee`, `greek-inflexion-eee`, `greek-accentuation` and
+  `inflexion` that made it.
+- The export pins those four versions (`==`) in the exported page. With
+  `ARGS=--no-pin` they stay free: a later release of one of them then switches
+  the pack off, and the page builds the paradigms itself (slower, same result).
+- A lesson that needs fewer than 20 paradigms gets no pack (the Palaestra
+  lessons).
+- The export prints `paradigm pack: 462 paradigms, 115 KB, ...` for a lesson with
+  a pack, and `no paradigm pack: <reason>` for one without. A failed pack never
+  fails the export. `ARGS=--no-pack` builds none.
+- A page that accepted its pack prints `paradigm pack: <N> paradigms loaded` to
+  the console of its Python worker. `N` must not be 0.
+- `make check-paradigm-pack` checks the step without `uv` and without the network:
+  the script header of every lesson, the pinned versions, the place of the pack
+  cell, and that the copy of a lesson cannot leave files in the repository.
+  `ARGS="--run ancient_greek/odyssey/2026_06_01/notebook.py"` also builds the real
+  pack of one lesson (it needs `uv` and the network).
+
 ### What's automated (reference)
 
 `make help` lists what's automated for syncing content across hosts —
@@ -255,10 +284,11 @@ checking whether Pages deployments are actually live rather than just pushed
 checking that no hub card, back link or asset is dead on any host (`make
 check-hub-links`, see `tools/check-hub-links.py`), and checking the data files
 that each export embeds (`make check-embedded-data`, see
-`tools/check-embedded-data.py`). All but the last three
-only stage local changes or run already-established scripts;
-`verify-pages-deploy`, `check-hub-links` and `check-embedded-data` are
-read-only and make no local changes at all.
+`tools/check-embedded-data.py`), and checking the paradigm pack step of the
+export (`make check-paradigm-pack`, see `tools/check-paradigm-pack.py`). All
+but the last four only stage local changes or run already-established scripts;
+`verify-pages-deploy`, `check-hub-links`, `check-embedded-data` and
+`check-paradigm-pack` are read-only and make no local changes at all.
 
 For a complete propagation of an already-correct Codeberg `pages` branch,
 including all GitLab split projects, use:

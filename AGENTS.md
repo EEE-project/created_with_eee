@@ -211,3 +211,12 @@ to a data file, export the lessons that read it again (`python3 tools/check-embe
 `make check-embedded-data` lists a lesson whose requested file is not embedded. `make export-notebooks ARGS=--no-embed`
 exports a lesson without the embedded data; the README section "Export one lesson with and without the embedded data"
 shows how to compare the two.
+
+## Paradigm packs in WASM exports
+
+`make export-notebooks` also runs an ancient Greek lesson once with `uv` (environment from the lesson's own script header) and
+puts the paradigms its backends built into the page as an extra first cell (`tools/_paradigm_pack.py`). A lesson needs no code for
+this. The page pins the four library versions that made the pack (`ARGS=--no-pin`, `ARGS=--no-pack`); a lesson with fewer than
+20 paradigms gets no pack. Do not run a lesson natively inside the repository to make a pack: `ensure_file()` downloads files next to
+the notebook (the tool runs a copy in a temporary folder). `make check-paradigm-pack` checks the step. See the README section
+"The paradigm pack of an ancient Greek lesson".

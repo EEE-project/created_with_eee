@@ -14,7 +14,7 @@ PAGES_DIR ?= $(CURDIR)/../created_with_eee-pages-worktree
 
 EEE_PYTHON ?= $(HOME)/.venv/eee/bin/python3
 
-.PHONY: help sync-main propagate-pages fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-hub-links check-vocab check-kavafis-english check-embedded-data
+.PHONY: help sync-main propagate-pages fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-hub-links check-vocab check-kavafis-english check-embedded-data check-paradigm-pack
 
 help:
 	@echo "Targets:"
@@ -118,6 +118,11 @@ help:
 	@echo "                      Optional SCOPE= limits it to one path, e.g."
 	@echo "                      make check-embedded-data SCOPE=ancient_greek/odyssey"
 	@echo "                      ARGS=--export also exports each copy with marimo (slow)."
+	@echo "  check-paradigm-pack Check the paradigm pack step of export-notebooks (see"
+	@echo "                      tools/check-paradigm-pack.py). Read-only; needs neither uv"
+	@echo "                      nor the network. Optional SCOPE= limits it to one path."
+	@echo "                      ARGS=\"--run <notebook>\" also builds the real pack of one"
+	@echo "                      lesson (needs uv and the network)."
 	@echo ""
 	@echo "NOT automated here (still manual -- see README's Maintainer tooling"
 	@echo "section): splitting a new course off into its own GitLab project."
@@ -212,3 +217,6 @@ check-kavafis-english:
 
 check-embedded-data:
 	$(EEE_PYTHON) tools/check-embedded-data.py $(ARGS) $(SCOPE)
+
+check-paradigm-pack:
+	$(EEE_PYTHON) tools/check-paradigm-pack.py $(ARGS) $(SCOPE)
