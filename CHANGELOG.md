@@ -3,8 +3,10 @@
 ## 2026-10-15
 - **Ancient Greek lesson pages start with their paradigms already built.** `make export-notebooks` runs an ancient Greek lesson once on this
   machine, with `uv`, in an environment resolved from the lesson's own script header. It puts the paradigms that the lesson built into the page as an extra
-  first cell, and the page builds none of them while it starts, so the page loads faster. An Odyssey lesson builds 400 to 500 paradigms (a 60 to 160 KB
-  pack). The page pins
+  first cell, and the page builds none of them while it starts, so the page loads faster: an Odyssey lesson page is ready about 2 times sooner than
+  before (1.9 to 2.0 times; median page ready time 27 to 31 s instead of about 54 to 62 s on Codeberg, GitHub and GitLab Pages). The faster libraries give
+  about 1.5 times of it and the pack about 1.3 times more. The first cell output comes about 4 s later, because the pack cell runs first. An Odyssey lesson
+  builds 400 to 500 paradigms (a 60 to 160 KB pack). The page pins
   the four library versions that made the pack (`ARGS=--no-pin` leaves them free; a later release then switches the pack off and the page builds
   the paradigms itself); `ARGS=--no-pack` builds no pack. A lesson that needs fewer than 20 paradigms (the Palaestra lessons) gets none, and a
   failed pack never fails the export. The export needs `uv` and a network connection for an ancient Greek lesson; the README names it in the table of tools.
