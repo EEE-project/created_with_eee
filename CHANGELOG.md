@@ -19,6 +19,16 @@
 - **`make sync-main ARGS=gitlab` switches GitLab's force-push permission for `main` off again when the push fails.** The script allows the
   force-push for the push and switches it off afterwards. A failed push (for example a missed confirmation of the key) used to end the script
   before the second step, so the permission stayed on. The script now restores it first and then exits with the status of the push.
+- **The `ship-eee-change` skill file is no longer in the repository.** It described one maintainer's own shipping routine and now lives in that
+  maintainer's personal skills folder. The README ("Quick start" and "What each command needs before you run it") holds the steps that matter to
+  everyone, and `AGENTS.md` points there.
+- **`make sync-main` exits with the status of a failed GitLab push when the repository has no conversion script.** For such a repository the script
+  pushes all branches and tags in one plain push. It switched GitLab's force-push permission off again afterwards, but it swallowed the failure of
+  the push: a failed push ended with exit status 0 and nothing pushed. The script now restores the permission and then exits with the status of the push.
+- **`make propagate-pages` reads the folder variables of the make targets.** The make targets call three folders `PAGES_DIR`,
+  `GITLAB_UNIFIED_PAGES_DIR` and `SPLIT_PROJECTS_DIR`; `tools/propagate-pages.sh` called them `CODEBERG_PAGES_DIR`, `GITLAB_PAGES_DIR` and
+  `GITLAB_SPLIT_DIR`, so a make-style variable given to `make propagate-pages` was silently ignored. The script now reads both sets (its own name
+  wins when both are set), from the environment or from `.env`. The README table names one variable per folder.
 
 ## 2026-10-14
 - **Exported lesson pages carry their text data files.** `make export-notebooks` now puts the lesson's TSV, Markdown, YAML, JSON and HTML

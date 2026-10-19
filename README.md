@@ -123,22 +123,23 @@ value the scripts use plain `git`. There is an example under "What's automated
 **Folders.** Each folder must exist before the first run. The pages folders
 must be clean, on `pages`, have an `origin` remote, and not share their git
 directory with the Codeberg folder; `propagate-pages` stops at once if one
-of them does not. The make targets and `tools/propagate-pages.sh` use
-different variable names for some of the same folders:
+of them does not. Set another path with the variable of the last column. The
+make targets read only that variable; `propagate-pages` also reads its older
+name in brackets, and the older name wins when both are set:
 
 | Folder | Default path | Branch | Another path with |
 | :-- | :-- | :-- | :-- |
-| Codeberg pages worktree | `../created_with_eee-pages-worktree` (next to this repository) | `pages` | `PAGES_DIR` (make targets), `CODEBERG_PAGES_DIR` (`propagate-pages`) |
+| Codeberg pages worktree | `../created_with_eee-pages-worktree` (next to this repository) | `pages` | `PAGES_DIR` (`CODEBERG_PAGES_DIR`) |
 | GitHub pages worktree | `~/work/greek/git/github/EEE-project/created_with_eee-pages-worktree` | `pages` | `GITHUB_PAGES_DIR` |
-| GitLab unified pages worktree | `~/work/greek/git/gitlab/EEE-project/created_with_eee-pages-worktree` | `pages` | `GITLAB_UNIFIED_PAGES_DIR` (make targets), `GITLAB_PAGES_DIR` (`propagate-pages`) |
-| GitLab split projects, one clone each (`python3 tools/_split_courses.py projects` lists them) | `~/work/greek/git/gitlab/EEE-project/<project>` | `pages` | `SPLIT_PROJECTS_DIR` (make targets), `GITLAB_SPLIT_DIR` (`propagate-pages`) |
+| GitLab unified pages worktree | `~/work/greek/git/gitlab/EEE-project/created_with_eee-pages-worktree` | `pages` | `GITLAB_UNIFIED_PAGES_DIR` (`GITLAB_PAGES_DIR`) |
+| GitLab split projects, one clone each (`python3 tools/_split_courses.py projects` lists them) | `~/work/greek/git/gitlab/EEE-project/<project>` | `pages` | `SPLIT_PROJECTS_DIR` (`GITLAB_SPLIT_DIR`) |
 | GitHub mirror checkout, for `sync-main` | `~/work/greek/git/github/EEE-project/created_with_eee` | `main`, remote `codeberg` | none (fixed in `tools/push.sh`) |
 | GitLab mirror checkout, for `sync-main` | `~/work/greek/git/gitlab/EEE-project/created_with_eee` | `main`, remote `codeberg` | none (fixed in `tools/push.sh`) |
 
 **Set up the folders once.** Clone over HTTPS (no key is needed to read), then
-make `origin` the SSH address: the scripts push through `origin`. The `codeberg`
-remote of a mirror checkout stays on HTTPS, so `sync-main` fetches Codeberg
-without your key.
+make `origin` the SSH address: the split projects push through `origin`, and
+every pages folder needs an `origin` remote. The `codeberg` remote of a mirror
+checkout stays on HTTPS, so `sync-main` fetches Codeberg without your key.
 
 ```bash
 # Codeberg pages worktree, next to this repository

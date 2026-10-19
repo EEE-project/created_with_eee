@@ -28,7 +28,10 @@ Hosts (default: all):
   gitlab          GitLab unified and all GitLab split Pages projects
 
 Environment overrides: GIT_CMD_CODEBERG, GIT_CMD_GITHUB, GIT_CMD_GITLAB,
-GITHUB_PAGES_DIR, GITLAB_PAGES_DIR, GITLAB_SPLIT_DIR
+GITHUB_PAGES_DIR, GITLAB_PAGES_DIR, GITLAB_SPLIT_DIR, CODEBERG_PAGES_DIR.
+The names of the make targets work too: PAGES_DIR (= CODEBERG_PAGES_DIR),
+GITLAB_UNIFIED_PAGES_DIR (= GITLAB_PAGES_DIR) and SPLIT_PROJECTS_DIR
+(= GITLAB_SPLIT_DIR); when both names are set, the first one wins.
 EOF
 }
 
@@ -68,20 +71,21 @@ source "$tool_dir/_dotenv.sh"
 
 for env_name in \
     GIT_CMD_CODEBERG GIT_CMD_GITHUB GIT_CMD_GITLAB \
-    GITHUB_PAGES_DIR GITLAB_PAGES_DIR GITLAB_SPLIT_DIR CODEBERG_PAGES_DIR; do
+    GITHUB_PAGES_DIR GITLAB_PAGES_DIR GITLAB_SPLIT_DIR CODEBERG_PAGES_DIR \
+    GITLAB_UNIFIED_PAGES_DIR SPLIT_PROJECTS_DIR PAGES_DIR; do
     load_dotenv_value "$env_name"
 done
 
 github_dir="${GITHUB_PAGES_DIR:-$HOME/work/greek/git/github/EEE-project/created_with_eee-pages-worktree}"
-gitlab_dir="${GITLAB_PAGES_DIR:-$HOME/work/greek/git/gitlab/EEE-project/created_with_eee-pages-worktree}"
-split_parent="${GITLAB_SPLIT_DIR:-$HOME/work/greek/git/gitlab/EEE-project}"
+gitlab_dir="${GITLAB_PAGES_DIR:-${GITLAB_UNIFIED_PAGES_DIR:-$HOME/work/greek/git/gitlab/EEE-project/created_with_eee-pages-worktree}}"
+split_parent="${GITLAB_SPLIT_DIR:-${SPLIT_PROJECTS_DIR:-$HOME/work/greek/git/gitlab/EEE-project}}"
 git_cmd_codeberg=(git)
 git_cmd_github=(git)
 git_cmd_gitlab=(git)
 [[ -z "${GIT_CMD_CODEBERG:-}" ]] || read -r -a git_cmd_codeberg <<< "$GIT_CMD_CODEBERG"
 [[ -z "${GIT_CMD_GITHUB:-}" ]] || read -r -a git_cmd_github <<< "$GIT_CMD_GITHUB"
 [[ -z "${GIT_CMD_GITLAB:-}" ]] || read -r -a git_cmd_gitlab <<< "$GIT_CMD_GITLAB"
-source_pages_dir="${CODEBERG_PAGES_DIR:-$repo_root/../created_with_eee-pages-worktree}"
+source_pages_dir="${CODEBERG_PAGES_DIR:-${PAGES_DIR:-$repo_root/../created_with_eee-pages-worktree}}"
 
 github_url=git@github.com:EEE-project/created_with_eee.git
 gitlab_url=git@gitlab.com:EEE-project/created_with_eee.git

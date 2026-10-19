@@ -169,8 +169,8 @@ links:
    the file).
 2. Export the notebook: `marimo export html-wasm <lesson-dir>/<notebook>.py --mode run -o <tmp-dir>`.
 3. Copy that export into the `pages` branch at the matching path — `pages` is
-   synced directly, never via a PR against `main` (see
-   `.claude/skills/ship-eee-change`).
+   synced directly, never via a PR against `main` (see the README, "Quick
+   start: from a notebook change to every host").
 4. Regenerate that course's own hub — it's static HTML now, not a live
    notebook, so it won't pick up the new `index.tsv` row on its own:
    `python3 tools/gen_hub.py <hub-key>` from `main` (see `tools/gen_hub.py`'s

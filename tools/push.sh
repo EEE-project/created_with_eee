@@ -150,7 +150,8 @@ if wants gitlab; then
             # bites when history was rewritten (a fast-forward update never
             # trips it), but toggle it off unconditionally since we can't tell
             # in advance. Always restore after, even if the push reports
-            # failure, so a real error never leaves protection off.
+            # failure, so a real error never leaves protection off; the
+            # script then exits with the status of the push.
             #
             # Explicit refspecs (not --mirror) so only real branches/tags sync --
             # --mirror also copies this checkout's own refs/remotes/* bookkeeping
@@ -165,10 +166,12 @@ if wants gitlab; then
             if glab api --method PATCH "$protected_branch_api" -f allow_force_push=true > /dev/null 2>&1; then
                 unprotected=true
             fi
-            $git_lab push --prune --force git@gitlab.com:EEE-project/${gitlab_repo}.git 'refs/heads/*:refs/heads/*' 'refs/tags/*:refs/tags/*' || true
+            push_status=0
+            $git_lab push --prune --force git@gitlab.com:EEE-project/${gitlab_repo}.git 'refs/heads/*:refs/heads/*' 'refs/tags/*:refs/tags/*' || push_status=$?
             if [ "$unprotected" = true ]; then
                 glab api --method PATCH "$protected_branch_api" -f allow_force_push=false > /dev/null
             fi
+            [ "$push_status" = 0 ] || exit "$push_status"
         elif [ ! -d "$mirror_dir" ]; then
             echo "⚠️  ${conv_script} exists but ${mirror_dir} is missing — skipping GitLab sync, set up the checkout first"
         else
