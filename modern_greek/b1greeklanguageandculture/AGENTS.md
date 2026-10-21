@@ -70,20 +70,19 @@ Identify which dated section(s) belong to the lesson you're building (a session'
 
 ## Notebook structure
 
-Every lesson notebook is one large trilingual (ru/el/en) file combining:
+The existing Kapodistrias and Zorba lesson notebooks use the OLD machinery. Each is one large trilingual (ru/el/en) file combining:
 
 1. **A content cell** — `_lang`-branched `mo.vstack([...])`, interspersing `mo.md(...)` prose (title, biography/discussion text, closing vocabulary summary) with `_img(n)` calls for each relevant slide. This is the only cell that's genuinely lesson-specific.
 2. **Noun/verb/adjective drill machinery** — identical across every lesson in both courses (confirmed: two arbitrary lessons diff at ~320 of ~1130-1213 lines, i.e. ~75% shared). Reads `nouns.tsv`/`verbs.tsv`/`adjectives.tsv` from the lesson's own directory, builds a `mo.ui.table` selector, then a skip/clear/submit drill loop per part of speech via `gu.create_noun_test_ui` / `gu.create_verb_test_ui` / `gu.create_adjective_test_ui` and `gu.check_*_test`.
 3. **A trilingual `UI_STRINGS` dict + `t_ui()` helper** — all drill labels, not just content, are translated.
 4. **A fixed-position `language_selector` dropdown** and shared `eee_footer`.
 
-**Never hand-write this machinery.** To add a new lesson: copy the closest existing `notebook.<date>.py` as a template (matches the pattern documented in Palaestra's own AGENTS.md), then replace only:
-- the content cell (all three `if _lang == "ru" / elif "el" / else` blocks),
-- the `_badge` placeholder (`""` with a `# молаб-бейдж добавить после загрузки в molab` comment until the lesson is uploaded to molab — never invent a molab ID),
-- the three vocabulary TSVs,
+**Never hand-write this machinery, and do not copy an old Kapodistrias or Zorba lesson as the template of a new one.** The old machinery uses the retired drill calls (the `gu.create_*_test_ui` and `gu.check_*_test` family) and a `UI_STRINGS` dict. Every new lesson uses the current eee-project API only (the Kavafis lessons were built that way). To add a new lesson, use the `eee` skill of `modern-greek-eee-skills`, profile `slides-lesson.md`: it clones the canonical chapter `ellinika_b/chapter_09` with `clone_lesson.py --course-dir ... --titles-json ... --drop-phrases`. You replace only:
+- the content cells (each has a `ru`, an `el` and an `en` branch),
+- the three vocabulary TSVs and their `_ru` twins,
 - the `slide-N.jpg` files.
 
-Leave the drill machinery, `UI_STRINGS`, language selector, and footer untouched.
+Leave the machinery of the existing lessons untouched. `check_lesson.py` of the skill fails a lesson that still calls a retired function; moving the old lessons to the current API is a separate task and needs the maintainer's word.
 
 ## Index notebook + index.tsv
 

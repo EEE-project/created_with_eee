@@ -136,10 +136,9 @@ target the same key — don't invent a different key or mechanism for a new
 course, or that course's pages will silently fall out of the shared
 persistence.
 
-Already wired: `ellinika_b`, `b1greeklanguageandculture` (kapodistrias, zorba,
-kavafis_ithaki), and Odyssey's two oldest lessons (`2026_06_01`, `2026_06_15`
-— the rest of Odyssey and all of Palaestra still use a plain, non-persisted
-dropdown as of 2026-09-09).
+Already wired (checked 2026-10-21): `ellinika_b`, `b1greeklanguageandculture`
+(kapodistrias, zorba, kavafis_ithaki) and all 8 Odyssey lessons. All 10
+Palaestra lessons still use a plain, non-persisted dropdown.
 
 ## The word-in-translation test: 10 balanced questions, the same way in every notebook
 

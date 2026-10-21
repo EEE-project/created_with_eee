@@ -8,7 +8,7 @@
 
 ```
 ancient_greek.2026.summer/
-  index.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
+  index.tsv          # trilingual lesson index (url, icon, greek, label_{ru,el,en}, title_{ru,el,en}, desc_{ru,el,en}, index_url)
   notebook.py          # index/parent notebook
   athenaze_capN_{adjs,nouns,verbs}.yaml  # course-local lexicon data, see "Course-local
                         # lexicon YAMLs" below — NOT per-lesson, sibling to the lesson dirs
@@ -659,7 +659,7 @@ eee_topbar(mo, back_url=cfg.index_url(), lang="ru", titles=cfg.titles())
 NB_REMOTE = f"{cfg.raw_base}/2026_06_16"   # match lesson dir name
 ```
 
-`index.tsv` columns: `url`, `icon`, `greek`, `label`, `title`, `desc`, `index_url`.
+`index.tsv` columns (trilingual, 13): `url`, `icon`, `greek`, `label_ru`, `label_el`, `label_en`, `title_ru`, `title_el`, `title_en`, `desc_ru`, `desc_el`, `desc_en`, `index_url`.
 Add a row here when creating a new lesson notebook — `url` is the lesson's own
 directory name (e.g. `2026_07_15/`), `index_url` is this course's root-relative
 Pages path, the same on every row

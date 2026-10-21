@@ -8,7 +8,7 @@
 
 ```
 odyssey/
-  index.tsv          # lesson index (url, icon, greek, label_ru, title_ru, desc_ru, index_url)
+  index.tsv          # trilingual lesson index (url, icon, greek, label_{ru,el,en}, title_{ru,el,en}, desc_{ru,el,en}, index_url)
   notebook.py           # index/parent notebook
   eee_note.md            # shared "О морфологическом движке EEE" text (see below)
   odyssey_morpheus_{adjs,nouns,verbs}_lexicon.yaml  # course-local lexicon
@@ -28,12 +28,14 @@ Each lesson directory:
 ```
 notebook.py
 greek.md                   ← Greek source text (do NOT hardcode in notebook)
-translations_ru.md         ← literary translations, incl. подстрочник gloss (do NOT hardcode)
+translations_{ru,en,el}.md ← not kept here: fetched at runtime from greek-knowledge-eee (see "Translations" below)
 ictus.html                 ← rhythm (икты) markup, one marked-up line per greek.md line
 vocab_{ref}.tsv            ← vocabulary for the quiz
 vocab_content_problems.md  ← known coverage gaps (read before adding TSV entries)
 translation_presence.tsv   ← manually-reviewed word×translator judgments (see below)
 ```
+
+**Translations (since the knowledge-base port):** `translations_{ru,en,el}.md` are not kept in the lesson folders. The notebook fetches them at runtime with `ensure_files(...)` from `https://codeberg.org/EEE-project/greek-knowledge-eee/raw/branch/main/texts/odyssey` (see the cell with `_gke_remote` in `2026_07_27/notebook.py`). A copy next to a notebook is a git-ignored download cache; the one tracked file of this kind is `2026_07_20/translations_ru_starikovsky.md`. The knowledge base names the interlinear crib `interlinear_{lang}` (`eee.interlinear_translator_key`), not `подстрочник`. Where the sections below say `translations_ru.md` or `## подстрочник`, read the knowledge-base file and its section names (checked 2026-10-21).
 
 All 6 lessons share the same interactive layout (migrated July 13, 2026):
 clickable poem text with a click-to-gloss panel, an ictus toggle, a
