@@ -30,8 +30,8 @@ notebook.py
 greek.md                   ← Greek source text (do NOT hardcode in notebook)
 translations_{ru,en,el}.md ← not kept here: fetched at runtime from greek-knowledge-eee (see below)
 ictus.html                 ← rhythm (икты) markup, one marked-up line per greek.md line
-vocab_{ref}.tsv            ← vocabulary for the quiz
-vocab_content_problems.md  ← known coverage gaps (read before adding TSV entries)
+vocab_{ref}.tsv            ← vocabulary for the quiz (every lesson also has vocab_{ref}_el.tsv and vocab_{ref}_en.tsv)
+vocab_content_problems.md  ← known coverage gaps (not every lesson has one; read it, where it exists, before adding TSV entries)
 translation_presence.tsv   ← manually-reviewed word×translator judgments (see below)
 ```
 
@@ -87,7 +87,7 @@ Identify cells by content, not by ID — IDs change after each save.
 | `## Слова, слова…` | per-lesson vocabulary notes (optional section) |
 | `## Текст поэмы с параллельными переводами` | section separator |
 | `_MURRAY = (...)` | Murray 1919 source citation (HTML) |
-| `_PODSTROCHNIK_DESC = ...` / `_desc_map` | translation-picker description text |
+| `_desc_map = {eee.interlinear_translator_key(...): gu.ui_label('interlinear_description', ...), **TRANS_DESC}` | translation-picker description text |
 | `SHOW_ICTUS = mo.ui.switch(...)` | ictus + homer-highlight toggles, `EEE_NOTE` accordion |
 | `text_widget = eee.interactive_text(...)` | clickable poem display + translation panel |
 | `period_tables, period_selector, gloss_panel = gu.render_gloss_selector(...)` | click-to-gloss panel (meaning + real period `mo.ui.dropdown`, see `eee_project.build_grc_period_tables` — the `bridge`/`lang_sel` convention below: a plain assignment displays nothing, `gloss_panel` needs its own bare-expression line) |
@@ -156,7 +156,8 @@ The files are `texts/odyssey/translations_ru.md` (interlinear_ru, Жуковск
 `translations_en.md` (Pope, Murray, Chapman, interlinear_en) and `translations_el.md`
 (Πολυλάς, interlinear_el), next to `text.md` (the Greek original) and `index.md` (how to
 read them). Each file starts with YAML front matter (`type: Literary Translation`, the
-translators, the sources). Today they cover Odyssey I.1-21 and IX.19-180.
+translators, the sources). Today they cover Odyssey I.1-21 and IX.19-180. Chapman has 8 stanzas only (I.1-21 and IX.19-38), and `TRANS_BY_LANG` in the notebooks does not
+offer Chapman.
 
 ```markdown
 ## interlinear_ru
@@ -173,6 +174,7 @@ translators, the sources). Today they cover Odyssey I.1-21 and IX.19-180.
 
 ## Жуковский
 
+<!-- Жуковский В. А. Одиссея. СПб., 1849 · https://ru.wikisource.org/... -->
 <!-- **Жуковский, 1849** · ... -->
 
 ### Odyss. IX.39–42
@@ -185,15 +187,23 @@ translators, the sources). Today they cover Odyssey I.1-21 and IX.19-180.
 
 ## Вересаев
 
+<!-- Вересаев В. В. Одиссея. М., 1953 · http://az.lib.ru/... -->
 <!-- **Вересаев, 1953** · ... -->
 ```
 
 Rules (implemented by `eee.parse_stanza_translations`; see its docstring in `eee_project/notebook_utils.py`): `## Name` opens a translator's section and is the
-translator key. An optional `<!-- **...** -->` comment line right after the heading is the display description (it goes into the `TRANS_DESC` dict).
-`### Odyss.` opens a stanza (the same ref as in `greek.md`). `---` separates translators. Every non-empty line under a `### Odyss.` heading (up to the next
-heading or `---`) belongs to that stanza's text. After the `<!-- ... -->` lines are stripped (`eee.strip_comment_lines`), the block must have exactly as many
-lines as `greek.md`'s matching stanza, in the same order — **one line in, one line out**: the notebook zips the translation lines against `stanza["lines"]`
-positionally. The result is `{translator: {stanza_ref: text}}`.
+translator key. A `<!-- **...** -->` comment line between the heading and the first stanza heading is the display description (it goes into the `TRANS_DESC` dict). The knowledge-base
+files put a plain source comment (`<!-- Author. Title. Place, year · URL -->`) before it; the parser ignores that line.
+`### Odyss.` opens a stanza. `---` separates translators. Every non-empty line under a `### Odyss.` heading (up to the next
+heading or `---`) belongs to that stanza's text. The result is `{translator: {stanza_ref: text}}`.
+
+**How the notebook finds and shows a stanza.** The notebooks from `2026_06_22` on look up each lesson stanza (the ref from `greek.md`) with `eee.find_stanza_translation`; the
+first two lessons use an exact `d.get(ref, "—")`, which is enough for their stanzas. An `interlinear_{lang}` section needs the exact ref (`allow_coarse_fallback=False`); a
+missing ref shows "—". For a literary translator, the lookup also accepts a stored range that contains the
+lesson stanza. Pope (from IX.39) and Chapman mark such refs `### Odyss. IX.39–46 (equivalent passage)`. After `eee.strip_comment_lines` removes the `<!-- ... -->` lines, the
+notebook shows each text line on its own line beside the Greek lines (the cell with `_txt_lines`). It does not pair a translation line with a Greek line, so a literary
+translation can have any number of lines: Murray's prose has one line for IX.39–42, where the Greek has four. The interlinear crib keeps one gloss line for each Greek line,
+each after an echo of that Greek line.
 
 **The interlinear crib is a section like any other, with three conventions.** Its name is `interlinear_{lang}`: get it from `eee.interlinear_translator_key(lang)` and
 never hardcode it (the old name `подстрочник` once made the interlinear option show no text). It has **no** `<!-- **...** -->` description: the notebook supplies
@@ -202,9 +212,12 @@ is preceded by an `<!-- grc: ... -->` comment that echoes its Greek source line 
 translator gets a real `<!-- **...** -->` description like Жуковский/Вересаев. A section titled `## Name (reference only, not reproduced)` is the citation of a
 translation in copyright: it has no stanzas and no description.
 
-**Adding translations for a new passage.** The notebooks fetch `main` of `greek-knowledge-eee`, so the stanzas must be there before a lesson can show them. The
-knowledge base builds these files with `scripts/populate_odyssey_texts.py`, a one-off, re-runnable script: each section constant is copied byte for byte from its
-source (the old `translations` branch of this repository, via `git show`), never retyped by hand. Read that script's docstring and ask before you change it.
+**Adding translations for a new passage.** The notebooks fetch `main` of `greek-knowledge-eee`, so the stanzas must be there before a lesson can show them (a missing
+stanza shows "—"). That repository describes how a work is authored in `texts/index.md` (copy a template, then run `uv run greek-knowledge check`) and says that the
+Odyssey is not migrated to it yet. The Odyssey files are built by `scripts/populate_odyssey_texts.py`, a one-off, re-runnable script that holds each section as a Python
+constant. Its docstring says that the sections come from the old `translations` branch of this repository. That branch no longer exists, and the comments in the script name
+other sources: Wikisource, Project Gutenberg, the Internet Archive, and `interlinear_en` and `interlinear_el` text for I.1-21 that was written for the knowledge base.
+Read `texts/index.md` and that script, and ask before you change either.
 
 ---
 
@@ -274,7 +287,7 @@ Format: `form\tlemma\tpos\tcontext\tmeaning`
 - `context` — citation (`IX.42: δασσάμεθ', ὡς μή τίς μοι`)
 - Multi-word forms (e.g. `πεφυγμένος ἦεν`, `οὔ ποτε`) are **intentional** — they
   represent periphrastic constructions; do not split them
-- Before adding entries, check `vocab_content_problems.md` — the gap may be documented
+- Before adding entries, check `vocab_content_problems.md` if the lesson has one — the gap may be documented
 
 ### Fixing a genuine coverage gap (not already documented)
 
