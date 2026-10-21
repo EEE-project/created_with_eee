@@ -28,27 +28,23 @@ Each lesson directory:
 ```
 notebook.py
 greek.md                   ← Greek source text (do NOT hardcode in notebook)
-translations_{ru,en,el}.md ← not kept here: fetched at runtime from greek-knowledge-eee (see "Translations" below)
+translations_{ru,en,el}.md ← not kept here: fetched at runtime from greek-knowledge-eee (see below)
 ictus.html                 ← rhythm (икты) markup, one marked-up line per greek.md line
 vocab_{ref}.tsv            ← vocabulary for the quiz
 vocab_content_problems.md  ← known coverage gaps (read before adding TSV entries)
 translation_presence.tsv   ← manually-reviewed word×translator judgments (see below)
 ```
 
-**Translations (since the knowledge-base port):** `translations_{ru,en,el}.md` are not kept in the lesson folders. The notebook fetches them at runtime with `ensure_files(...)` from `https://codeberg.org/EEE-project/greek-knowledge-eee/raw/branch/main/texts/odyssey` (see the cell with `_gke_remote` in `2026_07_27/notebook.py`). A copy next to a notebook is a git-ignored download cache; the one tracked file of this kind is `2026_07_20/translations_ru_starikovsky.md`. The knowledge base names the interlinear crib `interlinear_{lang}` (`eee.interlinear_translator_key`), not `подстрочник`. Where the sections below say `translations_ru.md` or `## подстрочник`, read the knowledge-base file and its section names (checked 2026-10-21).
+**Translations live in the knowledge base, not in the lesson folder.** The notebook fetches `translations_{ru,en,el}.md` at runtime with `ensure_files(...)` from `https://codeberg.org/EEE-project/greek-knowledge-eee/raw/branch/main/texts/odyssey` (see the cell with `_gke_remote` in `2026_07_27/notebook.py`). A copy next to a notebook is a git-ignored download cache. The one translation file kept in a lesson folder is `2026_07_20/translations_ru_starikovsky.md`: Стариковский (2025) is in copyright, so the knowledge base holds only a citation of it. The format is described under "`translations_{ru,en,el}.md`" below.
 
-All 6 lessons share the same interactive layout (migrated July 13, 2026):
+All 8 lessons share the same interactive layout (migrated July 13, 2026; `2026_07_27` was built directly on it):
 clickable poem text with a click-to-gloss panel, an ictus toggle, a
 homer-lexicon highlight toggle, three exercises (найди слово / сопоставь
-строфу и перевод / слово в переводе), and a merged `## подстрочник` section
-inside `translations_ru.md` (no more standalone `interlenear_ru.md` — its
-content was merged in and the file deleted). All 7 lessons (including
-`2026_07_27`, built directly on this pattern rather than migrated to it),
-and the pilot (`2026_06_01`), now read the shared `odyssey/eee_note.md` file at
-runtime instead of duplicating the ~30-line explanation in every
-`notebook.py` — the pilot's originally-fuller text (covering the `morpheus`
-lexicon, now wired into all 6 lessons) became the shared file's content.
-There is no more pilot exception.
+строфу и перевод / слово в переводе), and an interlinear crib in each language
+(the section `interlinear_{lang}` of the knowledge-base file; there is no standalone
+interlinear file). Every lesson reads the shared `odyssey/eee_note.md` file at runtime
+instead of duplicating the ~30-line explanation in every `notebook.py`, and the `morpheus`
+lexicon is wired into every lesson. There is no pilot exception.
 
 ---
 
@@ -61,9 +57,9 @@ ask before researching further). This course's materials live in
 the presentation. **`notes.md` is a valid source — transcribe / distill it** (that
 is how the День-4 lotus material got in).
 
-- **Greek / interlinear / translations** (`greek.md`, `translations_ru.md` — the
-  latter's `## подстрочник` section is the interlinear gloss, see below) —
-  transcribe from the presentation slides only.
+- **Greek** (`greek.md`) — transcribe from the presentation slides only.
+  **Translations and the interlinear crib** are not transcribed per lesson: the lesson
+  reads them from `greek-knowledge-eee` (see below).
 - **Rhythm (икты)** — transcribe the presentation's colour-marked stressed
   syllables faithfully (render red in the notebook); don't re-derive scansion.
 - **Images** — extract the presentation's own pictures/diagrams and wire them.
@@ -130,8 +126,9 @@ Identify cells by content, not by ID — IDs change after each save.
 
 ## CRITICAL: Text from `.md` files, never hardcoded
 
-Greek text and translations (incl. the interlinear gloss, see below) live in two
-Markdown files read at runtime by `eee.parse_stanza_text`/`eee.parse_stanza_translations`
+Greek text and translations (incl. the interlinear crib, see below) live in Markdown
+files read at runtime by `eee.parse_stanza_text`/`eee.parse_stanza_translations`: `greek.md`
+in the lesson folder, `translations_{ru,en,el}.md` in `greek-knowledge-eee`
 (shared `eee_project` functions — every lesson notebook calls these with
 `ref_prefix="### Odyss. "` instead of defining its own local parser; see their
 docstrings in `eee_project/notebook_utils.py` for the exact file-format contract
@@ -153,51 +150,61 @@ Rules (implemented by `eee.parse_stanza_text`): `### Odyss. X.XX–XX` → stanz
 key (stripped of the `ref_prefix`). Lines under heading → `stanza["lines"]`.
 Lines starting `<!--` are skipped.
 
-### `translations_ru.md` — literary translations + interlinear gloss
+### `translations_{ru,en,el}.md` — literary translations + interlinear crib (in `greek-knowledge-eee`)
+
+The files are `texts/odyssey/translations_ru.md` (interlinear_ru, Жуковский, Вересаев),
+`translations_en.md` (Pope, Murray, Chapman, interlinear_en) and `translations_el.md`
+(Πολυλάς, interlinear_el), next to `text.md` (the Greek original) and `index.md` (how to
+read them). Each file starts with YAML front matter (`type: Literary Translation`, the
+translators, the sources). Today they cover Odyssey I.1-21 and IX.19-180.
 
 ```markdown
-## подстрочник
+## interlinear_ru
 
 ### Odyss. IX.39–42
 
+<!-- grc: Ἰλιόθεν με φέρων ἄνεμος Κικόνεσσι πέλασσεν, -->
 Из Илиона меня неся ветер к киконам притащил,
-к Исмару; а там я город разрушил и погубил их.
+
+<!-- grc: Ἰσμάρῳ. ἔνθα δ᾽ ἐγὼ πόλιν ἔπραθον, ὤλεσα δ᾽ αὐτούς: -->
+к Исмару; а там я город разрушил и погубил их (жителей).
 
 ---
 
 ## Жуковский
 
-<!-- **Жуковский, 1849** · рус., белый стих · ... -->
+<!-- **Жуковский, 1849** · ... -->
 
 ### Odyss. IX.39–42
 
 Ветер от стен Илиона привел нас ко граду киконов,
+Исмару: град мы разрушили, жителей всех истребили.
 ...
 
 ---
 
 ## Вересаев
 
-<!-- **Вересаев, 1953** · рус., проза · ... -->
+<!-- **Вересаев, 1953** · ... -->
 ```
 
-Rules (implemented by `eee.parse_stanza_translations`): `## Name` → translator key; `<!-- **...** -->` on next line → display
-description (goes into `TRANS_DESC` dict). `### Odyss.` → stanza ref. `---`
-separates translators. Every non-empty line under a `### Odyss.` heading (up to
-the next heading or `---`) is one poem line's translation — **one line in, one
-line out**: the block must have exactly as many lines as `greek.md`'s matching
-stanza, in the same order (this is what lets the notebook zip translation lines
-against `stanza["lines"]` positionally). Produces `stanza["translations"]` =
-`{"подстрочник": "...", "Жуковский": "...", ...}` — подстрочник is a translator
-like any other here, not a special case.
+Rules (implemented by `eee.parse_stanza_translations`; see its docstring in `eee_project/notebook_utils.py`): `## Name` opens a translator's section and is the
+translator key. An optional `<!-- **...** -->` comment line right after the heading is the display description (it goes into the `TRANS_DESC` dict).
+`### Odyss.` opens a stanza (the same ref as in `greek.md`). `---` separates translators. Every non-empty line under a `### Odyss.` heading (up to the next
+heading or `---`) belongs to that stanza's text. After the `<!-- ... -->` lines are stripped (`eee.strip_comment_lines`), the block must have exactly as many
+lines as `greek.md`'s matching stanza, in the same order — **one line in, one line out**: the notebook zips the translation lines against `stanza["lines"]`
+positionally. The result is `{translator: {stanza_ref: text}}`.
 
-**`## подстрочник` is special only by convention, not by markdown structure:**
-unlike the other translators its lines are a word-for-word gloss (not verse),
-and it deliberately has **no** `<!-- **...** -->` description comment — the
-notebook hardcodes подстрочник's description separately (the cell building
-`_desc_map`), so adding one here would silently start overriding it. If you add
-a new corpus-level translator, give it a real `<!-- **...** -->` comment like
-Жуковский/Вересаев; only подстрочник skips it.
+**The interlinear crib is a section like any other, with three conventions.** Its name is `interlinear_{lang}`: get it from `eee.interlinear_translator_key(lang)` and
+never hardcode it (the old name `подстрочник` once made the interlinear option show no text). It has **no** `<!-- **...** -->` description: the notebook supplies
+the description from the UI label `interlinear_description` (the cell that builds `_desc_map`), so a description comment here would override it. Each gloss line
+is preceded by an `<!-- grc: ... -->` comment that echoes its Greek source line (as in the example above); the notebooks strip these comments. A new corpus-level
+translator gets a real `<!-- **...** -->` description like Жуковский/Вересаев. A section titled `## Name (reference only, not reproduced)` is the citation of a
+translation in copyright: it has no stanzas and no description.
+
+**Adding translations for a new passage.** The notebooks fetch `main` of `greek-knowledge-eee`, so the stanzas must be there before a lesson can show them. The
+knowledge base builds these files with `scripts/populate_odyssey_texts.py`, a one-off, re-runnable script: each section constant is copied byte for byte from its
+source (the old `translations` branch of this repository, via `git show`), never retyped by hand. Read that script's docstring and ask before you change it.
 
 ---
 

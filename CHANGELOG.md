@@ -2,6 +2,7 @@
 
 ## 2026-10-21
 - **The course `AGENTS.md` files describe the lessons as they are now.** Every course `index.tsv` has the same 13 trilingual columns (the Odyssey and Palaestra files listed one language). All 8 Odyssey lessons keep the chosen language across pages (the root file named 2). The Odyssey translations are not kept in the lesson folders: the notebooks fetch `translations_{ru,en,el}.md` from `greek-knowledge-eee`, and a note in the Odyssey file says so. The Kapodistrias and Zorba section says that a new lesson is built from `ellinika_b/chapter_09` with the `eee` skill, not copied from an old lesson. The Ελληνικά chapter file points to the current skill and to its section for the `Φωνή-γραφή` segment.
+- **The Odyssey `AGENTS.md` describes the translation files as they are now.** The translations are in `greek-knowledge-eee` (`texts/odyssey`), not in the lesson folders. The file says how the notebooks fetch them, which sections each file has (the translators, `interlinear_{lang}`, the citation-only ones), what the format rules are, and that the stanzas of a new passage must be added to the knowledge base first. The lesson count (8) and the shared note are corrected.
 
 ## 2026-10-15
 - **Ancient Greek lesson pages start with their paradigms already built.** `make export-notebooks` runs an ancient Greek lesson once on this
