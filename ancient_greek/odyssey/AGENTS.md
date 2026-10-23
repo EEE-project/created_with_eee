@@ -86,7 +86,7 @@ Identify cells by content, not by ID — IDs change after each save.
 | `**Материалы занятия:**` PDF links | materials links |
 | `## Слова, слова…` | per-lesson vocabulary notes (optional section) |
 | `## Текст поэмы с параллельными переводами` | section separator |
-| `_MURRAY = (...)` | Murray 1919 source citation (HTML) |
+| `_EDITION = (...)` | Greek text edition citation (HTML), the edition named in the first line of `greek.md`; `_MURRAY` (Murray 1919) in `2026_06_22`, `2026_06_29` and `2026_07_06`, no such cell in `2026_06_01` and `2026_06_15` |
 | `_desc_map = {eee.interlinear_translator_key(...): gu.ui_label('interlinear_description', ...), **TRANS_DESC}` | translation-picker description text |
 | `SHOW_ICTUS = mo.ui.switch(...)` | ictus + homer-highlight toggles, `EEE_NOTE` accordion |
 | `text_widget = eee.interactive_text(...)` | clickable poem display + translation panel |
@@ -134,17 +134,24 @@ in the lesson folder, `translations_{ru,en,el}.md` in `greek-knowledge-eee`
 docstrings in `eee_project/notebook_utils.py` for the exact file-format contract
 they implement). Never copy poem lines or translations into Python cells.
 
-### `greek.md` — Greek source text (Murray 1919)
+### `greek.md` — Greek source text
 
 ```markdown
-<!-- Murray 1919 · https://... -->
+<!-- Homerus. Odyssea. ed. M. West, Bibliotheca Teubneriana, De Gruyter 2017 -->
 
-### Odyss. IX.39–42
+### Odyss. IX.152–155
 
-Ἰλιόθεν με φέρων ἄνεμος Κικόνεσσι πέλασσεν,
-Ἰσμάρῳ· ἔνθα δ' ἐγὼ πόλιν ἔπραθον, ὤλεσα δ' αὐτούς.
+ἦμος δ' ἠριγένεια φάνη ῥοδοδάκτυλος Ἠώς,
+νῆσον θαυμάζοντες ἐδινεόμεσθα κατ' αὐτήν.
 ...
 ```
+
+The first line is a comment that names the edition of the Greek text. The edition is not
+the same in every lesson (for example Murray 1919 in `2026_06_01` to `2026_07_06`,
+von der Mühll in `2026_07_13`, West in `2026_07_20` and `2026_07_27`). Copy it from the
+source line that the presentation prints with the Greek text, and name the same edition in
+the `_EDITION` cell. If the presentation prints none, ask the user which edition the text
+follows.
 
 Rules (implemented by `eee.parse_stanza_text`): `### Odyss. X.XX–XX` → stanza ref
 key (stripped of the `ref_prefix`). Lines under heading → `stanza["lines"]`.
