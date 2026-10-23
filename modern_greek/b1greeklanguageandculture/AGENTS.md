@@ -77,7 +77,7 @@ The existing Kapodistrias and Zorba lesson notebooks use the OLD machinery. Each
 3. **A trilingual `UI_STRINGS` dict + `t_ui()` helper** — all drill labels, not just content, are translated.
 4. **A fixed-position `language_selector` dropdown** and shared `eee_footer`.
 
-**Never hand-write this machinery, and do not copy an old Kapodistrias or Zorba lesson as the template of a new one.** The old machinery uses the retired drill calls (the `gu.create_*_test_ui` and `gu.check_*_test` family) and a `UI_STRINGS` dict. Every new lesson uses the current eee-project API only (the Kavafis lessons were built that way). To add a new lesson, use the `eee` skill of `modern-greek-eee-skills`, profile `slides-lesson.md`: it clones the canonical chapter `ellinika_b/chapter_09` with `clone_lesson.py --course-dir ... --titles-json ... --drop-phrases`. You replace only:
+**Never hand-write this machinery, and do not copy an old Kapodistrias or Zorba lesson as the template of a new one.** The old machinery uses the retired drill calls (the `gu.create_*_test_ui` and `gu.check_*_test` family) and a `UI_STRINGS` dict. Every new lesson uses the current eee-project API only (the Kavafis lessons were built that way). To add a new lesson, use the `eee` skill of `greek-eee-skills`, profile `slides-lesson.md`: it clones the canonical chapter `ellinika_b/chapter_09` with `clone_lesson.py --course-dir ... --titles-json ... --drop-phrases`. You replace only:
 - the content cells (each has a `ru`, an `el` and an `en` branch),
 - the three vocabulary TSVs and their `_ru` twins,
 - the `slide-N.jpg` files.

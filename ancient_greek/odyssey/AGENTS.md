@@ -53,9 +53,11 @@ lexicon is wired into every lesson. There is no pilot exception.
 See the root `AGENTS.md`'s "Source discipline" for the policy (materials-only,
 ask before researching further). This course's materials live in
 `~/work/greek/lectures/Odyssey/<date>/`: the presentation PDF (`Одиссея N.pdf` /
-`Od_IX_*.pdf`), **`notes.md`**, the vocab `*.docx/.md`, and the images/diagrams in
-the presentation. **`notes.md` is a valid source — transcribe / distill it** (that
-is how the День-4 lotus material got in).
+`Od_IX_*.pdf`), the vocab file (`.docx`, `.pdf`, `.md` or `.tsv`), the
+images/diagrams in the presentation, and in some folders the lecturer's notes
+(`notes.md` or `notes.txt`). **Notes are a valid source — transcribe / distill
+them** (that is how the День-4 lotus material got in). Most folders hold no
+notes: the notes cells then hold only what the slides say.
 
 - **Greek** (`greek.md`) — transcribe from the presentation slides only.
   **Translations and the interlinear crib** are not transcribed per lesson: the lesson
@@ -406,3 +408,8 @@ translator's actual stanza text (see any already-filled lesson's TSV for the
 judging convention: count a "yes" if the translator's line(s) contain a
 recognizable reflection of the word's meaning, even via a different specific
 lexeme, not only an exact cognate).
+
+One run of the notebook appends the rows of the literary translators of the
+selected UI language only (`TRANS_BY_LANG[lang_sel.value]`, without the
+interlinear key). Run the notebook once in each UI language (ru, en, el) so
+that every translator has its rows, then fill in the blank ones.

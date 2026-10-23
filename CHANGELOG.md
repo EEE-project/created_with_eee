@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-24
+- **The Odyssey `AGENTS.md` describes the lecture folders and the translation-presence rows as they are.** Only some lecture folders hold the lecturer's notes (`notes.md` or `notes.txt`), and most hold none; the vocabulary file can be a `.docx`, `.pdf`, `.md` or `.tsv`. One run of a lesson notebook appends the `translation_presence.tsv` rows of the translators of the selected UI language only, so the notebook has to run once in each UI language.
+- **The course `AGENTS.md` files name the skills repository `greek-eee-skills`.** The repository that holds the `eee` skill was renamed from `modern-greek-eee-skills`, and the skill is called `/greek-eee-skills:eee`.
+
 ## 2026-10-23
 - **The Odyssey `AGENTS.md` names the Greek text edition as the lessons have it.** The cell table listed `_MURRAY` (Murray 1919) as the edition citation, and the `greek.md` section called the Greek text Murray 1919. Only `2026_06_22`, `2026_06_29` and `2026_07_06` have `_MURRAY`. The notebooks from `2026_07_13` on have `_EDITION`, and those lessons follow other editions (von der Mühll, 1962; West, Teubner, 2017). The table row and the `greek.md` example now follow the newest lesson, and the file says to copy the edition from the source line that the presentation prints and to ask the user when it prints none.
 
