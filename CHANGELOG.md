@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-25
+- **The red ictus marks of the three first Odyssey lessons match their slides too.** In `2026_06_01`, `2026_06_15` and `2026_06_22` six lines of `ictus.html` marked other letters than the presentation does (the files had 5 marks on lines that have 6 on the slide). Every line of all eight Odyssey lessons now marks the letters that its slide marks.
+
 ## 2026-10-24
 - **The Odyssey `AGENTS.md` describes the lecture folders and the translation-presence rows as they are.** Only some lecture folders hold the lecturer's notes (`notes.md` or `notes.txt`), and most hold none; the vocabulary file can be a `.docx`, `.pdf`, `.md` or `.tsv`. One run of a lesson notebook appends the `translation_presence.tsv` rows of the translators of the selected UI language only, so the notebook has to run once in each UI language.
 - **The course `AGENTS.md` files name the skills repository `greek-eee-skills`.** The repository that holds the `eee` skill was renamed from `modern-greek-eee-skills`, and the skill is called `/greek-eee-skills:eee`.
