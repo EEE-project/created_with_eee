@@ -91,6 +91,25 @@ mirror_exists() {
     exit 1
 }
 
+# GitLab's main is a protected branch (no force-push) by default -- only bites when
+# history was rewritten (a fast-forward update never trips it), but allow it
+# unconditionally for one push since we can't tell in advance. Always switch it off
+# again, even if the push reports failure, so a real error never leaves protection
+# off. Returns the status of the push (set -e then ends the script with it).
+# The arguments are those of `git push`.
+gitlab_force_push() {
+    local protected_branch_api="projects/EEE-project%2F${gitlab_repo}/protected_branches/main" unprotected=false push_status=0
+    if glab api --method PATCH "$protected_branch_api" -f allow_force_push=true > /dev/null 2>&1; then
+        unprotected=true
+    fi
+    # set -e would end the function at a failed push, before the restore below: keep the status, restore, then return it.
+    $git_lab push "$@" || push_status=$?
+    if [ "$unprotected" = true ]; then
+        glab api --method PATCH "$protected_branch_api" -f allow_force_push=false > /dev/null
+    fi
+    return "$push_status"
+}
+
 if wants codeberg; then
     # --tags (not --follow-tags): our tags are lightweight, and
     # --follow-tags only follows annotated tags reachable from what's
@@ -146,13 +165,6 @@ if wants gitlab; then
         conv_script="codeberg2gitlab.sh"
         mirror_dir="$HOME/work/greek/git/gitlab/EEE-project/${repo}"
         if [ ! -f "${codeberg_root}/${conv_script}" ]; then
-            # main is a protected branch (no force-push) by default -- only
-            # bites when history was rewritten (a fast-forward update never
-            # trips it), but toggle it off unconditionally since we can't tell
-            # in advance. Always restore after, even if the push reports
-            # failure, so a real error never leaves protection off; the
-            # script then exits with the status of the push.
-            #
             # Explicit refspecs (not --mirror) so only real branches/tags sync --
             # --mirror also copies this checkout's own refs/remotes/* bookkeeping
             # (tracking refs for origin/github/gitlab/etc.), which is meaningless
@@ -161,17 +173,7 @@ if wants gitlab; then
             # nonzero exit here used to be from). --prune removes a branch/tag
             # here once it's gone locally, matching --mirror's own cleanup
             # behavior but scoped to refs/heads and refs/tags only.
-            protected_branch_api="projects/EEE-project%2F${gitlab_repo}/protected_branches/main"
-            unprotected=false
-            if glab api --method PATCH "$protected_branch_api" -f allow_force_push=true > /dev/null 2>&1; then
-                unprotected=true
-            fi
-            push_status=0
-            $git_lab push --prune --force git@gitlab.com:EEE-project/${gitlab_repo}.git 'refs/heads/*:refs/heads/*' 'refs/tags/*:refs/tags/*' || push_status=$?
-            if [ "$unprotected" = true ]; then
-                glab api --method PATCH "$protected_branch_api" -f allow_force_push=false > /dev/null
-            fi
-            [ "$push_status" = 0 ] || exit "$push_status"
+            gitlab_force_push --prune --force git@gitlab.com:EEE-project/${gitlab_repo}.git 'refs/heads/*:refs/heads/*' 'refs/tags/*:refs/tags/*'
         elif [ ! -d "$mirror_dir" ]; then
             echo "⚠️  ${conv_script} exists but ${mirror_dir} is missing — skipping GitLab sync, set up the checkout first"
         else
@@ -191,19 +193,7 @@ if wants gitlab; then
                 fi
                 git add -A
                 git commit -m "Switch raw asset URLs and EEE deps from Codeberg to GitLab mirror"
-                # main is a protected branch (no force-push) by default — toggle it off just for this push.
-                protected_branch_api="projects/EEE-project%2F${gitlab_repo}/protected_branches/main"
-                unprotected=false
-                if glab api --method PATCH "$protected_branch_api" -f allow_force_push=true > /dev/null 2>&1; then
-                    unprotected=true
-                fi
-                # set -e would end this subshell at a failed push, before the restore below: keep the status, restore, then exit with it.
-                push_status=0
-                $git_lab push --force git@gitlab.com:EEE-project/${gitlab_repo}.git main:main || push_status=$?
-                if [ "$unprotected" = true ]; then
-                    glab api --method PATCH "$protected_branch_api" -f allow_force_push=false > /dev/null
-                fi
-                exit "$push_status"
+                gitlab_force_push --force git@gitlab.com:EEE-project/${gitlab_repo}.git main:main
             )
         fi
     else
