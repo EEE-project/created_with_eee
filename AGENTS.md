@@ -145,7 +145,7 @@ Palaestra lessons still use a plain, non-persisted dropdown.
 Every notebook with the «Слово в переводе» / translation-presence test (`gu.balance_presence_items`) draws exactly 10 items per session, half `yes` and half `no` where its answer key has enough `no`
 rows: one `SESSION_SIZE = 10` cell and `n=SESSION_SIZE` -- the Odyssey lessons' own mechanism, since 2026-10-06 also in the four Kavafis lessons (the user: "in all nbs this test must show only 10 balanced
 questions -- do it by the same way in all nbs"). No question-count dropdown and no `n=None` (every item of the pool: up to 95 questions in Kavafis lesson 4). A language whose key has fewer than 5 `no` rows
-gives a shorter balanced session (as of 2026-10-06: Greek mode of Odyssey 2026_06_01 asks 2, of 2026_07_13 asks 8; English mode of Kavafis lesson 2 asks 6): add `no` judgments to the key rather than
+gives a shorter balanced session (as of 2026-10-26: Greek mode of Odyssey 2026_07_13 asks 8; as of 2026-10-06: English mode of Kavafis lesson 2 asks 6): add `no` judgments to the key rather than
 unbalance the session. How the keys are judged (word level, one regex per meaning) is in `modern_greek/b1greeklanguageandculture/AGENTS.md`.
 
 ## Publishing a lesson/chapter to Pages

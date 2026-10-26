@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-26
+- **The "word in the translation" answers of the first two Odyssey lessons match the repaired translations.** The translation texts in `greek-knowledge-eee` (0.9.3) now hold each translator's own words in these stanzas: Pope and Πολυλάς in `2026_06_01`, Murray, Вересаев and Жуковский in `2026_06_15`. The 323 answers in `translation_presence.tsv` that depend on those stanzas were judged again against the repaired texts. 274 answers stay and 49 change: 12 from `no` to `yes`, 24 from `yes` to `no`, and 13 to blank, where a real doubt remains. A blank answer leaves the word out of the quiz. The Greek mode of `2026_06_01` now asks 10 questions, not 2: its answer key had one `no` answer and now has 10.
+
 ## 2026-10-25
 - **The red ictus marks of the three first Odyssey lessons match their slides too.** In `2026_06_01`, `2026_06_15` and `2026_06_22` six lines of `ictus.html` marked other letters than the presentation does (the files had 5 marks on lines that have 6 on the slide). Every line of all eight Odyssey lessons now marks the letters that its slide marks.
 
