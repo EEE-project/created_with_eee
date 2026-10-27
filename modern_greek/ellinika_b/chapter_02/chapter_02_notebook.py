@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.23.0",
+#     "eee-project>=1.24.0",
 #     "marimo>=0.25.1",
 #     "modern-greek-backend-eee>=1.0.0",
 #     "pandas",
@@ -1549,6 +1549,12 @@ def _(checked_phrase_d, dia_phrase, gu2, language_selector, phrase_mode, t_ui):
 
 
 @app.cell(hide_code=True)
+def _(gu2, history_phrase, language_selector):
+    retry_btn_phrase = gu2.word_retry_button(history_phrase(), lang=language_selector.value)
+    return (retry_btn_phrase,)
+
+
+@app.cell(hide_code=True)
 def _(
     answer_radio_phrase,
     check_btn_phrase_d,
@@ -1566,6 +1572,7 @@ def _(
     prev_btn_phrase,
     remaining_phrase,
     restore_phrase,
+    retry_btn_phrase,
     score_phrase,
     set_checked_phrase_d,
     set_cv_phrase,
@@ -1592,6 +1599,7 @@ def _(
             title=t_ui("phrase_heading", _lang),
             lang=_lang,
             get_checked=checked_phrase_d, set_checked=set_checked_phrase_d,
+            retry_btn=retry_btn_phrase,
         )
     else:
         _out = gu2.word_quiz_form(
@@ -1602,6 +1610,7 @@ def _(
             vocab=confirmed_phrases(),
             title=t_ui("phrase_heading", _lang),
             lang=_lang,
+            retry_btn=retry_btn_phrase,
         )
     _out
     return

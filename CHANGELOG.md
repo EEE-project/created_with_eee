@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-27
+- **The "Useful Phrases: Quiz" of the ten `ellinika_b` chapters has an Errors button.** On the done screen of the multiple-choice quiz and of the typing quiz, **Errors** starts a new round over just the phrases that were answered wrong. The chapters now need `eee-project` 1.24.0, which also fixes two faults of this quiz: in the typing quiz, a wrong or an empty answer sent with Enter froze the page, and a new selection of phrases kept the score and the answers of the earlier round (the first question read "5 / 4 — correct: 1").
+
 ## 2026-10-26
 - **The "word in the translation" answers of the first two Odyssey lessons match the repaired translations.** The translation texts in `greek-knowledge-eee` (0.9.3) now hold each translator's own words in these stanzas: Pope and Πολυλάς in `2026_06_01`, Murray, Вересаев and Жуковский in `2026_06_15`. The 323 answers in `translation_presence.tsv` that depend on those stanzas were judged again against the repaired texts. 274 answers stay and 49 change: 12 from `no` to `yes`, 24 from `yes` to `no`, and 13 to blank, where a real doubt remains. A blank answer leaves the word out of the quiz. The Greek mode of `2026_06_01` now asks 10 questions, not 2: its answer key had one `no` answer and now has 10.
 
