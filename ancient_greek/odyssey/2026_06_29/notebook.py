@@ -18,7 +18,7 @@ app = marimo.App(width="medium", app_title="Odyssey with Homer — Day 3: Odysse
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     cfg = ConfigStore.from_file_or_url(__file__, f"{_ROOT}/ancient_greek/odyssey/index.tsv", ga=f"{_ROOT}/ga.json")
     _TITLES = {
         "ru": "Одиссея с Гомером",
@@ -59,7 +59,7 @@ def _(eee, lang_sel, mo):
         mo.md(_h1),
         mo.md(_h2),
     ])
-    _right = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_29", width=280)
+    _right = eee.magnify_image(mo, _thumb_path, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_29", width=280)
     mo.hstack([_left, _right], align="start")
     return
 
@@ -79,7 +79,7 @@ def _(NB_REMOTE, gu, lang_sel, mo):
 def _(eee, lang_sel, mo):
     from pathlib import Path as _Pp
     _prep = _Pp(__file__).parent / "prepositions.jpg"
-    _pimg = eee.magnify_image(mo, _prep, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_29", width=440)
+    _pimg = eee.magnify_image(mo, _prep, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_29", width=440)
     _TXT = {
         "ru": r"""
     ---
@@ -150,8 +150,8 @@ def _(eee, lang_sel, mo):
     _d = _Pm(__file__).parent
     _c, _m = _d / "malea_cliff.jpg", _d / "malea_map.jpg"
     _imgs = mo.hstack([
-        eee.magnify_image(mo, _c, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_29", width=300),
-        eee.magnify_image(mo, _m, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_29", width=300),
+        eee.magnify_image(mo, _c, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_29", width=300),
+        eee.magnify_image(mo, _m, raw_base="https://raw.githubusercontent.com/EEE-project/created_with_eee/main/ancient_greek/odyssey/2026_06_29", width=300),
     ], justify="start", align="center")
     _TXT = {
         "ru": r"""

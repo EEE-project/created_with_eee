@@ -15,7 +15,7 @@ app = marimo.App(width="medium")
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
     from eee_project import ConfigStore, eee_topbar
-    _ROOT = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main"
+    _ROOT = "https://raw.githubusercontent.com/EEE-project/created_with_eee/main"
     cfg = ConfigStore.from_file_or_url(
         __file__,
         f"{_ROOT}/index.tsv",
