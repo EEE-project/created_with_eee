@@ -657,7 +657,7 @@ def _(eee, gu, lang_sel, mo):
         # STANZAS-building cell.
         "ru": [],
         "en": [],
-        "el": ["Πολυλάς", eee.interlinear_translator_key("el")],
+        "el": ["Πολυλάς", "Σπανούδης", eee.interlinear_translator_key("el")],
     }
     _DEFAULT_BY_LANG = {"ru": "", "en": "", "el": "Πολυλάς"}
     # Only one interlinear variant is ever relevant for the current language,
@@ -671,6 +671,7 @@ def _(eee, gu, lang_sel, mo):
         "Pope (1725)":          "Pope",
         "Murray (1919)":        "Murray",
         "Πολυλάς (1875/1877)":  "Πολυλάς",
+        "Σπανούδης (2021, κυπριακή διάλεκτος)": "Σπανούδης",
     }
     _valid = TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"])
     _opts = {k: v for k, v in _ALL_OPTIONS.items() if v in _valid}

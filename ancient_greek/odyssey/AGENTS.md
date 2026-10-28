@@ -164,10 +164,18 @@ Lines starting `<!--` are skipped.
 
 The files are `texts/odyssey/translations_ru.md` (interlinear_ru, Жуковский, Вересаев),
 `translations_en.md` (Pope, Murray, Chapman, interlinear_en) and `translations_el.md`
-(Πολυλάς, interlinear_el), next to `text.md` (the Greek original) and `index.md` (how to
+(Πολυλάς, Σπανούδης, interlinear_el), next to `text.md` (the Greek original) and `index.md` (how to
 read them). Each file starts with YAML front matter (`type: Literary Translation`, the
 translators, the sources). Today they cover Odyssey I.1-21 and IX.19-180. Chapman has 8 stanzas only (I.1-21 and IX.19-38), and `TRANS_BY_LANG` in the notebooks does not
 offer Chapman.
+
+**Σπανούδης** (2021) is a Cypriot-dialect rendering, offered in Greek mode only (`TRANS_BY_LANG["el"]`, picker label
+`Σπανούδης (2021, κυπριακή διάλεκτος)`). It is in copyright, so the knowledge base holds fragments only (Ραψωδία Α' στ. 1-30 and
+Ι' στ. 19-166 of the edition), by the translator's permission to the maintainer, and the lessons read them from
+`translations_el.md` (`greek-knowledge-eee` 0.10.0) like Πολυλάς: no copy is kept in a lesson folder, unlike Стариковский.
+The rendering is free and rhymed in couplets, so its verses were assigned to the lesson stanzas by sense: a stanza can hold a
+line more or less than its Greek lines. The `<!-- Ραψωδία … στ. … -->` and `<!-- gloss: … -->` lines in its stanzas are
+comments that `eee.strip_comment_lines` removes, so a lesson shows verse lines only.
 
 ```markdown
 ## interlinear_ru
@@ -414,3 +422,6 @@ One run of the notebook appends the rows of the literary translators of the
 selected UI language only (`TRANS_BY_LANG[lang_sel.value]`, without the
 interlinear key). Run the notebook once in each UI language (ru, en, el) so
 that every translator has its rows, then fill in the blank ones.
+
+Σπανούδης joined the Greek list on 2026-10-28, so the first run of a lesson in Greek appends its rows with a blank `reflected`.
+Until someone judges them they are never asked (`build_translation_presence_items` skips a row that is not `yes` or `no`).
