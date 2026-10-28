@@ -475,9 +475,7 @@ def _(cfg, gu, lang_sel, mo):
     # read: molab only bundles files that live in the notebook's own directory,
     # so a parent-directory file like this one is missing there unless we
     # download it ourselves (matches the pattern already used for materials PDFs).
-    _eee_note_filename = (
-        "eee_note.md" if lang_sel.value == "ru" else f"eee_note_{lang_sel.value}.md"
-    )
+    _eee_note_filename = f"eee_note_{lang_sel.value}.md"
     _eee_note_path = gu.ensure_file(
         _eee_note_filename, nb_dir=_P(__file__).parent.parent, remote_base=cfg.raw_base,
     )
@@ -1048,9 +1046,7 @@ async def _(cfg, eee):
 def _(ag_backend, cfg, eee, grc_lexicons, gu, lang_sel):
     from pathlib import Path
 
-    _vocab_filename = (
-        "vocab_IX_19-38.tsv" if lang_sel.value == "ru" else f"vocab_IX_19-38_{lang_sel.value}.tsv"
-    )
+    _vocab_filename = f"vocab_IX_19-38_{lang_sel.value}.tsv"
     QUIZ_WORDS_RAW = gu.resolve_word_grammar(
         gu.load_inflected_vocab_tsv(_vocab_filename, nb_dir=Path(__file__).parent, remote_base=cfg.nb_remote("2026_06_15")),
         ag_backend, lang_sel.value

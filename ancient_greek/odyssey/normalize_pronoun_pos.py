@@ -9,11 +9,11 @@ from pathlib import Path
 
 ODYSSEY_DIR = Path(__file__).parent
 VOCAB_FILES = [
-    "2026_06_01/vocab_I_1-21.tsv",
-    "2026_06_15/vocab_IX_19-38.tsv",
-    "2026_06_22/vocab_IX_39-61.tsv",
-    "2026_06_29/vocab_IX_62-81.tsv",
-    "2026_07_06/vocab_IX_82-104.tsv",
+    "2026_06_01/vocab_I_1-21_ru.tsv",
+    "2026_06_15/vocab_IX_19-38_ru.tsv",
+    "2026_06_22/vocab_IX_39-61_ru.tsv",
+    "2026_06_29/vocab_IX_62-81_ru.tsv",
+    "2026_07_06/vocab_IX_82-104_ru.tsv",
 ]
 
 for rel in VOCAB_FILES:

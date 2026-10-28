@@ -10,7 +10,7 @@
 odyssey/
   index.tsv          # trilingual lesson index (url, icon, greek, label_{ru,el,en}, title_{ru,el,en}, desc_{ru,el,en}, index_url)
   notebook.py           # index/parent notebook
-  eee_note.md            # shared "О морфологическом движке EEE" text (see below)
+  eee_note_{ru,el,en}.md  # shared "О морфологическом движке EEE" text, one file per language (see below)
   odyssey_morpheus_{adjs,nouns,verbs}_lexicon.yaml  # course-local lexicon
                           # data, see "Fixing a genuine coverage gap" below
   2026_07_27/            # Lesson: Od. IX.152–180
@@ -30,9 +30,10 @@ notebook.py
 greek.md                   ← Greek source text (do NOT hardcode in notebook)
 translations_{ru,en,el}.md ← not kept here: fetched at runtime from greek-knowledge-eee (see below)
 ictus.html                 ← rhythm (икты) markup, one marked-up line per greek.md line
-vocab_{ref}.tsv            ← vocabulary for the quiz (every lesson also has vocab_{ref}_el.tsv and vocab_{ref}_en.tsv)
+vocab_{ref}_{ru,en,el}.tsv ← vocabulary for the quiz, one file per language
 vocab_content_problems.md  ← known coverage gaps (not every lesson has one; read it, where it exists, before adding TSV entries)
 translation_presence.tsv   ← manually-reviewed word×translator judgments (see below)
+notebook_{ru,el,en}.py, README.md ← only in a split lesson (2026_07_27): one notebook per UI language, made by `python -m eee_project.split_lesson`; change a text there, then run `python -m eee_project.join_lesson` (the README of the folder has the rules)
 ```
 
 **Translations live in the knowledge base, not in the lesson folder.** The notebook fetches `translations_{ru,en,el}.md` at runtime with `ensure_files(...)` from `https://codeberg.org/EEE-project/greek-knowledge-eee/raw/branch/main/texts/odyssey` (see the cell with `_gke_remote` in `2026_07_27/notebook.py`). A copy next to a notebook is a git-ignored download cache. The one translation file kept in a lesson folder is `2026_07_20/translations_ru_starikovsky.md`: Стариковский (2025) is in copyright, so the knowledge base holds only a citation of it. The format is described under "`translations_{ru,en,el}.md`" below.
@@ -42,7 +43,7 @@ clickable poem text with a click-to-gloss panel, an ictus toggle, a
 homer-lexicon highlight toggle, three exercises (найди слово / сопоставь
 строфу и перевод / слово в переводе), and an interlinear crib in each language
 (the section `interlinear_{lang}` of the knowledge-base file; there is no standalone
-interlinear file). Every lesson reads the shared `odyssey/eee_note.md` file at runtime
+interlinear file). Every lesson reads the shared `odyssey/eee_note_{lang}.md` file of its language at runtime
 instead of duplicating the ~30-line explanation in every `notebook.py`, and the `morpheus`
 lexicon is wired into every lesson. There is no pilot exception.
 

@@ -1,4 +1,4 @@
-# vocab_IX_39-61.tsv — content problems
+# vocab_IX_39-61_ru.tsv — content problems
 
 Tokens in the poem that don't match any vocab entry (after normalization).
 No structural bugs found (no multi-word forms).

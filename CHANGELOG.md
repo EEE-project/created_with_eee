@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-28
+- **The Russian vocabulary and note files of the Odyssey lessons carry a `_ru` label.** Every language file of an Odyssey lesson is now named `<name>_<language>`: `vocab_<ref>_ru.tsv`, `vocab_<ref>_el.tsv` and `vocab_<ref>_en.tsv` in each lesson folder, and `eee_note_ru.md`, `eee_note_el.md` and `eee_note_en.md` in the course folder (the Russian files had no label). The notebooks pick both files by the language code alone.
+- **Odyssey lesson `2026_07_27` has one notebook per UI language.** `notebook_ru.py`, `notebook_el.py` and `notebook_en.py` hold the cells of `notebook.py` with the language selector fixed to one language and the text of the other two languages empty, and the `README.md` of the folder lists the files of each language. A translator edits the text in the notebook of its language; `python -m eee_project.join_lesson ancient_greek/odyssey/2026_07_27/notebook.py --write` (eee-project 1.25.0) puts the edited texts into `notebook.py`. The lesson page is not changed: only `notebook.py` is exported.
+
 ## 2026-10-27
 - **The "Useful Phrases: Quiz" of the ten `ellinika_b` chapters has an Errors button.** On the done screen of the multiple-choice quiz and of the typing quiz, **Errors** starts a new round over just the phrases that were answered wrong. The chapters now need `eee-project` 1.24.0, which also fixes two faults of this quiz: in the typing quiz, a wrong or an empty answer sent with Enter froze the page, and a new selection of phrases kept the score and the answers of the earlier round (the first question read "5 / 4 — correct: 1").
 

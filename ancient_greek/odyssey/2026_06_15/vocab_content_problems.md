@@ -1,4 +1,4 @@
-# vocab_IX_19-38.tsv — content problems
+# vocab_IX_19-38_ru.tsv — content problems
 
 Tokens in the poem that don't match any vocab entry (after normalization).
 
