@@ -92,7 +92,7 @@ Identify cells by content, not by ID — IDs change after each save.
 | `_EDITION = (...)` | Greek text edition citation (HTML), the edition named in the first line of `greek.md`; `_MURRAY` (Murray 1919) in `2026_06_22`, `2026_06_29` and `2026_07_06`, no such cell in `2026_06_01` and `2026_06_15` |
 | `_desc_map = {eee.interlinear_translator_key(...): gu.ui_label('interlinear_description', ...), **TRANS_DESC}` | translation-picker description text |
 | `SHOW_ICTUS = mo.ui.switch(...)` | ictus + homer-highlight toggles, `EEE_NOTE` accordion |
-| `text_widget = eee.interactive_text(...)` | clickable poem display + translation panel |
+| `text_widget = eee.interactive_text(...)` | clickable poem display + translation panel; a translator with margin notes (Σπανούδης) gets a second column of notes beside its verses |
 | `period_tables, period_selector, gloss_panel = gu.render_gloss_selector(...)` | click-to-gloss panel (meaning + real period `mo.ui.dropdown`, see `eee_project.build_grc_period_tables` — the `bridge`/`lang_sel` convention below: a plain assignment displays nothing, `gloss_panel` needs its own bare-expression line) |
 | `gu.render_gloss_table(period_tables, period_selector)` | own cell, taking `period_selector` as a parameter so it (and only it) reruns on a pick — renders the selected period's table |
 | `mo.accordion({"О проверке форм (EEE)": EEE_NOTE})` | EEE system explanation (reads `EEE_NOTE`) |
@@ -114,7 +114,7 @@ Identify cells by content, not by ID — IDs change after each save.
 | `stanza_selector = mo.ui.dropdown(...)` | stanza picker |
 | `trans_selector = mo.ui.dropdown(...)` | translation picker |
 | `bridge = eee_project.language_bridge(mo)` | localStorage bridge for `lang_sel` (own cell, undisplayed — see visible-cells row above) |
-| `eee.parse_stanza_text(...)` / `eee.parse_stanza_translations(...)` | text parsers (shared `eee_project` functions, `ref_prefix="### Odyss. "`) + `STANZAS`/`RHYTHM_HTML`/`TRANS_DESC` builders |
+| `eee.parse_stanza_text(...)` / `eee.parse_stanza_translations(...)` | text parsers (shared `eee_project` functions, `ref_prefix="### Odyss. "`) + `STANZAS`/`RHYTHM_HTML`/`TRANS_DESC` builders; a `STANZAS` entry also carries `margin_glosses` (see Σπανούδης below) |
 | `import csv` / `QUIZ_WORDS_RAW = gu.resolve_word_grammar(...)` | vocab TSV loader |
 | `QUIZ_WORDS = gu.sample_session_items(...)` | word-quiz session sample (filter hardcoded `"none"`) |
 | `CLICKABLE_FORMS = eee.grc_coverage_words(...)` / `HOMER_WORDS = ...` | click targets + homer-highlight set for `interactive_text` |
@@ -172,10 +172,19 @@ offer Chapman.
 **Σπανούδης** (2021) is a Cypriot-dialect rendering, offered in Greek mode only (`TRANS_BY_LANG["el"]`, picker label
 `Σπανούδης (2021, κυπριακή διάλεκτος)`). It is in copyright, so the knowledge base holds fragments only (Ραψωδία Α' στ. 1-30 and
 Ι' στ. 19-166 of the edition), by the translator's permission to the maintainer, and the lessons read them from
-`translations_el.md` (`greek-knowledge-eee` 0.10.0) like Πολυλάς: no copy is kept in a lesson folder, unlike Стариковский.
+`translations_el.md` (`greek-knowledge-eee` 0.10.1) like Πολυλάς: no copy is kept in a lesson folder, unlike Стариковский.
 The rendering is free and rhymed in couplets, so its verses were assigned to the lesson stanzas by sense: a stanza can hold a
-line more or less than its Greek lines. The `<!-- Ραψωδία … στ. … -->` and `<!-- gloss: … -->` lines in its stanzas are
-comments that `eee.strip_comment_lines` removes, so a lesson shows verse lines only.
+line more or less than its Greek lines.
+
+**Margin notes.** The edition marks Cypriot words with an asterisk and translates each into standard Greek in its right
+margin; those notes matter and the lessons show them. In the knowledge base the starred word carries its asterisk in the
+verse (`πολλοπάητον*`) and the note is the line right after the verse, `<!-- gloss: word — meaning -->` (several notes of
+one verse are joined with ` · `). `eee.strip_comment_lines` removes comments, so the cell that builds `STANZAS` reads
+the `gloss` lines first (`_margin_glosses`: shown line index → `[(word, meaning)]`, kept in `STANZAS[...]["margin_glosses"]`,
+looked up like the shown text: by exact key in `2026_06_01` and `2026_06_15`, with `find_stanza_translation` in the others),
+and the text-widget cell draws them as a second grid column, `* word — meaning`, at the height of their verse. A translator
+without notes is drawn exactly as before. The `<!-- Ραψωδία … στ. … -->` lines name the edition's verses of a stanza and are
+only stripped.
 
 ```markdown
 ## interlinear_ru

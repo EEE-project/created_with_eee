@@ -311,6 +311,26 @@ def _(
         + _line_divs + "</div>"
     )
 
+    # A translator with margin notes (Σπανούδης): the edition's right margin, as a second column beside
+    # each verse -- the starred word (the verse carries its asterisk) and its meaning in standard Greek.
+    _notes = _stanza.get("margin_glosses", {}).get(trans_selector.value, {})
+    if _notes:
+        def _esc(text):
+            return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+        _cells = "".join(
+            f"<div>{_esc(line)}</div>"
+            '<div style="opacity:0.75;font-size:0.9em">'
+            + " · ".join(f"* {_esc(word)} — {_esc(meaning)}" for word, meaning in _notes.get(i, []))
+            + "</div>"
+            for i, line in enumerate(_txt_lines)
+        )
+        _right = mo.Html(
+            '<div style="font-size:1.0em;display:grid;grid-template-columns:minmax(0,max-content) minmax(8em,14em);'
+            'align-content:space-between;column-gap:1.2em;border-left:3px solid #ccc;padding-left:0.8em">'
+            + _cells + "</div>"
+        )
+
     mo.vstack([
         mo.hstack([stanza_selector, trans_selector], justify="space-between"),
         mo.hstack([text_widget, _right], justify="start", align="stretch", gap=1.5),
@@ -792,6 +812,33 @@ async def _(cfg, eee):
         _translations.update(_tr)
         TRANS_DESC.update(_desc)
 
+    # Margin notes: a "<!-- gloss: word — meaning · word — meaning -->" line right after a verse
+    # (Σπανούδης: a Cypriot word -> standard Greek, the starred words of the edition) is a comment,
+    # so it is read here, before the strip below removes it.
+    def _margin_glosses(raw):
+        """{index of the shown line a note follows: [(word, meaning), ...]} from one stanza's raw text."""
+        notes, shown = {}, 0
+        for L in raw.splitlines():
+            s = L.strip()
+            if s.startswith("<!-- gloss:") and s.endswith("-->"):
+                for part in s[len("<!-- gloss:"):-len("-->")].split(" · "):
+                    word, _, meaning = part.partition(" — ")
+                    if shown and meaning.strip():
+                        notes.setdefault(shown - 1, []).append((word.strip(), meaning.strip()))
+            elif not (s.startswith("<!--") and s.endswith("-->")):
+                shown += 1
+        return notes
+
+    _raw_translations = _translations
+
+    def _stanza_glosses(ref):
+        found = {}
+        for tr, d in _raw_translations.items():
+            notes = _margin_glosses(eee.find_stanza_translation(ref, d, allow_coarse_fallback=not tr.startswith("interlinear_")))
+            if notes:
+                found[tr] = notes
+        return found
+
     # Strip any <!-- ... --> annotation (e.g. an interlinear translator's
     # own echoed Greek source line) from every translator's stanza text --
     # a no-op for translators without one.
@@ -819,6 +866,8 @@ async def _(cfg, eee):
                 tr: eee.find_stanza_translation(ref, d, allow_coarse_fallback=not tr.startswith("interlinear_"))
                 for tr, d in _translations.items()
             },
+            # {translator: {shown line index: [(word, meaning), ...]}}, only for translators that have notes
+            "margin_glosses": _stanza_glosses(ref),
         }
         for ref, lines in _greek.items()
     ]
