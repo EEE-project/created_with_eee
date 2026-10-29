@@ -169,10 +169,10 @@ read them). Each file starts with YAML front matter (`type: Literary Translation
 translators, the sources). Today they cover Odyssey I.1-21 and IX.19-180. Chapman has 8 stanzas only (I.1-21 and IX.19-38), and `TRANS_BY_LANG` in the notebooks does not
 offer Chapman.
 
-**Σπανούδης** (2021) is a Cypriot-dialect rendering, offered in Greek mode only (`TRANS_BY_LANG["el"]`, picker label
-`Σπανούδης (2021, κυπριακή διάλεκτος)`). It is in copyright, so the knowledge base holds fragments only (Ραψωδία Α' στ. 1-30 and
+**Σπανούδης** (Β' έκδοση, Λάρνακα 2020) is a Cypriot-dialect rendering, offered in Greek mode only (`TRANS_BY_LANG["el"]`, picker label
+`Σπανούδης (2020, κυπριακή διάλεκτος)`). It is in copyright, so the knowledge base holds fragments only (Ραψωδία Α' στ. 1-30 and
 Ι' στ. 19-166 of the edition), by the translator's permission to the maintainer, and the lessons read them from
-`translations_el.md` (`greek-knowledge-eee` 0.10.1) like Πολυλάς: no copy is kept in a lesson folder, unlike Стариковский.
+`translations_el.md` (`greek-knowledge-eee` 0.10.2) like Πολυλάς: no copy is kept in a lesson folder, unlike Стариковский.
 The rendering is free and rhymed in couplets, so its verses were assigned to the lesson stanzas by sense: a stanza can hold a
 line more or less than its Greek lines.
 

@@ -1068,7 +1068,7 @@ def _(eee, gu, lang_sel, mo):
         "Pope (1725)":          "Pope",
         "Murray (1919)":        "Murray",
         "Πολυλάς (1875/1877)":  "Πολυλάς",
-        "Σπανούδης (2021, κυπριακή διάλεκτος)": "Σπανούδης",
+        "Σπανούδης (2020, κυπριακή διάλεκτος)": "Σπανούδης",
     }
     _valid = TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"])
     _opts = {k: v for k, v in _ALL_OPTIONS.items() if v in _valid}
