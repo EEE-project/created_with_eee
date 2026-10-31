@@ -235,8 +235,27 @@ the run with its line). It takes about a minute per lesson. Run it after a chang
 needs `translations_{ru,en,el}.md` next to it (git-ignored; the lesson fetches them from Codeberg when they are missing) and the tool
 puts the lesson folder's files back after the run. See `tools/check-lesson-layout.py` for the exit statuses.
 
-The check runs `marimo run` natively; it does not see Pyodide. A published page installs the newest `eee-project` from PyPI, so
-**a lesson whose header says `eee-project>=1.26.0` goes to `pages` only after 1.26.0 is on PyPI**: before that the page would
-run 1.25 and stop at the first `wrap=` (`unexpected keyword argument`), and `make export-notebooks` would build no paradigm pack
-for it (`uv` cannot find 1.26.0 for the header). After the release, export the lesson and check the published page with
+The check runs `marimo run` natively; it does not see Pyodide. `marimo export html-wasm` writes every package of the lesson's script
+header into the page pinned (`==`) to the version that the exporting Python has installed (`lock_kind = "observed"` in the page's
+header), and the page installs those versions (`tools/_paradigm_pack.py` relies on that when it pins the libraries of the pack; the
+install itself was not observed, because Pyodide cannot be reached from where this was written).
+Checked on `2026_06_01`: a Python whose installed metadata said `eee-project` 1.25.0 gave a page that pins `eee-project==1.25.0`, and
+the same export after the reinstall gave `==1.26.0`. So **a lesson whose header says `eee-project>=1.26.0` goes to `pages` only after
+1.26.0 is on PyPI and installed in `EEE_PYTHON`**: exported from a Python that still has 1.25, the page pins 1.25 and stops at the
+first `wrap=` (`unexpected keyword argument`); exported from one that has an unreleased 1.26.0 (an editable install), the page asks PyPI
+for a version that is not there and does not start; and `make export-notebooks` builds no paradigm pack for the lesson (`uv` resolves
+the header from PyPI; the export goes on without a pack and says why). Before the export run
+`$EEE_PYTHON -c "import importlib.metadata as m; print(m.version('eee-project'))"`: it must print 1.26.0 or newer (an editable install
+keeps the version it was made with, so it prints the old one although `eee_project.__version__` is new; reinstall it). After the export,
+`grep -o 'eee-project==[0-9.]*'` in the page's `index.html` shows what it pinned. After the release, check the published page with
 `.claude/skills/verify-pages`.
+
+**Merging `claude/cypriot-dialect-translation-be01kl` (Σπανούδης) into this layout.** Tried in a scratch worktree: git reports two
+conflicts, `CHANGELOG.md` (keep both sections) and `ancient_greek/odyssey/AGENTS.md` (keep the layout side of the cell table), and
+merges the 11 notebooks without a conflict, but the old text cell's note block of the Σπανούδης branch (from the comment `# A translator
+with margin notes (Σπανούδης): the edition's right margin, as a second column beside` to the `_right = mo.Html(...)` that follows it)
+stays in the merged text cell and reads `_txt_lines`, which the layout deleted: choosing Σπανούδης then raises `NameError`. Delete that
+block from the text cell of each of the 8 lessons, make the three language notebooks of `2026_07_27` again from its `notebook.py`
+(`rm notebook_{ru,el,en}.py README.md; python -m eee_project.split_lesson notebook.py`; `join_lesson` must then report no change), and run
+`make check-lesson-layout`: it fails on a leftover block with the line `NameError: name '_txt_lines' is not defined`, and with the block
+gone it passes (checked on the trial merge: 8 lessons, Greek interface, 390 and 830 px, margin notes tapped in 6 lessons).

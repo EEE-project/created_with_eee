@@ -21,8 +21,9 @@ Chromium at each width and in each interface language, taps the words, and check
 A lesson starts in its default interface language and is drawn again once the language kept in the browser has reached the kernel;
 the tool waits until the page has stopped changing before it checks anything.
 
-The tool cannot see anything that happens in Pyodide (the published pages): a published page installs the newest
-eee-project from PyPI, so the layout shows there only after eee-project 1.26.0 is released, and
+The tool cannot see anything that happens in Pyodide (the published pages): an export pins the eee-project version that its
+Python has installed and the page installs that version, so the layout shows there only after eee-project 1.26.0 is released
+and installed in the exporting Python (see AGENTS.md, "The stanza layout of the Odyssey lessons"), and
 `.claude/skills/verify-pages` is the check of a published lesson. Each run loads the whole lesson once per
 language and width, which takes 10 to 40 seconds.
 
@@ -37,11 +38,13 @@ Usage:
 
 Needs, in the Python that runs it (`make check-lesson-layout` uses EEE_PYTHON): marimo, eee-project 1.26 or newer, and
 Playwright with a Chromium (EEE_CHROMIUM, `chromium` on the PATH, one under /opt/pw-browsers, or Playwright's own).
-Exit status 0: every check passed; 1: a check failed; 2: it could not run (the message says what is missing).
+Exit status 0: every check passed (or --list); 1: a check failed; 2: it could not run: something is missing, or the scope matches
+no lesson (the message says which), so a mistyped path never counts as a pass.
 """
 import argparse
 import contextlib
 import glob
+import importlib.metadata
 import os
 import pathlib
 import re
@@ -75,6 +78,9 @@ class Cannot(Exception):
 def lesson_notebooks(scope: pathlib.Path) -> "list[pathlib.Path]":
     """The tracked lesson notebooks below scope (or scope itself, a notebook) that call render_gloss_sheet."""
     scope = (REPO_ROOT / scope).resolve() if not scope.is_absolute() else scope.resolve()
+    if not scope.exists():
+        raise Cannot(f"no such file or folder: {scope.relative_to(REPO_ROOT) if scope.is_relative_to(REPO_ROOT) else scope} "
+                     "(a list of languages or widths is comma-separated: --langs el,ru)")
     if scope.is_file():
         return [scope]
     tracked = subprocess.run(["git", "-C", str(REPO_ROOT), "ls-files", "-z", "*.py"], capture_output=True, text=True, check=True).stdout.split("\0")
@@ -101,6 +107,10 @@ def check_prerequisites() -> None:
     version = tuple(int(part) for part in re.findall(r"\d+", eee_project.__version__)[:3])
     if version < (1, 26, 0):
         raise Cannot(f"the lessons need eee-project 1.26.0 or newer (wrap=, translation=, render_gloss_sheet); {sys.executable} has {eee_project.__version__}")
+    installed = importlib.metadata.version("eee-project")
+    if installed != eee_project.__version__:
+        print(f"note: eee_project.__version__ is {eee_project.__version__} but the installed metadata says {installed} (an editable install made before a version bump?); "
+              "an export from this Python pins the metadata version", file=sys.stderr)
 
 
 def launch_chromium(playwright):
@@ -466,13 +476,15 @@ def main() -> None:
     args = parser.parse_args()
     widths, langs = [int(w) for w in args.widths.split(",")], args.langs.split(",")
 
-    notebooks = sorted({n for scope in (args.scope or [pathlib.Path(".")]) for n in lesson_notebooks(scope)})
-    if args.list or not notebooks:
-        for notebook in notebooks:
-            print(notebook.relative_to(REPO_ROOT).as_posix())
-        print(f"{len(notebooks)} notebook(s) call {USES_LAYOUT[:-1]}")
-        sys.exit(0)
     try:
+        notebooks = sorted({n for scope in (args.scope or [pathlib.Path(".")]) for n in lesson_notebooks(scope)})
+        if args.list:
+            for notebook in notebooks:
+                print(notebook.relative_to(REPO_ROOT).as_posix())
+            print(f"{len(notebooks)} notebook(s) call {USES_LAYOUT[:-1]}")
+            sys.exit(0)
+        if not notebooks:
+            raise Cannot(f"no notebook {'below ' + ', '.join(map(str, args.scope)) if args.scope else 'of this repository'} calls {USES_LAYOUT[:-1]}, so there is nothing to check")
         check_prerequisites()
         from playwright.sync_api import sync_playwright
 
