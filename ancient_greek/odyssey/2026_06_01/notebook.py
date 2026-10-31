@@ -140,6 +140,12 @@ def _(
     _st_map = {s["ref"]: s for s in STANZAS}
     _stanza = _st_map[stanza_selector.value]
 
+    # The translation is one card for the whole stanza: its lines need not match the Greek lines one to one.
+    # The widget puts it beside the Greek on a wide page and under it on a narrow one. The blank choice of the
+    # selector (value None) shows no translation. A translator with margin notes (Σπανούδης): the verse
+    # carries the asterisk of each glossed word, and a tap on that word shows its note (the word and its
+    # meaning in standard Greek) in the word panel below, where a tap on a Greek word shows its forms.
+    _tr = trans_selector.value
     text_widget = eee.interactive_text(
         mo,
         lines=_stanza["lines"],
@@ -148,21 +154,13 @@ def _(
         ictus_html=RHYTHM_HTML,
         show_ictus=SHOW_ICTUS.value,
         wrap=True,
+        translation=None if _tr is None else _stanza["translations"].get(_tr, "—").split("\n"),
+        notes=_stanza.get("margin_glosses", {}).get(_tr, {}),
     )
 
-    # The translation is one block for the whole stanza: its lines need not match the Greek lines one to
-    # one. stanza_view puts it beside the Greek on a wide page and under it on a narrow one. The blank
-    # choice of the selector (value None) shows no translation. A translator with margin notes
-    # (Σπανούδης): each note stands under its verse -- the starred word and its meaning in standard Greek.
-    _tr = trans_selector.value
     mo.vstack([
         mo.hstack([stanza_selector, trans_selector], justify="start", wrap=True, gap=1.5),
-        eee.stanza_view(
-            mo,
-            text_widget,
-            None if _tr is None else _stanza["translations"].get(_tr, "—").split("\n"),
-            notes=_stanza.get("margin_glosses", {}).get(_tr, {}),
-        ),
+        text_widget,
     ])
     return (text_widget,)
 
@@ -182,10 +180,12 @@ def _(gloss_panel, gu, lang_sel, period_selector, period_tables, text_widget):
     # as a parameter so marimo reruns it -- and only it -- the moment the dropdown's value changes; the
     # cell above never depends on its own dropdown's value, so it correctly does NOT re-run on a pick.
     # On a wide page the sheet is a block under the text; on a narrow one it is fixed to the bottom of the
-    # screen once a word is chosen, so the table is in view without scrolling.
+    # screen once a word is chosen, so the table is in view without scrolling. A tapped margin note of the
+    # translation (note=) is shown there instead of the forms.
     gu.render_gloss_sheet(
         gloss_panel, period_tables, period_selector, lang=lang_sel.value,
         selected_word=text_widget.widget.selected_word, click_seq=text_widget.widget.click_seq,
+        note=text_widget.widget.selected_note,
     )
     return
 
