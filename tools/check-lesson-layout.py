@@ -12,9 +12,14 @@ Chromium at each width and in each interface language, taps the words, and check
    and under it where narrower; at 390 px it is under, at 830 px beside.
 3. A tap on a Greek word opens the word sheet; it is fixed to the bottom of the screen below 750 px (at most 55% of the
    screen high) and a block in the page from 750 px on. A closed sheet opens again for the next word.
-4. Every translation of the dropdown draws a card that fits; a translation with margin notes has tappable starred words,
-   a tap shows the note in the sheet and clears the Greek word (and the reverse); the blank entry removes the card.
-5. The page raises no uncaught JavaScript error.
+4. Every translation of the dropdown draws a card that fits (on the narrowest page in every stanza of the lesson, otherwise in
+   the stanza on show); a translation with margin notes has tappable starred words, a tap shows the note in the sheet and
+   clears the Greek word (and the reverse); the blank entry removes the card.
+5. The page raises no uncaught JavaScript error, and the server prints no exception while the tool works (a cell that raises,
+   for instance a NameError left behind by a merge, fails the run with the line of the exception).
+
+A lesson starts in its default interface language and is drawn again once the language kept in the browser has reached the kernel;
+the tool waits until the page has stopped changing before it checks anything.
 
 The tool cannot see anything that happens in Pyodide (the published pages): a published page installs the newest
 eee-project from PyPI, so the layout shows there only after eee-project 1.26.0 is released, and
@@ -57,7 +62,8 @@ TWO_COLUMNS_FROM = 600                        # interactive_text(two_columns_fro
 SHEET_BELOW = 750                             # render_gloss_sheet(sheet_below_px=...), the viewport width
 SHEET_MAX_SHARE = 0.55                        # the share of the screen height a fixed sheet may take
 MAX_SNAPSHOT_FILE = 5_000_000                 # a bigger file in a lesson folder is not copied (none is written by a run)
-LOAD_TIMEOUT_MS = 240_000
+LOAD_TIMEOUT_MS = 240_000                     # a lesson loads its backends first
+ACTION_TIMEOUT_MS = 8_000                     # a tap or a choice that takes longer than this has not worked
 
 
 class Cannot(Exception):
@@ -170,7 +176,10 @@ def marimo_run(notebook: pathlib.Path):
 def box(page, selector: str):
     """The bounding box of the first match; a widget drawn again by the kernel has none for a moment, so it is asked again."""
     for _ in range(15):
-        found = page.locator(selector).first.bounding_box() if page.locator(selector).count() else None
+        try:
+            found = page.locator(selector).first.bounding_box(timeout=1000) if page.locator(selector).count() else None
+        except Exception:  # noqa: BLE001 - the element went away while it was asked for; ask again
+            found = None
         if found is not None:
             return found
         page.wait_for_timeout(200)
@@ -235,10 +244,18 @@ def placement(page) -> "tuple[str, list[str]]":
     return where, problems
 
 
-def translation_picker(page):
-    """The dropdown that has the blank entry (the translation selector)."""
-    picker = page.locator(f"select:has(option[value='{BLANK}'])")
-    return picker.first if picker.count() else None
+def pickers(page):
+    """(stanza dropdown, translation dropdown): the translation dropdown is the one with the blank entry, and the lessons put the
+    stanza dropdown right before it. (None, None) when the page has no such pair."""
+    selects = page.locator("select")
+    for i in range(selects.count()):
+        if BLANK in selects.nth(i).evaluate("s => [...s.options].map(o => o.value)"):
+            return (selects.nth(i - 1) if i else None), selects.nth(i)
+    return None, None
+
+
+def option_values(select) -> "list[str]":
+    return select.evaluate("s => [...s.options].map(o => o.value)")
 
 
 def check_sheet_after_tap(page, width: int, label: str) -> "list[str]":
@@ -260,71 +277,72 @@ def check_sheet_after_tap(page, width: int, label: str) -> "list[str]":
     return problems
 
 
-def check_page(page, width: int) -> "tuple[list[str], list[str]]":
-    """(problems, notes) for one loaded lesson at one width."""
-    problems: list[str] = []
-    notes: list[str] = []
-    if not page.locator(f"{STANZA} .gk-word").count():
-        return ["no text block with a translation card by default"], notes
-    problems += fits(page, width)
-    lines = page.locator(f"{GREEK}.wrap .eee-line")
-    if not lines.count():
-        problems.append("the Greek lines are not drawn with wrap=True")
-    elif lines.first.evaluate("el => parseFloat(getComputedStyle(el).textIndent)") >= 0:
-        problems.append("the wrapped Greek lines have no hanging indent")
-    where, bad = placement(page)
-    problems += bad
-    notes.append(f"card {where}")
+def settle(page, quiet: float = 1.5, limit: float = 15.0) -> None:
+    """A lesson starts in its default interface language and is drawn again once the language kept in localStorage has reached the
+    kernel: wait until the text of the page has stopped changing, or the limit has passed."""
+    def snapshot() -> str:
+        return page.evaluate("() => document.body.innerText") + page.locator(GREEK).first.inner_text()
 
-    # a tap on a Greek word; on a phone: close the sheet, and the next word opens it again
-    words = page.locator(f"{STANZA} .gk-word")
-    words.first.click()
-    problems += check_sheet_after_tap(page, width, "a Greek word")
-    if width < SHEET_BELOW and words.count() > 1 and page.locator(".eee-sheet-close").count():
-        page.locator(".eee-sheet-close").first.click()
-        if not wait_until(page, lambda: not sheet_state(page)["open"], 5):
-            problems.append("the close button does not hide the sheet")
-        words.nth(1).click()
-        problems += check_sheet_after_tap(page, width, "the next word after closing")
-    close_sheet(page)
-
-    # every translation: a card that fits; notes; the blank entry
-    picker = translation_picker(page)
-    if picker is None:
-        problems.append("no translation dropdown with a blank entry")
-        return problems, notes
-    options = picker.evaluate("s => [...s.options].map(o => o.value)")
-    with_notes = []
-    for option in options:
-        picker.select_option(option)
-        if option == BLANK:
-            if not wait_until(page, lambda: page.locator(CARD).count() == 0):
-                problems.append("the blank entry does not remove the translation card")
-            elif not page.locator(f"{GREEK}.wrap .eee-line").count():
-                problems.append("the blank entry removes the Greek text with the card")
-            continue
-        if not wait_until(page, lambda: page.locator(CARD).count() == 1 and page.locator(f"{STANZA} .gk-word").count() > 0):
-            problems.append(f"translation {option!r}: no card")
-            continue
-        problems += [f"translation {option!r}: {p}" for p in fits(page, width)]
-        if page.locator(f"{STANZA} {NOTE}").count():
-            with_notes.append(option)
-    notes.append(f"{len(options) - (BLANK in options)} translations, {len(with_notes)} with margin notes")
-    if with_notes:
-        problems += check_note(page, picker, with_notes[0], width)
-    return problems, notes
+    last, changed, deadline = snapshot(), time.monotonic(), time.monotonic() + limit
+    while time.monotonic() < deadline:
+        page.wait_for_timeout(250)
+        now = snapshot()
+        if now != last:
+            last, changed = now, time.monotonic()
+        elif time.monotonic() - changed >= quiet:
+            return
 
 
-def check_note(page, picker, option: str, width: int) -> "list[str]":
-    """A tap on a starred word shows its note and clears the Greek word; a tap on a Greek word clears the note."""
+def kernel_errors(printed, since: int) -> "list[str]":
+    """The exception lines (a NameError in a cell...) that the server printed after offset `since` of its output."""
+    found = re.findall(r"(?m)^[\w.]*(?:Error|Exception)\b.*$", printed()[since:])
+    return sorted({line.strip()[:200] for line in found})
+
+
+def show(page, stanza, stanza_value: "str | None", translation, translator: str) -> bool:
+    """Choose a stanza (None: keep) and a translator, and wait for the card of that pair. False when it does not come."""
+    try:
+        if stanza_value is not None:
+            stanza.select_option(stanza_value)
+        translation.select_option(translator)
+    except Exception:  # noqa: BLE001 - the dropdown is gone: the cell that draws it raised an error
+        return False
+    return wait_until(page, lambda: page.locator(CARD).count() == 1 and page.locator(f"{STANZA} .gk-word").count() > 0, 8)
+
+
+def check_translations(page, width: int, all_stanzas: bool) -> "tuple[list[str], list[str], tuple | None]":
+    """Every translator in the stanza on show (and, with all_stanzas, in every stanza) draws a card that fits.
+    Returns (problems, notes, the first (stanza, translator) whose card has margin notes)."""
+    stanza, translation = pickers(page)
+    translators = [o for o in option_values(translation) if o != BLANK]
+    stanzas = option_values(stanza) if stanza is not None and all_stanzas else [None]
+    problems, with_notes, shown = [], None, 0
+    for stanza_value in stanzas:
+        for translator in translators:
+            where = f"translation {translator!r}" + (f" in stanza {stanza_value!r}" if stanza_value else "")
+            if not show(page, stanza, stanza_value, translation, translator):
+                problems.append(f"{where}: no card")
+                if pickers(page)[1] is None:
+                    problems.append("the dropdowns are gone after this choice (the cell that draws them raised an error)")
+                    return problems, [], with_notes
+                continue
+            shown += 1
+            problems += [f"{where}: {p}" for p in fits(page, width)]
+            if with_notes is None and page.locator(f"{STANZA} {NOTE}").count():
+                with_notes = (stanza_value, translator)
+    notes = [f"{len(translators)} translations" + (f" in {len(stanzas)} stanzas" if stanza is not None and all_stanzas else ""),
+             "margin notes at " + (f"{with_notes[1]!r}" + (f" in {with_notes[0]!r}" if with_notes[0] else "") if with_notes else "none")]
+    return problems, notes, with_notes
+
+
+def check_note(page, width: int) -> "list[str]":
+    """With a card that has margin notes on show: a tap on a starred word shows its note and clears the Greek word, and a tap on a
+    Greek word clears the note."""
     problems = []
-    picker.select_option(option)
-    if not wait_until(page, lambda: page.locator(f"{STANZA} {NOTE}").count() > 0):
-        return [f"translation {option!r}: the notes are gone"]
     close_sheet(page)
     page.locator(f"{STANZA} {NOTE}").first.click()
     if not wait_until(page, lambda: page.locator(f"{STANZA} {NOTE}.active").count() == 1):
-        return [f"translation {option!r}: a tap on a starred word selects no note"]
+        return ["a tap on a starred word selects no note"]
     problems += check_sheet_after_tap(page, width, "a starred word")
     if page.locator(f"{STANZA} .gk-word.active").count():
         problems.append("a Greek word stays selected beside a note")
@@ -335,6 +353,63 @@ def check_note(page, picker, option: str, width: int) -> "list[str]":
     if not wait_until(page, lambda: page.locator(f"{STANZA} {NOTE}.active").count() == 0):
         problems.append("a note stays selected after a tap on a Greek word")
     return problems
+
+
+def check_page(page, width: int, all_stanzas: bool) -> "tuple[list[str], list[str]]":
+    """(problems, notes) for one loaded lesson at one width."""
+    problems: list[str] = []
+    notes: list[str] = []
+    if not page.locator(f"{STANZA} .gk-word").count():
+        problems.append("no text block with a translation card by default")
+    else:
+        problems += fits(page, width)
+        lines = page.locator(f"{GREEK}.wrap .eee-line")
+        if not lines.count():
+            problems.append("the Greek lines are not drawn with wrap=True")
+        elif lines.first.evaluate("el => parseFloat(getComputedStyle(el).textIndent)") >= 0:
+            problems.append("the wrapped Greek lines have no hanging indent")
+        where, bad = placement(page)
+        problems += bad
+        notes.append(f"card {where}")
+
+        # a tap on a Greek word; on a phone: close the sheet, and the next word opens it again
+        words = page.locator(f"{STANZA} .gk-word")
+        words.first.click()
+        problems += check_sheet_after_tap(page, width, "a Greek word")
+        if width < SHEET_BELOW and words.count() > 1 and page.locator(".eee-sheet-close").count():
+            page.locator(".eee-sheet-close").first.click()
+            if not wait_until(page, lambda: not sheet_state(page)["open"], 5):
+                problems.append("the close button does not hide the sheet")
+            words.nth(1).click()
+            problems += check_sheet_after_tap(page, width, "the next word after closing")
+        close_sheet(page)
+
+        # every translator (in every stanza, on the narrowest page): a card that fits; the notes; the blank entry
+        stanza, translation = pickers(page)
+        if translation is None:
+            problems.append("no translation dropdown with a blank entry")
+        else:
+            bad, more, with_notes = check_translations(page, width, all_stanzas)
+            problems += bad
+            notes += more
+            if with_notes:
+                stanza_value, translator = with_notes
+                if show(page, stanza, stanza_value, translation, translator):
+                    problems += check_note(page, width)
+                else:
+                    problems.append("the card with margin notes does not come back")
+            if pickers(page)[1] is not None:
+                translation.select_option(BLANK)
+                if not wait_until(page, lambda: page.locator(CARD).count() == 0):
+                    problems.append("the blank entry does not remove the translation card")
+                elif not page.locator(f"{GREEK}.wrap .eee-line").count():
+                    problems.append("the blank entry removes the Greek text with the card")
+    return problems, notes
+
+
+def describe(exc: Exception) -> str:
+    """One line for a failed browser call: the exception's name and the first lines of Playwright's message."""
+    return f"{type(exc).__name__}: " + " | ".join(line.strip() for line in str(exc).strip().splitlines()[:3])[:300]
 
 
 def wait_for_greek(page, printed) -> None:
@@ -354,21 +429,29 @@ def wait_for_greek(page, printed) -> None:
 
 
 def check_notebook(browser, url: str, printed, widths: "list[int]", langs: "list[str]"):
-    """Yield (lang, width, problems, notes) for each run of a running lesson."""
+    """Yield (lang, width, problems, notes) for each run of a running lesson. The narrowest width also goes through every stanza."""
     for lang in langs:
         for width in widths:
             context = browser.new_context(viewport={"width": width, "height": 844})
             context.add_init_script(f"try {{ localStorage.setItem('eee_lang', '{lang}'); }} catch (e) {{}}")
             page = context.new_page()
+            page.set_default_timeout(ACTION_TIMEOUT_MS)
             errors: list[str] = []
             page.on("pageerror", lambda exc, errors=errors: errors.append(str(exc).splitlines()[0][:160]))
+            problems: list[str] = []
+            notes: list[str] = []
             try:
-                page.goto(url, wait_until="load")
+                page.goto(url, wait_until="load", timeout=LOAD_TIMEOUT_MS)
                 wait_for_greek(page, printed)
-                page.wait_for_timeout(500)
-                problems, notes = check_page(page, width)
-            except Exception as exc:  # noqa: BLE001 - a timeout or a closed page is a finding, not a crash of the tool
-                problems, notes = [f"{type(exc).__name__}: " + " | ".join(line.strip() for line in str(exc).strip().splitlines()[:4])[:300]], []
+                settle(page)
+                since = len(printed())
+                try:
+                    problems, notes = check_page(page, width, all_stanzas=width == min(widths))
+                except Exception as exc:  # noqa: BLE001 - a timeout or a closed page is a finding, not a crash of the tool
+                    problems = [describe(exc)]
+                problems += [f"the lesson raised an error: {line}" for line in kernel_errors(printed, since)]
+            except Exception as exc:  # noqa: BLE001 - the lesson did not even start
+                problems = [describe(exc)]
             problems += [f"uncaught JavaScript error: {e}" for e in sorted(set(errors))]
             context.close()
             yield lang, width, problems, notes

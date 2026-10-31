@@ -228,8 +228,9 @@ card beside the Greek (a box 600 px wide or more) or under it, and the word shee
 `marimo check`, an export and the library's unit tests cannot see any of that, so `make check-lesson-layout` runs every lesson that
 calls `render_gloss_sheet` in a real browser (`marimo run`, Chromium) at 390 and 830 px in Greek, Russian and English. It checks that
 the block fits, where the card and the sheet stand, that a tap opens the sheet (and a closed one opens again), that every translator of
-the dropdown draws a card, that a starred word shows its margin note, that the blank entry removes the card, and that the page raises
-no JavaScript error. Run it after a change to a lesson's text cell, gloss cells or translator dropdown, and after raising the
+the dropdown draws a card (on the narrow page in every stanza of the lesson), that a starred word shows its margin note, that the blank
+entry removes the card, and that neither the page nor a cell of the lesson raises an error (a `NameError` left behind by a merge fails
+the run with its line). It takes about a minute per lesson. Run it after a change to a lesson's text cell, gloss cells or translator dropdown, and after raising the
 `eee-project` floor of a lesson. `SCOPE=<notebook or folder>` limits it, `ARGS="--langs el --widths 390"` makes fewer runs; a lesson
 needs `translations_{ru,en,el}.md` next to it (git-ignored; the lesson fetches them from Codeberg when they are missing) and the tool
 puts the lesson folder's files back after the run. See `tools/check-lesson-layout.py` for the exit statuses.
