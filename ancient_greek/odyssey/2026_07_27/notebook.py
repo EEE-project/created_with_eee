@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.25.1",
-#     "eee-project>=1.23.0",
+#     "eee-project>=1.26.0",
 #     "ancient-greek-backend-eee>=2.0.0",
 #     "unimorph-backend-eee>=1.0.3",
 #     "modern-greek-backend-eee>=1.0.0",
@@ -326,6 +326,12 @@ def _(
     _st_map = {s["ref"]: s for s in STANZAS}
     _stanza = _st_map[stanza_selector.value]
 
+    # The translation is one card for the whole stanza: its lines need not match the Greek lines one to one.
+    # The widget puts it beside the Greek on a wide page and under it on a narrow one. The blank choice of the
+    # selector (value None) shows no translation. A translator with margin notes (Σπανούδης): the verse
+    # carries the asterisk of each glossed word, and a tap on that word shows its note (the word and its
+    # meaning in standard Greek) in the word panel below, where a tap on a Greek word shows its forms.
+    _tr = trans_selector.value
     text_widget = eee.interactive_text(
         mo,
         lines=_stanza["lines"],
@@ -333,39 +339,40 @@ def _(
         homer_words=HOMER_WORDS if SHOW_HOMER.value else set(),
         ictus_html=RHYTHM_HTML,
         show_ictus=SHOW_ICTUS.value,
-    )
-
-    _txt_lines = _stanza["translations"].get(trans_selector.value, "—").split("\n")
-
-    _line_divs = "".join(
-        f'<div>{line.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")}</div>'
-        for line in _txt_lines
-    )
-    _right = mo.Html(
-        '<div style="font-size:1.0em;display:flex;flex-direction:column;'
-        'justify-content:space-between;border-left:3px solid #ccc;padding-left:0.8em">'
-        + _line_divs + "</div>"
+        wrap=True,
+        translation=None if _tr is None else _stanza["translations"].get(_tr, "—").split("\n"),
+        notes=_stanza.get("margin_glosses", {}).get(_tr, {}),
     )
 
     mo.vstack([
-        mo.hstack([stanza_selector, trans_selector], justify="space-between"),
-        mo.hstack([text_widget, _right], justify="start", align="stretch", gap=1.5),
+        mo.hstack([stanza_selector, trans_selector], justify="start", wrap=True, gap=1.5),
+        text_widget,
     ])
     return (text_widget,)
 
 
 @app.cell(hide_code=True)
 def _(QUIZ_WORDS_RAW, build_period_tables, gu, lang_sel, text_widget):
+    # Builds the panel and its period dropdown; shows nothing (the sheet cell below does).
     period_tables, period_selector, gloss_panel = gu.render_gloss_selector(
         QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_period_tables, lang=lang_sel.value,
     )
-    gloss_panel
-    return period_selector, period_tables
+    return gloss_panel, period_selector, period_tables
 
 
 @app.cell(hide_code=True)
-def _(gu, period_selector, period_tables):
-    gu.render_gloss_table(period_tables, period_selector)
+def _(gloss_panel, gu, lang_sel, period_selector, period_tables, text_widget):
+    # One sheet holds the gloss panel and the table of the chosen period. Own cell, taking period_selector
+    # as a parameter so marimo reruns it -- and only it -- the moment the dropdown's value changes; the
+    # cell above never depends on its own dropdown's value, so it correctly does NOT re-run on a pick.
+    # On a wide page the sheet is a block under the text; on a narrow one it is fixed to the bottom of the
+    # screen once a word is chosen, so the table is in view without scrolling. A tapped margin note of the
+    # translation (note=) is shown there instead of the forms.
+    gu.render_gloss_sheet(
+        gloss_panel, period_tables, period_selector, lang=lang_sel.value,
+        selected_word=text_widget.widget.selected_word, click_seq=text_widget.widget.click_seq,
+        note=text_widget.widget.selected_note,
+    )
     return
 
 
@@ -786,6 +793,7 @@ def _(eee, gu, lang_sel, mo):
     trans_selector = mo.ui.dropdown(
         options=_opts,
         value=_default_k,
+        allow_select_none=True,  # the blank choice (value None) hides the translation
         label=gu.ui_label('trans_selector_label', lang_sel.value),
     )
     return TRANS_BY_LANG, trans_selector
