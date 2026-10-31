@@ -110,6 +110,7 @@ repository (the folder with the `Makefile`).
 | `gh`, logged in | `sync-main` (mirror check), `verify-pages-deploy`, the manual Pages rebuild below | `gh auth status` |
 | `glab`, logged in | `sync-main` (mirror check and the `main` protection switch), `verify-pages-deploy` | `glab auth status` |
 | `~/.venv/eee/bin/python3` with `marimo` (another Python: `EEE_PYTHON=...`) | `export-notebooks`, `check-embedded-data`, `gen-hub`, `sync-pages-export`, `sync-hub-pages` | `~/.venv/eee/bin/python3 -m marimo --version` |
+| the same Python with `playwright`, a Chromium (`EEE_CHROMIUM=...`, `chromium` on the `PATH`, or Playwright's own) and `eee-project` 1.26 or newer | `check-lesson-layout` | `~/.venv/eee/bin/python3 -c "import playwright, eee_project; print(eee_project.__version__)"` |
 | `uv` and a network connection to PyPI | `export-notebooks` for an ancient Greek lesson (it builds the paradigm pack; `ARGS=--no-pack` needs neither) | `uv --version` |
 
 `tools/propagate-pages.sh` itself calls neither `gh` nor `glab`.
@@ -172,6 +173,7 @@ times are what a run took on 2026-10-15, key uses included.
 | `make sync-main ARGS=gitlab` | the same with `codeberg2gitlab.sh`; the script allows a force-push to GitLab `main` only while it pushes | 2 | 1 minute | the same check on `gitlab.com`; `glab api projects/EEE-project%2Fcreated_with_eee/protected_branches/main` must show `"allow_force_push":false` |
 | `make sync-pages-export`, `sync-hub-pages`, `fix-split-roots`, `fix-gitlab-unified-scope`, `fix-static-footer`, `fix-split-hub-links` (the steps `propagate-pages` runs for you), and `make gen-hub` | files in the folders above only; they never commit or push | 0 | seconds | `git status` and `git diff` in each folder |
 | `make verify-pages-deploy [SITE=...]`, `make check-hub-links [URL=...]`, `make check-embedded-data [SCOPE=...]`, `make check-paradigm-pack [SCOPE=...]` | nothing (read-only) | 0 | seconds | exit status 0 |
+| `make check-lesson-layout [SCOPE=...]` | nothing (read-only; the lesson folders get their files back) | 0 | 1 to 3 minutes per lesson and language (one page load of the lesson per language and width) | exit status 0 (1: a check failed, 2: it cannot run here) |
 
 `make sync-main` without `ARGS` first pushes this repository's current branch
 and its tags to Codeberg (one more key use), then does GitHub and GitLab.

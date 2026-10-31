@@ -14,7 +14,7 @@ PAGES_DIR ?= $(CURDIR)/../created_with_eee-pages-worktree
 
 EEE_PYTHON ?= $(HOME)/.venv/eee/bin/python3
 
-.PHONY: help sync-main propagate-pages fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-hub-links check-vocab check-kavafis-english check-embedded-data check-paradigm-pack
+.PHONY: help sync-main propagate-pages fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-hub-links check-vocab check-kavafis-english check-embedded-data check-paradigm-pack check-lesson-layout
 
 help:
 	@echo "Targets:"
@@ -123,6 +123,14 @@ help:
 	@echo "                      nor the network. Optional SCOPE= limits it to one path."
 	@echo "                      ARGS=\"--run <notebook>\" also builds the real pack of one"
 	@echo "                      lesson (needs uv and the network)."
+	@echo "  check-lesson-layout Run the lessons that use the stanza layout in a real"
+	@echo "                      browser (marimo run + Chromium) at 390 and 830 px in el, ru,"
+	@echo "                      en: the text and translation block fits, the word sheet is"
+	@echo "                      fixed on a phone, the notes and the blank translation work"
+	@echo "                      (see tools/check-lesson-layout.py). Read-only, takes"
+	@echo "                      minutes. Needs Playwright with a Chromium and eee-project"
+	@echo "                      1.26 or newer in EEE_PYTHON. Optional SCOPE= limits it to a"
+	@echo "                      notebook or folder; ARGS=\"--langs el --widths 390\" fewer runs."
 	@echo ""
 	@echo "NOT automated here (still manual -- see README's Maintainer tooling"
 	@echo "section): splitting a new course off into its own GitLab project."
@@ -220,3 +228,6 @@ check-embedded-data:
 
 check-paradigm-pack:
 	$(EEE_PYTHON) tools/check-paradigm-pack.py $(ARGS) $(SCOPE)
+
+check-lesson-layout:
+	$(EEE_PYTHON) tools/check-lesson-layout.py $(ARGS) $(SCOPE)
