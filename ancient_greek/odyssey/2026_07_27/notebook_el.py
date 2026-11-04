@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.25.1",
-#     "eee-project>=1.23.0",
+#     "eee-project>=1.26.0",
 #     "ancient-greek-backend-eee>=2.0.0",
 #     "unimorph-backend-eee>=1.0.3",
 #     "modern-greek-backend-eee>=1.0.0",
@@ -219,6 +219,8 @@ def _(
     _st_map = {s["ref"]: s for s in STANZAS}
     _stanza = _st_map[stanza_selector.value]
 
+    # One translation card per stanza; the blank choice (None) shows none; a tap on a word with a margin note (a link, no star) shows its note in the word panel.
+    _tr = trans_selector.value
     text_widget = eee.interactive_text(
         mo,
         lines=_stanza["lines"],
@@ -226,39 +228,35 @@ def _(
         homer_words=HOMER_WORDS if SHOW_HOMER.value else set(),
         ictus_html=RHYTHM_HTML,
         show_ictus=SHOW_ICTUS.value,
-    )
-
-    _txt_lines = _stanza["translations"].get(trans_selector.value, "—").split("\n")
-
-    _line_divs = "".join(
-        f'<div>{line.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")}</div>'
-        for line in _txt_lines
-    )
-    _right = mo.Html(
-        '<div style="font-size:1.0em;display:flex;flex-direction:column;'
-        'justify-content:space-between;border-left:3px solid #ccc;padding-left:0.8em">'
-        + _line_divs + "</div>"
+        wrap=True,
+        translation=None if _tr is None else _stanza["translations"].get(_tr, "—").split("\n"),
+        notes=_stanza.get("margin_glosses", {}).get(_tr, {}),
     )
 
     mo.vstack([
-        mo.hstack([stanza_selector, trans_selector], justify="space-between"),
-        mo.hstack([text_widget, _right], justify="start", align="stretch", gap=1.5),
+        mo.hstack([stanza_selector, trans_selector], justify="start", wrap=True, gap=1.5),
+        text_widget,
     ])
     return (text_widget,)
 
 
 @app.cell(hide_code=True)
 def _(QUIZ_WORDS_RAW, build_period_tables, gu, lang_sel, text_widget):
+    # Builds the panel and its period dropdown; shows nothing (the sheet cell below does).
     period_tables, period_selector, gloss_panel = gu.render_gloss_selector(
         QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_period_tables, lang=lang_sel.value,
     )
-    gloss_panel
-    return period_selector, period_tables
+    return gloss_panel, period_selector, period_tables
 
 
 @app.cell(hide_code=True)
-def _(gu, period_selector, period_tables):
-    gu.render_gloss_table(period_tables, period_selector)
+def _(gloss_panel, gu, lang_sel, period_selector, period_tables, text_widget):
+    # Takes period_selector as a parameter, so a pick in the dropdown reruns only this cell; a tapped margin note (note=) replaces the forms.
+    gu.render_gloss_sheet(
+        gloss_panel, period_tables, period_selector, lang=lang_sel.value,
+        selected_word=text_widget.widget.selected_word, click_seq=text_widget.widget.click_seq,
+        note=text_widget.widget.selected_note,
+    )
     return
 
 
@@ -366,6 +364,13 @@ def _(gu, lang_sel, mo):
 
 
 @app.cell(hide_code=True)
+def _(TRANS_BY_LANG, gu, lang_sel):
+    sm_translators = gu.translator_multiselect(TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"]), lang_sel.value)
+    sm_translators
+    return (sm_translators,)
+
+
+@app.cell(hide_code=True)
 def _(mo):
     sm_cv, sm_set_cv = mo.state(None)
     sm_score, sm_set_score = mo.state({"correct": 0, "total": 0})
@@ -390,8 +395,9 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(sm_direction, sm_set_cv, sm_set_remaining):
+def _(sm_direction, sm_set_cv, sm_set_remaining, sm_translators):
     _ = sm_direction.value
+    _ = sm_translators.value
     sm_set_cv(None)
     sm_set_remaining(None)
     return
@@ -425,7 +431,6 @@ def _(gu, lang_sel):
 @app.cell(hide_code=True)
 def _(
     SM_STANZAS,
-    TRANS_BY_LANG,
     gu,
     lang_sel,
     sm_cv,
@@ -433,6 +438,7 @@ def _(
     sm_history,
     sm_remaining,
     sm_restore_entry,
+    sm_translators,
 ):
     _ = sm_cv()
     sm_choice_radio, sm_next_btn, sm_prev_btn = gu.stanza_match_widgets(
@@ -443,7 +449,7 @@ def _(
         restore_entry=sm_restore_entry(),
         history_len=len(sm_history()),
         lang=lang_sel.value,
-        valid_translators=TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"]),
+        valid_translators=sm_translators.value,
     )
     return sm_choice_radio, sm_next_btn, sm_prev_btn
 
@@ -451,7 +457,6 @@ def _(
 @app.cell(hide_code=True)
 def _(
     SM_STANZAS,
-    TRANS_BY_LANG,
     gu,
     lang_sel,
     sm_choice_radio,
@@ -471,6 +476,7 @@ def _(
     sm_set_remaining,
     sm_set_restore_entry,
     sm_set_score,
+    sm_translators,
 ):
     gu.stanza_match_form(
         sm_cv, sm_set_cv, sm_remaining, sm_set_remaining,
@@ -481,7 +487,8 @@ def _(
         direction=sm_direction.value,
         lang=lang_sel.value,
         renew_btn=sm_renew_btn,
-        valid_translators=TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"]),
+        valid_translators=sm_translators.value,
+        translator_choice=True,
     )
     return
 
@@ -493,23 +500,7 @@ def _(gu, lang_sel, mo):
 
 
 @app.cell(hide_code=True)
-def _(
-    QUIZ_WORDS_RAW,
-    SESSION_SIZE,
-    STANZAS,
-    TRANS_BY_LANG,
-    cfg,
-    eee,
-    gu,
-    lang_sel,
-    tp_renew_btn,
-    tp_set_cv,
-    tp_set_future,
-    tp_set_history,
-    tp_set_remaining,
-    tp_set_restore_entry,
-    tp_set_score,
-):
+def _(QUIZ_WORDS_RAW, STANZAS, TRANS_BY_LANG, cfg, eee, gu, lang_sel):
     from pathlib import Path as _P
 
     _interlinear_keys = {eee.interlinear_translator_key(_l) for _l in ("ru", "en", "el")}
@@ -523,10 +514,40 @@ def _(
         "translation_presence.tsv", nb_dir=_P(__file__).parent, remote_base=cfg.nb_remote("2026_07_27"),
     )
     gu.sync_translation_presence_tsv(_tp_vocab, LITERARY_TRANSLATORS, STANZAS, _tp_path)
-    TP_ITEMS = gu.balance_presence_items(gu.build_translation_presence_items(
+    TP_ALL = gu.build_translation_presence_items(
         gu.read_translation_presence_tsv(_tp_path), QUIZ_WORDS_RAW, STANZAS,
         valid_translators=LITERARY_TRANSLATORS,
-    ), n=SESSION_SIZE)
+    )
+    return LITERARY_TRANSLATORS, TP_ALL
+
+
+@app.cell(hide_code=True)
+def _(LITERARY_TRANSLATORS, TP_ALL, gu, lang_sel):
+    # only the translators that have a judged word to ask about
+    tp_translators = gu.translator_multiselect(
+        [t for t in LITERARY_TRANSLATORS if any(it["translator"] == t for it in TP_ALL)], lang_sel.value,
+    )
+    tp_translators
+    return (tp_translators,)
+
+
+@app.cell(hide_code=True)
+def _(
+    SESSION_SIZE,
+    TP_ALL,
+    gu,
+    tp_renew_btn,
+    tp_set_cv,
+    tp_set_future,
+    tp_set_history,
+    tp_set_remaining,
+    tp_set_restore_entry,
+    tp_set_score,
+    tp_translators,
+):
+    TP_ITEMS = gu.balance_presence_items(
+        [it for it in TP_ALL if it["translator"] in set(tp_translators.value)], n=SESSION_SIZE, by_translator=True,
+    )
     gu.reset_quiz_state(tp_renew_btn, tp_set_cv, tp_set_remaining, tp_set_score,
                          tp_set_history, tp_set_future, tp_set_restore_entry)
     return (TP_ITEMS,)
@@ -598,6 +619,7 @@ def _(
     tp_set_restore_entry,
     tp_set_score,
     tp_source_switch,
+    tp_translators,
 ):
     gu.translation_presence_form(
         tp_cv, tp_set_cv, tp_remaining, tp_set_remaining,
@@ -607,6 +629,7 @@ def _(
         items=TP_ITEMS,
         lang=lang_sel.value,
         renew_btn=tp_renew_btn,
+        valid_translators=tp_translators.value,
     )
     return
 
@@ -657,7 +680,7 @@ def _(eee, gu, lang_sel, mo):
         # STANZAS-building cell.
         "ru": [],
         "en": [],
-        "el": ["Πολυλάς", eee.interlinear_translator_key("el")],
+        "el": ["Πολυλάς", "Σπανούδης", eee.interlinear_translator_key("el")],
     }
     _DEFAULT_BY_LANG = {"ru": "", "en": "", "el": "Πολυλάς"}
     # Only one interlinear variant is ever relevant for the current language,
@@ -671,6 +694,7 @@ def _(eee, gu, lang_sel, mo):
         "Pope (1725)":          "Pope",
         "Murray (1919)":        "Murray",
         "Πολυλάς (1875/1877)":  "Πολυλάς",
+        "Σπανούδης (2020, κυπριακή διάλεκτος)": "Σπανούδης",
     }
     _valid = TRANS_BY_LANG.get(lang_sel.value, TRANS_BY_LANG["ru"])
     _opts = {k: v for k, v in _ALL_OPTIONS.items() if v in _valid}
@@ -679,6 +703,7 @@ def _(eee, gu, lang_sel, mo):
     trans_selector = mo.ui.dropdown(
         options=_opts,
         value=_default_k,
+        allow_select_none=True,  # the blank choice (value None) hides the translation
         label=gu.ui_label('trans_selector_label', lang_sel.value),
     )
     return TRANS_BY_LANG, trans_selector
@@ -720,6 +745,31 @@ async def _(cfg, eee):
         _translations.update(_tr)
         TRANS_DESC.update(_desc)
 
+    # The "<!-- gloss: ... -->" margin-note lines after a verse are comments: read them here, before the strip below.
+    def _margin_glosses(raw):
+        """{index of the shown line a note follows: [(word, meaning), ...]} from one stanza's raw text."""
+        notes, shown = {}, 0
+        for L in raw.splitlines():
+            s = L.strip()
+            if s.startswith("<!-- gloss:") and s.endswith("-->"):
+                for part in s[len("<!-- gloss:"):-len("-->")].split(" · "):
+                    word, _, meaning = part.partition(" — ")
+                    if shown and meaning.strip():
+                        notes.setdefault(shown - 1, []).append((word.strip(), meaning.strip()))
+            elif not (s.startswith("<!--") and s.endswith("-->")):
+                shown += 1
+        return notes
+
+    _raw_translations = _translations
+
+    def _stanza_glosses(ref):
+        found = {}
+        for tr, d in _raw_translations.items():
+            notes = _margin_glosses(eee.find_stanza_translation(ref, d, allow_coarse_fallback=not tr.startswith("interlinear_")))
+            if notes:
+                found[tr] = notes
+        return found
+
     # Strip any <!-- ... --> annotation (e.g. an interlinear translator's
     # own echoed Greek source line) from every translator's stanza text --
     # a no-op for translators without one.
@@ -747,6 +797,8 @@ async def _(cfg, eee):
                 tr: eee.find_stanza_translation(ref, d, allow_coarse_fallback=not tr.startswith("interlinear_"))
                 for tr, d in _translations.items()
             },
+            # {translator: {shown line index: [(word, meaning), ...]}}, only for translators that have notes
+            "margin_glosses": _stanza_glosses(ref),
         }
         for ref, lines in _greek.items()
     ]

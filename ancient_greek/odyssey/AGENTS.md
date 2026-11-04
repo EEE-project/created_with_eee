@@ -92,17 +92,19 @@ Identify cells by content, not by ID — IDs change after each save.
 | `_EDITION = (...)` | Greek text edition citation (HTML), the edition named in the first line of `greek.md`; `_MURRAY` (Murray 1919) in `2026_06_22`, `2026_06_29` and `2026_07_06`, no such cell in `2026_06_01` and `2026_06_15` |
 | `_desc_map = {eee.interlinear_translator_key(...): gu.ui_label('interlinear_description', ...), **TRANS_DESC}` | translation-picker description text |
 | `SHOW_ICTUS = mo.ui.switch(...)` | ictus + homer-highlight toggles, `EEE_NOTE` accordion |
-| `text_widget = eee.interactive_text(...)` | clickable poem display + translation panel |
-| `period_tables, period_selector, gloss_panel = gu.render_gloss_selector(...)` | click-to-gloss panel (meaning + real period `mo.ui.dropdown`, see `eee_project.build_grc_period_tables` — the `bridge`/`lang_sel` convention below: a plain assignment displays nothing, `gloss_panel` needs its own bare-expression line) |
-| `gu.render_gloss_table(period_tables, period_selector)` | own cell, taking `period_selector` as a parameter so it (and only it) reruns on a pick — renders the selected period's table |
+| `text_widget = eee.interactive_text(..., wrap=True, translation=lines_or_None, notes=...)` (needs `eee-project>=1.26.0`) | clickable poem display + translation, laid out for a narrow screen: the Greek lines wrap with a hanging indent, the translation is one card for the whole stanza inside the same widget (beside the Greek from 600 px of container width, under it below), and the blank entry of `trans_selector` (`allow_select_none=True`, value `None`) shows no translation. `notes` are a translator's margin notes (`STANZAS[...]["margin_glosses"]`): the card draws no star, a word that has a note is a link, and a tap shows its note in the word panel (`text_widget.widget.selected_note`); a lesson whose translators have none passes `{}`. All eight lessons have this layout; `make check-lesson-layout` checks it in a real browser |
+| `period_tables, period_selector, gloss_panel = gu.render_gloss_selector(...)` | click-to-gloss panel (meaning + real period `mo.ui.dropdown`, see `eee_project.build_grc_period_tables` — the `bridge`/`lang_sel` convention below). The cell shows nothing (`return gloss_panel, period_selector, period_tables`); the next cell shows the sheet |
+| `gu.render_gloss_sheet(gloss_panel, period_tables, period_selector, lang=..., selected_word=text_widget.widget.selected_word, click_seq=text_widget.widget.click_seq, note=text_widget.widget.selected_note)` | own cell, taking `period_selector` as a parameter so it (and only it) reruns on a pick: the panel and the table of the chosen period as one sheet (or, after a tap on a linked word of the translation, its margin note): a block under the text on a page of 750 px or more, a sheet fixed to the bottom of the screen below that once a word is chosen. It replaces the bare `gloss_panel` line and the `render_gloss_table` cell |
 | `mo.accordion({"О проверке форм (EEE)": EEE_NOTE})` | EEE system explanation (reads `EEE_NOTE`) |
 | `## Упражнения` | section separator |
 | `gu.word_quiz_form(...)` (title `### Упражнение: найди слово`) | word-form quiz |
 | `### Упражнение: сопоставь строфу и перевод` | section separator |
 | `sm_direction = mo.ui.radio(...)` | stanza-match direction toggle |
-| `gu.stanza_match_form(...)` | stanza-match quiz |
+| `sm_translators = gu.translator_multiselect(...)` | translator choice of the stanza match: the translators of the interface language, all selected at the start; `.value` is passed as `valid_translators=` to `gu.stanza_match_widgets` and `gu.stanza_match_form(..., translator_choice=True)`, which show a message in place of the exercise when fewer than 2 are selected; a new choice restarts the exercise (the reset cell reads it); `make check-translator-choice` checks the wiring in every lesson |
+| `gu.stanza_match_form(...)` | stanza-match quiz; it shows a translator's text without the stars and does not show the margin notes (they belong to the text widget) |
 | `### Упражнение: слово в переводе` | section separator |
-| `gu.translation_presence_form(...)` | translation-presence quiz |
+| `tp_translators = gu.translator_multiselect(...)` | translator choice of the translation-presence quiz: only the translators that have a judged row; `.value` filters `TP_ITEMS` and is passed as `valid_translators=` to the form, which shows a message when none is selected; `make check-translator-choice` checks the wiring in every lesson |
+| `gu.translation_presence_form(...)` | translation-presence quiz; it quotes the passage without the stars and does not show the margin notes |
 
 ### Hidden cells (below visible area, order not significant for UI)
 
@@ -114,12 +116,13 @@ Identify cells by content, not by ID — IDs change after each save.
 | `stanza_selector = mo.ui.dropdown(...)` | stanza picker |
 | `trans_selector = mo.ui.dropdown(...)` | translation picker |
 | `bridge = eee_project.language_bridge(mo)` | localStorage bridge for `lang_sel` (own cell, undisplayed — see visible-cells row above) |
-| `eee.parse_stanza_text(...)` / `eee.parse_stanza_translations(...)` | text parsers (shared `eee_project` functions, `ref_prefix="### Odyss. "`) + `STANZAS`/`RHYTHM_HTML`/`TRANS_DESC` builders |
+| `eee.parse_stanza_text(...)` / `eee.parse_stanza_translations(...)` | text parsers (shared `eee_project` functions, `ref_prefix="### Odyss. "`) + `STANZAS`/`RHYTHM_HTML`/`TRANS_DESC` builders; a `STANZAS` entry also carries `margin_glosses` (see Σπανούδης below) |
 | `import csv` / `QUIZ_WORDS_RAW = gu.resolve_word_grammar(...)` | vocab TSV loader |
 | `QUIZ_WORDS = gu.sample_session_items(...)` | word-quiz session sample (filter hardcoded `"none"`) |
 | `CLICKABLE_FORMS = eee.grc_coverage_words(...)` / `HOMER_WORDS = ...` | click targets + homer-highlight set for `interactive_text` |
 | `SM_STANZAS = gu.sample_session_items(STANZAS, ...)` | stanza-match session sample |
-| `TP_ITEMS = gu.balance_presence_items(...)` | translation-presence session sample; also (re)writes `translation_presence.tsv` via `gu.sync_translation_presence_tsv` |
+| `TP_ALL = gu.build_translation_presence_items(...)` | every judged word × translator item of the literary translators of the interface language; the cell also (re)writes `translation_presence.tsv` via `gu.sync_translation_presence_tsv` |
+| `TP_ITEMS = gu.balance_presence_items(..., by_translator=True)` | translation-presence session sample from the translators chosen in `tp_translators`, split evenly between them (`make check-presence-balance` checks the flag); a new choice starts a new session |
 | `build_paradigm_table = eee.build_grc_paradigm_table(...)` | paradigm + lexicon tab builders |
 | `import marimo as mo` / backend init | all imports, `ag_backend`, `um_backend`, `gu` |
 | `NB_DIR = ...` / `gu.ensure_file(...)` | paths + remote file sync |
@@ -164,10 +167,29 @@ Lines starting `<!--` are skipped.
 
 The files are `texts/odyssey/translations_ru.md` (interlinear_ru, Жуковский, Вересаев),
 `translations_en.md` (Pope, Murray, Chapman, interlinear_en) and `translations_el.md`
-(Πολυλάς, interlinear_el), next to `text.md` (the Greek original) and `index.md` (how to
+(Πολυλάς, Σπανούδης, interlinear_el), next to `text.md` (the Greek original) and `index.md` (how to
 read them). Each file starts with YAML front matter (`type: Literary Translation`, the
 translators, the sources). Today they cover Odyssey I.1-21 and IX.19-180. Chapman has 8 stanzas only (I.1-21 and IX.19-38), and `TRANS_BY_LANG` in the notebooks does not
 offer Chapman.
+
+**Σπανούδης** (Β' έκδοση, Λάρνακα 2020) is a Cypriot-dialect rendering, offered in Greek mode only (`TRANS_BY_LANG["el"]`, picker label
+`Σπανούδης (2020, κυπριακή διάλεκτος)`). It is in copyright, so the knowledge base holds fragments only (Ραψωδία Α' στ. 1-31 and
+Ι' στ. 19-166 of the edition), by the translator's permission to the maintainer, and the lessons read them from
+`translations_el.md` (`greek-knowledge-eee` 0.10.0) like Πολυλάς: no copy is kept in a lesson folder, unlike Стариковский.
+The rendering is free and rhymed in couplets, so its verses were assigned to the lesson stanzas by sense, verse by verse: a stanza can hold
+a verse more or less than its Greek lines, a couplet is split where its two verses render different stanzas, and a verse that renders Greek lines of two stanzas stands in both
+blocks (`Ι' 35, 70, 71, 117, 136`); `IX.29–33` has two verses only: the Calypso lines have no counterpart.
+
+**Margin notes.** The edition marks Cypriot words with an asterisk and translates each into standard Greek in its right
+margin; those notes matter and the lessons show them. In the knowledge base the starred word carries its asterisk in the
+verse (`πολλοπάητον*`) and the note is the line right after the verse, `<!-- gloss: word — meaning -->` (several notes of
+one verse are joined with ` · `). `eee.strip_comment_lines` removes comments, so the cell that builds `STANZAS` reads
+the `gloss` lines first (`_margin_glosses`: shown line index → `[(word, meaning)]`, kept in `STANZAS[...]["margin_glosses"]`,
+looked up like the shown text: by exact key in `2026_06_01` and `2026_06_15`, with `find_stanza_translation` in the others),
+and the text-widget cell passes them as `notes=`: the card draws no star, a word that has a note is a link, and a tap shows
+its meaning in the word panel. The two translation exercises do not show the notes: they quote a translator's text without
+the stars. A translator without notes is drawn exactly as before. The `<!-- Ραψωδία … στ. … -->` lines name the edition's verses of a stanza and are
+only stripped.
 
 ```markdown
 ## interlinear_ru
@@ -366,7 +388,7 @@ build_paradigm_table=..., lexicons=...)`, called twice with different
 `mode`:
 
 - `CLICKABLE_FORMS` — `mode="none"`: every vocab-TSV word the engine can
-  resolve at all becomes clickable (drives the gloss panel below the poem).
+  resolve at all becomes clickable (drives the word sheet: a tap shows the word's panel and table).
 - `HOMER_WORDS` — `mode="homer"`: the subset whose exact attested surface
   form is confirmed by the Homeric corpus lexicon specifically. Rendered
   with a highlighted background when the `SHOW_HOMER` switch is on, so a
@@ -400,7 +422,7 @@ level up — it applies identically to every lesson's TSV, not just one.
 Columns: `lemma\tform\tstanza_ref\ttranslator\treflected` (`reflected` is
 `yes`/`no`, manually judged). One row per (content-POS vocab word × literary
 translator) pair actually present in the lesson's sampled stanzas. The
-`TP_ITEMS` builder cell calls `gu.sync_translation_presence_tsv(...)`
+`TP_ALL` builder cell calls `gu.sync_translation_presence_tsv(...)`
 every run, which appends any newly-needed rows (blank `reflected`) without
 touching existing judged rows — **never regenerate this file from scratch**,
 always let the sync call add to what's there, then manually fill in only the
@@ -414,3 +436,5 @@ One run of the notebook appends the rows of the literary translators of the
 selected UI language only (`TRANS_BY_LANG[lang_sel.value]`, without the
 interlinear key). Run the notebook once in each UI language (ru, en, el) so
 that every translator has its rows, then fill in the blank ones.
+
+Σπανούδης joined the Greek list on 2026-10-28. Its rows are judged: across the eight lessons 401 are `yes` and 185 are `no`; the 95 rows with no clear answer stay blank and are never asked (`build_translation_presence_items` skips a row that is not `yes` or `no`).

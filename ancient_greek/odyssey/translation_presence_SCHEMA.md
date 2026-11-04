@@ -15,7 +15,7 @@ Plain UTF-8 TSV (tab-separated), one header row. Safe to open in LibreOffice Cal
 | `lemma` | No — generated | Dictionary/citation form of the word, e.g. `ἀνήρ`. |
 | `form` | No — generated | The exact inflected surface form as it appears in the poem, e.g. `Ἄνδρα` (accusative singular of `ἀνήρ`). |
 | `stanza_ref` | No — generated | Which verse-group this specific occurrence is in, e.g. `I.1–5`. A word used in more than one stanza gets **one row per occurrence** — each independently reviewable, since the same word can be handled differently by a translator in different passages. |
-| `translator` | No — generated | Which translator's rendering is being judged: `Жуковский` (1849, verse) or `Вересаев` (1953, prose) — the two literary Russian translations in this lesson. (The подстрочник/word-for-word interlinear gloss is deliberately excluded — "is this word reflected" only makes sense against a real literary translation, not a literal gloss.) |
+| `translator` | No — generated | Which translator's rendering is being judged. Each interface language has its own literary translators: `Жуковский` (1849, verse) and `Вересаев` (1953, prose) for Russian, `Pope` and `Murray` for English, `Πολυλάς` and `Σπανούδης` (2020, Cypriot dialect) for Greek. (The подстрочник/word-for-word interlinear gloss is deliberately excluded — "is this word reflected" only makes sense against a real literary translation, not a literal gloss.) |
 | `reflected` | **Yes — this is the only field to fill in** | See below. |
 
 ## Filling in `reflected`

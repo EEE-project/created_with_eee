@@ -219,3 +219,33 @@ this. The page pins the four library versions that made the pack (`ARGS=--no-pin
 20 paradigms gets no pack. Do not run a lesson natively inside the repository to make a pack: `ensure_file()` downloads files next to
 the notebook (the tool runs a copy in a temporary folder). `make check-paradigm-pack` checks the step. See the README section
 "The paradigm pack of an ancient Greek lesson".
+
+## The stanza layout of the Odyssey lessons (browser check, release order)
+
+A lesson that draws its stanza with `eee.interactive_text(..., wrap=True, translation=..., notes=...)` and its word panel with
+`gu.render_gloss_sheet(...)` (eee-project 1.26.0) is laid out by CSS: the Greek wraps with a hanging indent, the translation is one
+card beside the Greek (a box 600 px wide or more) or under it, and the word sheet is fixed to the bottom of the screen below 750 px.
+`marimo check`, an export and the library's unit tests cannot see any of that, so `make check-lesson-layout` runs every lesson that
+calls `render_gloss_sheet` in a real browser (`marimo run`, Chromium) at 390 and 830 px in Greek, Russian and English. It checks that
+the block fits, where the card and the sheet stand, that a tap opens the sheet (and a closed one opens again), that every translator of
+the dropdown draws a card (on the narrow page in every stanza of the lesson), that a word with a margin note shows it, that the blank
+entry removes the card, and that neither the page nor a cell of the lesson raises an error (a `NameError` left behind by a merge fails
+the run with its line). It takes about two minutes per lesson. Run it after a change to a lesson's text cell, gloss cells or translator dropdown, and after raising the
+`eee-project` floor of a lesson. `SCOPE=<notebook or folder>` limits it, `ARGS="--langs el --widths 390"` makes fewer runs; a lesson
+needs `translations_{ru,en,el}.md` next to it (git-ignored; the lesson fetches them from Codeberg when they are missing) and the tool
+puts the lesson folder's files back after the run. See `tools/check-lesson-layout.py` for the exit statuses.
+
+The check runs `marimo run` natively; it does not see Pyodide. `marimo export html-wasm` writes every package of the lesson's script
+header into the page pinned (`==`) to the version that the exporting Python has installed (`lock_kind = "observed"` in the page's
+header), and the page installs those versions (`tools/_paradigm_pack.py` relies on that when it pins the libraries of the pack; the
+install itself was not observed, because Pyodide cannot be reached from where this was written).
+Checked on `2026_06_01`: a Python whose installed metadata said `eee-project` 1.25.0 gave a page that pins `eee-project==1.25.0`, and
+the same export after the reinstall gave `==1.26.0`. So **a lesson whose header says `eee-project>=1.26.0` goes to `pages` only after
+1.26.0 is on PyPI and installed in `EEE_PYTHON`**: exported from a Python that still has 1.25, the page pins 1.25 and stops at the
+first `wrap=` (`unexpected keyword argument`); exported from one that has an unreleased 1.26.0 (an editable install), the page asks PyPI
+for a version that is not there and does not start; and `make export-notebooks` builds no paradigm pack for the lesson (`uv` resolves
+the header from PyPI; the export goes on without a pack and says why). Before the export run
+`$EEE_PYTHON -c "import importlib.metadata as m; print(m.version('eee-project'))"`: it must print 1.26.0 or newer (an editable install
+keeps the version it was made with, so it prints the old one although `eee_project.__version__` is new; reinstall it). After the export,
+`grep -o 'eee-project==[0-9.]*'` in the page's `index.html` shows what it pinned. After the release, check the published page with
+`.claude/skills/verify-pages`.
