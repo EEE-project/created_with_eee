@@ -6,8 +6,6 @@
 #     "modern-greek-inflexion-eee @ git+https://github.com/EEE-project/modern-greek-inflexion-eee.git",
 #     "pandas",
 # ]
-#
-# [tool.uv.sources]
 # modern-greek-eee = { git = "https://github.com/EEE-project/modern-greek-eee" }
 # modern-greek-inflexion-eee = { git = "https://github.com/EEE-project/modern-greek-inflexion-eee" }
 # ///
