@@ -67,7 +67,7 @@ source — transcribe / distill it.**
   case-order history in `2026_06_26`) must not be duplicated into later sessions
   built from the same template — cut template-inherited cells that don't belong
   to the new lesson.
-- Handout PDFs: link them in the materials cell and commit them.
+- Handout PDFs: link them in the materials cell and commit them. The materials cell stands last, right before the footer.
 
 ---
 
@@ -124,6 +124,7 @@ Two variants exist:
 | `## Упражнение 1` exercise cell | first exercise (see below) |
 | `## Упражнение 2` exercise cell | second exercise (if present) |
 | `mo.md(r"## τὸ πρῶτον προστεταγμένον…")` | homework cell |
+| `**Материалы занятия:**` PDF links | materials cell: the last visible cell, right before the footer (root `AGENTS.md`, "The page order of a lesson") |
 
 ### Hidden cells — Pattern A (word_drill × 2)
 

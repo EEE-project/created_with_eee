@@ -39,14 +39,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
-    mo.md(f"""
-    **Материалы занятия:** [κεφΙΙ(2).pdf]({NB_REMOTE}/κεφΙΙ(2).pdf) · [κεφΙΙ(2,5)\\_ἀσκήματα\\_τέλος.pdf]({NB_REMOTE}/κεφΙΙ(2,5)_ἀσκήματα_τέλος.pdf) · [Athenaze\\_2\\_vocabula.pdf]({NB_REMOTE}/Athenaze_2_vocabula.pdf) · [CONSPECTVS GRAMMATICVS II.pdf]({NB_REMOTE}/CONSPECTVS GRAMMATICVS II_graecus.pdf)
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(NB_REMOTE, mo):
     mo.md(fr"""
     ## Проверка домашнего задания · Κεφ. II(2,5) — ἀσκήματα
 
@@ -807,6 +799,14 @@ def _():
     import marimo as mo
 
     return (mo,)
+
+
+@app.cell(hide_code=True)
+def _(NB_REMOTE, mo):
+    mo.md(f"""
+    **Материалы занятия:** [κεφΙΙ(2).pdf]({NB_REMOTE}/κεφΙΙ(2).pdf) · [κεφΙΙ(2,5)\\_ἀσκήματα\\_τέλος.pdf]({NB_REMOTE}/κεφΙΙ(2,5)_ἀσκήματα_τέλος.pdf) · [Athenaze\\_2\\_vocabula.pdf]({NB_REMOTE}/Athenaze_2_vocabula.pdf) · [CONSPECTVS GRAMMATICVS II.pdf]({NB_REMOTE}/CONSPECTVS GRAMMATICVS II_graecus.pdf)
+    """)
+    return
 
 
 @app.cell(hide_code=True)

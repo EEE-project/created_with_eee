@@ -77,6 +77,10 @@ The existing Kapodistrias and Zorba lesson notebooks use the OLD machinery. Each
 3. **A trilingual `UI_STRINGS` dict + `t_ui()` helper** — all drill labels, not just content, are translated.
 4. **A fixed-position `language_selector` dropdown** and shared `eee_footer`.
 
+The link to the Google Slides copy of a presentation (Kapodistrias) is not in the intro sentence of the content cell: the sentence names the presentation as plain text, and a closing cell right before
+`eee_footer` shows the label `lesson_materials_label` and the link (root `AGENTS.md`, "The page order of a lesson"). The per-language files `notebook_<language>.<date>.py` of Kapodistrias are old variants
+without a language selector or a footer; they were not changed.
+
 **Never hand-write this machinery, and do not copy an old Kapodistrias or Zorba lesson as the template of a new one.** The old machinery uses the retired drill calls (the `gu.create_*_test_ui` and `gu.check_*_test` family) and a `UI_STRINGS` dict. Every new lesson uses the current eee-project API only (the Kavafis lessons were built that way). To add a new lesson, use the `eee` skill of `greek-eee-skills`, profile `slides-lesson.md`: it clones the canonical chapter `ellinika_b/chapter_09` with `clone_lesson.py --course-dir ... --titles-json ... --drop-phrases`. You replace only:
 - the content cells (each has a `ru`, an `el` and an `en` branch),
 - the three vocabulary TSVs and their `_ru` twins,

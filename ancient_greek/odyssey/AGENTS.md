@@ -84,10 +84,8 @@ Identify cells by content, not by ID — IDs change after each save.
 | content / first line | role |
 |---|---|
 | `eee_topbar(mo, ...)` | EEE navigation bar |
-| `{lang_sel}{bridge}` (floating div, top-right) | language switcher, cross-page persisted via `eee_project.language_bridge`/`language_selector`/`save_language_selection` (browser `localStorage`, key `"eee_lang"` — same key `tools/gen_hub.py` uses for the hub pages, so a hub selection carries into a lesson) |
+| `{lang_sel}{bridge}` (`.eee-lang-picker`; its cell stands right under the top bar: a row in the page flow, right aligned, at every width) | language switcher, cross-page persisted via `eee_project.language_bridge`/`language_selector`/`save_language_selection` (browser `localStorage`, key `"eee_lang"` — same key `tools/gen_hub.py` uses for the hub pages, so a hub selection carries into a lesson) |
 | `mo.md("# Одиссея…")` + image | title, molab badge, lesson image |
-| `**Материалы занятия:**` PDF links | materials links |
-| `## Слова, слова…` | per-lesson vocabulary notes (optional section) |
 | `## Текст поэмы с параллельными переводами` | section separator |
 | `_EDITION = (...)` | Greek text edition citation (HTML), the edition named in the first line of `greek.md`; `_MURRAY` (Murray 1919) in `2026_06_22`, `2026_06_29` and `2026_07_06`, no such cell in `2026_06_01` and `2026_06_15` |
 | `_desc_map = {eee.interlinear_translator_key(...): gu.ui_label('interlinear_description', ...), **TRANS_DESC}` | translation-picker description text |
@@ -96,6 +94,7 @@ Identify cells by content, not by ID — IDs change after each save.
 | `period_tables, period_selector, gloss_panel = gu.render_gloss_selector(...)` | click-to-gloss panel (meaning + real period `mo.ui.dropdown`, see `eee_project.build_grc_period_tables` — the `bridge`/`lang_sel` convention below). The cell shows nothing (`return gloss_panel, period_selector, period_tables`); the next cell shows the sheet |
 | `gu.render_gloss_sheet(gloss_panel, period_tables, period_selector, lang=..., selected_word=text_widget.widget.selected_word, click_seq=text_widget.widget.click_seq, note=text_widget.widget.selected_note)` | own cell, taking `period_selector` as a parameter so it (and only it) reruns on a pick: the panel and the table of the chosen period as one sheet (or, after a tap on a linked word of the translation, its margin note): a block under the text on a page of 750 px or more, a sheet fixed to the bottom of the screen below that once a word is chosen. It replaces the bare `gloss_panel` line and the `render_gloss_table` cell |
 | `mo.accordion({"О проверке форм (EEE)": EEE_NOTE})` | EEE system explanation (reads `EEE_NOTE`) |
+| `## Слова, слова…` | per-lesson explanation notes (0 to 6 cells; they stand after the widget group, before the exercises) |
 | `## Упражнения` | section separator |
 | `gu.word_quiz_form(...)` (title `### Упражнение: найди слово`) | word-form quiz |
 | `### Упражнение: сопоставь строфу и перевод` | section separator |
@@ -105,6 +104,7 @@ Identify cells by content, not by ID — IDs change after each save.
 | `### Упражнение: слово в переводе` | section separator |
 | `tp_translators = gu.translator_multiselect(...)` | translator choice of the translation-presence quiz: only the translators that have a judged row; `.value` filters `TP_ITEMS` and is passed as `valid_translators=` to the form, which shows a message when none is selected; `make check-translator-choice` checks the wiring in every lesson |
 | `gu.translation_presence_form(...)` | translation-presence quiz; it quotes the passage without the stars and does not show the margin notes |
+| `**Материалы занятия:**` PDF links | materials links: the last visible cell, right before the footer |
 
 ### Hidden cells (below visible area, order not significant for UI)
 

@@ -31,6 +31,20 @@ def _(lang_sel, mo):
 
 
 @app.cell(hide_code=True)
+def _(bridge, lang_sel, mo):
+    from eee_project import save_language_selection
+    save_language_selection(bridge, lang_sel)
+    mo.Html(f"""
+    <div class="eee-lang-picker" style="width:max-content;margin:6px 12px 0 auto;
+                background:white;padding:6px 10px;border-radius:8px;
+                box-shadow:0 2px 8px rgba(0,0,0,.12);">
+      {lang_sel}{bridge}
+    </div>
+    """)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg):
     import pathlib as _pl
     # Course-local lexicon files (moved from greek-inflexion-eee 2026-07-31,
@@ -61,115 +75,6 @@ def _(eee, lang_sel, mo):
     ])
     _right = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_22", width=280)
     mo.hstack([_left, _right], align="start")
-    return
-
-
-@app.cell(hide_code=True)
-def _(NB_REMOTE, gu, lang_sel, mo):
-    _txt = (
-        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
-        f"[Od_IX_39-61.pdf]({NB_REMOTE}/Od_IX_39-61.pdf) · "
-        f"[Od_IX_39-61_vocabula.pdf]({NB_REMOTE}/Od_IX_39-61_vocabula.pdf)"
-    )
-    mo.md(_txt)
-    return
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _TXT = {
-        "ru": r"""
-    ---
-    ## Слова, слова…
-
-    **μῆλον** (τό) — и *мелкий скот, овцы*, и *яблоко*.
-
-    В нашем тексте (IX.45): *πολλὰ δὲ **μῆλα** ἔσφαζον* — «много скота они резали».
-    Никаких яблок.
-
-    ---
-
-    **ἀγαθός** → **ἀρείων** → **ἄριστος** — суплетивное сравнение («хороший, доблестный»):
-
-    | степень | ед. ч. | мн. ч. |
-    |---------|--------|--------|
-    | сравнительная | ἀρείων | ἀρείονες |
-    | превосходная | ἄριστος | — |
-
-    В тексте (IX.48): *πλέονες καὶ **ἀρείους*** — «более многочисленные и более доблестные».
-
-    ср. англ. *good → better → best*.
-
-    ---
-
-    **μόρος** (ὁ) — *рок, судьба, гибель* (муж. род)
-    **μόρον** (τό) — *тут, шелковица* (ср. род)
-
-    В последней строке (IX.61): *φύγομεν **θάνατόν** τε **μόρον** τε* — «мы избежали смерти и рока».
-    Но μόρον можно прочитать и как «тут»: избежали смерти и шелковицы.
-    """,
-        "en": r"""
-    ---
-    ## Words, words…
-
-    **μῆλον** (τό) — both *small livestock, sheep* and *apple*.
-
-    In our text (IX.45): *πολλὰ δὲ **μῆλα** ἔσφαζον* — "they slaughtered many head of livestock."
-    No apples involved.
-
-    ---
-
-    **ἀγαθός** → **ἀρείων** → **ἄριστος** — a suppletive comparison ("good, brave"):
-
-    | degree | sg. | pl. |
-    |--------|-----|-----|
-    | comparative | ἀρείων | ἀρείονες |
-    | superlative | ἄριστος | — |
-
-    In the text (IX.48): *πλέονες καὶ **ἀρείους*** — "more numerous and braver."
-
-    cf. English *good → better → best*.
-
-    ---
-
-    **μόρος** (ὁ) — *fate, doom, ruin* (masc.)
-    **μόρον** (τό) — *mulberry* (neut.)
-
-    In the last line (IX.61): *φύγομεν **θάνατόν** τε **μόρον** τε* — "we escaped death and doom."
-    But μόρον could also be read as "mulberry": escaped death and the mulberry.
-    """,
-        "el": r"""
-    ---
-    ## Λέξεις, λέξεις…
-
-    **μῆλον** (τό) — και *μικρά ζώα, πρόβατα*, και *μήλο*.
-
-    Στο κείμενό μας (IX.45): *πολλὰ δὲ **μῆλα** ἔσφαζον* — «έσφαζαν πολλά ζώα».
-    Καθόλου μήλα.
-
-    ---
-
-    **ἀγαθός** → **ἀρείων** → **ἄριστος** — υποπληρωματική σύγκριση («καλός, γενναίος»):
-
-    | βαθμός | εν. | πληθ. |
-    |--------|-----|-------|
-    | συγκριτικός | ἀρείων | ἀρείονες |
-    | υπερθετικός | ἄριστος | — |
-
-    Στο κείμενο (IX.48): *πλέονες καὶ **ἀρείους*** — «περισσότεροι και γενναιότεροι».
-
-    πρβλ. αγγλικά *good → better → best*.
-
-    ---
-
-    **μόρος** (ὁ) — *μοίρα, θάνατος, χαμός* (αρσ.)
-    **μόρον** (τό) — *μούρο, συκάμινο* (ουδ.)
-
-    Στην τελευταία γραμμή (IX.61): *φύγομεν **θάνατόν** τε **μόρον** τε* — «ξεφύγαμε από τον θάνατο και τη μοίρα».
-    Αλλά το μόρον μπορεί να διαβαστεί και ως «μούρο»: ξεφύγαμε από τον θάνατο και το μούρο.
-    """,
-    }
-    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
     return
 
 
@@ -287,6 +192,104 @@ def _(gloss_panel, gu, lang_sel, period_selector, period_tables, text_widget):
 @app.cell(hide_code=True)
 def _(EEE_NOTE, gu, lang_sel, mo):
     mo.accordion({gu.ui_label('form_check_accordion_label', lang_sel.value): EEE_NOTE})
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _TXT = {
+        "ru": r"""
+    ---
+    ## Слова, слова…
+
+    **μῆλον** (τό) — и *мелкий скот, овцы*, и *яблоко*.
+
+    В нашем тексте (IX.45–46): *πολλὰ δὲ **μῆλα** ἔσφαζον* — «много скота они резали».
+    Никаких яблок.
+
+    ---
+
+    **ἀγαθός** → **ἀρείων** → **ἄριστος** — суплетивное сравнение («хороший, доблестный»):
+
+    | степень | ед. ч. | мн. ч. |
+    |---------|--------|--------|
+    | сравнительная | ἀρείων | ἀρείονες |
+    | превосходная | ἄριστος | ἄριστοι |
+
+    В тексте (IX.48): *πλέονες καὶ **ἀρείους*** — «более многочисленные и более доблестные».
+
+    ср. англ. *good → better → best*.
+
+    ---
+
+    **μόρος** (ὁ) — *рок, судьба, гибель* (муж. род)
+    **μόρον** (τό) — *тут, шелковица* (ср. род)
+
+    В последней строке (IX.61): *φύγομεν **θάνατόν** τε **μόρον** τε* — «мы избежали смерти и рока».
+    Но μόρον можно прочитать и как «тут»: избежали смерти и шелковицы.
+    """,
+        "en": r"""
+    ---
+    ## Words, words…
+
+    **μῆλον** (τό) — both *small livestock, sheep* and *apple*.
+
+    In our text (IX.45–46): *πολλὰ δὲ **μῆλα** ἔσφαζον* — "they slaughtered many head of livestock."
+    No apples involved.
+
+    ---
+
+    **ἀγαθός** → **ἀρείων** → **ἄριστος** — a suppletive comparison ("good, brave"):
+
+    | degree | sg. | pl. |
+    |--------|-----|-----|
+    | comparative | ἀρείων | ἀρείονες |
+    | superlative | ἄριστος | ἄριστοι |
+
+    In the text (IX.48): *πλέονες καὶ **ἀρείους*** — "more numerous and braver."
+
+    cf. English *good → better → best*.
+
+    ---
+
+    **μόρος** (ὁ) — *fate, doom, ruin* (masc.)
+    **μόρον** (τό) — *mulberry* (neut.)
+
+    In the last line (IX.61): *φύγομεν **θάνατόν** τε **μόρον** τε* — "we escaped death and doom."
+    But μόρον could also be read as "mulberry": escaped death and the mulberry.
+    """,
+        "el": r"""
+    ---
+    ## Λέξεις, λέξεις…
+
+    **μῆλον** (τό) — και *μικρά ζώα, πρόβατα*, και *μήλο*.
+
+    Στο κείμενό μας (IX.45–46): *πολλὰ δὲ **μῆλα** ἔσφαζον* — «έσφαζαν πολλά ζώα».
+    Καθόλου μήλα.
+
+    ---
+
+    **ἀγαθός** → **ἀρείων** → **ἄριστος** — υποπληρωματική σύγκριση («καλός, γενναίος»):
+
+    | βαθμός | εν. | πληθ. |
+    |--------|-----|-------|
+    | συγκριτικός | ἀρείων | ἀρείονες |
+    | υπερθετικός | ἄριστος | ἄριστοι |
+
+    Στο κείμενο (IX.48): *πλέονες καὶ **ἀρείους*** — «περισσότεροι και γενναιότεροι».
+
+    πρβλ. αγγλικά *good → better → best*.
+
+    ---
+
+    **μόρος** (ὁ) — *μοίρα, θάνατος, χαμός* (αρσ.)
+    **μόρον** (τό) — *μούρο, συκάμινο* (ουδ.)
+
+    Στην τελευταία γραμμή (IX.61): *φύγομεν **θάνατόν** τε **μόρον** τε* — «ξεφύγαμε από τον θάνατο και τη μοίρα».
+    Αλλά το μόρον μπορεί να διαβαστεί και ως «μούρο»: ξεφύγαμε από τον θάνατο και το μούρο.
+    """,
+    }
+    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
     return
 
 
@@ -997,6 +1000,17 @@ def _(cfg, gu):
 
 
 @app.cell(hide_code=True)
+def _(NB_REMOTE, gu, lang_sel, mo):
+    _txt = (
+        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
+        f"[Od_IX_39-61.pdf]({NB_REMOTE}/Od_IX_39-61.pdf) · "
+        f"[Od_IX_39-61_vocabula.pdf]({NB_REMOTE}/Od_IX_39-61_vocabula.pdf)"
+    )
+    mo.md(_txt)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_footer
     _prev_url, _next_url = cfg.adjacent_urls("2026_06_22/")
@@ -1021,20 +1035,6 @@ def _(bridge, mo):
     # language -- the moment the browser's async localStorage read lands
     lang_sel = language_selector(mo, bridge)
     return (lang_sel,)
-
-
-@app.cell(hide_code=True)
-def _(bridge, lang_sel, mo):
-    from eee_project import save_language_selection
-    save_language_selection(bridge, lang_sel)
-    mo.Html(f"""
-    <div style="position:fixed;top:56px;right:12px;z-index:1000;
-                background:white;padding:6px 10px;border-radius:8px;
-                box-shadow:0 2px 8px rgba(0,0,0,.12);">
-      {lang_sel}{bridge}
-    </div>
-    """)
-    return
 
 
 if __name__ == "__main__":

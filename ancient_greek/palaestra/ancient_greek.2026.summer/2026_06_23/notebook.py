@@ -39,13 +39,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
-    _cap1_remote = NB_REMOTE.replace("/2026_06_23", "/2026_06_16")
-    mo.md(f"**Материалы занятия:** [заметки\\_23.06.pdf]({NB_REMOTE}/заметки_23.06.pdf) · [I(1,5).pdf]({NB_REMOTE}/I(1,5).pdf) · [κεφ.I, (3)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ.I, (3)_ἀσκήματα.pdf) · [Athenaze\\_1\\_vocabula.pdf]({_cap1_remote}/Athenaze_1_vocabula.pdf)")
-    return
-
-
-@app.cell(hide_code=True)
-def _(NB_REMOTE, mo):
     _next_remote = NB_REMOTE.replace("/2026_06_23", "/2026_06_26")
     mo.md(fr"""
     ## Проверка домашнего задания · τὸ τρίτον προστεταγμένον
@@ -711,6 +704,13 @@ def _():
     import marimo as mo
 
     return (mo,)
+
+
+@app.cell(hide_code=True)
+def _(NB_REMOTE, mo):
+    _cap1_remote = NB_REMOTE.replace("/2026_06_23", "/2026_06_16")
+    mo.md(f"**Материалы занятия:** [заметки\\_23.06.pdf]({NB_REMOTE}/заметки_23.06.pdf) · [I(1,5).pdf]({NB_REMOTE}/I(1,5).pdf) · [κεφ.I, (3)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ.I, (3)_ἀσκήματα.pdf) · [Athenaze\\_1\\_vocabula.pdf]({_cap1_remote}/Athenaze_1_vocabula.pdf)")
+    return
 
 
 @app.cell(hide_code=True)

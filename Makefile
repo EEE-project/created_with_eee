@@ -14,7 +14,7 @@ PAGES_DIR ?= $(CURDIR)/../created_with_eee-pages-worktree
 
 EEE_PYTHON ?= $(HOME)/.venv/eee/bin/python3
 
-.PHONY: help sync-main propagate-pages fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-hub-links check-vocab check-kavafis-english check-embedded-data check-paradigm-pack check-lesson-layout check-presence-balance check-translator-choice
+.PHONY: help sync-main propagate-pages fix-split-roots fix-gitlab-unified-scope fix-static-footer fix-split-hub-links export-notebooks sync-pages-export gen-hub sync-hub-pages verify-pages-deploy check-hub-links check-vocab check-kavafis-english check-embedded-data check-paradigm-pack check-lesson-layout check-presence-balance check-translator-choice check-lesson-order
 
 help:
 	@echo "Targets:"
@@ -143,6 +143,13 @@ help:
 	@echo "                      never asked about (see tools/check-translator-choice.py)."
 	@echo "                      Read-only, no network. Optional SCOPE= limits it to a"
 	@echo "                      notebook or folder."
+	@echo "  check-lesson-order"
+	@echo "                      Every lesson page shows the text widget first, then the"
+	@echo "                      explanations, the exercises, the links to the lecture"
+	@echo "                      presentations, the footer; the language picker is a row"
+	@echo "                      under the top bar (see tools/check-lesson-order.py)."
+	@echo "                      Read-only, no network. Optional SCOPE= limits it to a"
+	@echo "                      notebook or folder."
 	@echo ""
 	@echo "NOT automated here (still manual -- see README's Maintainer tooling"
 	@echo "section): splitting a new course off into its own GitLab project."
@@ -249,3 +256,6 @@ check-presence-balance:
 
 check-translator-choice:
 	$(EEE_PYTHON) tools/check-translator-choice.py $(SCOPE)
+
+check-lesson-order:
+	$(EEE_PYTHON) tools/check-lesson-order.py $(SCOPE)

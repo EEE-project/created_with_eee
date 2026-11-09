@@ -31,6 +31,20 @@ def _(lang_sel, mo):
 
 
 @app.cell(hide_code=True)
+def _(bridge, lang_sel, mo):
+    from eee_project import save_language_selection
+    save_language_selection(bridge, lang_sel)
+    mo.Html(f"""
+    <div class="eee-lang-picker" style="width:max-content;margin:6px 12px 0 auto;
+                background:white;padding:6px 10px;border-radius:8px;
+                box-shadow:0 2px 8px rgba(0,0,0,.12);">
+      {lang_sel}{bridge}
+    </div>
+    """)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg):
     import pathlib as _pl
     # Course-local lexicon files (moved from greek-inflexion-eee 2026-07-31,
@@ -62,91 +76,6 @@ def _(eee, lang_sel, mo):
     _img = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_07_27", width=280)
     _right = mo.vstack([_img], align="center")
     mo.hstack([_left, _right], align="start")
-    return
-
-
-@app.cell(hide_code=True)
-def _(NB_REMOTE, gu, lang_sel, mo):
-    _txt = (
-        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
-        f"[Od_IX_152-180.pdf]({NB_REMOTE}/Od_IX_152-180.pdf) · "
-        f"[Od_IX_152-180_vocabula.pdf]({NB_REMOTE}/Od_IX_152-180_vocabula.pdf)"
-    )
-    mo.md(_txt)
-    return
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _TXT = {
-        "ru": r"""
-    ---
-    ## Τμῆσις — «рассечение» глагола предлогом
-
-    В этом отрывке дважды встречается **тмесис** — приставка глагола
-    отделена от самого глагола другими словами, как будто это ещё не
-    приставка, а самостоятельный предлог (в классическом аттическом
-    такое разделение уже практически не встречается, приставка и
-    глагол слились в одно слово):
-
-    - **ἀνὰ νηὸς ἔβην** (IX.177) — «взошёл на корабль»: ἀνά отделено
-      от ἔβην словом νηός; вместе это ἀνέβην = ἀναβαίνω.
-    - **ἀνά τε πρυμνήσια λῦσαι** (IX.178) — «отвязать причальные
-      канаты»: ἀνά отделено от λῦσαι словом πρυμνήσια; вместе это
-      ἀναλῦσαι = ἀναλύω.
-
-    В обоих случаях предлог сохраняет собственное значение
-    («вверх», «обратно») и относится ко всей фразе, а не только к
-    глаголу — след более раннего, ещё не полностью грамматикализованного
-    состояния языка.
-    """,
-        "en": "",
-        "el": "",
-    }
-    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
-    return
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _TXT = {
-        "ru": r"""
-    ---
-    ## Грамматическая памятка
-
-    #### Имперфект δινέω (медиального/пассивного залога)
-
-    `imperf.: [ἐ] + δινέ + вторичные окончания`
-
-    | | Первичные оконч. (акт./мед.-пасс.) | Вторичные оконч. (акт./мед.-пасс.) |
-    |---|---|---|
-    | 1 ед. | ω / (ο)μαι | (ο)ν / (ο)μην |
-    | 2 ед. | εις / (ε)σαι > η | (ε)ς / (ε)σο > ου |
-    | 3 ед. | ει / (ε)ται | (ε) / (ε)το |
-    | 1 мн. | (ο)μεν / (ο)με(σ)θα | (ο)μεν / (ο)με(σ)θα |
-    | 2 мн. | (ε)τε / (ε)σθε | (ε)τε / (ε)σθε |
-    | 3 мн. | ουσι / (ο)νται | (ο)ν / (ο)ντο |
-
-    #### Склонение ναῦς/νηῦς — «корабль»
-
-    | | Ед. число | Мн. число |
-    |---|---|---|
-    | Им. | ναῦς/νηῦς | νῆες |
-    | Род. | νηός | νηῶν |
-    | Дат. | νηί | νηυσί |
-    | Вин. | νῆα | νῆας |
-
-    #### Конструкция Accusativus cum infinitivo (Винительный с инфинитивом)
-
-    **ἐκέλευσα** δ' ἑταίρους αὐτούς τ' **ἀμβαίνειν** (IX.177–178)
-    — управляющий глагол + вин. п. + вин. п. + инфинитив:
-    «**Я приказал**, чтобы **товарищи сами взошли**» — по-русски
-    переводим придаточным с союзом «что, чтобы».
-    """,
-        "en": "",
-        "el": "",
-    }
-    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
     return
 
 
@@ -262,6 +191,80 @@ def _(gloss_panel, gu, lang_sel, period_selector, period_tables, text_widget):
 @app.cell(hide_code=True)
 def _(EEE_NOTE, gu, lang_sel, mo):
     mo.accordion({gu.ui_label('form_check_accordion_label', lang_sel.value): EEE_NOTE})
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _TXT = {
+        "ru": r"""
+    ---
+    ## Τμῆσις — «рассечение» глагола предлогом
+
+    В этом отрывке дважды встречается **тмесис** — приставка глагола
+    отделена от самого глагола другими словами, как будто это ещё не
+    приставка, а самостоятельный предлог (в классическом аттическом
+    такое разделение уже практически не встречается, приставка и
+    глагол слились в одно слово):
+
+    - **ἀνὰ νηὸς ἔβην** (IX.177) — «взошёл на корабль»: ἀνά отделено
+      от ἔβην словом νηός; вместе это ἀνέβην = ἀναβαίνω.
+    - **ἀνά τε πρυμνήσια λῦσαι** (IX.178) — «отвязать причальные
+      канаты»: ἀνά отделено от λῦσαι словом πρυμνήσια; вместе это
+      ἀναλῦσαι = ἀναλύω.
+
+    В обоих случаях предлог сохраняет собственное значение
+    («вверх», «обратно») и относится ко всей фразе, а не только к
+    глаголу — след более раннего, ещё не полностью грамматикализованного
+    состояния языка.
+    """,
+        "en": "",
+        "el": "",
+    }
+    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _TXT = {
+        "ru": r"""
+    ---
+    ## Грамматическая памятка
+
+    #### Имперфект δινέω (медиального/пассивного залога)
+
+    `imperf.: [ἐ] + δινέ + вторичные окончания`
+
+    | | Первичные оконч. (акт./мед.-пасс.) | Вторичные оконч. (акт./мед.-пасс.) |
+    |---|---|---|
+    | 1 ед. | ω / (ο)μαι | (ο)ν / (ο)μην |
+    | 2 ед. | εις / (ε)σαι > η | (ε)ς / (ε)σο > ου |
+    | 3 ед. | ει / (ε)ται | (ε) / (ε)το |
+    | 1 мн. | (ο)μεν / (ο)με(σ)θα | (ο)μεν / (ο)με(σ)θα |
+    | 2 мн. | (ε)τε / (ε)σθε | (ε)τε / (ε)σθε |
+    | 3 мн. | ουσι / (ο)νται | (ο)ν / (ο)ντο |
+
+    #### Склонение ναῦς/νηῦς — «корабль»
+
+    | | Ед. число | Мн. число |
+    |---|---|---|
+    | Им. | ναῦς/νηῦς | νῆες |
+    | Род. | νηός | νηῶν |
+    | Дат. | νηί | νηυσί |
+    | Вин. | νῆα | νῆας |
+
+    #### Конструкция Accusativus cum infinitivo (Винительный с инфинитивом)
+
+    **ἐκέλευσα** δ' ἑταίρους αὐτούς τ' **ἀμβαίνειν** (IX.177–178)
+    — управляющий глагол + вин. п. + вин. п. + инфинитив:
+    «**Я приказал**, чтобы **товарищи сами взошли**» — по-русски
+    переводим придаточным с союзом «что, чтобы».
+    """,
+        "en": "",
+        "el": "",
+    }
+    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
     return
 
 
@@ -952,6 +955,17 @@ def _(cfg, gu):
 
 
 @app.cell(hide_code=True)
+def _(NB_REMOTE, gu, lang_sel, mo):
+    _txt = (
+        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
+        f"[Od_IX_152-180.pdf]({NB_REMOTE}/Od_IX_152-180.pdf) · "
+        f"[Od_IX_152-180_vocabula.pdf]({NB_REMOTE}/Od_IX_152-180_vocabula.pdf)"
+    )
+    mo.md(_txt)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_footer
     _prev_url, _next_url = cfg.adjacent_urls("2026_07_27/")
@@ -976,20 +990,6 @@ def _(bridge, mo):
     # language -- the moment the browser's async localStorage read lands
     lang_sel = language_selector(mo, bridge, options={"Русский": "ru"}, default="ru")  # eee-split lang=ru orig=language_selector(mo, bridge)
     return (lang_sel,)
-
-
-@app.cell(hide_code=True)
-def _(bridge, lang_sel, mo):
-    from eee_project import save_language_selection
-    save_language_selection(bridge, lang_sel)
-    mo.Html(f"""
-    <div style="position:fixed;top:56px;right:12px;z-index:1000;
-                background:white;padding:6px 10px;border-radius:8px;
-                box-shadow:0 2px 8px rgba(0,0,0,.12);">
-      {lang_sel}{bridge}
-    </div>
-    """)
-    return
 
 
 if __name__ == "__main__":

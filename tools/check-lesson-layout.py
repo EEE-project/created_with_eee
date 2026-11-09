@@ -21,9 +21,8 @@ Chromium at each width and in each interface language, taps the words, and check
 A lesson starts in its default interface language and is drawn again once the language kept in the browser has reached the kernel;
 the tool waits until that has happened (a tap on the first draw is lost), the page has stopped changing and the rules of the widget are applied, and after each choice in a dropdown until the kernel has drawn the widget again, before it checks anything.
 
-The tool cannot see anything that happens in Pyodide (the published pages): an export pins the eee-project version that its
-Python has installed and the page installs that version, so the layout shows there only after eee-project 1.26.0 is released
-and installed in the exporting Python (see AGENTS.md, "The stanza layout of the Odyssey lessons"), and
+The tool cannot see anything that happens in Pyodide (the published pages): the layout shows there only after eee-project 1.26.0 is released
+and installed in the exporting Python (an older marimo pinned the page to the installed version; see AGENTS.md, "The stanza layout of the Odyssey lessons"), and
 `.claude/skills/verify-pages` is the check of a published lesson. Each run loads the whole lesson once per
 language and width, which takes 10 to 40 seconds.
 

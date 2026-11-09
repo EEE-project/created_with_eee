@@ -256,6 +256,7 @@ FOOTER_CSS = """<style>
 
 PAGE_CSS = """<style>
 * { box-sizing: border-box; }
+html { background: #fff; color-scheme: light; }
 body { margin: 0; font-family: Syne, sans-serif; }
 .eee-page { max-width: 640px; margin: 0 auto; padding: 0 16px 16px; }
 #lang-picker {

@@ -39,14 +39,6 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(NB_REMOTE, mo):
-    _cap1_remote = NB_REMOTE.replace("/2026_06_26", "/2026_06_16")
-    _course_remote = NB_REMOTE.replace("/2026_06_26", "")
-    mo.md(f"**Материалы занятия:** [заметки\\_26.06.pdf]({NB_REMOTE}/заметки_26.06.pdf) · [τόνος+κλίσις β'.pdf]({NB_REMOTE}/τόνος+κλίσις β'.pdf) · [κεφ(Ι)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ(Ι)_ἀσκήματα.pdf) · [κεφ.I, (3)\\_ἀσκήματα\\_τέλος.pdf]({NB_REMOTE}/κεφ.I, (3)_ἀσκήματα_τέλος.pdf) · [Athenaze\\_1\\_vocabula.pdf]({_cap1_remote}/Athenaze_1_vocabula.pdf) · [CONSPECTVS GRAMMATICVS I\\_graecus.pdf]({_course_remote}/CONSPECTVS GRAMMATICVS I_graecus.pdf)")
-    return
-
-
-@app.cell(hide_code=True)
-def _(NB_REMOTE, mo):
     mo.md(fr"""
     ## Проверка домашнего задания · τὸ τέταρτον προστεταγμένον
 
@@ -684,6 +676,14 @@ def _():
     import marimo as mo
 
     return (mo,)
+
+
+@app.cell(hide_code=True)
+def _(NB_REMOTE, mo):
+    _cap1_remote = NB_REMOTE.replace("/2026_06_26", "/2026_06_16")
+    _course_remote = NB_REMOTE.replace("/2026_06_26", "")
+    mo.md(f"**Материалы занятия:** [заметки\\_26.06.pdf]({NB_REMOTE}/заметки_26.06.pdf) · [τόνος+κλίσις β'.pdf]({NB_REMOTE}/τόνος+κλίσις β'.pdf) · [κεφ(Ι)\\_ἀσκήματα.pdf]({NB_REMOTE}/κεφ(Ι)_ἀσκήματα.pdf) · [κεφ.I, (3)\\_ἀσκήματα\\_τέλος.pdf]({NB_REMOTE}/κεφ.I, (3)_ἀσκήματα_τέλος.pdf) · [Athenaze\\_1\\_vocabula.pdf]({_cap1_remote}/Athenaze_1_vocabula.pdf) · [CONSPECTVS GRAMMATICVS I\\_graecus.pdf]({_course_remote}/CONSPECTVS GRAMMATICVS I_graecus.pdf)")
+    return
 
 
 @app.cell(hide_code=True)

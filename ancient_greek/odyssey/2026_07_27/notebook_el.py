@@ -31,6 +31,20 @@ def _(lang_sel, mo):
 
 
 @app.cell(hide_code=True)
+def _(bridge, lang_sel, mo):
+    from eee_project import save_language_selection
+    save_language_selection(bridge, lang_sel)
+    mo.Html(f"""
+    <div class="eee-lang-picker" style="width:max-content;margin:6px 12px 0 auto;
+                background:white;padding:6px 10px;border-radius:8px;
+                box-shadow:0 2px 8px rgba(0,0,0,.12);">
+      {lang_sel}{bridge}
+    </div>
+    """)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg):
     import pathlib as _pl
     # Course-local lexicon files (moved from greek-inflexion-eee 2026-07-31,
@@ -62,92 +76,6 @@ def _(eee, lang_sel, mo):
     _img = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_07_27", width=280)
     _right = mo.vstack([_img], align="center")
     mo.hstack([_left, _right], align="start")
-    return
-
-
-@app.cell(hide_code=True)
-def _(NB_REMOTE, gu, lang_sel, mo):
-    _txt = (
-        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
-        f"[Od_IX_152-180.pdf]({NB_REMOTE}/Od_IX_152-180.pdf) · "
-        f"[Od_IX_152-180_vocabula.pdf]({NB_REMOTE}/Od_IX_152-180_vocabula.pdf)"
-    )
-    mo.md(_txt)
-    return
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _TXT = {
-        "ru": "",
-        "en": "",
-        "el": r"""
-    ---
-    ## Τμῆσις — «Διαχωρισμός» ρήματος με πρόθεση
-
-    Σε αυτό το απόσπασμα εμφανίζεται δύο φορές η **τμήσις** — η
-    πρόθεση ενός ρήματος διαχωρίζεται από το ίδιο το ρήμα με άλλες
-    λέξεις, σαν να μην είναι ακόμα πρόθεμα αλλά αυτοτελής πρόθεση
-    (στην κλασική αττική αυτός ο διαχωρισμός σχεδόν δεν απαντάται
-    πια, το πρόθεμα και το ρήμα έχουν συγχωνευτεί σε μία λέξη):
-
-    - **ἀνὰ νηὸς ἔβην** (IX.177) — «ανέβηκα στο πλοίο»: το ἀνά
-      διαχωρίζεται από το ἔβην με τη λέξη νηός· μαζί σχηματίζουν
-      το ἀνέβην = ἀναβαίνω.
-    - **ἀνά τε πρυμνήσια λῦσαι** (IX.178) — «να λύσω τα πρυμνήσια
-      σχοινιά»: το ἀνά διαχωρίζεται από το λῦσαι με τη λέξη
-      πρυμνήσια· μαζί σχηματίζουν το ἀναλῦσαι = ἀναλύω.
-
-    Και στις δύο περιπτώσεις η πρόθεση διατηρεί τη δική της
-    σημασία («προς τα πάνω», «πίσω/ξανά») και αναφέρεται σε
-    ολόκληρη τη φράση, όχι μόνο στο ρήμα — ίχνος ενός παλαιότερου,
-    ακόμα όχι πλήρως γραμματικοποιημένου σταδίου της γλώσσας.
-    """,
-    }
-    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
-    return
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _TXT = {
-        "ru": "",
-        "en": "",
-        "el": r"""
-    ---
-    ## Γραμματική Υπενθύμιση
-
-    #### Παρατατικός δινέω (μέσης/παθητικής φωνής)
-
-    `παρατ.: [ἐ] + δινέ + δευτερεύουσες καταλήξεις`
-
-    | | Πρωτεύουσες καταλήξεις (ενεργ./μέσο-παθ.) | Δευτερεύουσες καταλήξεις (ενεργ./μέσο-παθ.) |
-    |---|---|---|
-    | 1 εν. | ω / (ο)μαι | (ο)ν / (ο)μην |
-    | 2 εν. | εις / (ε)σαι > η | (ε)ς / (ε)σο > ου |
-    | 3 εν. | ει / (ε)ται | (ε) / (ε)το |
-    | 1 πλ. | (ο)μεν / (ο)με(σ)θα | (ο)μεν / (ο)με(σ)θα |
-    | 2 πλ. | (ε)τε / (ε)σθε | (ε)τε / (ε)σθε |
-    | 3 πλ. | ουσι / (ο)νται | (ο)ν / (ο)ντο |
-
-    #### Κλίση ναῦς/νηῦς — «πλοίο»
-
-    | | Ενικός | Πληθυντικός |
-    |---|---|---|
-    | Ονομ. | ναῦς/νηῦς | νῆες |
-    | Γεν. | νηός | νηῶν |
-    | Δοτ. | νηί | νηυσί |
-    | Αιτ. | νῆα | νῆας |
-
-    #### Η σύνταξη Accusativus cum infinitivo (Αιτιατική με απαρέμφατο)
-
-    **ἐκέλευσα** δ' ἑταίρους αὐτούς τ' **ἀμβαίνειν** (IX.177–178)
-    — κύριο ρήμα + αιτιατική + αιτιατική + απαρέμφατο:
-    «**Διέταξα** να **ανέβουν οι ίδιοι οι σύντροφοι**» — στα
-    ελληνικά αποδίδεται με δευτερεύουσα πρόταση με «να».
-    """,
-    }
-    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
     return
 
 
@@ -263,6 +191,81 @@ def _(gloss_panel, gu, lang_sel, period_selector, period_tables, text_widget):
 @app.cell(hide_code=True)
 def _(EEE_NOTE, gu, lang_sel, mo):
     mo.accordion({gu.ui_label('form_check_accordion_label', lang_sel.value): EEE_NOTE})
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _TXT = {
+        "ru": "",
+        "en": "",
+        "el": r"""
+    ---
+    ## Τμῆσις — «Διαχωρισμός» ρήματος με πρόθεση
+
+    Σε αυτό το απόσπασμα εμφανίζεται δύο φορές η **τμήσις** — η
+    πρόθεση ενός ρήματος διαχωρίζεται από το ίδιο το ρήμα με άλλες
+    λέξεις, σαν να μην είναι ακόμα πρόθεμα αλλά αυτοτελής πρόθεση
+    (στην κλασική αττική αυτός ο διαχωρισμός σχεδόν δεν απαντάται
+    πια, το πρόθεμα και το ρήμα έχουν συγχωνευτεί σε μία λέξη):
+
+    - **ἀνὰ νηὸς ἔβην** (IX.177) — «ανέβηκα στο πλοίο»: το ἀνά
+      διαχωρίζεται από το ἔβην με τη λέξη νηός· μαζί σχηματίζουν
+      το ἀνέβην = ἀναβαίνω.
+    - **ἀνά τε πρυμνήσια λῦσαι** (IX.178) — «να λύσουν τα πρυμνήσια
+      σχοινιά»: το ἀνά διαχωρίζεται από το λῦσαι με τη λέξη
+      πρυμνήσια· μαζί σχηματίζουν το ἀναλῦσαι = ἀναλύω.
+
+    Και στις δύο περιπτώσεις η πρόθεση διατηρεί τη δική της
+    σημασία («προς τα πάνω», «πίσω/ξανά») και αναφέρεται σε
+    ολόκληρη τη φράση, όχι μόνο στο ρήμα — ίχνος ενός παλαιότερου,
+    ακόμα όχι πλήρως γραμματικοποιημένου σταδίου της γλώσσας.
+    """,
+    }
+    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _TXT = {
+        "ru": "",
+        "en": "",
+        "el": r"""
+    ---
+    ## Γραμματική Υπενθύμιση
+
+    #### Παρατατικός δινέω (μέσης/παθητικής φωνής)
+
+    `παρατ.: [ἐ] + δινέ + δευτερεύουσες καταλήξεις`
+
+    | | Πρωτεύουσες καταλήξεις (ενεργ./μέσο-παθ.) | Δευτερεύουσες καταλήξεις (ενεργ./μέσο-παθ.) |
+    |---|---|---|
+    | 1 εν. | ω / (ο)μαι | (ο)ν / (ο)μην |
+    | 2 εν. | εις / (ε)σαι > η | (ε)ς / (ε)σο > ου |
+    | 3 εν. | ει / (ε)ται | (ε) / (ε)το |
+    | 1 πλ. | (ο)μεν / (ο)με(σ)θα | (ο)μεν / (ο)με(σ)θα |
+    | 2 πλ. | (ε)τε / (ε)σθε | (ε)τε / (ε)σθε |
+    | 3 πλ. | ουσι / (ο)νται | (ο)ν / (ο)ντο |
+
+    #### Κλίση ναῦς/νηῦς — «πλοίο»
+
+    | | Ενικός | Πληθυντικός |
+    |---|---|---|
+    | Ονομ. | ναῦς/νηῦς | νῆες |
+    | Γεν. | νηός | νηῶν |
+    | Δοτ. | νηί | νηυσί |
+    | Αιτ. | νῆα | νῆας |
+
+    #### Η σύνταξη Accusativus cum infinitivo (Αιτιατική με απαρέμφατο)
+
+    **ἐκέλευσα** δ' ἑταίρους αὐτούς τ' **ἀμβαίνειν** (IX.177–178)
+    — κύριο ρήμα + αιτιατική + αιτιατική + απαρέμφατο:
+    «**Διέταξα** να **ανέβουν οι ίδιοι οι σύντροφοι**» — στα
+    ελληνικά αποδίδεται με δευτερεύουσα πρόταση με «να».
+    """,
+    }
+    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
     return
 
 
@@ -953,6 +956,17 @@ def _(cfg, gu):
 
 
 @app.cell(hide_code=True)
+def _(NB_REMOTE, gu, lang_sel, mo):
+    _txt = (
+        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
+        f"[Od_IX_152-180.pdf]({NB_REMOTE}/Od_IX_152-180.pdf) · "
+        f"[Od_IX_152-180_vocabula.pdf]({NB_REMOTE}/Od_IX_152-180_vocabula.pdf)"
+    )
+    mo.md(_txt)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_footer
     _prev_url, _next_url = cfg.adjacent_urls("2026_07_27/")
@@ -977,20 +991,6 @@ def _(bridge, mo):
     # language -- the moment the browser's async localStorage read lands
     lang_sel = language_selector(mo, bridge, options={"Ελληνικά": "el"}, default="el")  # eee-split lang=el orig=language_selector(mo, bridge)
     return (lang_sel,)
-
-
-@app.cell(hide_code=True)
-def _(bridge, lang_sel, mo):
-    from eee_project import save_language_selection
-    save_language_selection(bridge, lang_sel)
-    mo.Html(f"""
-    <div style="position:fixed;top:56px;right:12px;z-index:1000;
-                background:white;padding:6px 10px;border-radius:8px;
-                box-shadow:0 2px 8px rgba(0,0,0,.12);">
-      {lang_sel}{bridge}
-    </div>
-    """)
-    return
 
 
 if __name__ == "__main__":

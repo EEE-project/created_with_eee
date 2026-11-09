@@ -28,6 +28,27 @@ Identify a notebook's cells by their content, not by ID — marimo reassigns
 cell IDs on every save, so an ID noted in a previous session (or in any
 `AGENTS.md`) is not stable across the next one.
 
+## The page order of a lesson
+
+A lesson page shows its blocks in this order (the maintainer's rule, 2026-11-09). Marimo shows the cells of a notebook in file order, so the place of a cell in the file is its place on the page:
+
+1. the top bar and the title;
+2. the text and translation widget with its heading, source line, controls, word sheet and form-check accordion (only the Odyssey lessons have this widget);
+3. the explanations (the lesson notes);
+4. the exercises;
+5. the links to the lecture presentations: the materials line (`gu.ui_label('lesson_materials_label', ...)` and the PDF links; Odyssey and Palaestra) and the Google Slides link (Kapodistrias);
+6. the footer.
+
+A link that belongs to one exercise (an answer key or a homework PDF in Palaestra) stays with that exercise. In a Kapodistrias lesson the intro sentence names the presentation as plain text, and a closing cell before the footer
+holds the link. A hosted copy of a presentation in another course (Zorba, Kavafis Ithaki) goes into a closing cell of the same kind when the maintainer gives its URL.
+
+The language picker is a row, not a floating box (the maintainer's choice, 2026-11-09). Its cell stands directly under the top bar, and its block is in the page flow, right aligned, at every width. A fixed box covered text on a phone
+and, in a local run of `2026_06_22`, in 2 of 7 scroll steps at 700 and at 830 px and in 1 of 6 at 1280 px; a box with `position: absolute` would sit at the page bottom, because the output wrapper of a cell is positioned
+(measured on 2026-11-09 with `marimo run`).
+
+To change the order, move whole cells and do not edit their code. `make check-lesson-order` (`tools/check-lesson-order.py`) fails a lesson that breaks the order. After a move in a lesson with per-language files
+(`2026_07_27`), make the files again: `python -m eee_project.split_lesson` refuses to overwrite, so run it on a copy of `notebook.py` in an empty folder and copy the three `notebook_<language>.py` files back.
+
 ## Vocabulary TSVs
 
 Schema and multi-word-entry handling both vary by TSV, not by one repo-wide
@@ -235,17 +256,18 @@ the run with its line). It takes about two minutes per lesson. Run it after a ch
 needs `translations_{ru,en,el}.md` next to it (git-ignored; the lesson fetches them from Codeberg when they are missing) and the tool
 puts the lesson folder's files back after the run. See `tools/check-lesson-layout.py` for the exit statuses.
 
-The check runs `marimo run` natively; it does not see Pyodide. `marimo export html-wasm` writes every package of the lesson's script
-header into the page pinned (`==`) to the version that the exporting Python has installed (`lock_kind = "observed"` in the page's
-header), and the page installs those versions (`tools/_paradigm_pack.py` relies on that when it pins the libraries of the pack; the
-install itself was not observed, because Pyodide cannot be reached from where this was written).
-Checked on `2026_06_01`: a Python whose installed metadata said `eee-project` 1.25.0 gave a page that pins `eee-project==1.25.0`, and
-the same export after the reinstall gave `==1.26.0`. So **a lesson whose header says `eee-project>=1.26.0` goes to `pages` only after
-1.26.0 is on PyPI and installed in `EEE_PYTHON`**: exported from a Python that still has 1.25, the page pins 1.25 and stops at the
-first `wrap=` (`unexpected keyword argument`); exported from one that has an unreleased 1.26.0 (an editable install), the page asks PyPI
-for a version that is not there and does not start; and `make export-notebooks` builds no paradigm pack for the lesson (`uv` resolves
+The check runs `marimo run` natively; it does not see Pyodide. What `marimo export html-wasm` writes into the page depends on the marimo version.
+With marimo 0.25.1 (the version in `EEE_PYTHON` on 2026-11-09) the page keeps the packages of the lesson's script header as written: floors such as `eee-project>=1.26.0`,
+no `==` pin and no `lock_kind` marker (measured on an export of the Palaestra lesson `2026_06_12`; in the page's `index.html` the header is JSON-escaped: `eee-project\u003E=1.1.0`).
+The `==` pins that an export has (`ancient-greek-backend-eee`, `greek-accentuation`, `greek-inflexion-eee`, `inflexion`) are those of the paradigm pack that `tools/_paradigm_pack.py` adds.
+An older marimo wrote every package pinned (`==`) to the version that the exporting Python had installed (`lock_kind = "observed"`; checked on `2026_06_01`: a Python whose installed
+metadata said `eee-project` 1.25.0 gave a page that pinned `eee-project==1.25.0`, and the same export after the reinstall gave `==1.26.0`). The install in Pyodide was not observed in either case,
+because Pyodide cannot be reached from where this was written. The rule stays: **a lesson whose header says `eee-project>=1.26.0` goes to `pages` only after
+1.26.0 is on PyPI and installed in `EEE_PYTHON`**. With the older marimo that pinned, a page exported from a Python that still has 1.25 pins 1.25 and stops at the
+first `wrap=` (`unexpected keyword argument`), and a page exported from one that has an unreleased 1.26.0 (an editable install) asks PyPI
+for a version that is not there and does not start. With any marimo, `make export-notebooks` builds no paradigm pack for the lesson while the floor is not on PyPI (`uv` resolves
 the header from PyPI; the export goes on without a pack and says why). Before the export run
 `$EEE_PYTHON -c "import importlib.metadata as m; print(m.version('eee-project'))"`: it must print 1.26.0 or newer (an editable install
 keeps the version it was made with, so it prints the old one although `eee_project.__version__` is new; reinstall it). After the export,
-`grep -o 'eee-project==[0-9.]*'` in the page's `index.html` shows what it pinned. After the release, check the published page with
+`grep -o 'eee-project[^"]\{0,14\}'` in the page's `index.html` shows what the header asks for. After the release, check the published page with
 `.claude/skills/verify-pages`.

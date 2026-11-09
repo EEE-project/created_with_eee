@@ -31,6 +31,20 @@ def _(lang_sel, mo):
 
 
 @app.cell(hide_code=True)
+def _(bridge, lang_sel, mo):
+    from eee_project import save_language_selection
+    save_language_selection(bridge, lang_sel)
+    mo.Html(f"""
+    <div class="eee-lang-picker" style="width:max-content;margin:6px 12px 0 auto;
+                background:white;padding:6px 10px;border-radius:8px;
+                box-shadow:0 2px 8px rgba(0,0,0,.12);">
+      {lang_sel}{bridge}
+    </div>
+    """)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg):
     import pathlib as _pl
     # Course-local lexicon files (moved from greek-inflexion-eee 2026-07-31,
@@ -62,94 +76,6 @@ def _(eee, lang_sel, mo):
     _img = eee.magnify_image(mo, _thumb_path, raw_base="https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_07_27", width=280)
     _right = mo.vstack([_img], align="center")
     mo.hstack([_left, _right], align="start")
-    return
-
-
-@app.cell(hide_code=True)
-def _(NB_REMOTE, gu, lang_sel, mo):
-    _txt = (
-        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
-        f"[Od_IX_152-180.pdf]({NB_REMOTE}/Od_IX_152-180.pdf) · "
-        f"[Od_IX_152-180_vocabula.pdf]({NB_REMOTE}/Od_IX_152-180_vocabula.pdf)"
-    )
-    mo.md(_txt)
-    return
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _TXT = {
-        "ru": "",
-        "en": r"""
-    ---
-    ## Τμῆσις — "Splitting" a Verb with a Preposition
-
-    This passage contains **tmesis** twice — a verb's prefix is
-    separated from the verb itself by other words, as though it
-    were still not a prefix but an independent preposition (in
-    Classical Attic this kind of separation has almost entirely
-    disappeared, the prefix and the verb having merged into a
-    single word):
-
-    - **ἀνὰ νηὸς ἔβην** (IX.177) — "went aboard the ship": ἀνά is
-      separated from ἔβην by the word νηός; together this is
-      ἀνέβην = ἀναβαίνω.
-    - **ἀνά τε πρυμνήσια λῦσαι** (IX.178) — "to cast off the
-      mooring ropes": ἀνά is separated from λῦσαι by the word
-      πρυμνήσια; together this is ἀναλῦσαι = ἀναλύω.
-
-    In both cases the preposition retains its own meaning ("up",
-    "back/away") and applies to the whole phrase, not just to the
-    verb — a trace of an earlier stage of the language, not yet
-    fully grammaticalized.
-    """,
-        "el": "",
-    }
-    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
-    return
-
-
-@app.cell(hide_code=True)
-def _(lang_sel, mo):
-    _TXT = {
-        "ru": "",
-        "en": r"""
-    ---
-    ## Grammar Notes
-
-    #### Imperfect δινέω (middle/passive voice)
-
-    `imperf.: [ἐ] + δινέ + secondary endings`
-
-    | | Primary endings (act./mid.-pass.) | Secondary endings (act./mid.-pass.) |
-    |---|---|---|
-    | 1 sg. | ω / (ο)μαι | (ο)ν / (ο)μην |
-    | 2 sg. | εις / (ε)σαι > η | (ε)ς / (ε)σο > ου |
-    | 3 sg. | ει / (ε)ται | (ε) / (ε)το |
-    | 1 pl. | (ο)μεν / (ο)με(σ)θα | (ο)μεν / (ο)με(σ)θα |
-    | 2 pl. | (ε)τε / (ε)σθε | (ε)τε / (ε)σθε |
-    | 3 pl. | ουσι / (ο)νται | (ο)ν / (ο)ντο |
-
-    #### Declension of ναῦς/νηῦς — "ship"
-
-    | | Singular | Plural |
-    |---|---|---|
-    | Nom. | ναῦς/νηῦς | νῆες |
-    | Gen. | νηός | νηῶν |
-    | Dat. | νηί | νηυσί |
-    | Acc. | νῆα | νῆας |
-
-    #### The Accusativus cum Infinitivo Construction
-
-    **ἐκέλευσα** δ' ἑταίρους αὐτούς τ' **ἀμβαίνειν** (IX.177–178)
-    — governing verb + accusative + accusative + infinitive:
-    "**I ordered** that **the companions themselves should go
-    aboard**" — English renders this with a subordinate "that"
-    clause.
-    """,
-        "el": "",
-    }
-    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
     return
 
 
@@ -265,6 +191,83 @@ def _(gloss_panel, gu, lang_sel, period_selector, period_tables, text_widget):
 @app.cell(hide_code=True)
 def _(EEE_NOTE, gu, lang_sel, mo):
     mo.accordion({gu.ui_label('form_check_accordion_label', lang_sel.value): EEE_NOTE})
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _TXT = {
+        "ru": "",
+        "en": r"""
+    ---
+    ## Τμῆσις — "Splitting" a Verb with a Preposition
+
+    This passage contains **tmesis** twice — a verb's prefix is
+    separated from the verb itself by other words, as though it
+    were still not a prefix but an independent preposition (in
+    Classical Attic this kind of separation has almost entirely
+    disappeared, the prefix and the verb having merged into a
+    single word):
+
+    - **ἀνὰ νηὸς ἔβην** (IX.177) — "went aboard the ship": ἀνά is
+      separated from ἔβην by the word νηός; together this is
+      ἀνέβην = ἀναβαίνω.
+    - **ἀνά τε πρυμνήσια λῦσαι** (IX.178) — "to cast off the
+      mooring ropes": ἀνά is separated from λῦσαι by the word
+      πρυμνήσια; together this is ἀναλῦσαι = ἀναλύω.
+
+    In both cases the preposition retains its own meaning ("up",
+    "back/away") and applies to the whole phrase, not just to the
+    verb — a trace of an earlier stage of the language, not yet
+    fully grammaticalized.
+    """,
+        "el": "",
+    }
+    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
+    return
+
+
+@app.cell(hide_code=True)
+def _(lang_sel, mo):
+    _TXT = {
+        "ru": "",
+        "en": r"""
+    ---
+    ## Grammar Notes
+
+    #### Imperfect δινέω (middle/passive voice)
+
+    `imperf.: [ἐ] + δινέ + secondary endings`
+
+    | | Primary endings (act./mid.-pass.) | Secondary endings (act./mid.-pass.) |
+    |---|---|---|
+    | 1 sg. | ω / (ο)μαι | (ο)ν / (ο)μην |
+    | 2 sg. | εις / (ε)σαι > η | (ε)ς / (ε)σο > ου |
+    | 3 sg. | ει / (ε)ται | (ε) / (ε)το |
+    | 1 pl. | (ο)μεν / (ο)με(σ)θα | (ο)μεν / (ο)με(σ)θα |
+    | 2 pl. | (ε)τε / (ε)σθε | (ε)τε / (ε)σθε |
+    | 3 pl. | ουσι / (ο)νται | (ο)ν / (ο)ντο |
+
+    #### Declension of ναῦς/νηῦς — "ship"
+
+    | | Singular | Plural |
+    |---|---|---|
+    | Nom. | ναῦς/νηῦς | νῆες |
+    | Gen. | νηός | νηῶν |
+    | Dat. | νηί | νηυσί |
+    | Acc. | νῆα | νῆας |
+
+    #### The Accusativus cum Infinitivo Construction
+
+    **ἐκέλευσα** δ' ἑταίρους αὐτούς τ' **ἀμβαίνειν** (IX.177–178)
+    — governing verb + accusative + accusative + infinitive:
+    "**I ordered** that **the companions themselves should go
+    aboard**" — English renders this with a subordinate "that"
+    clause.
+    """,
+        "el": "",
+    }
+    mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
     return
 
 
@@ -955,6 +958,17 @@ def _(cfg, gu):
 
 
 @app.cell(hide_code=True)
+def _(NB_REMOTE, gu, lang_sel, mo):
+    _txt = (
+        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
+        f"[Od_IX_152-180.pdf]({NB_REMOTE}/Od_IX_152-180.pdf) · "
+        f"[Od_IX_152-180_vocabula.pdf]({NB_REMOTE}/Od_IX_152-180_vocabula.pdf)"
+    )
+    mo.md(_txt)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_footer
     _prev_url, _next_url = cfg.adjacent_urls("2026_07_27/")
@@ -979,20 +993,6 @@ def _(bridge, mo):
     # language -- the moment the browser's async localStorage read lands
     lang_sel = language_selector(mo, bridge, options={"English": "en"}, default="en")  # eee-split lang=en orig=language_selector(mo, bridge)
     return (lang_sel,)
-
-
-@app.cell(hide_code=True)
-def _(bridge, lang_sel, mo):
-    from eee_project import save_language_selection
-    save_language_selection(bridge, lang_sel)
-    mo.Html(f"""
-    <div style="position:fixed;top:56px;right:12px;z-index:1000;
-                background:white;padding:6px 10px;border-radius:8px;
-                box-shadow:0 2px 8px rgba(0,0,0,.12);">
-      {lang_sel}{bridge}
-    </div>
-    """)
-    return
 
 
 if __name__ == "__main__":

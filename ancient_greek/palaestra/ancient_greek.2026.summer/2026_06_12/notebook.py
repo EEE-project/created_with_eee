@@ -37,14 +37,6 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(NB_REMOTE, mo):
-    mo.md(f"""
-    **Материалы занятия:** [Greek Letter Practice]({NB_REMOTE}/Greek%20Letter%20Practice%20-%20Vanguard%20Education.pdf) · [Прописи.pdf]({NB_REMOTE}/Прописи.pdf) · [τόνος+λέξεις(προλεγόμενον).pdf]({NB_REMOTE}/τόνος+λέξεις(προλεγόμενον).pdf)
-    """)
-    return
-
-
-@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     ## ἡ προσῳδία · Система ударений
@@ -202,6 +194,14 @@ def _(NB_REMOTE, mo):
     5. **Задание 9** — антоним: δῆλόν ἐστιν ↔ ??? ἐστιν.
 
     ⚠️ Не подглядывайте в словари — задания проверяют понимание правил, а не правильность акцентов.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(NB_REMOTE, mo):
+    mo.md(f"""
+    **Материалы занятия:** [Greek Letter Practice]({NB_REMOTE}/Greek%20Letter%20Practice%20-%20Vanguard%20Education.pdf) · [Прописи.pdf]({NB_REMOTE}/Прописи.pdf) · [τόνος+λέξεις(προλεγόμενον).pdf]({NB_REMOTE}/τόνος+λέξεις(προλεγόμενον).pdf)
     """)
     return
 

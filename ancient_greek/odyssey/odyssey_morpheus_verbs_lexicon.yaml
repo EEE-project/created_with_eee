@@ -125,7 +125,7 @@
     PMI.3S: κεῖται
 λανθάνω:
   forms:
-    APS.3S: λάθηται
+    AMS.3S: λάθηται
 μάχομαι:
   forms:
     IMI.3P: ἐμάχοντο
@@ -190,7 +190,7 @@
 φεύγω:
   forms:
     PAN: φευγέμεν
-    XMP.NSM: πεφυγμένος ἦεν
+    XMP.NSM: πεφυγμένος
 ἀΰω:
   forms:
     AAN: ἀῦσαι
@@ -277,13 +277,18 @@
 
 # 2026_07_20 gap-mining pass (2026-07-27) -- same methodology, this batch
 # never went through a coverage pass before (course-vocab header note above
-# predates this lesson's addition to the course). δέρκομαι/προφαίνομαι/
-# προφαίνω: Morpheus's own citation resolves the compound with its
-# preverb spelled out (εἰσδέρκομαι, πρό-ὑφαίνω) -- stored here under the
-# course vocab TSV's own simple-verb lemma spelling instead, matching how
-# this file's lookup path actually queries it (same class of citation-form
-# difference as accent/dialect spelling, tolerated per this file's own
-# header). TSV's gloss for ἐσέδρακεν says "perfect" but Morpheus confirms
+# predates this lesson's addition to the course). δέρκομαι: Morpheus's own
+# citation resolves the compound with its preverb spelled out (εἰσδέρκομαι) --
+# stored here under the course vocab TSV's own simple-verb lemma spelling
+# instead, matching how this file's lookup path actually queries it (same
+# class of citation-form difference as accent/dialect spelling, tolerated
+# per this file's own header). προφαίνομαι/προφαίνω are NOT that case: Morpheus
+# returns only the lemma πρό-ὑφαίνω (a compound of ὑφαίνω, to weave) for
+# προυφαίνετ᾽ (IX.143) and προύφαινε (IX.145), but the course vocabulary
+# reads both as forms of προφαίνομαι/προφαίνω (to become visible, to shine
+# forth). The rows stay under the vocabulary's lemmas; πρό-ὑφαίνω is a
+# different word, not a spelling variant of them.
+# TSV's gloss for ἐσέδρακεν says "perfect" but Morpheus confirms
 # aorist active indicative -- the TSV gloss itself has a small error here;
 # the tag below is the grammatically correct (Morpheus-verified) one.
 ἀμάω:

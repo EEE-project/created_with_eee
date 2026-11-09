@@ -176,6 +176,7 @@ times are what a run took on 2026-10-15, key uses included.
 | `make check-lesson-layout [SCOPE=...]` | nothing (read-only; the lesson folders get their files back) | 0 | about two minutes per lesson with the three languages and both widths (one page load of the lesson per language and width) | exit status 0 (1: a check failed, 2: it cannot run here) |
 | `make check-presence-balance [SCOPE=...]` | nothing (read-only, no network) | 0 | a second | exit status 0 (1: an Odyssey lesson calls `balance_presence_items` without `by_translator=True`, 2: nothing to check) |
 | `make check-translator-choice [SCOPE=...]` | nothing (read-only, no network) | 0 | a second | exit status 0 (1: an Odyssey lesson lacks a part of the translator choice of its two translation exercises, 2: nothing to check) |
+| `make check-lesson-order [SCOPE=...]` | nothing (read-only, no network) | 0 | a second | exit status 0 (1: a lesson page breaks the order widget, explanations, exercises, links to the lecture presentations, footer, or its language picker is not directly under the top bar; 2: nothing to check, or the self-test of the rules on made-up lessons failed) |
 
 `make sync-main` without `ARGS` first pushes this repository's current branch
 and its tags to Codeberg (one more key use), then does GitHub and GitLab.

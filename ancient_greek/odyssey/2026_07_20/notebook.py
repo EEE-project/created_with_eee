@@ -31,6 +31,20 @@ def _(lang_sel, mo):
 
 
 @app.cell(hide_code=True)
+def _(bridge, lang_sel, mo):
+    from eee_project import save_language_selection
+    save_language_selection(bridge, lang_sel)
+    mo.Html(f"""
+    <div class="eee-lang-picker" style="width:max-content;margin:6px 12px 0 auto;
+                background:white;padding:6px 10px;border-radius:8px;
+                box-shadow:0 2px 8px rgba(0,0,0,.12);">
+      {lang_sel}{bridge}
+    </div>
+    """)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg):
     import pathlib as _pl
     # Course-local lexicon files (moved from greek-inflexion-eee 2026-07-31,
@@ -66,13 +80,114 @@ def _(eee, lang_sel, mo):
 
 
 @app.cell(hide_code=True)
-def _(NB_REMOTE, gu, lang_sel, mo):
-    _txt = (
-        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
-        f"[Od_IX_130-151.pdf]({NB_REMOTE}/Od_IX_130-151.pdf) · "
-        f"[Od_IX_130-151_vocabula.docx]({NB_REMOTE}/Od_IX_130-151_vocabula.docx)"
+def _(gu, lang_sel, mo):
+    mo.md(gu.ui_label('poem_section_heading', lang_sel.value))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    _EDITION = (
+        "<b>Homerus. Odyssea.</b> Ed. M. West. "
+        "Bibliotheca Teubneriana, De Gruyter, 2017."
     )
-    mo.md(_txt)
+    mo.md(_EDITION)
+    return
+
+
+@app.cell(hide_code=True)
+def _(TRANS_DESC, eee, gu, lang_sel, mo, trans_selector):
+    _desc_map = {eee.interlinear_translator_key(lang_sel.value): gu.ui_label('interlinear_description', lang_sel.value), **TRANS_DESC}
+    mo.md(_desc_map.get(trans_selector.value, ""))
+    return
+
+
+@app.cell(hide_code=True)
+def _(cfg, gu, lang_sel, mo):
+    from pathlib import Path as _P
+    SHOW_ICTUS = mo.ui.switch(value=True)
+    SHOW_HOMER = mo.ui.switch(value=True)
+
+    # Shared across all lessons. Fetched via ensure_file, not a bare local
+    # read: molab only bundles files that live in the notebook's own directory,
+    # so a parent-directory file like this one is missing there unless we
+    # download it ourselves (matches the pattern already used for materials PDFs).
+    _eee_note_filename = f"eee_note_{lang_sel.value}.md"
+    _eee_note_path = gu.ensure_file(
+        _eee_note_filename, nb_dir=_P(__file__).parent.parent, remote_base=cfg.raw_base,
+    )
+    EEE_NOTE = _eee_note_path.read_text(encoding="utf-8") if _eee_note_path else (
+        gu.ui_label('eee_note_load_error', lang_sel.value)
+    )
+
+    _ICTUS_COLOR_NAME = {"ru": "красным", "en": "red", "el": "κόκκινο"}
+    gu.ictus_toggle_panel(SHOW_ICTUS, SHOW_HOMER, EEE_NOTE,
+                           ictus_color="#980000",
+                           ictus_color_name=_ICTUS_COLOR_NAME.get(lang_sel.value, "красным"),
+                           lang=lang_sel.value)
+    return EEE_NOTE, SHOW_HOMER, SHOW_ICTUS
+
+
+@app.cell(hide_code=True)
+def _(
+    CLICKABLE_FORMS,
+    HOMER_WORDS,
+    RHYTHM_HTML,
+    SHOW_HOMER,
+    SHOW_ICTUS,
+    STANZAS,
+    eee,
+    mo,
+    stanza_selector,
+    trans_selector,
+):
+    _st_map = {s["ref"]: s for s in STANZAS}
+    _stanza = _st_map[stanza_selector.value]
+
+    # One translation card per stanza; the blank choice (None) shows none; a tap on a word with a margin note (a link, no star) shows its note in the word panel.
+    _tr = trans_selector.value
+    text_widget = eee.interactive_text(
+        mo,
+        lines=_stanza["lines"],
+        clickable=CLICKABLE_FORMS,
+        homer_words=HOMER_WORDS if SHOW_HOMER.value else set(),
+        ictus_html=RHYTHM_HTML,
+        show_ictus=SHOW_ICTUS.value,
+        wrap=True,
+        translation=None if _tr is None else _stanza["translations"].get(_tr, "—").split("\n"),
+        notes=_stanza.get("margin_glosses", {}).get(_tr, {}),
+    )
+
+    mo.vstack([
+        mo.hstack([stanza_selector, trans_selector], justify="start", wrap=True, gap=1.5),
+        text_widget,
+    ])
+    return (text_widget,)
+
+
+@app.cell(hide_code=True)
+def _(QUIZ_WORDS_RAW, build_period_tables, gu, lang_sel, text_widget):
+    # Builds the panel and its period dropdown; shows nothing (the sheet cell below does).
+    period_tables, period_selector, gloss_panel = gu.render_gloss_selector(
+        QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_period_tables, lang=lang_sel.value,
+    )
+    return gloss_panel, period_selector, period_tables
+
+
+@app.cell(hide_code=True)
+def _(gloss_panel, gu, lang_sel, period_selector, period_tables, text_widget):
+    # Takes period_selector as a parameter, so a pick in the dropdown reruns only this cell; a tapped margin note (note=) replaces the forms.
+    gu.render_gloss_sheet(
+        gloss_panel, period_tables, period_selector, lang=lang_sel.value,
+        selected_word=text_widget.widget.selected_word, click_seq=text_widget.widget.click_seq,
+        note=text_widget.widget.selected_note,
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(EEE_NOTE, gu, lang_sel, mo):
+    mo.accordion({gu.ui_label('form_check_accordion_label', lang_sel.value): EEE_NOTE})
     return
 
 
@@ -139,11 +254,9 @@ def _(lang_sel, mo):
     В нашем отрывке тополя (**αἴγειροι**, IX.141) растут у источника —
     примета плодородия и пресной воды. Но в другом месте у Гомера тополя
     отмечают совсем иной порог: в X песни Кирка описывает Одиссею путь к
-    дому Аида (Od. X.509–510):
+    дому Аида (Od. X.510):
 
-    > **ἔνθα δὲ Περσεφόνης ἄλσος καὶ δενδρήεντα,
-    > μακραί τ᾽ αἴγειροι καὶ ἰτέαι ὠλεσίκαρποι·**
-    > там роща Персефоны и тенистые деревья,
+    > **μακραί τ᾽ αἴγειροι καὶ ἰτέαι ὠλεσίκαρποι·**
     > высокие тополя и ивы, теряющие плод
 
     Возможно, оба образа не противоречат друг другу: тополя у Гомера
@@ -158,11 +271,9 @@ def _(lang_sel, mo):
     In our passage, poplars (**αἴγειροι**, IX.141) grow by a spring — a
     sign of fertility and fresh water. But elsewhere in Homer, poplars mark
     a very different threshold: in Book X, Circe describes to Odysseus the
-    way to the house of Hades (Od. X.509–510):
+    way to the house of Hades (Od. X.510):
 
-    > **ἔνθα δὲ Περσεφόνης ἄλσος καὶ δενδρήεντα,
-    > μακραί τ᾽ αἴγειροι καὶ ἰτέαι ὠλεσίκαρποι·**
-    > there is the grove of Persephone and shady trees,
+    > **μακραί τ᾽ αἴγειροι καὶ ἰτέαι ὠλεσίκαρποι·**
     > tall poplars and willows that shed their fruit
 
     Perhaps the two images do not contradict each other: in Homer, poplars
@@ -179,11 +290,9 @@ def _(lang_sel, mo):
     κοντά σε μια πηγή — σημάδι γονιμότητας και γλυκού νερού. Αλλού όμως
     στον Όμηρο, οι λεύκες σηματοδοτούν ένα εντελώς διαφορετικό κατώφλι:
     στη ραψωδία Κ η Κίρκη περιγράφει στον Οδυσσέα τον δρόμο προς το σπίτι
-    του Άδη (Od. X.509–510):
+    του Άδη (Od. X.510):
 
-    > **ἔνθα δὲ Περσεφόνης ἄλσος καὶ δενδρήεντα,
-    > μακραί τ᾽ αἴγειροι καὶ ἰτέαι ὠλεσίκαρποι·**
-    > εκεί το άλσος της Περσεφόνης και τα σκιερά δέντρα,
+    > **μακραί τ᾽ αἴγειροι καὶ ἰτέαι ὠλεσίκαρποι·**
     > ψηλές λεύκες και ιτιές που χάνουν τον καρπό τους
 
     Ίσως οι δύο εικόνες δεν έρχονται σε αντίθεση μεταξύ τους: στον Όμηρο
@@ -256,8 +365,8 @@ def _(lang_sel, mo):
     | Гомеровское слово | В тексте | Отзвук |
     |---|---|---|
     | **κτίζω** — строить, основывать | ἐϋκτιμένην, IX.130 | новогреч. **κτίριο** — здание |
-    | **λεῖος** — гладкий, ровный | λείη, IX.131 | лат. **levis** — гладкий, лёгкий |
-    | **βαθύς** — глубокий | βαθὺ, IX.131 | «батиаль», «батискаф» — из βαθύς + σκάφος |
+    | **λεῖος** — гладкий, ровный | λείη, IX.134 | лат. **levis** — гладкий, лёгкий |
+    | **βαθύς** — глубокий | βαθὺ, IX.134 | «батиаль», «батискаф» — из βαθύς + σκάφος |
     """,
         "en": r"""
     ---
@@ -266,8 +375,8 @@ def _(lang_sel, mo):
     | Homeric word | In the text | Echo |
     |---|---|---|
     | **κτίζω** — to build, to found | ἐϋκτιμένην, IX.130 | Modern Greek **κτίριο** — building |
-    | **λεῖος** — smooth, level | λείη, IX.131 | Latin **levis** — smooth, light |
-    | **βαθύς** — deep | βαθὺ, IX.131 | "bathyscaphe" — from βαθύς + σκάφος |
+    | **λεῖος** — smooth, level | λείη, IX.134 | Latin **levis** — smooth, light |
+    | **βαθύς** — deep | βαθὺ, IX.134 | "bathyscaphe" — from βαθύς + σκάφος |
     """,
         "el": r"""
     ---
@@ -276,8 +385,8 @@ def _(lang_sel, mo):
     | Ομηρική λέξη | Στο κείμενο | Αντίλαλος |
     |---|---|---|
     | **κτίζω** — χτίζω, ιδρύω | ἐϋκτιμένην, IX.130 | νέα ελλ. **κτίριο** — κτήριο |
-    | **λεῖος** — λείος, ομαλός | λείη, IX.131 | λατ. **levis** — λείος, ελαφρύς |
-    | **βαθύς** — βαθύς | βαθὺ, IX.131 | **βαθυσκάφος** — από βαθύς + σκάφος |
+    | **λεῖος** — λείος, ομαλός | λείη, IX.134 | λατ. **levis** — λείος, ελαφρύς |
+    | **βαθύς** — βαθύς | βαθὺ, IX.134 | **βαθυσκάφος** — από βαθύς + σκάφος |
     """,
     }
     mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
@@ -522,118 +631,6 @@ def _(lang_sel, mo):
     """,
     }
     mo.md(_TXT.get(lang_sel.value, _TXT["ru"]))
-    return
-
-
-@app.cell(hide_code=True)
-def _(gu, lang_sel, mo):
-    mo.md(gu.ui_label('poem_section_heading', lang_sel.value))
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    _EDITION = (
-        "<b>Homerus. Odyssea.</b> Ed. M. West. "
-        "Bibliotheca Teubneriana, De Gruyter, 2017."
-    )
-    mo.md(_EDITION)
-    return
-
-
-@app.cell(hide_code=True)
-def _(TRANS_DESC, eee, gu, lang_sel, mo, trans_selector):
-    _desc_map = {eee.interlinear_translator_key(lang_sel.value): gu.ui_label('interlinear_description', lang_sel.value), **TRANS_DESC}
-    mo.md(_desc_map.get(trans_selector.value, ""))
-    return
-
-
-@app.cell(hide_code=True)
-def _(cfg, gu, lang_sel, mo):
-    from pathlib import Path as _P
-    SHOW_ICTUS = mo.ui.switch(value=True)
-    SHOW_HOMER = mo.ui.switch(value=True)
-
-    # Shared across all lessons. Fetched via ensure_file, not a bare local
-    # read: molab only bundles files that live in the notebook's own directory,
-    # so a parent-directory file like this one is missing there unless we
-    # download it ourselves (matches the pattern already used for materials PDFs).
-    _eee_note_filename = f"eee_note_{lang_sel.value}.md"
-    _eee_note_path = gu.ensure_file(
-        _eee_note_filename, nb_dir=_P(__file__).parent.parent, remote_base=cfg.raw_base,
-    )
-    EEE_NOTE = _eee_note_path.read_text(encoding="utf-8") if _eee_note_path else (
-        gu.ui_label('eee_note_load_error', lang_sel.value)
-    )
-
-    _ICTUS_COLOR_NAME = {"ru": "красным", "en": "red", "el": "κόκκινο"}
-    gu.ictus_toggle_panel(SHOW_ICTUS, SHOW_HOMER, EEE_NOTE,
-                           ictus_color="#980000",
-                           ictus_color_name=_ICTUS_COLOR_NAME.get(lang_sel.value, "красным"),
-                           lang=lang_sel.value)
-    return EEE_NOTE, SHOW_HOMER, SHOW_ICTUS
-
-
-@app.cell(hide_code=True)
-def _(
-    CLICKABLE_FORMS,
-    HOMER_WORDS,
-    RHYTHM_HTML,
-    SHOW_HOMER,
-    SHOW_ICTUS,
-    STANZAS,
-    eee,
-    mo,
-    stanza_selector,
-    trans_selector,
-):
-    _st_map = {s["ref"]: s for s in STANZAS}
-    _stanza = _st_map[stanza_selector.value]
-
-    # One translation card per stanza; the blank choice (None) shows none; a tap on a word with a margin note (a link, no star) shows its note in the word panel.
-    _tr = trans_selector.value
-    text_widget = eee.interactive_text(
-        mo,
-        lines=_stanza["lines"],
-        clickable=CLICKABLE_FORMS,
-        homer_words=HOMER_WORDS if SHOW_HOMER.value else set(),
-        ictus_html=RHYTHM_HTML,
-        show_ictus=SHOW_ICTUS.value,
-        wrap=True,
-        translation=None if _tr is None else _stanza["translations"].get(_tr, "—").split("\n"),
-        notes=_stanza.get("margin_glosses", {}).get(_tr, {}),
-    )
-
-    mo.vstack([
-        mo.hstack([stanza_selector, trans_selector], justify="start", wrap=True, gap=1.5),
-        text_widget,
-    ])
-    return (text_widget,)
-
-
-@app.cell(hide_code=True)
-def _(QUIZ_WORDS_RAW, build_period_tables, gu, lang_sel, text_widget):
-    # Builds the panel and its period dropdown; shows nothing (the sheet cell below does).
-    period_tables, period_selector, gloss_panel = gu.render_gloss_selector(
-        QUIZ_WORDS_RAW, text_widget.widget.selected_word, build_period_tables, lang=lang_sel.value,
-    )
-    return gloss_panel, period_selector, period_tables
-
-
-@app.cell(hide_code=True)
-def _(gloss_panel, gu, lang_sel, period_selector, period_tables, text_widget):
-    # Takes period_selector as a parameter, so a pick in the dropdown reruns only this cell; a tapped margin note (note=) replaces the forms.
-    gu.render_gloss_sheet(
-        gloss_panel, period_tables, period_selector, lang=lang_sel.value,
-        selected_word=text_widget.widget.selected_word, click_seq=text_widget.widget.click_seq,
-        note=text_widget.widget.selected_note,
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(EEE_NOTE, gu, lang_sel, mo):
-    mo.accordion({gu.ui_label('form_check_accordion_label', lang_sel.value): EEE_NOTE})
     return
 
 
@@ -1344,6 +1341,17 @@ def _(cfg, gu):
 
 
 @app.cell(hide_code=True)
+def _(NB_REMOTE, gu, lang_sel, mo):
+    _txt = (
+        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
+        f"[Od_IX_130-151.pdf]({NB_REMOTE}/Od_IX_130-151.pdf) · "
+        f"[Od_IX_130-151_vocabula.docx]({NB_REMOTE}/Od_IX_130-151_vocabula.docx)"
+    )
+    mo.md(_txt)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_footer
     _prev_url, _next_url = cfg.adjacent_urls("2026_07_20/")
@@ -1368,20 +1376,6 @@ def _(bridge, mo):
     # language -- the moment the browser's async localStorage read lands
     lang_sel = language_selector(mo, bridge)
     return (lang_sel,)
-
-
-@app.cell(hide_code=True)
-def _(bridge, lang_sel, mo):
-    from eee_project import save_language_selection
-    save_language_selection(bridge, lang_sel)
-    mo.Html(f"""
-    <div style="position:fixed;top:56px;right:12px;z-index:1000;
-                background:white;padding:6px 10px;border-radius:8px;
-                box-shadow:0 2px 8px rgba(0,0,0,.12);">
-      {lang_sel}{bridge}
-    </div>
-    """)
-    return
 
 
 if __name__ == "__main__":

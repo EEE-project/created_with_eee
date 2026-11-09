@@ -47,7 +47,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
         _c = mo.vstack([
             mo.md(f"""
             # **В каком состоянии Грецию нашёл Каподистриас**
-            Ниже приводится краткое содержание материалов презентации [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) и записей занятия 8/5/2026:
+            Ниже приводится краткое содержание материалов презентации «Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ» и записей занятия 8/5/2026:
             """),
             _img(1),
             mo.md(r"""
@@ -93,7 +93,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
         _c = mo.vstack([
             mo.md(f"""
             # **Η Ελλάδα που Βρήκε ο Καποδίστριας**
-            Παρακάτω παρουσιάζεται σύνοψη του υλικού από την παρουσίαση [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) και τις σημειώσεις του μαθήματος 8/5/2026:
+            Παρακάτω παρουσιάζεται σύνοψη του υλικού από την παρουσίαση «Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ» και τις σημειώσεις του μαθήματος 8/5/2026:
             """),
             _img(1),
             mo.md(r"""
@@ -139,7 +139,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
         _c = mo.vstack([
             mo.md(f"""
             # **The Greece that Kapodistrias Found**
-            Below is a summary of the materials from the presentation [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) and notes from the lesson on 8/5/2026:
+            Below is a summary of the materials from the presentation «Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ» and notes from the lesson on 8/5/2026:
             """),
             _img(1),
             mo.md(r"""
@@ -1088,6 +1088,12 @@ def _(lang_bridge, mo):
 def _(lang_bridge, language_selector):
     from eee_project import save_language_selection
     save_language_selection(lang_bridge, language_selector)
+    return
+
+
+@app.cell(hide_code=True)
+def _(gu, language_selector, mo):
+    mo.md(f"{gu.ui_label('lesson_materials_label', language_selector.value)} [«Η ΕΛΛΑΔΑ ΠΟΥ ΒΡΗΚΕ Ο ΚΑΠΟΔΙΣΤΡΙΑΣ»](https://docs.google.com/presentation/d/1ra_DryijiIBPcuLHhWpiLp0U8nMp2b91/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true)")
     return
 
 

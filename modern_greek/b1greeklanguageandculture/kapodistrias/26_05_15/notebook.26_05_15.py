@@ -48,7 +48,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
             mo.md(f"""
             # **КАК ИЗМЕНИТЬ РАЗРУШЕННУЮ СТРАНУ?**
             #### *Иоаннис Каподистриас · Урок 3*
-            Ниже приводится краткое содержание материалов [презентации](https://docs.google.com/presentation/d/12DglmkOuzPrOTN6bQDSyLUb8bDblOwKz/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) и [записей занятия](https://docs.google.com/document/d/1ZofrX31VyBdIMwsPo-CZOtMcztO28QDQNn60ymkVsSU/edit?usp=sharing) от 15/5/2026.
+            Ниже приводится краткое содержание материалов презентации и [записей занятия](https://docs.google.com/document/d/1ZofrX31VyBdIMwsPo-CZOtMcztO28QDQNn60ymkVsSU/edit?usp=sharing) от 15/5/2026.
             """),
             _img(1),
             mo.md(r"""
@@ -101,7 +101,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
             mo.md(f"""
             # **ΠΏΣ ΠΡΟΣΠΑΘΕΊ ΝΑ ΑΛΛΆΞΕΙΣ ΜΙΑ ΔΙΑΛΥΜΈΝΗ ΧΏΡΑ;**
             #### *Ιωάννης Καποδίστριας · Μάθημα 3*
-            Ακολουθεί η σύνοψη των υλικών από την [παρουσίαση](https://docs.google.com/presentation/d/12DglmkOuzPrOTN6bQDSyLUb8bDblOwKz/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) και τις [σημειώσεις του μαθήματος](https://docs.google.com/document/d/1ZofrX31VyBdIMwsPo-CZOtMcztO28QDQNn60ymkVsSU/edit?usp=sharing) της 15/5/2026.
+            Ακολουθεί η σύνοψη των υλικών από την παρουσίαση και τις [σημειώσεις του μαθήματος](https://docs.google.com/document/d/1ZofrX31VyBdIMwsPo-CZOtMcztO28QDQNn60ymkVsSU/edit?usp=sharing) της 15/5/2026.
             """),
             _img(1),
             mo.md(r"""
@@ -154,7 +154,7 @@ def _(RAW_BASE, gu, language_selector, mo, notebook_dir):
             mo.md(f"""
             # **HOW DO YOU TRY TO CHANGE A DEVASTATED COUNTRY?**
             #### *Ioannis Kapodistrias · Lesson 3*
-            Below is a summary of the materials from the [presentation](https://docs.google.com/presentation/d/12DglmkOuzPrOTN6bQDSyLUb8bDblOwKz/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true) and [lesson notes](https://docs.google.com/document/d/1ZofrX31VyBdIMwsPo-CZOtMcztO28QDQNn60ymkVsSU/edit?usp=sharing) of 15/5/2026.
+            Below is a summary of the materials from the presentation and [lesson notes](https://docs.google.com/document/d/1ZofrX31VyBdIMwsPo-CZOtMcztO28QDQNn60ymkVsSU/edit?usp=sharing) of 15/5/2026.
             """),
             _img(1),
             mo.md(r"""
@@ -1107,6 +1107,12 @@ def _(lang_bridge, mo):
 def _(lang_bridge, language_selector):
     from eee_project import save_language_selection
     save_language_selection(lang_bridge, language_selector)
+    return
+
+
+@app.cell(hide_code=True)
+def _(gu, language_selector, mo):
+    mo.md(f"{gu.ui_label('lesson_materials_label', language_selector.value)} [Google Slides](https://docs.google.com/presentation/d/12DglmkOuzPrOTN6bQDSyLUb8bDblOwKz/edit?usp=drive_link&ouid=114390708685640574713&rtpof=true&sd=true)")
     return
 
 

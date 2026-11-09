@@ -34,6 +34,20 @@ def _(lang_sel, mo):
 
 
 @app.cell(hide_code=True)
+def _(bridge, lang_sel, mo):
+    from eee_project import save_language_selection
+    save_language_selection(bridge, lang_sel)
+    mo.Html(f"""
+    <div class="eee-lang-picker" style="width:max-content;margin:6px 12px 0 auto;
+                background:white;padding:6px 10px;border-radius:8px;
+                box-shadow:0 2px 8px rgba(0,0,0,.12);">
+      {lang_sel}{bridge}
+    </div>
+    """)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg):
     import pathlib as _pl
     # Course-local lexicon files (moved from greek-inflexion-eee 2026-07-31,
@@ -67,18 +81,6 @@ def _(eee, lang_sel, mo):
         width=340,
     )
     mo.hstack([_left, _img], align="start")
-    return
-
-
-@app.cell(hide_code=True)
-def _(gu, lang_sel, mo):
-    _base = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_01"
-    mo.md(
-        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
-        f"[Одиссея. Зачин.pdf]({_base}/Одиссея.%20Зачин.pdf) · "
-        rf"[Одиссея\_1-21\_словарь.pdf]({_base}/Одиссея_1-21_словарь.pdf) · "
-        f"[Греческий алфавит.pdf]({_base}/Греческий%20алфавит.pdf)"
-    )
     return
 
 
@@ -856,6 +858,18 @@ def _(ODYSSEY_EXTRA_LEXICONS, mo):
 
 
 @app.cell(hide_code=True)
+def _(gu, lang_sel, mo):
+    _base = "https://codeberg.org/EEE-project/created_with_eee/raw/branch/main/ancient_greek/odyssey/2026_06_01"
+    mo.md(
+        f"{gu.ui_label('lesson_materials_label', lang_sel.value)} "
+        f"[Одиссея. Зачин.pdf]({_base}/Одиссея.%20Зачин.pdf) · "
+        rf"[Одиссея\_1-21\_словарь.pdf]({_base}/Одиссея_1-21_словарь.pdf) · "
+        f"[Греческий алфавит.pdf]({_base}/Греческий%20алфавит.pdf)"
+    )
+    return
+
+
+@app.cell(hide_code=True)
 def _(cfg, lang_sel, mo):
     from eee_project.notebook_utils import eee_footer
     _prev_url, _next_url = cfg.adjacent_urls("2026_06_01/")
@@ -896,20 +910,6 @@ def _(bridge, mo):
     # language -- the moment the browser's async localStorage read lands
     lang_sel = language_selector(mo, bridge)
     return (lang_sel,)
-
-
-@app.cell(hide_code=True)
-def _(bridge, lang_sel, mo):
-    from eee_project import save_language_selection
-    save_language_selection(bridge, lang_sel)
-    mo.Html(f"""
-    <div style="position:fixed;top:56px;right:12px;z-index:1000;
-                background:white;padding:6px 10px;border-radius:8px;
-                box-shadow:0 2px 8px rgba(0,0,0,.12);">
-      {lang_sel}{bridge}
-    </div>
-    """)
-    return
 
 
 if __name__ == "__main__":
