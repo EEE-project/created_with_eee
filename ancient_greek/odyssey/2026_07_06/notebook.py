@@ -93,8 +93,8 @@ def _(gu, lang_sel, mo):
 @app.cell(hide_code=True)
 def _(mo):
     _MURRAY = (
-        "<b>Homer.</b> <a href='https://www.perseus.tufts.edu/hopper/text?"
-        "doc=Perseus%3atext%3a1999.01.0136%3abook%3d9'><i>The Odyssey</i></a>"
+        "<b>Greek text:</b> Homer. <a href='https://www.perseus.tufts.edu/hopper/text?"
+        "doc=Perseus%3atext%3a1999.01.0135%3abook%3d9'><i>The Odyssey</i></a>"
         " with an English Translation by A.T. Murray, PH.D. in two volumes."
         " Cambridge, MA., Harvard University Press; London, William Heinemann, Ltd. 1919."
     )

@@ -159,6 +159,11 @@ source line that the presentation prints with the Greek text, and name the same 
 the `_EDITION` cell. If the presentation prints none, ask the user which edition the text
 follows.
 
+A Perseus link in that comment or in the cell opens the Greek page of the edition (Murray 1919:
+`doc=Perseus:text:1999.01.0135`), not the English page (`1999.01.0136`); Perseus prints the same
+citation under both pages. The `_MURRAY` cell starts with `Greek text:` because Murray is also
+one of the English translators that a lesson shows.
+
 Rules (implemented by `eee.parse_stanza_text`): `### Odyss. X.XX–XX` → stanza ref
 key (stripped of the `ref_prefix`). Lines under heading → `stanza["lines"]`.
 Lines starting `<!--` are skipped.
