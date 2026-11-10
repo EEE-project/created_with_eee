@@ -18,6 +18,8 @@ data file changed on main shows up after the next export, not at once.
 `--no-embed` exports the lesson as it is, and the page fetches its data files
 from Codeberg while it starts.
 
+Each page also gets the loading overlay (tools/_loader.py): the EEE logo and the lesson title show at once, until the lesson shows its first text.
+
 An ancient Greek lesson that builds many paradigms also carries a paradigm pack
 (tools/_paradigm_pack.py): the export runs the lesson once with `uv`, in an
 environment resolved from the lesson's own script header, and the page starts
@@ -41,6 +43,7 @@ import sys
 import tempfile
 
 import _embed_data
+import _loader
 import _paradigm_pack
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -70,7 +73,13 @@ def export_one(notebook: pathlib.Path, pages_dir: pathlib.Path, embed: bool = Tr
              str(source), "-o", str(out_dir), "-f", "--mode", "run"],
             capture_output=True, text=True,
         )
-    return result.returncode == 0, result.stderr, note
+    if result.returncode != 0:
+        return False, result.stderr, note
+    try:
+        _loader.add_loader_to_file(out_dir / "index.html")
+    except ValueError as err:
+        return False, f"loading overlay: {err}", note
+    return True, result.stderr, note
 
 
 def main() -> None:

@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.25.1",
-#     "eee-project>=1.1.0",
+#     "eee-project>=1.27.0",
 # ]
 # ///
 
@@ -35,33 +35,12 @@ def _(lang_sel, mo):
 
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
-    _TXT = {
+    from eee_project.notebook_utils import eee_index_header
+    eee_index_header(mo, lang_sel.value, {
         "ru": ("Древнегреческий язык, начальный уровень", "Palaestra · Лето 2026"),
         "en": ("Ancient Greek, Beginner Level", "Palaestra · Summer 2026"),
         "el": ("Αρχαία Ελληνικά, Επίπεδο Αρχαρίων", "Παλαίστρα · Καλοκαίρι 2026"),
-    }
-    _title, _series = _TXT.get(lang_sel.value, _TXT["ru"])
-    mo.Html(f"""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap');
-    .eee-hero {{ text-align: center; padding: 32px 16px 24px; font-family: Syne, sans-serif; }}
-    .eee-series {{
-      font-family: "DM Mono", monospace; font-size: 11px; color: #003d82;
-      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px;
-    }}
-    .eee-title {{
-      font-size: 26px; font-weight: 800; letter-spacing: -0.02em;
-      background: linear-gradient(90deg, #003d82, #5f27cd);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
-    }}
-    .eee-subtitle {{ font-size: 14px; color: #666; }}
-    </style>
-    <div class="eee-hero">
-      <div class="eee-title">{_title}</div>
-      <div class="eee-series">{_series}</div>
-    </div>
-    """)
+    }, lang_fallback="ru")
     return
 
 

@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "eee-project>=1.1.0",
+#     "eee-project>=1.27.0",
 #     "marimo>=0.25.1",
 # ]
 # ///
@@ -39,8 +39,8 @@ def _(back_url, cfg, lang_sel, mo):
 
 @app.cell(hide_code=True)
 def _(lang_sel, mo):
-    from eee_project.notebook_utils import eee_hero
-    eee_hero(mo, lang_sel.value, {
+    from eee_project.notebook_utils import eee_index_header
+    eee_index_header(mo, lang_sel.value, {
         "ru": ("Алексис Зорбас", "B1: Греческий язык и культура"),
         "el": ("Αλέξης Ζορμπάς", "B1: Ελληνική Γλώσσα και Πολιτισμός"),
         "en": ("Alexis Zorbas", "B1: Greek Language and Culture"),

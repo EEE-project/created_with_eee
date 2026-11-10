@@ -241,6 +241,14 @@ this. The page pins the four library versions that made the pack (`ARGS=--no-pin
 the notebook (the tool runs a copy in a temporary folder). `make check-paradigm-pack` checks the step. See the README section
 "The paradigm pack of an ancient Greek lesson".
 
+## Loading overlay in WASM exports
+
+`make export-notebooks` puts a loading overlay before the root div of each exported page (`tools/_loader.py`): the EEE logo and the
+page title on a white screen, until the lesson shows its first text (more than 100 characters in the root div) or after 150 s. A lesson
+needs no code for this. A page exported before gets it from `make add-loader`. A hub page (made by `make gen-hub`, it has no root div)
+gets none. `make check-loader` checks every lesson page of a pages checkout: run it on the Codeberg pages worktree before a deploy, and
+with `DIRS=` on the GitHub and GitLab checkouts after `make propagate-pages`.
+
 ## The stanza layout of the Odyssey lessons (browser check, release order)
 
 A lesson that draws its stanza with `eee.interactive_text(..., wrap=True, translation=..., notes=...)` and its word panel with

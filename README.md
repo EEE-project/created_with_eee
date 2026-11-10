@@ -71,6 +71,10 @@ directory has its own README (description + live links) and `AGENTS.md`
    snapshot: after a data file changes, export again the lessons that embed it;
    `python3 tools/check-embedded-data.py --who <file>` lists them. More in
    "Export one lesson with and without the embedded data" below.
+   The export also puts a loading overlay into each page: the EEE logo and the
+   lesson title show at once, until the lesson shows its first text (see
+   `tools/_loader.py`). A page exported before gets it from `make add-loader`.
+   `make check-loader` checks that every lesson page has it.
 3. **Commit and push Codeberg's `pages`** from that worktree,
    then open the live Codeberg page and check it (hard-reload with Ctrl+Shift+R).
 4. **Propagate to GitHub and GitLab**, including the three GitLab split
@@ -91,7 +95,8 @@ directory has its own README (description + live links) and `AGENTS.md`
    project's remote `pages` tip over HTTPS and stops if its checkout does not
    contain it (those branches refuse force-pushes).
 5. **Verify** — `make verify-pages-deploy SITE=odyssey` (GitLab Pages needs its
-   CI pipeline to finish first); after hub changes also `make check-hub-links`.
+   CI pipeline to finish first); after hub changes also `make check-hub-links`;
+   `make check-loader DIRS="<checkout> ..."` on the GitHub and GitLab checkouts.
 
 A hub change (`tools/gen_hub.py`, an `index.tsv`) follows the same steps with
 `make gen-hub HUBS="<hub keys>"` instead of the export.
@@ -110,6 +115,7 @@ repository (the folder with the `Makefile`).
 | `gh`, logged in | `sync-main` (mirror check), `verify-pages-deploy`, the manual Pages rebuild below | `gh auth status` |
 | `glab`, logged in | `sync-main` (mirror check and the `main` protection switch), `verify-pages-deploy` | `glab auth status` |
 | `~/.venv/eee/bin/python3` with `marimo` (another Python: `EEE_PYTHON=...`) | `export-notebooks`, `check-embedded-data`, `gen-hub`, `sync-pages-export`, `sync-hub-pages` | `~/.venv/eee/bin/python3 -m marimo --version` |
+| the same Python with `eee-project` 1.27.0 or newer | `gen-hub` (the words on the cards and in the footer come from the label files of eee-project) | `~/.venv/eee/bin/python3 -c "import eee_project; print(eee_project.__version__)"` |
 | the same Python with `playwright`, a Chromium (`EEE_CHROMIUM=...`, `chromium` on the `PATH`, or Playwright's own) and `eee-project` 1.26 or newer | `check-lesson-layout` | `~/.venv/eee/bin/python3 -c "import playwright, eee_project; print(eee_project.__version__)"` |
 | `uv` and a network connection to PyPI | `export-notebooks` for an ancient Greek lesson (it builds the paradigm pack; `ARGS=--no-pack` needs neither) | `uv --version` |
 
@@ -171,8 +177,8 @@ times are what a run took on 2026-10-15, key uses included.
 | `make propagate-pages ARGS="gitlab --push"` | repeats the preparation for the GitLab unified project and force-pushes it; pushes the three split projects (a commit that an earlier dry run made is pushed as it is) | 6 after a dry run: fetch, 1 signature, 4 pushes; 9 without one | 3 minutes | `git ls-remote` of the four projects; wait for their Pages pipelines (1 minute), then `make verify-pages-deploy` |
 | `make sync-main ARGS=github` | resets the GitHub mirror checkout to Codeberg `main`, converts it with `codeberg2github.sh`, makes one signed commit and force-pushes it to GitHub `main` | 2: signature, push | 1 minute | `git ls-remote https://github.com/EEE-project/created_with_eee.git refs/heads/main` shows a new commit whose parent is Codeberg `main` |
 | `make sync-main ARGS=gitlab` | the same with `codeberg2gitlab.sh`; the script allows a force-push to GitLab `main` only while it pushes | 2 | 1 minute | the same check on `gitlab.com`; `glab api projects/EEE-project%2Fcreated_with_eee/protected_branches/main` must show `"allow_force_push":false` |
-| `make sync-pages-export`, `sync-hub-pages`, `fix-split-roots`, `fix-gitlab-unified-scope`, `fix-static-footer`, `fix-split-hub-links` (the steps `propagate-pages` runs for you), and `make gen-hub` | files in the folders above only; they never commit or push | 0 | seconds | `git status` and `git diff` in each folder |
-| `make verify-pages-deploy [SITE=...]`, `make check-hub-links [URL=...]`, `make check-embedded-data [SCOPE=...]`, `make check-paradigm-pack [SCOPE=...]` | nothing (read-only) | 0 | seconds | exit status 0 |
+| `make sync-pages-export`, `sync-hub-pages`, `fix-split-roots`, `fix-gitlab-unified-scope`, `fix-static-footer`, `fix-split-hub-links` (the steps `propagate-pages` runs for you), `make gen-hub`, and `make add-loader` (the `index.html` of a lesson page without the loading overlay) | files in the folders above only; they never commit or push | 0 | seconds | `git status` and `git diff` in each folder |
+| `make verify-pages-deploy [SITE=...]`, `make check-hub-links [URL=...]`, `make check-embedded-data [SCOPE=...]`, `make check-paradigm-pack [SCOPE=...]`, `make check-loader [DIRS=...]` | nothing (read-only) | 0 | seconds | exit status 0 |
 | `make check-lesson-layout [SCOPE=...]` | nothing (read-only; the lesson folders get their files back) | 0 | about two minutes per lesson with the three languages and both widths (one page load of the lesson per language and width) | exit status 0 (1: a check failed, 2: it cannot run here) |
 | `make check-presence-balance [SCOPE=...]` | nothing (read-only, no network) | 0 | a second | exit status 0 (1: an Odyssey lesson calls `balance_presence_items` without `by_translator=True`, 2: nothing to check) |
 | `make check-translator-choice [SCOPE=...]` | nothing (read-only, no network) | 0 | a second | exit status 0 (1: an Odyssey lesson lacks a part of the translator choice of its two translation exercises, 2: nothing to check) |
@@ -291,10 +297,14 @@ checking that no hub card, back link or asset is dead on any host (`make
 check-hub-links`, see `tools/check-hub-links.py`), and checking the data files
 that each export embeds (`make check-embedded-data`, see
 `tools/check-embedded-data.py`), and checking the paradigm pack step of the
-export (`make check-paradigm-pack`, see `tools/check-paradigm-pack.py`). All
-but the last four only stage local changes or run already-established scripts;
-`verify-pages-deploy`, `check-hub-links`, `check-embedded-data` and
-`check-paradigm-pack` are read-only and make no local changes at all.
+export (`make check-paradigm-pack`, see `tools/check-paradigm-pack.py`),
+putting the loading overlay into the pages exported before it existed (`make
+add-loader`, see `tools/add-loader.py` and `tools/_loader.py`), and checking
+that every lesson page holds it (`make check-loader`, see
+`tools/check-loader.py`). All but the last five only stage local changes or run
+already-established scripts; `verify-pages-deploy`, `check-hub-links`,
+`check-embedded-data`, `check-paradigm-pack` and `check-loader` are read-only
+and make no local changes at all.
 
 For a complete propagation of an already-correct Codeberg `pages` branch,
 including all GitLab split projects, use:
@@ -387,7 +397,8 @@ single-host work):
    `eee_footer()`'s "Source" link and similar host-detection logic resolve
    live in the browser (`js.self.location.hostname`), so the same exported
    `index.html`/`assets/` can be copied verbatim to every host below rather
-   than re-exported per host.
+   than re-exported per host. The export also puts the loading overlay into
+   the page (`tools/_loader.py`), so the same bytes carry it to every host.
 
 4. **Verify before committing anything** — a real browser check, not a
    text-scrape (a marimo WASM export can render its own loading chrome even
@@ -441,7 +452,7 @@ single-host work):
    200) — the exported bundle needs Pyodide to actually boot before the
    page is meaningfully "up".
 
-### Hub deployment (title/hero/switcher/index.tsv change → live pages)
+### Hub deployment (title/index header/switcher/index.tsv change → live pages)
 
 A hub page (root, category, or course card-list index) is static HTML from
 `tools/gen_hub.py`, not a WASM export — see `tools/gen_hub.py`'s own module
@@ -453,6 +464,11 @@ than a notebook's, since there's no Pyodide boot to wait for:
    workflow, then `make sync-main`.
 2. `make gen-hub HUBS="<hub keys>"` (default: all 10) into the Codeberg
    pages worktree — review with `git status`/`git diff`, commit + push.
+   `EEE_PYTHON` needs eee-project 1.27.0 or newer: the words on the cards
+   ("OPEN", "coming soon") and in the footer come from its label files.
+   The command also stops, before it writes a file, when the CSS of that
+   eee-project differs from the copies in `tools/gen_hub.py` (`CSS_COPIES`
+   lists the differences on purpose). The message names the rules.
 3. `make sync-hub-pages HUBS="<hub keys>"` to copy the regenerated
    `index.html` files into GitHub / GitLab-unified / each affected GitLab
    split project's checkout — review, commit + push each by hand

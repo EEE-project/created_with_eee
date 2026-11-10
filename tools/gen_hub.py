@@ -1,18 +1,24 @@
 """Generate static HTML for the 10 hub/index pages (root, ancient_greek,
 modern_greek, b1greeklanguageandculture, and the 6 course hubs).
 
-These pages are pure navigation -- a topbar, hero, and card grid rendered
+These pages are pure navigation -- a topbar, index header, and card grid rendered
 from index.tsv, nothing computational -- so unlike lesson pages they don't
 need a Pyodide/WASM boot. Reproduces eee_project.notebook_utils's actual
-CSS/markup (_TOPBAR_CSS, _HERO_CSS, _CARD_LIST_CSS, _FOOTER_CSS and the
-eee_topbar/eee_hero/eee_card_list/eee_footer render shapes) so these pages
+CSS/markup (_TOPBAR_CSS, _INDEX_HEADER_CSS, _CARD_LIST_CSS, _FOOTER_CSS and the
+eee_topbar/eee_index_header/eee_card_list/eee_footer render shapes) so these pages
 are visually identical to what those functions would render, just static.
+The words on the cards and in the footer ("OPEN", "coming soon", "Source:") are
+read from eee-project's ui-{lang}.tsv, so it needs the eee venv with eee-project
+1.27.0 or newer. It stops, before it writes anything, when a CSS copy below
+differs from the library's in a rule that CSS_COPIES does not list.
 
-Run: python3 tools/gen_hub.py [--out-dir DIR]
+Run: make gen-hub    (or: ~/.venv/eee/bin/python3 tools/gen_hub.py [--out-dir DIR])
 """
 import argparse
 import csv
 import json
+import re
+import sys
 from pathlib import Path
 
 from _split_courses import gitlab_overrides
@@ -22,8 +28,6 @@ REPO_ROOT = Path(__file__).parent.parent
 LANG_OPTIONS = {"English": "en", "Русский": "ru", "Ελληνικά": "el"}
 LANG_NAMES = {code: name for name, code in LANG_OPTIONS.items()}
 DEFAULT_LANG = "en"
-FOOTER_LABEL = {"ru": "Исходный код:", "en": "Source:", "el": "Πηγαίος κώδικας:"}
-CARD_LIST_SOON = {"ru": "скоро", "el": "σύντομα", "en": "coming soon"}
 
 # odyssey/palaestra/b1greeklanguageandculture are split into their own GitLab
 # projects (1GB Pages-per-project cap -- see README's GitLab Pages section),
@@ -44,15 +48,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 # Each hub: tsv (its own card-list source), parent_tsv (None for root --
 # back_url is a fixed self-badge, not a link), out (destination dir),
-# titles/parent_titles (topbar), hero (None to reuse palaestra's hand-rolled
-# single-language hero instead), footer_lang (fixed language for RU-only
+# titles/parent_titles (topbar), index_header (title and subtitle per
+# language), footer_lang (fixed language for RU-only
 # hubs; None for trilingual ones, where it tracks the selector). Initial
 # dropdown selection is DEFAULT_LANG (module-level, same for every hub).
 HUBS = {
     "root": {
         "tsv": "index.tsv", "parent_tsv": None, "out": ".",
         "titles": {"ru": "EEE", "el": "EEE", "en": "EEE"}, "parent_titles": None,
-        "hero": {
+        "index_header": {
             "ru": ("Курсы греческого языка", "Интерактивные тетради"),
             "el": ("Μαθήματα ελληνικής γλώσσας", "Διαδραστικά Τετράδια"),
             "en": ("Greek Language Courses", "Interactive Notebooks"),
@@ -63,7 +67,7 @@ HUBS = {
         "tsv": "ancient_greek/index.tsv", "parent_tsv": "index.tsv", "out": "ancient_greek",
         "titles": {"ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek"},
         "parent_titles": {"ru": "EEE", "el": "EEE", "en": "EEE"},
-        "hero": {
+        "index_header": {
             "ru": ("Αρχαία Ελληνικά", "Курсы древнегреческого языка"),
             "el": ("Αρχαία Ελληνικά", "Μαθήματα αρχαίας ελληνικής γλώσσας"),
             "en": ("Ancient Greek", "Ancient Greek language courses"),
@@ -74,7 +78,7 @@ HUBS = {
         "tsv": "modern_greek/index.tsv", "parent_tsv": "index.tsv", "out": "modern_greek",
         "titles": {"ru": "Νέα Ελληνικά", "el": "Νέα Ελληνικά", "en": "Modern Greek"},
         "parent_titles": {"ru": "EEE", "el": "EEE", "en": "EEE"},
-        "hero": {
+        "index_header": {
             "ru": ("Νέα Ελληνικά", "Курсы современного греческого языка"),
             "el": ("Νέα Ελληνικά", "Μαθήματα σύγχρονης ελληνικής γλώσσας"),
             "en": ("Modern Greek", "Modern Greek language courses"),
@@ -87,7 +91,7 @@ HUBS = {
         "out": "modern_greek/b1greeklanguageandculture",
         "titles": {"ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture"},
         "parent_titles": {"ru": "Νέα Ελληνικά", "el": "Νέα Ελληνικά", "en": "Modern Greek"},
-        "hero": {
+        "index_header": {
             "ru": ("B1: Греческий язык и культура", "Курс по истории и культуре Греции"),
             "el": ("B1: Ελληνική Γλώσσα και Πολιτισμός", "Μάθημα ιστορίας και πολιτισμού της Ελλάδας"),
             "en": ("B1: Greek Language and Culture", "Course on Greek history and culture"),
@@ -99,7 +103,7 @@ HUBS = {
         "out": "ancient_greek/odyssey",
         "titles": {"ru": "Одиссея с Гомером", "en": "Odyssey with Homer", "el": "Οδύσσεια με τον Όμηρο"},
         "parent_titles": {"ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek"},
-        "hero": {
+        "index_header": {
             "ru": ("Одиссея с Гомером", "Αρχαία Ελληνικά"),
             "el": ("Οδύσσεια με τον Όμηρο", "Αρχαία Ελληνικά"),
             "en": ("Odyssey with Homer", "Ancient Greek"),
@@ -112,7 +116,7 @@ HUBS = {
         "out": "ancient_greek/palaestra/ancient_greek.2026.summer",
         "titles": {"ru": "Палестра", "en": "Palaestra", "el": "Παλαίστρα"},
         "parent_titles": {"ru": "Αρχαία Ελληνικά", "el": "Αρχαία Ελληνικά", "en": "Ancient Greek"},
-        "hero": {
+        "index_header": {
             "ru": ("Древнегреческий язык, начальный уровень", "Palaestra · Лето 2026"),
             "en": ("Ancient Greek, Beginner Level", "Palaestra · Summer 2026"),
             "el": ("Αρχαία Ελληνικά, Επίπεδο Αρχαρίων", "Παλαίστρα · Καλοκαίρι 2026"),
@@ -124,7 +128,7 @@ HUBS = {
         "out": "modern_greek/ellinika_b",
         "titles": {"ru": "Ελληνικά Β1", "el": "Ελληνικά Β1", "en": "Ελληνικά Β1"},
         "parent_titles": {"ru": "Νέα Ελληνικά", "el": "Νέα Ελληνικά", "en": "Modern Greek"},
-        "hero": {
+        "index_header": {
             "ru": ("Ελληνικά Β1 — Интерактивные конспекты", "Уроки современного греческого языка"),
             "el": ("Ελληνικά Β1 — Διαδραστικά Τετράδια", "Μαθήματα σύγχρονων ελληνικών"),
             "en": ("Ελληνικά Β1 — Interactive Notebooks", "Modern Greek language lessons"),
@@ -137,7 +141,7 @@ HUBS = {
         "out": "modern_greek/b1greeklanguageandculture/kapodistrias",
         "titles": {"ru": "Каподистриас", "el": "Καποδίστριας", "en": "Kapodistrias"},
         "parent_titles": {"ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture"},
-        "hero": {
+        "index_header": {
             "ru": ("Каподистриас", "B1: Греческий язык и культура"),
             "el": ("Καποδίστριας", "B1: Ελληνική Γλώσσα και Πολιτισμός"),
             "en": ("Kapodistrias", "B1: Greek Language and Culture"),
@@ -150,7 +154,7 @@ HUBS = {
         "out": "modern_greek/b1greeklanguageandculture/kavafis_ithaki",
         "titles": {"ru": "Καβάφης — Ιθάκη", "el": "Καβάφης — Ιθάκη", "en": "Kavafis — Ithaki"},
         "parent_titles": {"ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture"},
-        "hero": {
+        "index_header": {
             "ru": ("Καβάφης — Ιθάκη", "B1: Греческий язык и культура"),
             "el": ("Καβάφης — Ιθάκη", "B1: Ελληνική Γλώσσα και Πολιτισμός"),
             "en": ("Kavafis — Ithaki", "B1: Greek Language and Culture"),
@@ -163,7 +167,7 @@ HUBS = {
         "out": "modern_greek/b1greeklanguageandculture/zorba",
         "titles": {"ru": "Алексис Зорбас", "el": "Αλέξης Ζορμπάς", "en": "Alexis Zorbas"},
         "parent_titles": {"ru": "B1: Греческий язык и культура", "el": "B1: Ελληνική Γλώσσα και Πολιτισμός", "en": "B1: Greek Language and Culture"},
-        "hero": {
+        "index_header": {
             "ru": ("Алексис Зорбас", "B1: Греческий язык и культура"),
             "el": ("Αλέξης Ζορμπάς", "B1: Ελληνική Γλώσσα και Πολιτισμός"),
             "en": ("Alexis Zorbas", "B1: Greek Language and Culture"),
@@ -172,7 +176,7 @@ HUBS = {
     },
 }
 
-# ═══════════════════════════════ CSS, verbatim from eee_project.notebook_utils ══
+# ═══════════════════════════════ CSS, copied from eee_project.notebook_utils (where it differs: CSS_COPIES) ══
 
 TOPBAR_CSS = """<style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap');
@@ -200,26 +204,22 @@ TOPBAR_CSS = """<style>
 
 BADGE = '<a class="tb-badge" href="https://telegram.me/+VuocC5la3ZwyNDky" target="_blank">EEE Community</a>'
 
-HERO_CSS = """<style>
-.eee-hero { text-align: center; padding: 32px 16px 24px; font-family: Syne, sans-serif; }
-.eee-series {
-  font-family: "DM Mono", monospace; font-size: 11px; color: #003d82;
-  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px;
-}
+INDEX_HEADER_CSS = """<style>
+.eee-index-header { text-align: center; padding: 32px 16px 24px; font-family: Syne, sans-serif; }
+.eee-subtitle { font-size: 15px; color: #666; line-height: 1.6; max-width: 480px; margin: 0 auto; }
 .eee-title {
-  font-size: 26px; font-weight: 800; letter-spacing: -0.02em;
+  font-size: 30px; font-weight: 800; letter-spacing: -0.02em;
   background: linear-gradient(90deg, #003d82, #5f27cd);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
-.eee-subtitle { font-size: 14px; color: #666; }
 </style>"""
 
 CARD_LIST_CSS = """<style>
 .eee-card, .eee-card-disabled {
   display: block; text-decoration: none; color: #1a1a1a;
   background: #f8f9fa; border: 1px solid #e0e0e0;
-  border-radius: 12px; padding: 20px; margin-bottom: 14px;
+  border-radius: 12px; padding: 20px; margin-bottom: 16px;
   font-family: Syne, sans-serif;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -235,12 +235,12 @@ CARD_LIST_CSS = """<style>
   font-family: "DM Mono", monospace; font-size: 10px; color: #003d82;
   letter-spacing: .12em; text-transform: uppercase; margin-bottom: 2px;
 }
-.eee-card-title { font-size: 16px; font-weight: 700; }
-.eee-card-greek { font-family: "DM Mono", monospace; font-size: 12px; color: #5f27cd; margin-top: 1px; }
-.eee-card-desc { font-size: 13px; color: #666; line-height: 1.5; }
+.eee-card-title { font-size: 19px; font-weight: 700; letter-spacing: 0.01em; }
+.eee-card-greek { font-family: "DM Mono", monospace; font-size: 13px; color: #003d82; margin-top: 2px; }
+.eee-card-desc { font-size: 14px; color: #666; line-height: 1.5; }
 .eee-card-arrow {
   text-align: right; margin-top: 10px;
-  font-family: "DM Mono", monospace; font-size: 11px; color: #5f27cd;
+  font-family: "DM Mono", monospace; font-size: 11px; color: #5f27cd; letter-spacing: 0.1em;
 }
 </style>"""
 
@@ -267,6 +267,60 @@ body { margin: 0; font-family: Syne, sans-serif; }
 #lang-picker select { font-family: inherit; font-size: inherit; border: none; background: none; }
 </style>"""
 
+# ═══════════════════ the copies above must follow the library's CSS ══════════════════
+
+LIBRARY_ONLY, COPY_ONLY = "library only", "copy only"
+# library constant -> (our copy, the rules where it differs on purpose: selector -> LIBRARY_ONLY | COPY_ONLY | the properties that differ)
+CSS_COPIES = {
+    "_TOPBAR_CSS": (TOPBAR_CSS, {"#eee-topbar": {"margin"}, ".markdown table td, .markdown table th": LIBRARY_ONLY}),
+    "_INDEX_HEADER_CSS": (INDEX_HEADER_CSS, {"@import 1": LIBRARY_ONLY}),  # the fonts come with TOPBAR_CSS
+    "_CARD_LIST_CSS": (CARD_LIST_CSS, {}),
+    "_FOOTER_CSS": (FOOTER_CSS, {  # a hub footer is centred and has no page arrows
+        "#eee-footer": {"gap", "justify-content", "margin", "padding"},
+        "#eee-footer .footer-center": LIBRARY_ONLY, "#eee-footer .footer-nav": LIBRARY_ONLY, "#eee-footer .footer-nav-spacer": LIBRARY_ONLY,
+    }),
+}
+
+
+def css_rules(css: str) -> "dict[str, dict[str, str]]":
+    """{selector: {property: value}} of one <style> block, whitespace folded; the rules of one selector are merged and the later value wins, as in CSS.
+    An @import is the rule "@import N" with the one property url."""
+    css = re.sub(r"</?style>|/\*.*?\*/", " ", css, flags=re.S)
+    imports, block = re.compile(r"@import\s+url\(([^)]*)\)\s*;"), re.compile(r"([^{}]+)\{([^{}]*)\}")
+    rules = {f"@import {n}": {"url": m.group(1)} for n, m in enumerate(imports.finditer(css), 1)}
+    css = imports.sub("", css)
+    rest = block.sub("", css).strip()
+    if rest:
+        sys.exit(f"gen_hub.py cannot compare this CSS (a block inside a block, such as @media, or a brace inside a string?): {rest[:80]!r}")
+    for selector, body in block.findall(css):
+        declarations = [d.partition(":") for d in body.split(";") if d.strip()]
+        if not all(sep for _, sep, _ in declarations):
+            sys.exit(f"gen_hub.py cannot compare this CSS (a ';' inside a string or url()?): {body.strip()[:80]!r}")
+        rules.setdefault(" ".join(selector.split()), {}).update({k.strip(): " ".join(v.split()) for k, _, v in declarations})
+    return rules
+
+
+def css_differences(copy: str, library: str) -> dict:
+    """{selector: LIBRARY_ONLY | COPY_ONLY | the properties that differ} for every rule that is not the same in both blocks."""
+    ours, theirs = css_rules(copy), css_rules(library)
+    return {
+        sel: COPY_ONLY if sel not in theirs else LIBRARY_ONLY if sel not in ours
+        else {p for p in ours[sel].keys() | theirs[sel].keys() if ours[sel].get(p) != theirs[sel].get(p)}
+        for sel in ours.keys() | theirs.keys() if ours.get(sel) != theirs.get(sel)
+    }
+
+
+def css_problems(library_css: "dict[str, str]") -> "list[str]":
+    """One line per rule where a copy differs from the library's CSS in another way than CSS_COPIES says."""
+    def show(v):
+        return "the same in both" if v is None else v if isinstance(v, str) else "different in " + ", ".join(sorted(v))
+    problems = []
+    for name, (copy, allowed) in CSS_COPIES.items():
+        actual = css_differences(copy, library_css[name])
+        problems += [f"{name} {sel!r}: now {show(actual.get(sel))}, CSS_COPIES says {show(allowed.get(sel))}"
+                     for sel in sorted(actual.keys() | allowed.keys()) if actual.get(sel) != allowed.get(sel)]
+    return problems
+
 
 def esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
@@ -279,6 +333,22 @@ def js_str(s: str) -> str:
 def read_tsv_rows(path: Path) -> "list[dict]":
     with open(path, newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f, delimiter="\t"))
+
+
+def ui_labels(key: str) -> "dict[str, str]":
+    """{lang: text} of one row of eee-project's ui-{lang}.tsv -- the words the
+    notebooks show, so a hub and a notebook never differ. Imported when a hub is
+    rendered, not on import: sync-hub-pages.py imports HUBS with a python that
+    has no eee_project."""
+    try:
+        from eee_project.content import _UI_LABELS
+    except ModuleNotFoundError:
+        sys.exit("gen_hub.py reads its labels from eee-project: run it with the eee venv (make gen-hub)")
+    labels = _UI_LABELS.get(key, {})
+    missing = [lang for lang in LANG_NAMES if lang not in labels]
+    if missing:
+        sys.exit(f"eee-project has no label {key!r} in {', '.join(missing)}: install eee-project 1.27.0 or newer")
+    return {lang: labels[lang] for lang in LANG_NAMES}
 
 
 def read_self_index_url(path: Path) -> str:
@@ -324,14 +394,14 @@ def render_topbar(cfg: dict, langs: "list[str]", back_url: "str | None") -> str:
     return "\n".join(parts)
 
 
-def render_hero(hero: "dict[str, tuple[str, str]]", langs: "list[str]") -> str:
-    parts = [HERO_CSS, '<div class="eee-hero">']
+def render_index_header(index_header: "dict[str, tuple[str, str]]", langs: "list[str]") -> str:
+    parts = [INDEX_HEADER_CSS, '<div class="eee-index-header">']
     for lang in langs:
-        title, subtitle = hero[lang]
+        title, subtitle = index_header[lang]
         display = "" if lang == langs[0] else "display:none"
         parts.append(f'<div data-lang="{lang}" style="{display}">'
                      f'<div class="eee-title">{esc(title)}</div>'
-                     f'<div class="eee-series">{esc(subtitle)}</div></div>')
+                     f'<div class="eee-subtitle">{esc(subtitle)}</div></div>')
     parts.append("</div>")
     return "\n".join(parts)
 
@@ -339,6 +409,7 @@ def render_hero(hero: "dict[str, tuple[str, str]]", langs: "list[str]") -> str:
 def render_cards(rows: "list[dict]", langs: "list[str]") -> str:
     cards = []
     used_gitlab_override = False
+    soon, open_label = ui_labels("card_list_soon"), ui_labels("card_list_open")
     for row in rows:
         url = row["url"] or None
         header = f"""<div class="eee-card-header">
@@ -360,8 +431,8 @@ def render_cards(rows: "list[dict]", langs: "list[str]") -> str:
         arrow_block = ""
         for lang in langs:
             display = "" if lang == langs[0] else "display:none"
-            soon = CARD_LIST_SOON[lang]
-            arrow_block += f'<div class="eee-card-arrow" data-lang="{lang}" style="{display}">{"◀" if url else esc(soon)}</div>'
+            arrow = f"{open_label[lang]} →" if url else soon[lang]
+            arrow_block += f'<div class="eee-card-arrow" data-lang="{lang}" style="{display}">{esc(arrow)}</div>'
         inner = header + desc_block + arrow_block
         if url:
             gitlab_href = GITLAB_SPLIT_OVERRIDES.get(url)
@@ -379,10 +450,11 @@ def render_cards(rows: "list[dict]", langs: "list[str]") -> str:
 
 
 def render_footer(langs: "list[str]") -> str:
+    footer_label = ui_labels("footer_label")
     parts = [FOOTER_CSS, '<div id="eee-footer">']
     for lang in langs:
         display = "" if lang == langs[0] else "display:none"
-        parts.append(f'<span class="footer-label" data-lang="{lang}" style="{display}">{esc(FOOTER_LABEL[lang])}</span>')
+        parts.append(f'<span class="footer-label" data-lang="{lang}" style="{display}">{esc(footer_label[lang])}</span>')
     parts.append('<a href="https://codeberg.org/EEE-project" target="_blank">codeberg.org/EEE-project</a>')
     parts.append("</div>")
     return "\n".join(parts)
@@ -429,17 +501,12 @@ def gen_hub(key: str, cfg: dict, out_root: Path) -> None:
     if DEFAULT_LANG in langs:
         langs = [DEFAULT_LANG] + [lang for lang in langs if lang != DEFAULT_LANG]
 
-    if cfg["hero"] is not None:
-        hero_html = render_hero(cfg["hero"], langs)
-    else:
-        hero_html = ""  # odyssey: no hero, matches its own notebook.py
-
     body = [
         PAGE_CSS,
         render_topbar(cfg, langs, back_url),
         render_lang_picker(DEFAULT_LANG, cfg["titles"]) if is_multilingual else "",
         '<div class="eee-page">',
-        hero_html,
+        render_index_header(cfg["index_header"], langs),
         render_cards(rows, langs),
         render_footer(langs if is_multilingual else ["ru"]) if is_multilingual else render_footer(["ru"]),
         "</div>",
@@ -470,6 +537,14 @@ def main():
     ap.add_argument("hubs", nargs="*", help="hub keys to generate (default: all)")
     ap.add_argument("--out-dir", default=None, help="output root (default: repo root)")
     args = ap.parse_args()
+
+    ui_labels("card_list_open")  # first: an eee-project older than 1.27.0 stops here, so the CSS check below cannot blame the CSS
+    import eee_project
+    from eee_project import notebook_utils  # here, not at the top: sync-hub-pages.py imports HUBS with a python that has no eee_project
+    problems = css_problems({name: getattr(notebook_utils, name) for name in CSS_COPIES})
+    if problems:
+        sys.exit(f"gen_hub.py's CSS does not match eee-project {eee_project.__version__} ({notebook_utils.__file__}):\n  " + "\n  ".join(problems)
+                 + "\nCopy the change into gen_hub.py or, for a difference on purpose, into CSS_COPIES.")
 
     out_root = Path(args.out_dir) if args.out_dir else REPO_ROOT
     keys = args.hubs if args.hubs else list(HUBS.keys())
