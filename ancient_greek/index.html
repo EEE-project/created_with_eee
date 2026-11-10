@@ -77,29 +77,25 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <div class="eee-page">
 <style>
-.eee-hero { text-align: center; padding: 32px 16px 24px; font-family: Syne, sans-serif; }
-.eee-series {
-  font-family: "DM Mono", monospace; font-size: 11px; color: #003d82;
-  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px;
-}
+.eee-index-header { text-align: center; padding: 32px 16px 24px; font-family: Syne, sans-serif; }
+.eee-subtitle { font-size: 15px; color: #666; line-height: 1.6; max-width: 480px; margin: 0 auto; }
 .eee-title {
-  font-size: 26px; font-weight: 800; letter-spacing: -0.02em;
+  font-size: 30px; font-weight: 800; letter-spacing: -0.02em;
   background: linear-gradient(90deg, #003d82, #5f27cd);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
-.eee-subtitle { font-size: 14px; color: #666; }
 </style>
-<div class="eee-hero">
-<div data-lang="en" style=""><div class="eee-title">Ancient Greek</div><div class="eee-series">Ancient Greek language courses</div></div>
-<div data-lang="el" style="display:none"><div class="eee-title">Αρχαία Ελληνικά</div><div class="eee-series">Μαθήματα αρχαίας ελληνικής γλώσσας</div></div>
-<div data-lang="ru" style="display:none"><div class="eee-title">Αρχαία Ελληνικά</div><div class="eee-series">Курсы древнегреческого языка</div></div>
+<div class="eee-index-header">
+<div data-lang="en" style=""><div class="eee-title">Ancient Greek</div><div class="eee-subtitle">Ancient Greek language courses</div></div>
+<div data-lang="el" style="display:none"><div class="eee-title">Αρχαία Ελληνικά</div><div class="eee-subtitle">Μαθήματα αρχαίας ελληνικής γλώσσας</div></div>
+<div data-lang="ru" style="display:none"><div class="eee-title">Αρχαία Ελληνικά</div><div class="eee-subtitle">Курсы древнегреческого языка</div></div>
 </div>
 <style>
 .eee-card, .eee-card-disabled {
   display: block; text-decoration: none; color: #1a1a1a;
   background: #f8f9fa; border: 1px solid #e0e0e0;
-  border-radius: 12px; padding: 20px; margin-bottom: 14px;
+  border-radius: 12px; padding: 20px; margin-bottom: 16px;
   font-family: Syne, sans-serif;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -115,19 +111,19 @@ document.addEventListener('DOMContentLoaded', function() {
   font-family: "DM Mono", monospace; font-size: 10px; color: #003d82;
   letter-spacing: .12em; text-transform: uppercase; margin-bottom: 2px;
 }
-.eee-card-title { font-size: 16px; font-weight: 700; }
-.eee-card-greek { font-family: "DM Mono", monospace; font-size: 12px; color: #5f27cd; margin-top: 1px; }
-.eee-card-desc { font-size: 13px; color: #666; line-height: 1.5; }
+.eee-card-title { font-size: 19px; font-weight: 700; letter-spacing: 0.01em; }
+.eee-card-greek { font-family: "DM Mono", monospace; font-size: 13px; color: #003d82; margin-top: 2px; }
+.eee-card-desc { font-size: 14px; color: #666; line-height: 1.5; }
 .eee-card-arrow {
   text-align: right; margin-top: 10px;
-  font-family: "DM Mono", monospace; font-size: 11px; color: #5f27cd;
+  font-family: "DM Mono", monospace; font-size: 11px; color: #5f27cd; letter-spacing: 0.1em;
 }
 </style><a class="eee-card" href="/created_with_eee/ancient_greek/odyssey/" data-gitlab-href="https://eee-project.gitlab.io/created-with-eee-odyssey/"><div class="eee-card-header">
           <div class="eee-card-icon">🏺</div>
-          <div><div data-lang="en" style=""><div class="eee-card-label">Ancient Greek with Homer</div><div class="eee-card-title">Odyssey</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Αρχαία Ελληνικά με τον Όμηρο</div><div class="eee-card-title">Οδύσσεια</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">Древнегреческий с Гомером</div><div class="eee-card-title">Одиссея с Гомером</div></div><div class="eee-card-greek">Ὀδύσσεια</div></div></div><div class="eee-card-desc" data-lang="en" style="">Reading the Odyssey with morphological analysis, paradigms, and translation. 8 lessons.</div><div class="eee-card-desc" data-lang="el" style="display:none">Ανάγνωση της Οδύσσειας με μορφολογική ανάλυση, παραδείγματα και μετάφραση. 8 μαθήματα.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Чтение Одиссеи с морфологическим анализом, парадигмами и переводом. 8 занятий.</div><div class="eee-card-arrow" data-lang="en" style="">◀</div><div class="eee-card-arrow" data-lang="el" style="display:none">◀</div><div class="eee-card-arrow" data-lang="ru" style="display:none">◀</div></a>
+          <div><div data-lang="en" style=""><div class="eee-card-label">Ancient Greek with Homer</div><div class="eee-card-title">Odyssey</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Αρχαία Ελληνικά με τον Όμηρο</div><div class="eee-card-title">Οδύσσεια</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">Древнегреческий с Гомером</div><div class="eee-card-title">Одиссея с Гомером</div></div><div class="eee-card-greek">Ὀδύσσεια</div></div></div><div class="eee-card-desc" data-lang="en" style="">Reading the Odyssey with morphological analysis, paradigms, and translation. 8 lessons.</div><div class="eee-card-desc" data-lang="el" style="display:none">Ανάγνωση της Οδύσσειας με μορφολογική ανάλυση, παραδείγματα και μετάφραση. 8 μαθήματα.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Чтение Одиссеи с морфологическим анализом, парадигмами и переводом. 8 занятий.</div><div class="eee-card-arrow" data-lang="en" style="">OPEN →</div><div class="eee-card-arrow" data-lang="el" style="display:none">ΑΝΟΙΓΜΑ →</div><div class="eee-card-arrow" data-lang="ru" style="display:none">ОТКРЫТЬ →</div></a>
 <a class="eee-card" href="/created_with_eee/ancient_greek/palaestra/ancient_greek.2026.summer/" data-gitlab-href="https://eee-project.gitlab.io/created-with-eee-palaestra/"><div class="eee-card-header">
           <div class="eee-card-icon">🏛</div>
-          <div><div data-lang="en" style=""><div class="eee-card-label">Ancient Greek</div><div class="eee-card-title">Palaestra — Summer 2026</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Αρχαία Ελληνικά</div><div class="eee-card-title">Παλαίστρα — Καλοκαίρι 2026</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">Древнегреческий язык</div><div class="eee-card-title">Παλαίστρα — Лето 2026</div></div><div class="eee-card-greek">Παλαίστρα</div></div></div><div class="eee-card-desc" data-lang="en" style="">Introduction to Ancient Greek for beginners. Alphabet, grammar, reading.</div><div class="eee-card-desc" data-lang="el" style="display:none">Εισαγωγή στα αρχαία ελληνικά για αρχάριους. Αλφάβητο, γραμματική, ανάγνωση.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Введение в древнегреческий язык для начинающих. Алфавит, грамматика, чтение.</div><div class="eee-card-arrow" data-lang="en" style="">◀</div><div class="eee-card-arrow" data-lang="el" style="display:none">◀</div><div class="eee-card-arrow" data-lang="ru" style="display:none">◀</div></a><script>
+          <div><div data-lang="en" style=""><div class="eee-card-label">Ancient Greek</div><div class="eee-card-title">Palaestra — Summer 2026</div></div><div data-lang="el" style="display:none"><div class="eee-card-label">Αρχαία Ελληνικά</div><div class="eee-card-title">Παλαίστρα — Καλοκαίρι 2026</div></div><div data-lang="ru" style="display:none"><div class="eee-card-label">Древнегреческий язык</div><div class="eee-card-title">Παλαίστρα — Лето 2026</div></div><div class="eee-card-greek">Παλαίστρα</div></div></div><div class="eee-card-desc" data-lang="en" style="">Introduction to Ancient Greek for beginners. Alphabet, grammar, reading.</div><div class="eee-card-desc" data-lang="el" style="display:none">Εισαγωγή στα αρχαία ελληνικά για αρχάριους. Αλφάβητο, γραμματική, ανάγνωση.</div><div class="eee-card-desc" data-lang="ru" style="display:none">Введение в древнегреческий язык для начинающих. Алфавит, грамматика, чтение.</div><div class="eee-card-arrow" data-lang="en" style="">OPEN →</div><div class="eee-card-arrow" data-lang="el" style="display:none">ΑΝΟΙΓΜΑ →</div><div class="eee-card-arrow" data-lang="ru" style="display:none">ОТКРЫТЬ →</div></a><script>
 document.addEventListener('DOMContentLoaded', function() {
   if (location.hostname !== 'eee-project.gitlab.io') return;
   document.querySelectorAll('[data-gitlab-href]').forEach(function(el) {
