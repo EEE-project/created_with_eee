@@ -47,7 +47,7 @@ and, in a local run of `2026_06_22`, in 2 of 7 scroll steps at 700 and at 830 px
 (measured on 2026-11-09 with `marimo run`).
 
 To change the order, move whole cells and do not edit their code. `make check-lesson-order` (`tools/check-lesson-order.py`) fails a lesson that breaks the order. After a move in a lesson with per-language files
-(`2026_07_27`), make the files again: `python -m eee_project.split_lesson` refuses to overwrite, so run it on a copy of `notebook.py` in an empty folder and copy the three `notebook_<language>.py` files back.
+(every Odyssey lesson has them), make the files again: `python -m eee_project.split_lesson` refuses to overwrite, so run it on a copy of `notebook.py` in an empty folder and copy the three `notebook_<language>.py` files back.
 
 ## Vocabulary TSVs
 

@@ -33,7 +33,7 @@ ictus.html                 ← rhythm (икты) markup, one marked-up line per 
 vocab_{ref}_{ru,en,el}.tsv ← vocabulary for the quiz, one file per language
 vocab_content_problems.md  ← known coverage gaps (not every lesson has one; read it, where it exists, before adding TSV entries)
 translation_presence.tsv   ← manually-reviewed word×translator judgments (see below)
-notebook_{ru,el,en}.py, README.md ← only in a split lesson (2026_07_27): one notebook per UI language, made by `python -m eee_project.split_lesson`; change a text there, then run `python -m eee_project.join_lesson` (the README of the folder has the rules)
+notebook_{ru,el,en}.py, README.md ← one notebook per UI language, in every lesson, made by `python -m eee_project.split_lesson`; change a text there, then run `python -m eee_project.join_lesson`; after any other change of `notebook.py`, delete them and make them again (the README of the folder has the rules)
 ```
 
 **Translations live in the knowledge base, not in the lesson folder.** The notebook fetches `translations_{ru,en,el}.md` at runtime with `ensure_files(...)` from `https://codeberg.org/EEE-project/greek-knowledge-eee/raw/branch/main/texts/odyssey` (see the cell with `_gke_remote` in `2026_07_27/notebook.py`). A copy next to a notebook is a git-ignored download cache. The one translation file kept in a lesson folder is `2026_07_20/translations_ru_starikovsky.md`: Стариковский (2025) is in copyright, so the knowledge base holds only a citation of it. The format is described under "`translations_{ru,en,el}.md`" below.
