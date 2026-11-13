@@ -78,7 +78,7 @@ directory has its own README (description + live links) and `AGENTS.md`
 3. **Commit and push Codeberg's `pages`** from that worktree,
    then open the live Codeberg page and check it (hard-reload with Ctrl+Shift+R).
 4. **Propagate to GitHub and GitLab**, including the three GitLab split
-   projects. It copies the Codeberg worktree's *local* `pages`, so finish
+   projects. It copies the Codeberg worktree's `pages` branch, so finish
    step 3 first:
    ```bash
    make propagate-pages                           # fetch Codeberg, prepare + commit locally, push nothing
@@ -94,6 +94,11 @@ directory has its own README (description + live links) and `AGENTS.md`
    Before it fetches or pushes anything, it also reads each GitLab course
    project's remote `pages` tip over HTTPS and stops if its checkout does not
    contain it (those branches refuse force-pushes).
+   After it fetches Codeberg's `pages`, it also stops when the worktree's
+   local `pages` is not that commit (an unpushed commit, or a newer commit
+   pushed from another checkout). It stops before it resets, copies or commits
+   anything. Push the local branch, or run `git merge --ff-only origin/pages`
+   in the worktree, then run the command again.
 5. **Verify** — `make verify-pages-deploy SITE=odyssey` (GitLab Pages needs its
    CI pipeline to finish first); after hub changes also `make check-hub-links`;
    `make check-loader DIRS="<checkout> ..."` on the GitHub and GitLab checkouts.
@@ -122,7 +127,8 @@ repository (the folder with the `Makefile`).
 `tools/propagate-pages.sh` itself calls neither `gh` nor `glab`.
 
 **The git command of each host.** `GIT_CMD_CODEBERG`, `GIT_CMD_GITHUB` and
-`GIT_CMD_GITLAB` name the command that runs `git` for each host. Export them, or
+`GIT_CMD_GITLAB` name the command that runs `git` for each host
+(`tools/propagate-pages.sh` reads only the last two). Export them, or
 put them in the file `.env` in the repository root (git ignores it). Without a
 value the scripts use plain `git`. There is an example under "What's automated
 (reference)" below.
@@ -330,16 +336,16 @@ leave it off unless you need the trace.
 With no host argument, `propagate-pages` defaults to `all`. The explicit
 `all` selector is also accepted.
 
-Remote fetches and pushes (in `tools/propagate-pages.sh` and in `tools/push.sh`,
-which `make sync-main` runs) use separate commands for each host:
-`GIT_CMD_CODEBERG`, `GIT_CMD_GITHUB`, and `GIT_CMD_GITLAB` (each defaults to
-`git`). Authentication wrappers remain personal environment settings rather
-than being embedded in the repository script. You can export them in the
-environment or put them in the repository-root `.env` file, which is ignored
-by Git. For example:
+Remote pushes (in `tools/propagate-pages.sh` and in `tools/push.sh`, which
+`make sync-main` runs) use separate commands for each host: `GIT_CMD_GITHUB`
+and `GIT_CMD_GITLAB` in both scripts, and `GIT_CMD_CODEBERG` in `tools/push.sh`
+only (each defaults to `git`). `tools/propagate-pages.sh` reads Codeberg over
+its public URL with plain `git`. Authentication wrappers remain personal
+environment settings rather than being embedded in the repository script. You
+can export them in the environment or put them in the repository-root `.env`
+file, which is ignored by Git. For example:
 
 ```bash
-GIT_CMD_CODEBERG="codeberg-git" \
 GIT_CMD_GITHUB="github-git" \
 GIT_CMD_GITLAB="gitlab-git" \
 make propagate-pages ARGS="--push"

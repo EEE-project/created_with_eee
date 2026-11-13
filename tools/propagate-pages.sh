@@ -220,7 +220,11 @@ echo "fetching Codeberg pages"
 codeberg_url=$(public_url "$(git -C "$source_pages_dir" remote get-url origin)")
 GIT_TERMINAL_PROMPT=0 timeout 120 git -C "$source_pages_dir" fetch "$codeberg_url" +refs/heads/pages:refs/remotes/origin/pages ||
     die "cannot fetch $codeberg_url"
+# Everything below copies the local pages, so it must be the branch that Codeberg serves (README step 3).
 source_pages_ref=$(git -C "$source_pages_dir" rev-parse pages)
+fetched_pages_ref=$(git -C "$source_pages_dir" rev-parse refs/remotes/origin/pages)
+[[ "$source_pages_ref" == "$fetched_pages_ref" ]] ||
+    die "$source_pages_dir: local pages is ${source_pages_ref:0:7}, Codeberg's pages is ${fetched_pages_ref:0:7}; push the local branch, or update it from Codeberg (README step 3), then run again"
 
 # Unified branches can be reset exactly from the fetched Codeberg commit.
 if wants github; then
