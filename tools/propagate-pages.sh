@@ -27,7 +27,7 @@ Hosts (default: all):
   github          GitHub unified Pages project only
   gitlab          GitLab unified and all GitLab split Pages projects
 
-Environment overrides: GIT_CMD_CODEBERG, GIT_CMD_GITHUB, GIT_CMD_GITLAB,
+Environment overrides: GIT_CMD_GITHUB, GIT_CMD_GITLAB,
 GITHUB_PAGES_DIR, GITLAB_PAGES_DIR, GITLAB_SPLIT_DIR, CODEBERG_PAGES_DIR.
 The names of the make targets work too: PAGES_DIR (= CODEBERG_PAGES_DIR),
 GITLAB_UNIFIED_PAGES_DIR (= GITLAB_PAGES_DIR) and SPLIT_PROJECTS_DIR
@@ -70,7 +70,7 @@ env_file="$repo_root/.env"
 source "$tool_dir/_dotenv.sh"
 
 for env_name in \
-    GIT_CMD_CODEBERG GIT_CMD_GITHUB GIT_CMD_GITLAB \
+    GIT_CMD_GITHUB GIT_CMD_GITLAB \
     GITHUB_PAGES_DIR GITLAB_PAGES_DIR GITLAB_SPLIT_DIR CODEBERG_PAGES_DIR \
     GITLAB_UNIFIED_PAGES_DIR SPLIT_PROJECTS_DIR PAGES_DIR; do
     load_dotenv_value "$env_name"
@@ -79,10 +79,8 @@ done
 github_dir="${GITHUB_PAGES_DIR:-$HOME/work/greek/git/github/EEE-project/created_with_eee-pages-worktree}"
 gitlab_dir="${GITLAB_PAGES_DIR:-${GITLAB_UNIFIED_PAGES_DIR:-$HOME/work/greek/git/gitlab/EEE-project/created_with_eee-pages-worktree}}"
 split_parent="${GITLAB_SPLIT_DIR:-${SPLIT_PROJECTS_DIR:-$HOME/work/greek/git/gitlab/EEE-project}}"
-git_cmd_codeberg=(git)
 git_cmd_github=(git)
 git_cmd_gitlab=(git)
-[[ -z "${GIT_CMD_CODEBERG:-}" ]] || read -r -a git_cmd_codeberg <<< "$GIT_CMD_CODEBERG"
 [[ -z "${GIT_CMD_GITHUB:-}" ]] || read -r -a git_cmd_github <<< "$GIT_CMD_GITHUB"
 [[ -z "${GIT_CMD_GITLAB:-}" ]] || read -r -a git_cmd_gitlab <<< "$GIT_CMD_GITLAB"
 source_pages_dir="${CODEBERG_PAGES_DIR:-${PAGES_DIR:-$repo_root/../created_with_eee-pages-worktree}}"
@@ -104,7 +102,6 @@ run_git() {
     local host=$1
     shift
     case "$host" in
-        codeberg) "${git_cmd_codeberg[@]}" "$@" ;;
         github) "${git_cmd_github[@]}" "$@" ;;
         gitlab) "${git_cmd_gitlab[@]}" "$@" ;;
         *) die "unknown Git hosting provider: $host" ;;
@@ -216,11 +213,13 @@ if wants gitlab; then
     done
 fi
 
-# Fetch Codeberg once from its canonical pages worktree. Mirror worktrees only
+# Fetch Codeberg once from its canonical pages worktree, over its public URL (no key). Mirror worktrees only
 # need their own hosting remote (normally `origin`); they do not need a
 # Codeberg remote configured locally.
 echo "fetching Codeberg pages"
-run_git codeberg -C "$source_pages_dir" fetch origin pages
+codeberg_url=$(public_url "$(git -C "$source_pages_dir" remote get-url origin)")
+GIT_TERMINAL_PROMPT=0 timeout 120 git -C "$source_pages_dir" fetch "$codeberg_url" +refs/heads/pages:refs/remotes/origin/pages ||
+    die "cannot fetch $codeberg_url"
 source_pages_ref=$(git -C "$source_pages_dir" rev-parse pages)
 
 # Unified branches can be reset exactly from the fetched Codeberg commit.
@@ -332,6 +331,7 @@ if [[ "$push_targets" != true ]]; then
     exit 0
 fi
 
+((${#changed_dirs[@]} > 0)) || echo "nothing to push: no destination has a new commit"
 for item in "${changed_dirs[@]}"; do
     IFS='|' read -r host dir url <<< "$item"
     push_pages "$host" "$dir" "$url"

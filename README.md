@@ -86,7 +86,7 @@ directory has its own README (description + live links) and `AGENTS.md`
    ```
    `github` or `gitlab` in `ARGS` limits the run to one host; after a failed
    push (for example a missed confirmation of your key) run the `--push` command again; a GitHub or
-   GitLab repository that already serves the prepared tree is not pushed again.
+   GitLab repository that already serves the prepared tree is not pushed again (a `--push` run with nothing new ends with `nothing to push`).
    Git runs through the `GIT_CMD_*` wrappers from `.env` or the environment
    (see "What each command needs" below; the default is plain `git`), and
    every destination worktree must be clean, on `pages`, with its *own* git
@@ -110,7 +110,7 @@ repository (the folder with the `Makefile`).
 
 | You need | Used by | How to check |
 | :-- | :-- | :-- |
-| An SSH key with push rights on `codeberg.org`, `github.com` and `gitlab.com` | every fetch of Codeberg and every push | `git ls-remote git@codeberg.org:EEE-project/created_with_eee.git HEAD` answers (the same for the other two hosts) |
+| An SSH key with push rights on `codeberg.org`, `github.com` and `gitlab.com` | every push | `git ls-remote git@codeberg.org:EEE-project/created_with_eee.git HEAD` answers (the same for the other two hosts) |
 | `git` set up to sign commits (`commit.gpgsign=true` and a signing key) | `propagate-pages`, `sync-main` (they make commits) | `git log -1 --format=%G?` prints `G` after a commit |
 | `gh`, logged in | `sync-main` (mirror check), `verify-pages-deploy`, the manual Pages rebuild below | `gh auth status` |
 | `glab`, logged in | `sync-main` (mirror check and the `main` protection switch), `verify-pages-deploy` | `glab auth status` |
@@ -172,9 +172,9 @@ times are what a run took on 2026-10-15, key uses included.
 | Command | What it changes | Key uses | Takes about | Check afterwards |
 | :-- | :-- | :-- | :-- | :-- |
 | `make export-notebooks NOTEBOOKS="..."` | the lesson folders in the Codeberg pages worktree (each is cleared, then written again); commits nothing | 0 | one marimo export per lesson; an ancient Greek lesson adds 10 to 60 seconds for its paradigm pack (the first run also builds an environment) | `make check-embedded-data`; `git status` in the worktree |
-| `make propagate-pages` | one signed commit in each of the GitHub, GitLab unified and three split folders that changes; pushes nothing | 1 (fetch of Codeberg `pages`) + 1 per commit, 6 at most | 3 minutes | `git log -1 --format='%h %G?'` in each folder |
-| `make propagate-pages ARGS="github --push"` | repeats the preparation for GitHub (the folder is reset to Codeberg `pages`, the signed commit is made again), then force-pushes `pages:pages` to GitHub | 3: fetch, signature, push | 1 minute | `git ls-remote https://github.com/EEE-project/created_with_eee.git refs/heads/pages`; wait for the Pages build (2 minutes), then `make verify-pages-deploy SITE=GitHub` (see the rebuild rule below) |
-| `make propagate-pages ARGS="gitlab --push"` | repeats the preparation for the GitLab unified project and force-pushes it; pushes the three split projects (a commit that an earlier dry run made is pushed as it is) | 6 after a dry run: fetch, 1 signature, 4 pushes; 9 without one | 3 minutes | `git ls-remote` of the four projects; wait for their Pages pipelines (1 minute), then `make verify-pages-deploy` |
+| `make propagate-pages` | one signed commit in each of the GitHub, GitLab unified and three split folders that changes; pushes nothing | 1 per commit, 5 at most | 3 minutes | `git log -1 --format='%h %G?'` in each folder |
+| `make propagate-pages ARGS="github --push"` | repeats the preparation for GitHub (the folder is reset to Codeberg `pages`, the signed commit is made again), then force-pushes `pages:pages` to GitHub | 2: signature, push | 1 minute | `git ls-remote https://github.com/EEE-project/created_with_eee.git refs/heads/pages`; wait for the Pages build (2 minutes), then `make verify-pages-deploy SITE=GitHub` (see the rebuild rule below) |
+| `make propagate-pages ARGS="gitlab --push"` | repeats the preparation for the GitLab unified project and force-pushes it; pushes the three split projects (a commit that an earlier dry run made is pushed as it is) | 5 after a dry run: 1 signature, 4 pushes; 8 without one | 3 minutes | `git ls-remote` of the four projects; wait for their Pages pipelines (1 minute), then `make verify-pages-deploy` |
 | `make sync-main ARGS=github` | resets the GitHub mirror checkout to Codeberg `main`, converts it with `codeberg2github.sh`, makes one signed commit and force-pushes it to GitHub `main` | 2: signature, push | 1 minute | `git ls-remote https://github.com/EEE-project/created_with_eee.git refs/heads/main` shows a new commit whose parent is Codeberg `main` |
 | `make sync-main ARGS=gitlab` | the same with `codeberg2gitlab.sh`; the script allows a force-push to GitLab `main` only while it pushes | 2 | 1 minute | the same check on `gitlab.com`; `glab api projects/EEE-project%2Fcreated_with_eee/protected_branches/main` must show `"allow_force_push":false` |
 | `make sync-pages-export`, `sync-hub-pages`, `fix-split-roots`, `fix-gitlab-unified-scope`, `fix-static-footer`, `fix-split-hub-links` (the steps `propagate-pages` runs for you), `make gen-hub`, and `make add-loader` (the `index.html` of a lesson page without the loading overlay) | files in the folders above only; they never commit or push | 0 | seconds | `git status` and `git diff` in each folder |

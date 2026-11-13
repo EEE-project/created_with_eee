@@ -123,7 +123,7 @@ def check_prerequisites() -> None:
     installed = importlib.metadata.version("eee-project")
     if installed != eee_project.__version__:
         print(f"note: eee_project.__version__ is {eee_project.__version__} but the installed metadata says {installed} (an editable install made before a version bump?); "
-              "an export from this Python pins the metadata version", file=sys.stderr)
+              "an export from this Python with an older marimo pins the metadata version", file=sys.stderr)
 
 
 def launch_chromium(playwright):
