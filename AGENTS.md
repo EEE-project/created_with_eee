@@ -258,8 +258,10 @@ card beside the Greek (a box 600 px wide or more) or under it, and the word shee
 calls `render_gloss_sheet` in a real browser (`marimo run`, Chromium) at 390 and 830 px in Greek, Russian and English. It checks that
 the block fits, where the card and the sheet stand, that a tap opens the sheet (and a closed one opens again), that every translator of
 the dropdown draws a card (on the narrow page in every stanza of the lesson), that a word with a margin note shows it, that the blank
-entry removes the card, and that neither the page nor a cell of the lesson raises an error (a `NameError` left behind by a merge fails
-the run with its line). It takes about two minutes per lesson. Run it after a change to a lesson's text cell, gloss cells or translator dropdown, and after raising the
+entry removes the card, that the page does not scroll sideways (nothing ends past the right edge of the page, also in the source line of
+each translator), and that neither the page nor a cell of the lesson raises an error (a `NameError` left behind by a merge fails
+the run with its line). The long `web.archive.org` links in some source lines (knowledge-base text, left as it is on purpose) do not fail
+the run: the `ok` line counts them, and an old `translations_*.md` next to the lesson shows an old source line. marimo sometimes loses the module of the stanza widget when a page starts (marimo issue 10494, `Virtual file not found` in the server output): the tool then loads the page again and the `ok` line says how often. It takes about two minutes per lesson. Run it after a change to a lesson's text cell, gloss cells or translator dropdown, and after raising the
 `eee-project` floor of a lesson. `SCOPE=<notebook or folder>` limits it, `ARGS="--langs el --widths 390"` makes fewer runs; a lesson
 needs `translations_{ru,en,el}.md` next to it (git-ignored; the lesson fetches them from Codeberg when they are missing) and the tool
 puts the lesson folder's files back after the run. See `tools/check-lesson-layout.py` for the exit statuses.

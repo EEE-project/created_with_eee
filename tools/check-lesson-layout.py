@@ -17,9 +17,19 @@ Chromium at each width and in each interface language, taps the words, and check
    clears the Greek word (and the reverse); the blank entry removes the card.
 5. The page raises no uncaught JavaScript error, and the server prints no exception while the tool works (a cell that raises,
    for instance a NameError left behind by a merge, fails the run with the line of the exception).
+6. The page does not scroll sideways: `div#App`, the box marimo gives a lesson (`overflow-x: auto`), holds nothing wider than the page,
+   and no element that is not fixed ends past the right edge of the page. The stanza on show and every translator are measured, so the
+   translation source line is seen too. The archive links (`https://web.archive.org/...`) in that line are KB text and too long for a
+   phone; they stay as they are (decision of 2026-11-09), so the `ok` line counts them and they do not fail the run. The tool reads the
+   box of each element, not what the eye sees: a box that ends past the right edge is reported also when a parent with `overflow`
+   hides or scrolls it, and text that a parent clips inside the page is not seen.
 
 A lesson starts in its default interface language and is drawn again once the language kept in the browser has reached the kernel;
 the tool waits until that has happened (a tap on the first draw is lost), the page has stopped changing and the rules of the widget are applied, and after each choice in a dropdown until the kernel has drawn the widget again, before it checks anything.
+
+marimo (issue 10494) sometimes deletes the module of the stanza widget before the page has fetched it: the server prints `Virtual file not found`, and if the lost module is the one of
+the widget that stays, the page shows no text for good. When no text shows 30 s after the first traceback and the server printed that message, the tool loads the page again, up to
+`MAX_RELOADS` times, and the `ok` line says how often. Any other error of the lesson at the start fails the run.
 
 The tool cannot see anything that happens in Pyodide (the published pages): the layout shows there only after eee-project 1.26.0 is released
 and installed in the exporting Python (an older marimo pinned the page to the installed version; see AGENTS.md, "The stanza layout of the Odyssey lessons"), and
@@ -67,6 +77,9 @@ SHEET_MAX_SHARE = 0.55                        # the share of the screen height a
 MAX_SNAPSHOT_FILE = 5_000_000                 # a bigger file in a lesson folder is not copied (none is written by a run)
 LOAD_TIMEOUT_MS = 240_000                     # a lesson loads its backends first
 ACTION_TIMEOUT_MS = 8_000                     # a tap or a choice that takes longer than this has not worked
+ARCHIVE_LINK = "https://web.archive.org/"     # the archive links of the translation source lines (KB text) are cut on a phone; left as they are since 2026-11-09: counted, not failed
+LOST_MODULE = "Virtual file not found"        # the server's line when marimo deleted the module of a widget before the page fetched it (marimo issue 10494)
+MAX_RELOADS = 4                               # a page that lost the module is loaded again this often before the run fails
 
 
 class Cannot(Exception):
@@ -252,6 +265,42 @@ def fits(page, width: int) -> "list[str]":
     return problems
 
 
+# Every element that ends past the page and is neither fixed nor inside a fixed box (the table of contents of marimo is one), shadow roots included. `reach` is the right edge of the
+# text block that holds the element: text right after a link, such as ").", counts too. Not `scrollWidth > clientWidth` of each element: that flags the parents of an overflowing link too.
+RIGHT_EDGE_JS = """width => {
+    const app = document.getElementById('App'), found = [];
+    const pinned = el => { for (let n = el; n; n = n.parentElement || n.getRootNode().host) if (getComputedStyle(n).position === 'fixed') return true; return false; };
+    const blockOf = el => { let b = el.parentElement; while (b && getComputedStyle(b).display.startsWith('inline')) b = b.parentElement; return b || el; };
+    const walk = root => { for (const el of root.querySelectorAll('*')) {
+        const r = el.getBoundingClientRect();
+        if (r.width > 0 && r.right > width + 1 && !pinned(el)) {
+            const text = document.createRange(); text.selectNodeContents(blockOf(el));
+            found.push({tag: el.tagName.toLowerCase(), href: typeof el.href === 'string' ? el.href : '', right: Math.round(r.right), reach: Math.round(text.getBoundingClientRect().right),
+                        text: (el.innerText || '').trim().replace(/\\s+/g, ' ').slice(0, 40)}); }
+        if (el.shadowRoot) walk(el.shadowRoot); } };
+    walk(document);
+    return {app: app && [app.scrollWidth, app.clientWidth], found}; }"""
+
+
+def sideways(page, width: int) -> "tuple[list[str], set[str]]":
+    """(problems, accepted): `div#App` holds more than the page is wide, or an element ends past the right edge. The cut archive links of the
+    translation source line are not problems: their addresses come back as `accepted`. (The scroll width of the page itself says nothing: `div#App` scrolls inside it.)"""
+    got = page.evaluate(RIGHT_EDGE_JS, width)
+    if got["app"] is None:
+        return ["div#App is not in the page, so a sideways scroll cannot be measured"], set()
+    cut, others = [], []
+    for found in got["found"]:
+        (cut if found["href"].startswith(ARCHIVE_LINK) else others).append(found)
+    scroll, client = got["app"]
+    problems = []
+    if scroll > max([client, *(e["reach"] for e in cut)]) + 1:      # what the accepted links cause (with the text after them) is not counted
+        problems.append(f"the page scrolls sideways inside div#App: {scroll} px of content in a {client} px page")
+    if others:
+        problems.append("past the right edge: " + "; ".join(f"{e['tag']} {e['text']!r} ends at x={e['right']}" for e in others[:3])
+                        + (f" (and {len(others) - 3} more)" if len(others) > 3 else ""))
+    return problems, {e["href"] for e in cut}
+
+
 def placement(page) -> "tuple[str, list[str]]":
     """('beside' | 'under', problems): where the card stands, against the rule of the container query."""
     wrap, greek, card = box(page, STANZA), box(page, GREEK), box(page, CARD)
@@ -318,9 +367,15 @@ def kernel_errors(printed, since: int) -> "list[str]":
     return sorted({line.strip()[:200] for line in found})
 
 
-def model_id(page) -> "str | None":
-    """The id of the model of the stanza widget: a widget that the kernel draws again has a new one, a moment after the choice that caused it."""
-    return page.locator(GREEK).first.evaluate("el => el.getRootNode().host.getAttribute('data-model-id')")
+def model_id(page) -> str:
+    """The id of the model of the stanza widget: a widget that the kernel draws again has a new one, a moment after the choice that caused it.
+    While the kernel draws it again the text has no host, so there is no id yet: the function waits up to 2 s for the new one, then raises."""
+    for _ in range(20):
+        found = page.locator(GREEK).first.evaluate("el => { const host = el.getRootNode().host; return host ? host.getAttribute('data-model-id') : null; }")
+        if found:
+            return found
+        page.wait_for_timeout(100)
+    raise RuntimeError("the stanza widget has no model id for 2 s")
 
 
 def choose(page, select, value: str) -> bool:
@@ -345,7 +400,7 @@ def check_translations(page, width: int, all_stanzas: bool) -> "tuple[list[str],
     stanza, translation = pickers(page)
     translators = [o for o in option_values(translation) if o != BLANK]
     stanzas = option_values(stanza) if stanza is not None and all_stanzas else [None]
-    problems, with_notes, shown = [], None, 0
+    problems, with_notes, shown, accepted = [], None, 0, set()
     for stanza_value in stanzas:
         for translator in translators:
             where = f"translation {translator!r}" + (f" in stanza {stanza_value!r}" if stanza_value else "")
@@ -357,10 +412,15 @@ def check_translations(page, width: int, all_stanzas: bool) -> "tuple[list[str],
                 continue
             shown += 1
             problems += [f"{where}: {p}" for p in fits(page, width)]
+            bad, cut = sideways(page, width)
+            problems += [f"{where}: {p}" for p in bad]
+            accepted |= cut
             if with_notes is None and page.locator(f"{STANZA} {NOTE}").count():
                 with_notes = (stanza_value, translator)
     notes = [f"{len(translators)} translations" + (f" in {len(stanzas)} stanzas" if stanza is not None and all_stanzas else ""),
              "margin notes at " + (f"{with_notes[1]!r}" + (f" in {with_notes[0]!r}" if with_notes[0] else "") if with_notes else "none")]
+    if accepted:
+        notes.append(f"{len(accepted)} archive link(s) past the edge (accepted)")
     return problems, notes, with_notes
 
 
@@ -391,6 +451,7 @@ def check_page(page, width: int, all_stanzas: bool) -> "tuple[list[str], list[st
         problems.append("no text block with a translation card by default")
     else:
         problems += fits(page, width)
+        problems += sideways(page, width)[0]      # the accepted links are counted by check_translations
         lines = page.locator(f"{GREEK}.wrap .eee-line")
         if not lines.count():
             problems.append("the Greek lines are not drawn with wrap=True")
@@ -441,18 +502,28 @@ def describe(exc: Exception) -> str:
     return f"{type(exc).__name__}: " + " | ".join(line.strip() for line in str(exc).strip().splitlines()[:3])[:300]
 
 
-def wait_for_greek(page, printed) -> None:
-    """Wait for the Greek text; give up early, with what the server printed, when the lesson raised an error and the text stays away."""
-    failed_at = None
+def wait_for_greek(page, printed, old: int) -> int:
+    """Wait for the Greek text and return how often the page was loaded again; give up early, with what the server printed, when the lesson raised an error and the text stays away.
+    `old` is the length of the server output before this load began: what the server printed earlier is not an error of this page.
+    marimo (issue 10494) sometimes deletes the module of the stanza widget before the page fetched it: the server prints `Virtual file not found`, and if the lost module is the one of the
+    widget that stays, the page shows no text for good. A new load of the page fixes that, so only this error is answered with up to MAX_RELOADS new loads; any other error still ends the wait."""
+    failed_at, reloads = None, 0
     deadline = time.monotonic() + LOAD_TIMEOUT_MS / 1000
     while time.monotonic() < deadline:
         if page.locator(f"{GREEK} .gk-word").count():
-            return
-        if failed_at is None and "Traceback (most recent call last)" in printed():
+            return reloads
+        if failed_at is None and "Traceback (most recent call last)" in printed()[old:]:
             failed_at = time.monotonic()
         if failed_at is not None and time.monotonic() - failed_at > 30:
-            tail = [line for line in printed().splitlines() if line.strip()][-4:]
-            raise RuntimeError("the lesson raised an error and shows no text: " + " | ".join(line.strip()[:200] for line in tail))
+            if LOST_MODULE in printed()[old:] and reloads < MAX_RELOADS:
+                old = len(printed())      # taken before the load starts: what the server prints while the page loads counts
+                page.reload(wait_until="load", timeout=LOAD_TIMEOUT_MS)
+                failed_at, reloads = None, reloads + 1
+                deadline = time.monotonic() + LOAD_TIMEOUT_MS / 1000      # the limit counts from the newest load
+            else:
+                tail = [line for line in printed().splitlines() if line.strip()][-4:]
+                again = f" (page loaded again {reloads}x)" if reloads else ""
+                raise RuntimeError(f"the lesson raised an error and shows no text{again}: " + " | ".join(line.strip()[:200] for line in tail))
         page.wait_for_timeout(1000)
     raise RuntimeError(f"no clickable Greek text within {LOAD_TIMEOUT_MS // 1000} s")
 
@@ -470,8 +541,9 @@ def check_notebook(browser, url: str, printed, widths: "list[int]", langs: "list
             problems: list[str] = []
             notes: list[str] = []
             try:
+                opened = len(printed())
                 page.goto(url, wait_until="load", timeout=LOAD_TIMEOUT_MS)
-                wait_for_greek(page, printed)
+                reloads = wait_for_greek(page, printed, opened)
                 first = model_id(page)
                 wait_until(page, lambda: model_id(page) != first and language_shown(page, lang), 60)     # drawn again when the stored language reaches the kernel; a tap before is lost
                 settle(page)
@@ -481,6 +553,8 @@ def check_notebook(browser, url: str, printed, widths: "list[int]", langs: "list
                     problems, notes = check_page(page, width, all_stanzas=width == min(widths))
                 except Exception as exc:  # noqa: BLE001 - a timeout or a closed page is a finding, not a crash of the tool
                     problems = [describe(exc)]
+                if reloads:
+                    notes.append(f"page loaded again {reloads}x (marimo issue 10494)")
                 problems += [f"the lesson raised an error: {line}" for line in kernel_errors(printed, since)]
             except Exception as exc:  # noqa: BLE001 - the lesson did not even start
                 problems = [describe(exc)]
