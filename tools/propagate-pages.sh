@@ -158,6 +158,8 @@ require_remote_contained() {
     tip=${out%%[[:space:]]*}
     [[ -z "$tip" ]] || git -C "$dir" merge-base --is-ancestor "$tip" pages 2>/dev/null ||
         die "$dir does not contain the remote pages tip ${tip:0:7} (git -C $dir fetch $url +refs/heads/pages:refs/remotes/origin/pages)"
+    # A push by URL leaves origin/pages behind, and the queue at the end of the script compares with it.
+    [[ -z "$tip" ]] || git -C "$dir" update-ref refs/remotes/origin/pages "$tip"
 }
 
 # True when the staged tree is exactly what the remote already publishes on pages: a new commit and force-push would change nothing.
@@ -223,8 +225,16 @@ GIT_TERMINAL_PROMPT=0 timeout 120 git -C "$source_pages_dir" fetch "$codeberg_ur
 # Everything below copies the local pages, so it must be the branch that Codeberg serves (README step 3).
 source_pages_ref=$(git -C "$source_pages_dir" rev-parse pages)
 fetched_pages_ref=$(git -C "$source_pages_dir" rev-parse refs/remotes/origin/pages)
-[[ "$source_pages_ref" == "$fetched_pages_ref" ]] ||
-    die "$source_pages_dir: local pages is ${source_pages_ref:0:7}, Codeberg's pages is ${fetched_pages_ref:0:7}; push the local branch, or update it from Codeberg (README step 3), then run again"
+if [[ "$source_pages_ref" != "$fetched_pages_ref" ]]; then
+    if git -C "$source_pages_dir" merge-base --is-ancestor "$fetched_pages_ref" "$source_pages_ref"; then
+        pages_fix="the local branch is ahead: push it"
+    elif git -C "$source_pages_dir" merge-base --is-ancestor "$source_pages_ref" "$fetched_pages_ref"; then
+        pages_fix="the local branch is behind: run git merge --ff-only origin/pages in that folder"
+    else
+        pages_fix="the two have diverged: run git rebase origin/pages in that folder and push it"
+    fi
+    die "$source_pages_dir: local pages is ${source_pages_ref:0:7}, Codeberg's pages is ${fetched_pages_ref:0:7}; $pages_fix, then run again"
+fi
 
 # Unified branches can be reset exactly from the fetched Codeberg commit.
 if wants github; then

@@ -93,12 +93,17 @@ directory has its own README (description + live links) and `AGENTS.md`
    directory — the script refuses a destination that shares Codeberg's.
    Before it fetches or pushes anything, it also reads each GitLab course
    project's remote `pages` tip over HTTPS and stops if its checkout does not
-   contain it (those branches refuse force-pushes).
+   contain it (those branches refuse force-pushes). Otherwise it sets the
+   checkout's `origin/pages` to that tip. The script then does not push a
+   project that GitLab already serves at the local commit.
    After it fetches Codeberg's `pages`, it also stops when the worktree's
-   local `pages` is not that commit (an unpushed commit, or a newer commit
-   pushed from another checkout). It stops before it resets, copies or commits
-   anything. Push the local branch, or run `git merge --ff-only origin/pages`
-   in the worktree, then run the command again.
+   local `pages` is not that commit. It stops before it resets, copies or
+   commits anything, and the error line says what to do for the state it
+   found. The local branch is ahead (an unpushed commit): push it. It is
+   behind (a newer commit pushed from another checkout): run
+   `git merge --ff-only origin/pages` in the worktree. The two have diverged
+   (both have a new commit): run `git rebase origin/pages` in the worktree,
+   then push. Then run the command again.
 5. **Verify** — `make verify-pages-deploy SITE=odyssey` (GitLab Pages needs its
    CI pipeline to finish first); after hub changes also `make check-hub-links`;
    `make check-loader DIRS="<checkout> ..."` on the GitHub and GitLab checkouts.
