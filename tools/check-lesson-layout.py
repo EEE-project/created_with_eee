@@ -24,8 +24,8 @@ Chromium at each width and in each interface language, taps the words, and check
    box of each element, not what the eye sees: a box that ends past the right edge is reported also when a parent with `overflow`
    hides or scrolls it, and text that a parent clips inside the page is not seen.
 
-A lesson starts in its default interface language and is drawn again once the language kept in the browser has reached the kernel;
-the tool waits until that has happened (a tap on the first draw is lost), the page has stopped changing and the rules of the widget are applied, and after each choice in a dropdown until the kernel has drawn the widget again, before it checks anything.
+A lesson starts in its default interface language and is drawn again once the language kept in the browser has reached the kernel
+(from eee-project 1.27.3 on, only when that language is not the default one); the tool waits until that has happened (a tap on the first draw is lost), the page has stopped changing and the rules of the widget are applied, and after each choice in a dropdown until the kernel has drawn the widget again, before it checks anything.
 
 marimo (issue 10494) sometimes deletes the module of the stanza widget before the page has fetched it: the server prints `Virtual file not found`, and if the lost module is the one of
 the widget that stays, the page shows no text for good. When no text shows 30 s after the first traceback and the server printed that message, the tool loads the page again, up to
@@ -105,8 +105,8 @@ def lesson_notebooks(scope: pathlib.Path) -> "list[pathlib.Path]":
     return sorted(found)
 
 
-def check_prerequisites() -> None:
-    """Raise Cannot with the thing that is missing."""
+def check_prerequisites() -> "tuple[int, ...]":
+    """Raise Cannot with the thing that is missing; return the version of the eee_project module, the one the lessons import."""
     try:
         import playwright.sync_api  # noqa: F401
     except ImportError:
@@ -124,6 +124,7 @@ def check_prerequisites() -> None:
     if installed != eee_project.__version__:
         print(f"note: eee_project.__version__ is {eee_project.__version__} but the installed metadata says {installed} (an editable install made before a version bump?); "
               "an export from this Python with an older marimo pins the metadata version", file=sys.stderr)
+    return version
 
 
 def launch_chromium(playwright):
@@ -231,6 +232,11 @@ def language_shown(page, lang: str) -> bool:
     """The lesson is drawn in the interface language asked for: its language dropdown shows the name of that language (a lesson starts in its default one)."""
     selects = page.locator("select")
     return any(selects.nth(i).evaluate("s => s.value") == LANGUAGE_NAME[lang] for i in range(selects.count())) if lang in LANGUAGE_NAME else True
+
+
+def busy(page) -> bool:
+    """A cell of the lesson is queued or running: marimo marks its output area as loading or stale until the cell has run."""
+    return page.locator(".marimo-output-loading, .marimo-output-stale").count() > 0
 
 
 def close_sheet(page) -> None:
@@ -528,8 +534,9 @@ def wait_for_greek(page, printed, old: int) -> int:
     raise RuntimeError(f"no clickable Greek text within {LOAD_TIMEOUT_MS // 1000} s")
 
 
-def check_notebook(browser, url: str, printed, widths: "list[int]", langs: "list[str]"):
-    """Yield (lang, width, problems, notes) for each run of a running lesson. The narrowest width also goes through every stanza."""
+def check_notebook(browser, url: str, printed, widths: "list[int]", langs: "list[str]", always_redrawn: bool):
+    """Yield (lang, width, problems, notes) for each run of a running lesson. The narrowest width also goes through every stanza.
+    always_redrawn: the lesson is drawn again also when the stored language is the default one (eee-project before 1.27.3)."""
     for lang in langs:
         for width in widths:
             context = browser.new_context(viewport={"width": width, "height": 844})
@@ -545,7 +552,10 @@ def check_notebook(browser, url: str, printed, widths: "list[int]", langs: "list
                 page.goto(url, wait_until="load", timeout=LOAD_TIMEOUT_MS)
                 reloads = wait_for_greek(page, printed, opened)
                 first = model_id(page)
-                wait_until(page, lambda: model_id(page) != first and language_shown(page, lang), 60)     # drawn again when the stored language reaches the kernel; a tap before is lost
+                if always_redrawn:
+                    wait_until(page, lambda: model_id(page) != first and language_shown(page, lang), 60)     # drawn again when the stored language reaches the kernel; a tap before is lost
+                else:      # eee-project 1.27.3 runs the cells again only for a language not on show, and that run can end before `first` is read
+                    wait_until(page, lambda: language_shown(page, lang) and not busy(page), 60)
                 settle(page)
                 wait_until(page, lambda: styled(page), 120)      # a stylesheet that never comes is reported by the checks below
                 since = len(printed())
@@ -581,7 +591,7 @@ def main() -> None:
             sys.exit(0)
         if not notebooks:
             raise Cannot(f"no notebook {'below ' + ', '.join(map(str, args.scope)) if args.scope else 'of this repository'} calls {USES_LAYOUT[:-1]}, so there is nothing to check")
-        check_prerequisites()
+        always_redrawn = check_prerequisites() < (1, 27, 3)
         from playwright.sync_api import sync_playwright
 
         failures = 0
@@ -592,7 +602,7 @@ def main() -> None:
                 started, runs, bad = time.monotonic(), 0, 0
                 print(name, flush=True)
                 with restored_folder(notebook.parent), marimo_run(notebook) as (url, printed):
-                    for lang, width, problems, notes in check_notebook(browser, url, printed, widths, langs):
+                    for lang, width, problems, notes in check_notebook(browser, url, printed, widths, langs, always_redrawn):
                         runs, bad = runs + 1, bad + bool(problems)
                         detail = f" ({'; '.join(notes)})" if notes else ""
                         for problem in problems:
