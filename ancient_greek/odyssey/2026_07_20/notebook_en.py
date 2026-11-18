@@ -287,9 +287,9 @@ def _(lang_sel, mo):
 
     | Homeric word | In the text | Echo |
     |---|---|---|
-    | **κτίζω** — to build, to found | ἐϋκτιμένην, IX.130 | Modern Greek **κτίριο** — building |
-    | **λεῖος** — smooth, level | λείη, IX.134 | Latin **levis** — smooth, light |
-    | **βαθύς** — deep | βαθὺ, IX.134 | "bathyscaphe" — from βαθύς + σκάφος |
+    | **κτίζω** — to build, to found | ἐϋκτιμένην, IX.130 | Modern Greek **κτίριο** — building (not from κτίζω: from Medieval Greek κτήριον; spelt with ι by folk etymology from κτίζω) |
+    | **λεῖος** — smooth, level | λείη, IX.134 | Latin **lēvis** — smooth (not lĕvis, "light") |
+    | **βαθύς** — deep | βαθὺ, IX.134 | "bathyscaphe" — from βαθύς + σκάφη, "boat" |
     """,
         "el": "",
     }
@@ -348,8 +348,8 @@ def _(lang_sel, mo):
     - **connective:** **ἄρα** — so, therefore; **ἀτάρ** — but, well
       (a shift to a different topic); **δέ** — and, but, however (a mild
       contrast); **μέν... δέ** — a contrast ("on the one hand... on the
-      other"); **οὖν** — so, then, but (a shift of topic, weaker than
-      ἀτάρ)
+      other"); **οὖν** — so, then (confirms or resumes what was said; in Homer only in
+      combinations: γὰρ οὖν, ἐπεὶ οὖν, ὡς οὖν, μὲν οὖν)
     - **emphatic and intensive:** **γέ** — indeed, precisely, at least
       (emphasizes the key word); **δή** — indeed, truly, precisely
       (underscores truthfulness); **μήν** — truly, verily (stronger than

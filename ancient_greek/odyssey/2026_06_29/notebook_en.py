@@ -219,7 +219,7 @@ def _(eee, lang_sel, mo):
       (I do it myself, for myself, in my own interest), and *passive* (it is
       done to me).
 
-    Prepositions of motion — **to where**, **from where**, **where** —
+    Prepositions of place and direction — **to where**, **from where**, **where** —
     around the "vessel" ἐν:
     """,
         "el": "",

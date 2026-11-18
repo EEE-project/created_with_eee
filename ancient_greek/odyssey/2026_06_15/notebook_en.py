@@ -196,10 +196,10 @@ def _(eee, lang_sel, mo):
     ---
     ## Name of the Hero
 
-    **Ὀδυσσεύς** ← **ὀδύσσομαι** — to be angry, to hate; to cause suffering
+    **Ὀδυσσεύς** ← **ὀδύσσομαι** — to be angry, to hate
 
     > *πολλοῖσιν γὰρ ἐγώ γε ὀδυσσάμενος* (Od. XIX.407)
-    > "for I have caused suffering to many"
+    > "for I have been angry with many (and many with me)"
 
     The name means "the one who causes / endures suffering." Homer uses it as an etymological symbol of the hero's fate.
 

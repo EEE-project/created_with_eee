@@ -229,9 +229,9 @@ def _(lang_sel, mo):
     *(this refers to the Lesser Syrtis — the coast of present-day Tunisia.)*
 
     **Polybius**
-    (2nd century BC, as retold by Strabo) identified it with the
+    (2nd century BC; his account survives in Athenaeus, Deipnosophists XIV 651d) describes a plant that botanists identify with the
     **ziziphus** (*Ziziphus lotus*, wild jujube, a relative of the common
-    jujube): a thorny shrub with small leaves, its fruit like a round plum,
+    jujube): a thorny shrub with small leaves, its fruit the size of a round olive,
     turning purple when ripe, from which wine was made, as from dates.
     Herodotus and Theophrastus had written about the plant earlier; later
     it was popularized by Pliny the Elder.

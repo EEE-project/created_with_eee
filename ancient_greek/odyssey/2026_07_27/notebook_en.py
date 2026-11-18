@@ -202,13 +202,15 @@ def _(lang_sel, mo):
     ---
     ## Τμῆσις — "Splitting" a Verb with a Preposition
 
-    This passage contains **tmesis** twice — a verb's prefix is
+    This passage contains **tmesis** three times — a verb's prefix is
     separated from the verb itself by other words, as though it
     were still not a prefix but an independent preposition (in
     Classical Attic this kind of separation has almost entirely
     disappeared, the prefix and the verb having merged into a
     single word):
 
+    - **διὰ δὲ τρίχα κοσμηθέντες** (IX.157) — "arranged in three bands": διά is
+      separated from κοσμηθέντες by δὲ τρίχα; together this is the verb διακοσμέω.
     - **ἀνὰ νηὸς ἔβην** (IX.177) — "went aboard the ship": ἀνά is
       separated from ἔβην by the word νηός; together this is
       ἀνέβην = ἀναβαίνω.
@@ -216,7 +218,7 @@ def _(lang_sel, mo):
       mooring ropes": ἀνά is separated from λῦσαι by the word
       πρυμνήσια; together this is ἀναλῦσαι = ἀναλύω.
 
-    In both cases the preposition retains its own meaning ("up",
+    In all three cases the preposition retains its own meaning ("apart", "up",
     "back/away") and applies to the whole phrase, not just to the
     verb — a trace of an earlier stage of the language, not yet
     fully grammaticalized.
