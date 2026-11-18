@@ -6,7 +6,7 @@ form	lemma	pos	context	meaning
 Διός	Ζεύς	noun	I.10: …θύγατερ Διός, εἰπὲ καὶ ἡμῖν	of Zeus (genitive of Ζεύς)
 εἶναι	εἰμί	verb	I.15: …λιλαιομένη πόσιν εἶναι	"infinitive of εἰμί; here, part of the construction ""that he might be"""
 ἔτος	ἔτος	noun	I.16: ἀλλ' ὅτε δὴ ἔτος ἦλθε…	year
-θεοὶ	θεός	noun	I.17: …ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι	gods (plural of θεός)
+θεοὶ	θεός	noun	I.17: …ἐπεκλώσαντο θεοὶ οἶκόνδε νέεσθαι	gods (plural of θεός)
 ἀνθρώπων	ἄνθρωπος	noun	I.3: πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα…	of people (genitive plural of ἄνθρωπος)
 πόντῳ	πόντος	noun	I.4: …ἐν πόντῳ πάθεν ἄλγεα…	sea (dative of πόντος)
 ἦμαρ	ἦμαρ	noun	I.10: …ἀφείλετο νόστιμον ἦμαρ	day
@@ -22,7 +22,7 @@ form	lemma	pos	context	meaning
 πάθεν	πάσχω	verb	I.4: ἐν πόντῳ πάθεν ἄλγεα	suffered, endured (active aorist of πάσχω)
 ὄλοντο	ἀπόλλυμι	verb	I.7: σφετέρῃσιν ἀτασθαλίῃσιν ὄλοντο	"perished (middle aorist of ὄλλυμι, ""to destroy"")"
 φύγον	φεύγω	verb	I.11: ὅσοι φύγον αἰπὺν ὄλεθρον	escaped, avoided (active aorist of φεύγω)
-ἐπεκλώσαντο	ἐπικλώθω	verb	I.17: ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι	"allotted, ordained (middle aorist of ἐπικλώθω, ""to spin"" — i.e. to spin the thread of fate, to allot)"
+ἐπεκλώσαντο	ἐπικλώθω	verb	I.17: ἐπεκλώσαντο θεοὶ οἶκόνδε νέεσθαι	"allotted, ordained (middle aorist of ἐπικλώθω, ""to spin"" — i.e. to spin the thread of fate, to allot)"
 ἱκέσθαι	ἱκνέομαι	verb	I.21: …πάρος ἣν γαῖαν ἱκέσθαι	to arrive, come (aorist infinitive of ἱκνέομαι)
 ἔννεπε	ἐνέπω	verb	I.1: Ἄνδρα μοι ἔννεπε, μοῦσα	tell, relate (imperative of ἐννέπω)
 πολύτροπον	πολύτροπος	adj	I.1: ἔννεπε, μοῦσα, πολύτροπον	"πολύ ""much"" + τρόπος (""way, manner,"" from τρέπω ""to turn"") → ""much-wandering"" / ""versatile, resourceful, cunning."" Accusative singular."
@@ -55,7 +55,7 @@ form	lemma	pos	context	meaning
 ἦλθε	ἔρχομαι	verb	I.16: ἀλλ' ὅτε δὴ ἔτος ἦλθε	came (active aorist of ἔρχομαι)
 περιπλομένων	περιπέλομαι	verb	I.16: ἔτος ἦλθε περιπλομένων ἐνιαυτῶν	"genitive plural of the present participle of περιπέλομαι, ""to revolve, go round""; here part of a construction meaning ""as [the years] revolved/turned"""
 ἐνιαυτῶν	ἐνιαυτός	noun	I.16: περιπλομένων ἐνιαυτῶν	"of the years (genitive plural of ἐνιαυτός, ""a long span of time, cycle, year"")"
-νέεσθαι	νέομαι	verb	I.17: ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι	to go, to return (infinitive of νέομαι)
+νέεσθαι	νέομαι	verb	I.17: ἐπεκλώσαντο θεοὶ οἶκόνδε νέεσθαι	to go, to return (infinitive of νέομαι)
 ἀέθλων	ἄεθλος	noun	I.18: οὐδ' ἔνθα πεφυγμένος ἦεν ἀέθλων	"of trials, contests (genitive plural of ἆθλον, ""contest, struggle, trial"")"
 φίλοισι	φίλος	adj	I.19: καὶ μετ' ἀθανάτοισι φίλοισι	friends (dative plural of φίλος)
 ἐλέαιρον	ἐλεαίρω	verb	I.19: θεοὶ δ' ἐλέαιρον ἅπαντες	were merciful, pitied (imperfect of ἐλεαίρω)
