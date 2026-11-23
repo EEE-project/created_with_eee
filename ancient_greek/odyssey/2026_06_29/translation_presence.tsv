@@ -63,8 +63,6 @@ lemma	form	stanza_ref	translator	reflected
 γαῖα	γαῖαν	IX.79–81	Вересаев	yes
 ὁμοῦ	ὁμοῦ	IX.67–71	Жуковский	no
 ὁμοῦ	ὁμοῦ	IX.67–71	Вересаев	no
-ὁμοῦ	ὁμοῦ	IX.72–75	Жуковский	no
-ὁμοῦ	ὁμοῦ	IX.72–75	Вересаев	no
 πόντος	πόντον	IX.67–71	Жуковский	yes
 πόντος	πόντον	IX.67–71	Вересаев	yes
 ὄρνυμι	ὀρώρει	IX.67–71	Жуковский	yes
@@ -227,8 +225,6 @@ lemma	form	stanza_ref	translator	reflected
 γαῖα	γαῖαν	IX.79–81	Murray	yes
 ὁμοῦ	ὁμοῦ	IX.67–71	Pope	no
 ὁμοῦ	ὁμοῦ	IX.67–71	Murray	yes
-ὁμοῦ	ὁμοῦ	IX.72–75	Pope	no
-ὁμοῦ	ὁμοῦ	IX.72–75	Murray	no
 πόντος	πόντον	IX.67–71	Pope	no
 πόντος	πόντον	IX.67–71	Murray	yes
 ὄρνυμι	ὀρώρει	IX.67–71	Pope	yes
@@ -280,7 +276,7 @@ lemma	form	stanza_ref	translator	reflected
 συνεχής	συνεχὲς	IX.72–75	Pope	no
 συνεχής	συνεχὲς	IX.72–75	Murray	yes
 αἰεί	αἰεὶ	IX.72–75	Pope	no
-αἰεί	αἰεὶ	IX.72–75	Murray	no
+αἰεί	αἰεὶ	IX.72–75	Murray	yes
 κεῖμαι	κείμεθ᾽	IX.72–75	Pope	yes
 κεῖμαι	κείμεθ᾽	IX.72–75	Murray	yes
 κάματος	καμάτῳ	IX.72–75	Pope	yes
@@ -359,7 +355,6 @@ lemma	form	stanza_ref	translator	reflected
 γαῖα	γαῖαν	IX.67–71	Πολυλάς	yes
 γαῖα	γαῖαν	IX.79–81	Πολυλάς	no
 ὁμοῦ	ὁμοῦ	IX.67–71	Πολυλάς	yes
-ὁμοῦ	ὁμοῦ	IX.72–75	Πολυλάς	no
 πόντος	πόντον	IX.67–71	Πολυλάς	yes
 ὄρνυμι	ὀρώρει	IX.67–71	Πολυλάς	yes
 οὐρανόθεν	οὐρανόθεν	IX.67–71	Πολυλάς	yes
@@ -441,7 +436,6 @@ lemma	form	stanza_ref	translator	reflected
 γαῖα	γαῖαν	IX.67–71	Σπανούδης	yes
 γαῖα	γαῖαν	IX.79–81	Σπανούδης	yes
 ὁμοῦ	ὁμοῦ	IX.67–71	Σπανούδης	no
-ὁμοῦ	ὁμοῦ	IX.72–75	Σπανούδης	no
 πόντος	πόντον	IX.67–71	Σπανούδης	yes
 ὄρνυμι	ὀρώρει	IX.67–71	Σπανούδης	
 οὐρανόθεν	οὐρανόθεν	IX.67–71	Σπανούδης	

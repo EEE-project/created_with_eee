@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23
+- **Five Greek lines of two Odyssey lessons follow the printed Loeb and Allen's OCT.** `2026_06_22`: IX.40 ends with a raised dot («αὐτούς·»), IX.51 has no comma after «ἔπειθ'» and reads «γίγνεται», IX.58 reads «μετενίσσετο» with two sigmas; `2026_07_06`: IX.93 reads «ἡμετέροις,» (no elision mark), IX.99 ends with a full stop («ἐρύσσας.»). The vocabulary and the translation-presence rows that carry the same forms follow. Six Murray rows in the translation-presence files of `2026_06_15`, `2026_06_22`, `2026_06_29`, `2026_07_06` and `2026_07_20` are marked as reflected: χθαμαλή, ἁλί, ὅθι, αἰεὶ, τότ' and χρόνον.
+
 ## 2026-11-19
 - **Three accent errors in the Greek text of two Odyssey lessons are corrected.** `2026_06_01`: I.17 now reads οἶκόνδε (the circumflex was missing) and I.21 ἣν (an acute stood before the next word, where the grave belongs); `2026_06_15`: IX.19 now reads εἴμ' (the circumflex made it the verb "I shall go" instead of "I am"). Murray's Loeb text, which the lessons cite, and Allen's Oxford text both print these forms. The same words are corrected where the vocabulary lists of `2026_06_01` quote line I.17 (Russian, English and Greek) and on the ictus page of `2026_06_15`.
 
